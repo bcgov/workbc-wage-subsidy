@@ -1,0 +1,8 @@
+@import "~@bcgov/bootstrap-theme/dist/scss/bootstrap-theme";
+@import "node_modules/progress-tracker/src/styles/progress-tracker.scss";
+
+#root {
+    display: flex;
+    flex-flow: column nowrap;
+    min-height: 100vh;
+}
