@@ -15,7 +15,7 @@
     "react-dom": "^16.13.1",
     "react-icons": "^3.11.0",
     "react-router-dom": "^5.2.0",
-    "react-scripts": "3.4.2"
+    "react-scripts": "^3.4.3"
   },
   "devDependencies": {
     "@bcgov/bootstrap-theme": "https://github.com/bcgov/bootstrap-theme/releases/download/v1.1.1/bcgov-bootstrap-theme-1.1.1.tgz",
