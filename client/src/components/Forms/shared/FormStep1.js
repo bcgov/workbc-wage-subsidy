@@ -18,7 +18,92 @@ class FormStep1 extends Component {
             )
         }
        return null;
-
+    }
+    get workAddressForm(){
+        if(this.props.otherWorkAddress){
+            return(<div>
+                <div className="form-group">
+                    <br /><h2 id="forms">Work Place Information (If different from Section 1)</h2><br/>
+                    <p>Complete a separate page for each work place</p>
+                </div>
+                <div className="form-group">
+                    <label className="col-form-label control-label" htmlFor="address">Work Address <span
+                        style={{ color: "red" }}>*  </span></label>
+                    <small className="text-muted" id="address">  123 Main St.</small>
+                    <Field className="form-control" id="address" name="address" />
+                </div>
+                <div className="form-row">
+                    <div className="form-group col-md-4">
+                        <label className="col-form-label control-label" htmlFor="city">City / Town <span
+                            style={{ color: "red" }}>*</span></label>
+                        <Field className="form-control" id="city" name="city" />
+                    </div>
+                    <div className="form-group col-md-4">
+                        <label className="col-form-label control-label" htmlFor="Province">Province <span
+                            style={{ color: "red" }}>*</span></label>
+                        <Field
+                            as="select"
+                            className="form-control" 
+                            id="Province" 
+                            name="Province" 
+                        >
+                            <option value="">Please select</option>
+                            <option value="AB">Alberta</option>
+                            <option value="BC">British Columbia</option>
+                            <option value="MB">Manitoba</option>
+                            <option value="NB">New Brunswick</option>
+                            <option value="NL">Newfoundland and Labrador</option>
+                            <option value="NT">Northwest Territories</option>
+                            <option value="NS">Nova Scotia</option>
+                            <option value="NU">Nunavut</option>
+                            <option value="ON">Ontario</option>
+                            <option value="PE">Prince Edward Island</option>
+                            <option value="QC">Quebec</option>
+                            <option value="SK">Saskatchewan</option>
+                            <option value="YT">Yukon</option>
+                        </Field>
+                    </div>
+                    <div className="form-group col-md-4">
+                        <label className="col-form-label control-label" htmlFor="postal">Postal Code <span
+                            style={{ color: "red" }}>*  </span></label>
+                        <small className="text-muted" id="postal">  V0R2V5</small>
+                        <Field className="form-control" id="postal" name="postal" />
+                    </div>
+                </div>
+                <div className="form-row">
+                    <div className="form-group col-md -8">
+                            <label className="col-form-label control-label" htmlFor="legalName">Contact Name <span
+                                style={{ color: "red" }}>*</span></label>
+                            <Field className="form-control" id="legalName" name="legalName"/>
+                    </div>
+                    <div className="form-group col-md-4">
+                        <label className="col-form-label control-label" htmlFor="businessNumber">CRA Business Number <span
+                            style={{ color: "red" }}>*</span></label>
+                        <Field className="form-control" id="businessNumber" name="businessNumber" />
+                    </div>
+                </div>
+                <div className="form-row">
+                    <div className="form-group col-md-4">
+                            <label className="col-form-label control-label" htmlFor="phone">Telephone <span
+                                style={{ color: "red" }}>*</span></label>
+                            <small className="text-muted" id="phone">  250-555-5555</small>
+                            <Field className="form-control" id="phone" name="phone" />
+                    </div>
+                    <div className="form-group col-md-4">
+                            <label className="col-form-label control-label" htmlFor="fax">Fax</label>
+                            <small className="text-muted" id="Fax"> 1-250-555-5555</small>
+                            <Field className="form-control" id="Fax" name="Fax" />
+                    </div>
+                    <div className="form-group col-md-4">
+                        <label className="col-form-label control-label" htmlFor="email">Email Address <span
+                            style={{ color: "red" }}>*</span></label>
+                        <small className="text-muted" id="email">  someone@example.com</small>
+                        <Field className="form-control" id="email" name="email" />
+                    </div>
+                </div>
+            </div>)
+        }
+        return null;
     }
     render() {
         if (this.props.currentStep !== 1) {
@@ -37,7 +122,7 @@ class FormStep1 extends Component {
                         <Field className="form-control" id="operatingName" name="operatingName" />
                     </div>
                     <div className="form-group col-md-4">
-                        <label className="col-form-label control-label" htmlFor="businessNumber">CRA Business Number<span
+                        <label className="col-form-label control-label" htmlFor="businessNumber">CRA Business Number <span
                             style={{ color: "red" }}>*</span></label>
                         <Field className="form-control" id="businessNumber" name="businessNumber" />
                     </div>
@@ -90,18 +175,18 @@ class FormStep1 extends Component {
                 </div>
                 <div className="form-row">
                     <div className="form-group col-md-4">
-                            <label className="col-form-label control-label" htmlFor="phone">Phone Number<span
+                            <label className="col-form-label control-label" htmlFor="phone">Phone Number <span
                                 style={{ color: "red" }}>*</span></label>
                             <small className="text-muted" id="phone">  250-555-5555</small>
                             <Field className="form-control" id="phone" name="phone" />
                     </div>
                     <div className="form-group col-md-4">
-                            <label className="col-form-label control-label" htmlFor="fax">Fax</label>
+                            <label className="col-form-label control-label" htmlFor="fax">Fax </label>
                             <small className="text-muted" id="Fax"> 1-250-555-5555</small>
                             <Field className="form-control" id="Fax" name="Fax" />
                         </div>
                     <div className="form-group col-md-4">
-                        <label className="col-form-label control-label" htmlFor="email">Email Address<span
+                        <label className="col-form-label control-label" htmlFor="email">Email Address <span
                                 style={{ color: "red" }}>*</span></label>
                         <small className="text-muted" id="email">  someone@example.com</small>
                         <Field className="form-control" id="email" name="email" />
@@ -139,6 +224,8 @@ class FormStep1 extends Component {
                             <label className="form-check-label" htmlFor="SectorTypePublic">Public</label>
                         </div>
                     </div>
+                </div>
+                <div className="form-row">
                     <div className="form-group col-md-6">
                         <label className="col-form-label control-label" htmlFor="TypeOfIndustry">Type of Industry <span
                             style={{ color: "red" }}>*</span></label>
@@ -159,7 +246,7 @@ class FormStep1 extends Component {
                 </div>
                 <div className="form-row">
                     <div className="form-group col-md-6" id="OrganizationSize">
-                        <label className="col-form-label control-label" htmlFor="OrganizationSize">Size of Organization(number of employees)<span
+                        <label className="col-form-label control-label" htmlFor="OrganizationSize">Size of Organization(number of employees) <span
                         style={{ color: "red" }}>*</span></label>
                         <div className="form-check">
                             <Field
@@ -191,7 +278,7 @@ class FormStep1 extends Component {
                     </div>
                 </div>
                 <div className="form-group">
-                    <label className="col-form-label control-label" htmlFor="employeeDisplacement">Will the subsidy result in the displacement of existing employees or volunteers?<span
+                    <label className="col-form-label control-label" htmlFor="employeeDisplacement">Will the subsidy result in the displacement of existing employees or volunteers? <span
                         style={{ color: "red" }}>*</span> </label>
                     <div className="form-check">
                         <Field
@@ -213,7 +300,7 @@ class FormStep1 extends Component {
                     </div>
                 </div>
                 <div className="form-group">
-                    <label className="col-form-label control-label" htmlFor="LabourDispute">Is there a labour stoppage or labour - management dispute in progress?<span
+                    <label className="col-form-label control-label" htmlFor="LabourDispute">Is there a labour stoppage or labour - management dispute in progress? <span
                         style={{ color: "red" }}>*</span></label>
                     <div className="form-check">
                         <Field
@@ -235,7 +322,7 @@ class FormStep1 extends Component {
                     </div>
                 </div>
                 <div className="form-group">
-                    <label className="col-form-label control-label" htmlFor="UnionConcurrence">Is there Union concurrence?<span
+                    <label className="col-form-label control-label" htmlFor="UnionConcurrence">Is there Union concurrence? <span
                         style={{ color: "red" }}>*</span></label>
                     <div className="form-check">
                         <Field
@@ -266,7 +353,7 @@ class FormStep1 extends Component {
                     </div>
                 </div>
                 <div className="form-group">
-                    <label className="col-form-label control-label" htmlFor="LiabilityCoverage">Does your organization have 3rd Party liability coverage?<span
+                    <label className="col-form-label control-label" htmlFor="LiabilityCoverage">Does your organization have 3rd Party liability coverage? <span
                         style={{ color: "red" }}>*</span></label>
                     <div className="form-check">
                         <Field
@@ -289,7 +376,7 @@ class FormStep1 extends Component {
                 </div>
                 
                 <div className="form-group">
-                    <label className="col-form-label control-label" htmlFor="WSBCCoverage">Do you have WorkSafe BC coverage?<span
+                    <label className="col-form-label control-label" htmlFor="WSBCCoverage">Do you have WorkSafe BC coverage? <span
                         style={{ color: "red" }}>*</span></label>
                     <div className="form-check">
                         <Field
@@ -311,6 +398,18 @@ class FormStep1 extends Component {
                     </div>
                 </div>
                 {this.WorkSafeCoverage}
+                <div className="form-group">
+                    <div className="form-check">
+                        <Field type="checkbox" className="form-check-input" id="otherWorkAddress" name="otherWorkAddress"/>
+                        <label 
+                            className="form-check-label" 
+                            htmlFor="otherWorkAddress"
+                        >
+                        My organization's Workplace address is different than the organization's Business address.
+                        </label>
+                    </div>
+                </div>
+                {this.workAddressForm}
             </div>
         )
     }
