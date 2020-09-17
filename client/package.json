@@ -19,7 +19,7 @@
   },
   "devDependencies": {
     "@bcgov/bootstrap-theme": "https://github.com/bcgov/bootstrap-theme/releases/download/v1.1.1/bcgov-bootstrap-theme-1.1.1.tgz",
-    "bootstrap": "~4.3.1",
+    "bootstrap": "^4.3.1",
     "progress-tracker": "^2.0.6"
   },
   "scripts": {
