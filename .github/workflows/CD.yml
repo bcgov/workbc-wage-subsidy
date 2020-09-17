@@ -29,4 +29,4 @@ jobs:
           # Oc command to be executed
           cmd: |
             'version'
-            'start-build workbc-small-grants -n ${{secrets.PROJECT_TOOLS}} --follow'
+            'start-build workbc-wage-subsidy -n ${{secrets.PROJECT_TOOLS}} --follow'
