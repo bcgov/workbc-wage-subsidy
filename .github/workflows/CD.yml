@@ -1,0 +1,32 @@
+# This is a basic workflow that will start a build with every push
+
+name: CD
+
+# Controls when the action will run. Triggers the workflow on push or pull request
+# events but only for the master branch
+on:
+  push:
+    branches: [ master ]
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      - name: OpenShift Action
+        uses: redhat-developer/openshift-actions@v2.1.0
+        with:
+          # Choose the oc version you want to use to execute the command. It can be a version or an url where to download oc cli desired. If left blank latest oc cli will be used.
+          version: latest
+          # The URL of the Openshift cluster
+          openshift_server_url: ${{secrets.OPENSHIFT_SERVER_URL}}
+          # JSON with values to connect to the Openshift cluster
+          parameters: '{"apitoken": "${{ secrets.API_TOKEN }}", "acceptUntrustedCerts": "true"}'
+          # Oc command to be executed
+          cmd: |
+            'version'
+            'start-build workbc-small-grants -n ${{secrets.PROJECT_TOOLS}} --follow'
