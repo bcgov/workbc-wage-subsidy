@@ -68,6 +68,20 @@ class FormStep2 extends Component {
                     <Field className="form-control" id="wage" name="wage" />
                 </div>
             </div>
+            <div className="form-row">
+                <div className="form-group col-md-12">
+                    <label className="col-form-label control-label" htmlFor="duties">Description of duties:<span
+                            style={{ color: "red" }}>*</span></label>
+                    <Field className="form-control" id="duties" name="duties" />
+                </div>
+            </div>
+            <div className="form-row">
+                <div className="form-group col-md-12">
+                    <label className="col-form-label control-label" htmlFor="skills">Skills and experience normally required for this position:<span
+                            style={{ color: "red" }}>*</span></label>
+                    <Field className="form-control" id="skills" name="skills" />
+                </div>
+            </div>
         </div>
         )
     }
