@@ -3,6 +3,40 @@ import {Field} from 'formik'
 
 class FormStep1 extends Component {
 
+    get WageSubsidyEmployees() {
+        let subsidy = this.props.wageSubsidy;
+        if (subsidy === "yes") {
+            return (
+                <div className="form-row">
+                    <div className="form-group col-md-6">
+                        <label className="col-form-label control-label" htmlFor="employeesClaimed">How Many Employees is WorkBC currently Subsidizing?<span
+                            style={{ color: "red" }}>*</span></label>
+                        <Field
+                            as="select"
+                            className="form-control" 
+                            id="EmployeesClaimed" 
+                            name="claims" 
+                        >
+                            <option value="">0</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                            <option value="6">6</option>
+                            <option value="7">7</option>
+                            <option value="8">8</option>
+                            <option value="9">9</option>
+                            <option value="10">10</option>
+                        </Field>
+                    </div>
+                    <p>Note: an employer may have a maximum of 5 active wage subsidy agreements at one time and a maximum of 10 wage subsidy agreements per year</p>
+                </div>
+
+            )
+        }
+       return null;
+    }
     get WorkSafeCoverage() {
         let Coverage = this.props.WSBCCoverage;
         if (Coverage === "yes") {
@@ -374,7 +408,30 @@ class FormStep1 extends Component {
                         <label className="form-check-label" htmlFor="LiabilityCoverage">No</label>
                     </div>
                 </div>
-                
+                <div className="form-group">
+                    <label className="col-form-label control-label" htmlFor="wageSubsidy">Is your organization currently receiving funding under a WorkBC Wage Subsidy agreement? <span
+                        style={{ color: "red" }}>*</span> </label>
+                    <div className="form-check">
+                        <Field
+                            className="form-check-input"
+                            type="radio"
+                            name="wageSubsidy"
+                            value="yes"
+                        />
+                        <label className="form-check-label" htmlFor="wageSubsidy">Yes</label>
+                    </div>
+                    <div className="form-check">
+                        <Field
+                            className="form-check-input"
+                            type="radio"
+                            name="wageSubsidy"
+                            value="no"
+                        />
+                        <label className="form-check-label" htmlFor="wageSubsidy">No</label>
+                    </div>
+                </div>
+                {this.WageSubsidyEmployees}
+
                 <div className="form-group">
                     <label className="col-form-label control-label" htmlFor="WSBCCoverage">Do you have WorkSafe BC coverage? <span
                         style={{ color: "red" }}>*</span></label>
@@ -398,6 +455,18 @@ class FormStep1 extends Component {
                     </div>
                 </div>
                 {this.WorkSafeCoverage}
+                <div className="form-group">
+                    <div className="form-check">
+                        <Field type="checkbox" className="form-check-input" id="eligibility" name="eligibility"/>
+                        <label 
+                            className="form-check-label" 
+                            htmlFor="eligibility"
+                        >
+                        Please confirm you have reviewed the employer eligibility criteria and meet the eligibility requirements. 
+                        <span style={{ color: "red" }}>*</span>
+                        </label>
+                    </div>
+                </div>
                 <div className="form-group">
                     <div className="form-check">
                         <Field type="checkbox" className="form-check-input" id="otherWorkAddress" name="otherWorkAddress"/>
