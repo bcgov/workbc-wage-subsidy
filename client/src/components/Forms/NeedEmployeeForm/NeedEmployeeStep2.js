@@ -120,7 +120,6 @@ class NeedEmployeeStep2 extends Component {
                             <option value="No">No</option>
                         </Field>
                 </div>   
-                {this.NewPosition}
             </div> 
             )
         }
@@ -164,7 +163,9 @@ class NeedEmployeeStep2 extends Component {
                         {/*<small>{this.props.workExperience.length}/700</small>*/}
                     </div>
                 </div> 
+                { /*
                 <div className="form-row">
+
                 <div className="form-group col-md-4">
                         <label className="col-form-label control-label" htmlFor="AddPosition"> Would you Like to add another position to this form? <span
                             style={{ color: "red" }}>*</span></label>
@@ -180,7 +181,8 @@ class NeedEmployeeStep2 extends Component {
                         </Field>
                     </div>          
                 </div>
-                {this.NewPosition}
+                */
+                }
             </div>
         )
     }
