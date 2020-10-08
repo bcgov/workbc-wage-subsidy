@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import {Field} from 'formik'
-import DatePicker from "react-datepicker"
+import { DatePickerField } from '../shared/DatePickerField'
 import "react-datepicker/dist/react-datepicker.css";
 
 
@@ -52,10 +52,10 @@ class FormStep2 extends Component {
                 <div className="form-group col-md-4">
                     <label className="col-form-label control-label" htmlFor="StartDate">Anticipated Start Date<span
                             style={{ color: "red" }}>*</span></label>
-                        <DatePicker 
-                                    selected={this.state.startDate}
-                                    onChange={this.handleStartChange}
-                                    />
+                        <DatePickerField 
+                            name="StartDate"
+                            className="form-control"
+                        />
                 </div>
                 <div className="form-group col-md-4">
                     <label className="col-form-label control-label" htmlFor="hours">Hours of Work Per Week<span
@@ -72,16 +72,17 @@ class FormStep2 extends Component {
                 <div className="form-group col-md-12">
                     <label className="col-form-label control-label" htmlFor="duties">Description of duties:<span
                             style={{ color: "red" }}>*</span></label>
-                    <Field className="form-control" id="duties" name="duties" />
+                    <Field 
+                        as="textarea"
+                        rows="4"
+                        maxLength="700"
+                        className="form-control" 
+                        id="duties" 
+                        name="duties" 
+                    />
                 </div>
             </div>
-            <div className="form-row">
-                <div className="form-group col-md-12">
-                    <label className="col-form-label control-label" htmlFor="skills">Skills and experience normally required for this position:<span
-                            style={{ color: "red" }}>*</span></label>
-                    <Field className="form-control" id="skills" name="skills" />
-                </div>
-            </div>
+
         </div>
         )
     }

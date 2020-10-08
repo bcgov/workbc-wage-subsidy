@@ -57,7 +57,7 @@ class FormStep1 extends Component {
         if(this.props.otherWorkAddress){
             return(<div>
                 <div className="form-group">
-                    <br /><h2 id="forms">Work Place Information (If different from Section 1)</h2><br/>
+                    <br /><h2 id="forms">Work Place Information (If different from address above)</h2><br/>
                     <p>Complete a separate page for each work place</p>
                 </div>
                 <div className="form-group">
@@ -310,6 +310,41 @@ class FormStep1 extends Component {
                             <label className="form-check-label"  htmlFor="OrganizationSize">500+</label>
                         </div>
                     </div>
+                </div>
+                <div className="form-group">
+                    <label className="col-form-label control-label" htmlFor="cewsParticipation">Are you actively participating in the Canada Emergency Wage Subsidy program? <span
+                        style={{ color: "red" }}>*</span> </label>
+                    <div className="form-check">
+                        <Field
+                            className="form-check-input"
+                            type="radio"
+                            name="cewsParticipation"
+                            value="yes"
+                        />
+                        <label className="form-check-label" htmlFor="cewsParticipation">Yes</label>
+                    </div>
+                    <div className="form-check">
+                        <Field
+                            className="form-check-input"
+                            type="radio"
+                            name="cewsParticipation"
+                            value="no"
+                        />
+                        <label className="form-check-label" htmlFor="cewsParticipation">No</label>
+                    </div>
+                    <div className="form-check">
+                        <Field
+                            className="form-check-input"
+                            type="radio"
+                            name="cewsParticipation"
+                            value="notSure"
+                        />
+                        <label className="form-check-label" htmlFor="cewsParticipation">Not Sure</label>
+                    </div>
+                    {
+                            this.props.cewsParticipation === "yes" &&
+                            <small className="text-danger">An employee may only be subsidized by WorkBC if that employee is not subsidized under CEWS. Employees subsidized by CEWS are not eligible for WorkBC Wage Subsidy.</small>
+                    }
                 </div>
                 <div className="form-group">
                     <label className="col-form-label control-label" htmlFor="employeeDisplacement">Will the subsidy result in the displacement of existing employees or volunteers? <span
