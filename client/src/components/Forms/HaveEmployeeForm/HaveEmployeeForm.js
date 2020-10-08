@@ -7,7 +7,7 @@ import {nanoid} from 'nanoid'
 
 import FormStep1 from '../shared/FormStep1'
 import FormStep2 from '../shared/FormStep2'
-import FormStep3 from './FormStep3'
+import FormStep3 from '../shared/FormStep3'
 import ProgressTracker from '../shared/ProgressTracker'
 
 class HaveEmployeeForm extends Component {
