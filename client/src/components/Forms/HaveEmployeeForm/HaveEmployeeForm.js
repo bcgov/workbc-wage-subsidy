@@ -96,20 +96,19 @@ class HaveEmployeeForm extends Component {
                             }}
                         
                         >
-                            {({values}) => (
+                            {props => (
                                 <Form>
-                                    {console.log(values)}
                                     <FormStep1 
                                         currentStep={this.state.currentStep}
-                                        {...values}
+                                        {...props}
                                     />
                                     <FormStep2
                                         currentStep={this.state.currentStep}
-                                        {...values}
+                                        {...props}
                                     />
                                     <FormStep3
                                         currentStep={this.state.currentStep}
-                                        {...values}
+                                        {...props}
                                     />
                                     {this.previousButton}
                                     {this.nextButton}

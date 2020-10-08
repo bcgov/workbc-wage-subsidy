@@ -4,7 +4,7 @@ import {Field} from 'formik'
 class FormStep1 extends Component {
 
     get WageSubsidyEmployees() {
-        let subsidy = this.props.wageSubsidy;
+        let subsidy = this.props.values.wageSubsidy;
         if (subsidy === "yes") {
             return (
                 <div className="form-row">
@@ -38,7 +38,7 @@ class FormStep1 extends Component {
        return null;
     }
     get WorkSafeCoverage() {
-        let Coverage = this.props.WSBCCoverage;
+        let Coverage = this.props.values.WSBCCoverage;
         if (Coverage === "yes") {
             return (
                 <div className="form-row">
@@ -54,11 +54,11 @@ class FormStep1 extends Component {
        return null;
     }
     get workAddressForm(){
-        if(this.props.otherWorkAddress){
+        if(this.props.values.otherWorkAddress){
             return(<div>
                 <div className="form-group">
-                    <br /><h2 id="forms">Work Place Information (If different from address above)</h2><br/>
-                    <p>Complete a separate page for each work place</p>
+                    <br /><h2 id="forms">Work Place Information (If different from address above)</h2>
+                    <p>Please complete a separate application for each work place</p>
                 </div>
                 <div className="form-group">
                     <label className="col-form-label control-label" htmlFor="address">Work Address <span
@@ -102,37 +102,6 @@ class FormStep1 extends Component {
                             style={{ color: "red" }}>*  </span></label>
                         <small className="text-muted" id="postal">  V0R2V5</small>
                         <Field className="form-control" id="postal" name="postal" />
-                    </div>
-                </div>
-                <div className="form-row">
-                    <div className="form-group col-md -8">
-                            <label className="col-form-label control-label" htmlFor="legalName">Contact Name <span
-                                style={{ color: "red" }}>*</span></label>
-                            <Field className="form-control" id="legalName" name="legalName"/>
-                    </div>
-                    <div className="form-group col-md-4">
-                        <label className="col-form-label control-label" htmlFor="businessNumber">CRA Business Number <span
-                            style={{ color: "red" }}>*</span></label>
-                        <Field className="form-control" id="businessNumber" name="businessNumber" />
-                    </div>
-                </div>
-                <div className="form-row">
-                    <div className="form-group col-md-4">
-                            <label className="col-form-label control-label" htmlFor="phone">Telephone <span
-                                style={{ color: "red" }}>*</span></label>
-                            <small className="text-muted" id="phone">  250-555-5555</small>
-                            <Field className="form-control" id="phone" name="phone" />
-                    </div>
-                    <div className="form-group col-md-4">
-                            <label className="col-form-label control-label" htmlFor="fax">Fax</label>
-                            <small className="text-muted" id="Fax"> 1-250-555-5555</small>
-                            <Field className="form-control" id="Fax" name="Fax" />
-                    </div>
-                    <div className="form-group col-md-4">
-                        <label className="col-form-label control-label" htmlFor="email">Email Address <span
-                            style={{ color: "red" }}>*</span></label>
-                        <small className="text-muted" id="email">  someone@example.com</small>
-                        <Field className="form-control" id="email" name="email" />
                     </div>
                 </div>
             </div>)
@@ -226,6 +195,18 @@ class FormStep1 extends Component {
                         <Field className="form-control" id="email" name="email" />
                     </div>
                 </div>
+                <div className="form-group">
+                    <div className="form-check">
+                        <Field type="checkbox" className="form-check-input" id="otherWorkAddress" name="otherWorkAddress"/>
+                        <label 
+                            className="form-check-label" 
+                            htmlFor="otherWorkAddress"
+                        >
+                        My organization's Workplace address is different than the organization's Business address.
+                        </label>
+                    </div>
+                </div>
+                {this.workAddressForm}
                 <div className="form-row">
                     <div className="form-group col-md-6" id="SectorType">
                         <label className="col-form-label control-label" htmlFor="SectorType">Type of Sector: <span
@@ -494,26 +475,14 @@ class FormStep1 extends Component {
                     <div className="form-check">
                         <Field type="checkbox" className="form-check-input" id="eligibility" name="eligibility"/>
                         <label 
-                            className="form-check-label" 
+                            className="form-check-label control-label" 
                             htmlFor="eligibility"
                         >
-                        Please confirm you have reviewed the employer eligibility criteria and meet the eligibility requirements. 
-                        <span style={{ color: "red" }}>*</span>
+                        <span style={{ color: "red" }}>*</span> I confirm that I have reviewed the employer eligibility criteria and meet the eligibility requirements. 
                         </label>
                     </div>
                 </div>
-                <div className="form-group">
-                    <div className="form-check">
-                        <Field type="checkbox" className="form-check-input" id="otherWorkAddress" name="otherWorkAddress"/>
-                        <label 
-                            className="form-check-label" 
-                            htmlFor="otherWorkAddress"
-                        >
-                        My organization's Workplace address is different than the organization's Business address.
-                        </label>
-                    </div>
-                </div>
-                {this.workAddressForm}
+
             </div>
         )
     }
