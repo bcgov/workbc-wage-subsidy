@@ -31,6 +31,13 @@ class ProgressTracker extends Component {
                         Job Information
                     </div>
                 </li>
+                <li className={classNameStep3}>
+                    <div className="progress-marker"></div>
+                    <div className="progress-text">
+                        <h4 className="progress-title">Step 3</h4>
+                        Declaration and Signature
+                    </div>
+                </li>
             </ul>
         )
     }

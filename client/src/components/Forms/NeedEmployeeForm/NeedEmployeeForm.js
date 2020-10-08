@@ -7,7 +7,8 @@ import {nanoid} from 'nanoid'
 
 import FormStep1 from '../shared/FormStep1'
 import FormStep2 from '../shared/FormStep2'
-import FormStep3 from './FormStep3'
+import FormStep3 from '../shared/FormStep3'
+import NeedEmployeeStep2 from './NeedEmployeeStep2'
 import ProgressTracker from '../shared/ProgressTracker'
 
 class NeedEmployeeForm extends Component {
@@ -82,10 +83,18 @@ class NeedEmployeeForm extends Component {
                             initialValues= {{
                                             _id: this.state._id,
                                             //step 1
-
+                                            operatingName: "",
                                             //step 2
-
+                                            NumberOfPositions: "0",
+                                            NumberOfPositions1: "0",
+                                            NumberOfPositions2: "0",
+                                            NumberOfPositions3: "0",
+                                            AddPosition:"",
+                                            AddPosition1:"",
+                                            AddPosition2:"",
+                                            AddPosition3:"",
                                             //step 3
+                                            
     
 
 
@@ -96,20 +105,24 @@ class NeedEmployeeForm extends Component {
                             }}
                         
                         >
-                            {({values}) => (
+                            {props => (
                                 <Form>
-                                    {console.log(values)}
+                                    {console.log(props)}
                                     <FormStep1 
                                         currentStep={this.state.currentStep}
-                                        {...values}
+                                        {...props}
                                     />
                                     <FormStep2
                                         currentStep={this.state.currentStep}
-                                        {...values}
+                                        {...props}
+                                    />
+                                    <NeedEmployeeStep2
+                                        currentStep={this.state.currentStep}
+                                        {...props}
                                     />
                                     <FormStep3
                                         currentStep={this.state.currentStep}
-                                        {...values}
+                                        {...props}
                                     />
                                     {this.previousButton}
                                     {this.nextButton}
