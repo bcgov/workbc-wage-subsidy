@@ -1,8 +1,13 @@
 @import "~@bcgov/bootstrap-theme/dist/scss/bootstrap-theme";
 @import "node_modules/progress-tracker/src/styles/progress-tracker.scss";
+@import "~react-datepicker/dist/react-datepicker.css";
 
 #root {
     display: flex;
     flex-flow: column nowrap;
     min-height: 100vh;
+}
+
+.react-datepicker-wrapper {
+    display: block;
 }
