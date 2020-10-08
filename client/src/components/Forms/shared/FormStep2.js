@@ -1,7 +1,6 @@
 import React, {Component} from 'react'
 import {Field} from 'formik'
 import { DatePickerField } from '../shared/DatePickerField'
-import "react-datepicker/dist/react-datepicker.css";
 
 
 class FormStep2 extends Component {

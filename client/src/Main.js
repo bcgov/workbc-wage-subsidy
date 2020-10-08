@@ -4,8 +4,7 @@ import Home from './Home'
 import HaveEmployeeForm from './components/Forms/HaveEmployeeForm/HaveEmployeeForm'
 import NeedEmployeeForm from './components/Forms/NeedEmployeeForm/NeedEmployeeForm'
 import Thankyou from './Thankyou'
-import DatePicker from "react-datepicker"
-import "react-datepicker/dist/react-datepicker.css";
+
 
 
 function Main() {
