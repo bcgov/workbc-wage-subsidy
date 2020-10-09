@@ -143,6 +143,7 @@ class HaveEmployeeForm extends Component {
                                     duties2:"",
                                     duties3:"",
                                     duties4:"",
+                                    //step 3
     
 
 
@@ -153,7 +154,7 @@ class HaveEmployeeForm extends Component {
                             }}
                         
                         >
-                            {({props}) => (
+                            {props => (
                                 <Form>
                                     {console.log(props)}
                                     <FormStep1 

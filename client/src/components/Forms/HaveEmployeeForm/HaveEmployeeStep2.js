@@ -80,8 +80,7 @@ class HaveEmployeeStep2 extends Component {
                                     <div className="form-group col-md-8">
                                         <label className="col-form-label control-label" htmlFor={operatingName}>Organization Name <span
                                             style={{ color: "red" }}>*</span></label>
-                                        <Field className="operatingName form-control" id={operatingName} name={operatingName} data-id={Entry} onChange={e =>
-                                            this.props.handleChange(e)}  />
+                                        <Field className="operatingName form-control" id={operatingName} name={operatingName} data-id={Entry}  />
                                         
                                     </div>
                                     <div className="form-group col-md-4">
@@ -93,8 +92,6 @@ class HaveEmployeeStep2 extends Component {
                                             id={numberOfPositions} 
                                             name={numberOfPositions}
                                             data-id={Entry}
-                                            onChange={e =>
-                                                this.props.handleChange(e)} 
                                             >
                                             <option value="0">Please select</option>
                                             <option value="1">1</option>
@@ -119,14 +116,12 @@ class HaveEmployeeStep2 extends Component {
                                     <div className="form-group col-md-4">
                                         <label className="col-form-label control-label" htmlFor={hours}>Hours of Work Per Week<span
                                                 style={{ color: "red" }}>*</span></label>
-                                        <Field className="hours form-control" id={hours} name={hours} data-id={Entry}  onChange={e =>
-                                                this.props.handleChange(e)}  />
+                                        <Field className="hours form-control" id={hours} name={hours} data-id={Entry}  />
                                     </div>
                                     <div className="form-group col-md-4">
                                         <label className="col-form-label control-label" htmlFor={wage}>Hourly Wage<span
                                                 style={{ color: "red" }}>*</span></label>
-                                        <Field className="wage form-control" id={wage} name={wage} data-id={Entry}  onChange={e =>
-                                                this.props.handleChange(e)}  />
+                                        <Field className="wage form-control" id={wage} name={wage} data-id={Entry}  />
                                     </div>
                             </div>
                                 <div className="form-row">
@@ -141,8 +136,6 @@ class HaveEmployeeStep2 extends Component {
                                         id={duties} 
                                         name={duties} 
                                         data-id={Entry}  
-                                        onChange={e =>
-                                            this.props.handleChange(e)} 
                                         />
                                     </div>
                                 </div>
