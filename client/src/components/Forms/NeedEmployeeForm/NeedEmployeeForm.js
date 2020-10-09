@@ -86,13 +86,17 @@ class NeedEmployeeForm extends Component {
                                             operatingName: "",
                                             //step 2
                                             NumberOfPositions: "0",
+                                            NumberOfPositions0: "0",
                                             NumberOfPositions1: "0",
                                             NumberOfPositions2: "0",
-                                            NumberOfPositions3: "0",
                                             AddPosition:"",
+                                            AddPosition0:"",
                                             AddPosition1:"",
                                             AddPosition2:"",
-                                            AddPosition3:"",
+                                            startDate0:"",
+                                            startDate1:"",
+                                            startDate2:"",
+                                            startDate3:"",
                                             //step 3
                                             
     

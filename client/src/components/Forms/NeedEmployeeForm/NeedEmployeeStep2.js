@@ -2,138 +2,8 @@ import React, { Component } from 'react'
 import { Field } from 'formik'
 import { DatePickerField } from '../shared/DatePickerField'
 
-window.$count = 0;
-window.$number = 0;
-
-class NeedEmployeeStep2 extends Component {
-    
-    state={
-        startDate: new Date(),
-        endDate: new Date()
-    };
-    handleStartChange = date => {
-        this.setState({
-            startDate: date
-        });
-    };
-    get NewPosition() {
-        let Entry = window.$count;
-        let check = this.props.values.AddPosition
-        if(Entry === 1){
-            check = this.props.values.AddPosition1
-        }
-        if(Entry === 2){
-            check = this.props.values.AddPosition2
-        }
-        if(Entry === 3){
-            check = this.props.values.AddPosition3
-        }
-        let NumPositions = parseInt(this.props.values.NumberOfPositions) +parseInt(this.props.values.NumberOfPositions1) +parseInt(this.props.values.NumberOfPositions2)+parseInt(this.props.values.NumberOfPositions3);
-        let lastNumPosition = window.$number;
-
-        console.log("checking "+ NumPositions);
-        console.log("entry "+ Entry);
-        console.log("checking "+ check);
-        if (NumPositions < 5 && check === "Yes" && (NumPositions > lastNumPosition)) {
-            Entry = Entry + 1;
-            window.$count = Entry;
-            window.$number = NumPositions;
-
-            return (
-            <div>
-                    <div className="form-row">
-                    <div className="form-group col-md-8">
-                        <label className="col-form-label control-label" htmlFor={`operatingName${Entry}`}>Organization Name <span
-                            style={{ color: "red" }}>*</span></label>
-                        <Field className="form-control" id={`operatingName${Entry}`} name={`operatingName${Entry}`} />
-                    </div>
-                    <div className="form-group col-md-4">
-                        <label className="col-form-label control-label" htmlFor={`NumberOfPositions${Entry}`}> Number of Available Positions <span
-                            style={{ color: "red" }}>*</span></label>
-                        <Field
-                            as="select"
-                            className="form-control" 
-                            id={`NumberOfPositions${Entry}`} 
-                            name={`NumberOfPositions${Entry}`}
-                            >
-                            <option value="0">Please select</option>
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                            <option value="4">4</option>
-                            <option value="5">5</option>
-                        </Field>
-                    </div>
-                </div>
-                <div className="form-row">
-                    <div className="form-group col-md-4">
-                        <label className="col-form-label control-label" htmlFor="StartDate">Anticipated Start Date<span
-                                style={{ color: "red" }}>*</span></label>
-                            <DatePickerField 
-                                name="StartDate"
-                                className="form-control"
-                            />
-                    </div>
-                    <div className="form-group col-md-4">
-                        <label className="col-form-label control-label" htmlFor={`hours${Entry}`}>Hours of Work Per Week<span
-                                style={{ color: "red" }}>*</span></label>
-                        <Field className="form-control" id={`hours${Entry}`} name={`hours${Entry}`} />
-                    </div>
-                    <div className="form-group col-md-4">
-                        <label className="col-form-label control-label" htmlFor={`wage${Entry}`}>Hourly Wage<span
-                                style={{ color: "red" }}>*</span></label>
-                        <Field className="form-control" id={`wage${Entry}`} name={`wage${Entry}`} />
-                    </div>
-            </div>
-                <div className="form-row">
-                    <div className="form-group col-md-12">
-                        <label className="col-form-label control-label" htmlFor={`duties${Entry}`}>Description of duties:<span
-                                style={{ color: "red" }}>*</span></label>
-                        <Field className="form-control" id={`duties${Entry}`} name={`duties${Entry}`} />
-                    </div>
-                </div>
-                <div className="form-row">
-                    <div className="form-group col-md-12">
-                        <label className="col-form-label control-label" htmlFor={`skills${Entry}`}>Skills and experience normally required for this position:<span
-                                style={{ color: "red" }}>*</span></label>
-                        <Field className="form-control" id={`skills${Entry}`} name={`skills${Entry}`} />
-                    </div>
-                </div>
-                <div className="form-row">
-                    <div className="form-group col-md-12">
-                        <label className="col-form-label control-label" htmlFor={`workExperience${Entry}`}>What work experience, training, supervision, etc., will the employee receive during the Wage Subsidy Placement?<span
-                                style={{ color: "red" }}>*</span></label>
-                        <Field className="form-control" id={`workExperience${Entry}`} name={`workExperience${Entry}`} />
-                    </div>
-                </div>
-                <div className="form-group col-md-4">
-                        <label className="col-form-label control-label" htmlFor={`AddPosition${Entry}`}> Would you Like to add another position to this form? <span
-                            style={{ color: "red" }}>*</span></label>
-                        <Field
-                            as="select"
-                            className="form-control" 
-                            id={`AddPosition${Entry}`}
-                            name={`AddPosition${Entry}`}
-                            >
-                            <option value="">Please select</option>
-                            <option value="Yes">Yes</option>
-                            <option value="No">No</option>
-                        </Field>
-                </div>   
-            </div> 
-            )
-        }
-        return null;
-    }
-
-    render() {
-        if (this.props.currentStep !== 2) {
-            return null
-        }
-        //Else return step 2
-        return (
-            <div>
-                <div className="form-row">
+/*
+<div className="form-row">
                     <div className="form-group col-md-12">
                         <label className="col-form-label control-label" htmlFor="skills">Skills and experience normally required for this position:<span
                             style={{ color: "red" }}>*</span></label>
@@ -141,47 +11,186 @@ class NeedEmployeeStep2 extends Component {
                             as="textarea"
                             rows="4"
                             maxLength="700"
-                            className="form-control"
+                            className="skills form-control"
                             id="skills"
                             name="skills"
+                            value={skills}
                         />
-                        {/*<small>{this.props.skills.length}/700</small>*/}
-                    </div>
-                </div>
-                <div className="form-row">
-                    <div className="form-group col-md-12">
-                        <label className="col-form-label control-label" htmlFor="workExperience">What work experience, training, supervision, etc., will the employee receive during the Wage Subsidy Placement?<span
-                            style={{ color: "red" }}>*</span></label>
-                        <Field
-                            as="textarea"
-                            rows="4"
-                            maxLength="700"
-                            className="form-control"
-                            id="workExperience"
-                            name="workExperience"
-                        />
-                        {/*<small>{this.props.workExperience.length}/700</small>*/}
-                    </div>
-                </div> 
-                { /*
-                <div className="form-row">
+                        {/*<small>{this.props.skills.length}/700</small>}
+                        </div>
+                        </div>
+                        <div className="form-row">
+                            <div className="form-group col-md-12">
+                                <label className="col-form-label control-label" htmlFor="workExperience">What work experience, training, supervision, etc., will the employee receive during the Wage Subsidy Placement?<span
+                                    style={{ color: "red" }}>*</span></label>
+                                <Field
+                                    as="textarea"
+                                    rows="4"
+                                    maxLength="700"
+                                    className="workExperience form-control"
+                                    id="workExperience"
+                                    name="workExperience"
+                                    value={workExperience}
+                                />
+                                {/*<small>{this.props.workExperience.length}/700</small>}
+                            </div>
+                        </div> 
+*/
+class NeedEmployeeStep2 extends Component {
+    
+    state={
+        positions:[{operatingName:"", numberOfPositions:"", startDate:"",hours:"",wage:"",duties:"",skills:"",workExperience:""}],
 
-                <div className="form-group col-md-4">
-                        <label className="col-form-label control-label" htmlFor="AddPosition"> Would you Like to add another position to this form? <span
-                            style={{ color: "red" }}>*</span></label>
-                        <Field
-                            as="select"
-                            className="form-control" 
-                            id="AddPosition" 
-                            name="AddPosition"
-                            >
-                            <option value="">Please select</option>
-                            <option value="Yes">Yes</option>
-                            <option value="No">No</option>
-                        </Field>
+    };
+    handleStartChange = date => {
+        console.log(date)
+        this.setState({
+            startDate: date
+        });
+    };
+    handleChange = (e) => {
+        console.log("arrived");
+
+        if (["operatingName", "numberOfPositions", "startDate", "hours", "wage", "duties", "skills", "workExperience"].includes(e.target.className.split(" ")[0])) {
+          let positions = [...this.state.positions]
+          positions[e.target.dataset.id][e.target.className.split(" ")[0]] = e.target.value
+          this.setState({ positions }, () => console.log(this.state.positions))
+        } else {
+          this.setState({ [e.target.name]: e.target.value.toUpperCase() })
+        }
+      }
+    addPosition = (e) => {
+        console.log("calls add positions!")
+        this.setState((prevState)=> ({
+            positions: [...prevState.positions, {operatingName:"", numberOfPositions:"", startDate:"",hours:"",wage:"",duties:"",skills:"",workExperience:""}]
+
+    }));
+    }
+    handleSubmit = (e) => { e.preventDefault() }
+    render() {
+        let { positions} = this.state
+        if (this.props.currentStep !== 2) {
+            return null
+        }
+    //Else return step 2
+        return (
+            <div>
+                <div className="form-row">
+                    <div className="form-group col-md-4">
+                      <button  type="button" onClick={this.addPosition}>Add Another Position Title</button>
                     </div>          
                 </div>
-                */
+                {
+                    positions.map((val,Entry)=>{
+                        let operatingName=`operatingName${Entry}`, numberOfPositions=`numberOfPositions${Entry}`, startDate=`startDate${Entry}`, hours=`hours${Entry}`, wage=`wage${Entry}`, duties=`duties${Entry}`,skills=`skills${Entry}`,workExperience=`workExperience${Entry}`
+                    
+                        return(
+                            <div key={Entry}>
+                                 <div className="form-row">
+                                    <div className="form-group col-md-8">
+                                        <label className="col-form-label control-label" htmlFor={operatingName}>Organization Name <span
+                                            style={{ color: "red" }}>*</span></label>
+                                        <Field className="operatingName form-control" id={operatingName} name={operatingName} data-id={Entry}  value={positions[Entry].operatingName} onChange={this.handleChange} />
+                                    </div>
+                                    <div className="form-group col-md-4">
+                                        <label className="col-form-label control-label" htmlFor={numberOfPositions}> Number of Available Positions <span
+                                            style={{ color: "red" }}>*</span></label>
+                                        <Field
+                                            as="select"
+                                            className="numberOfPositions form-control" 
+                                            id={numberOfPositions} 
+                                            name={numberOfPositions}
+                                            data-id={Entry}
+                                            value={positions[Entry].numberOfPositions}
+                                            onChange={this.handleChange}
+                                            >
+                                            <option value="0">Please select</option>
+                                            <option value="1">1</option>
+                                            <option value="2">2</option>
+                                            <option value="3">3</option>
+                                            <option value="4">4</option>
+                                            <option value="5">5</option>
+                                        </Field>
+                                    </div>
+                                </div>
+                                <div className="form-row">
+                                    <div className="form-group col-md-4">
+                                        <label className="col-form-label control-label" htmlFor={startDate}>Anticipated Start Date<span
+                                                style={{ color: "red" }}>*</span></label>
+                                            <DatePickerField 
+                                                id={startDate}
+                                                name={startDate}
+                                                data-id={Entry}
+                                                value={positions[Entry].startDate}
+                                                className="startDate form-control"
+                                                onChange={this.handleStartChange}
+                                            />
+                                    </div>
+                                    <div className="form-group col-md-4">
+                                        <label className="col-form-label control-label" htmlFor={hours}>Hours of Work Per Week<span
+                                                style={{ color: "red" }}>*</span></label>
+                                        <Field className="hours form-control" id={hours} name={hours} data-id={Entry}  value={positions[Entry].hours} onChange={this.handleChange} />
+                                    </div>
+                                    <div className="form-group col-md-4">
+                                        <label className="col-form-label control-label" htmlFor={wage}>Hourly Wage<span
+                                                style={{ color: "red" }}>*</span></label>
+                                        <Field className="wage form-control" id={wage} name={wage} data-id={Entry}  value={positions[Entry].wage} onChange={this.handleChange} />
+                                    </div>
+                            </div>
+                                <div className="form-row">
+                                    <div className="form-group col-md-12">
+                                        <label className="col-form-label control-label" htmlFor={duties}>Description of duties:<span
+                                                style={{ color: "red" }}>*</span></label>
+                                        <Field 
+                                        as="textarea"
+                                        rows="4"
+                                        maxLength="700"
+                                        className="duties form-control"
+                                        id={duties} 
+                                        name={duties} 
+                                        data-id={Entry}  
+                                        value={positions[Entry].duties}
+                                        onChange={this.handleChange}
+                                        />
+                                    </div>
+                                </div>
+                                <div className="form-row">
+                                    <div className="form-group col-md-12">
+                                        <label className="col-form-label control-label" htmlFor={skills}>Skills and experience normally required for this position:<span
+                                                style={{ color: "red" }}>*</span></label>
+                                        <Field 
+                                        as="textarea"
+                                        rows="4"
+                                        maxLength="700"
+                                        className="skills form-control"
+                                        id={skills} 
+                                        name={skills} 
+                                        data-id={Entry}  
+                                        value={positions[Entry].skills}
+                                        onChange={this.handleChange}
+                                        />
+                                    </div>
+                                </div>
+                                <div className="form-row">
+                                    <div className="form-group col-md-12">
+                                        <label className="col-form-label control-label" htmlFor={workExperience}>What work experience, training, supervision, etc., will the employee receive during the Wage Subsidy Placement?<span
+                                                style={{ color: "red" }}>*</span></label>
+                                        <Field 
+                                        as="textarea"
+                                        rows="4"
+                                        maxLength="700"
+                                        className="workExperience form-control"
+                                        id={workExperience} 
+                                        name={workExperience} 
+                                        data-id={Entry}  
+                                        value={positions[Entry].workExperience}
+                                        onChange={this.handleChange}
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+                        )
+                    })
                 }
             </div>
         )
