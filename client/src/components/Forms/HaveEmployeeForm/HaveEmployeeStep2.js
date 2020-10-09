@@ -3,10 +3,10 @@ import { Field } from 'formik'
 import { DatePickerField } from '../shared/DatePickerField'
 
 window.$buttonStatus = false;
-class NeedEmployeeStep2 extends Component {
+class HaveEmployeeStep2 extends Component {
     
     state={
-        positions:[{operatingName:"", numberOfPositions:"", startDate:"",hours:"",wage:"",duties:"",skills:"",workExperience:""}],
+        positions:[{operatingName:"", numberOfPositions:"", startDate:"",hours:"",wage:"",duties:""}],
 
     };
     handleStartChange = (e) => {
@@ -20,7 +20,7 @@ class NeedEmployeeStep2 extends Component {
     handleChange = (e) => {
         console.log("arrived");
 
-        if (["operatingName", "numberOfPositions", "startDate", "hours", "wage", "duties", "skills", "workExperience"].includes(e.target.className.split(" ")[0])) {
+        if (["operatingName", "numberOfPositions", "startDate", "hours", "wage", "duties"].includes(e.target.className.split(" ")[0])) {
           let positions = [...this.state.positions]
           positions[e.target.dataset.id][e.target.className.split(" ")[0]] = e.target.value
           this.setState({ positions }, () => console.log(this.state.positions))
@@ -46,7 +46,7 @@ class NeedEmployeeStep2 extends Component {
     }
     addPosition = (e) => {
         this.setState((prevState)=> ({
-            positions: [...prevState.positions, {operatingName:"", numberOfPositions:"", startDate:"",hours:"",wage:"",duties:"",skills:"",workExperience:""}]
+            positions: [...prevState.positions, {operatingName:"", numberOfPositions:"", startDate:"",hours:"",wage:"",duties:""}]
 
     }));
     }
@@ -69,7 +69,7 @@ class NeedEmployeeStep2 extends Component {
                     {this.positionCheck}          
                 {
                     positions.map((val,Entry)=>{
-                        let operatingName=`operatingName${Entry}`, numberOfPositions=`numberOfPositions${Entry}`, startDate=`startDate${Entry}`, hours=`hours${Entry}`, wage=`wage${Entry}`, duties=`duties${Entry}`,skills=`skills${Entry}`,workExperience=`workExperience${Entry}`
+                        let operatingName=`operatingName${Entry}`, numberOfPositions=`numberOfPositions${Entry}`, startDate=`startDate${Entry}`, hours=`hours${Entry}`, wage=`wage${Entry}`, duties=`duties${Entry}`
                     
                         return(
                           
@@ -146,40 +146,6 @@ class NeedEmployeeStep2 extends Component {
                                         />
                                     </div>
                                 </div>
-                                <div className="form-row">
-                                    <div className="form-group col-md-12">
-                                        <label className="col-form-label control-label" htmlFor={skills}>Skills and experience normally required for this position:<span
-                                                style={{ color: "red" }}>*</span></label>
-                                        <Field 
-                                        as="textarea"
-                                        rows="4"
-                                        maxLength="700"
-                                        className="skills form-control"
-                                        id={skills} 
-                                        name={skills} 
-                                        data-id={Entry}  
-                                        onChange={e =>
-                                            this.props.handleChange(e)} 
-                                        />
-                                    </div>
-                                </div>
-                                <div className="form-row">
-                                    <div className="form-group col-md-12">
-                                        <label className="col-form-label control-label" htmlFor={workExperience}>What work experience, training, supervision, etc., will the employee receive during the Wage Subsidy Placement?<span
-                                                style={{ color: "red" }}>*</span></label>
-                                        <Field 
-                                        as="textarea"
-                                        rows="4"
-                                        maxLength="700"
-                                        className="workExperience form-control"
-                                        id={workExperience} 
-                                        name={workExperience} 
-                                        data-id={Entry}  
-                                        onChange={e =>
-                                            this.props.handleChange(e)} 
-                                        />
-                                    </div>
-                                </div><br />
                             </div>
                         )
                     })
@@ -189,4 +155,4 @@ class NeedEmployeeStep2 extends Component {
         )
     }
 }
-export default NeedEmployeeStep2
+export default HaveEmployeeStep2
