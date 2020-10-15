@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { Field } from 'formik'
 import { DatePickerField } from '../shared/DatePickerField'
+import { NumPositionsInvalid } from '../shared/ValidationMessages'
 
 window.$buttonStatus = false;
 class HaveEmployeeStep2 extends Component {
@@ -10,15 +11,11 @@ class HaveEmployeeStep2 extends Component {
 
     };
     handleStartChange = (e) => {
-        console.log(e)
-        console.log(e.className)
         this.setState({
             startDate: e
         });
-        console.log(this.props.values);
     };
     handleChange = (e) => {
-        console.log("arrived");
 
         if (["operatingName", "numberOfPositions", "startDate", "hours", "wage", "duties"].includes(e.target.className.split(" ")[0])) {
           let positions = [...this.state.positions]
@@ -33,18 +30,17 @@ class HaveEmployeeStep2 extends Component {
        console.log(check)
        if(check >= 5){
             window.$buttonStatus = true;
-            console.log("disable button");
             if(check > 5){
                 console.log("error message");
             }
         }
         else{
             window.$buttonStatus = false;
-            console.log("enable button");
         }
         return null;
     }
     addPosition = (e) => {
+        window.$buttonStatus = true;
         this.setState((prevState)=> ({
             positions: [...prevState.positions, {operatingName:"", numberOfPositions:"", startDate:"",hours:"",wage:"",duties:""}]
 
@@ -100,6 +96,7 @@ class HaveEmployeeStep2 extends Component {
                                             <option value="4">4</option>
                                             <option value="5">5</option>
                                         </Field>
+                                        {NumPositionsInvalid(this.props.values)}
                                     </div>
                                 </div>
                                 <div className="form-row">
