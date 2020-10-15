@@ -170,7 +170,7 @@ class ClaimForm extends Component {
                                             </thead>
                                             <tbody>
                                                 <tr>
-                                                    <td><Field className="form-control" id="dateFrom1" name="dateFrom1" /></td>
+                                                    <td><DatePickerField  className="form-control" id="dateFrom1" name="dateFrom1" /></td>
                                                     <td><Field className="form-control" id="dateFrom1" name="hoursWorked1" /></td>
                                                     <td><Field className="form-control" id="dateFrom1" name="hourlyWage1" /></td>
                                                     <td><Field className="form-control" id="dateFrom1" name="total1" /></td>
