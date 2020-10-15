@@ -176,25 +176,25 @@ class ClaimForm extends Component {
                                                     <td><Field className="form-control" id="dateFrom1" name="total1" /></td>
                                                 </tr>
                                                 <tr>
-                                                    <td><Field className="form-control" id="dateFrom2" name="dateFrom2" /></td>
+                                                    <td><DatePickerField className="form-control" id="dateFrom2" name="dateFrom2" /></td>
                                                     <td><Field className="form-control" id="dateFrom2" name="hoursWorked2" /></td>
                                                     <td><Field className="form-control" id="dateFrom2" name="hourlyWage2" /></td>
                                                     <td><Field className="form-control" id="dateFrom2" name="total2" /></td>
                                                 </tr>
                                                 <tr>
-                                                    <td><Field className="form-control" id="dateFrom3" name="dateFrom3" /></td>
+                                                    <td><DatePickerField className="form-control" id="dateFrom3" name="dateFrom3" /></td>
                                                     <td><Field className="form-control" id="dateFrom3" name="hoursWorked3" /></td>
                                                     <td><Field className="form-control" id="dateFrom3" name="hourlyWage3" /></td>
                                                     <td><Field className="form-control" id="dateFrom3" name="total3" /></td>
                                                 </tr>
                                                 <tr>
-                                                    <td><Field className="form-control" id="dateFrom4" name="dateFrom4" /></td>
+                                                    <td><DatePickerField className="form-control" id="dateFrom4" name="dateFrom4" /></td>
                                                     <td><Field className="form-control" id="dateFrom4" name="hoursWorked4" /></td>
                                                     <td><Field className="form-control" id="dateFrom4" name="hourlyWage4" /></td>
                                                     <td><Field className="form-control" id="dateFrom4" name="total4" /></td>
                                                 </tr>
                                                 <tr>
-                                                    <td><Field className="form-control" id="dateFrom4" name="dateFrom4" /></td>
+                                                    <td><DatePickerField className="form-control" id="dateFrom4" name="dateFrom4" /></td>
                                                     <td><Field className="form-control" id="dateFrom4" name="hoursWorked4" /></td>
                                                     <td><Field className="form-control" id="dateFrom4" name="hourlyWage4" /></td>
                                                     <td><Field className="form-control" id="dateFrom4" name="total4" /></td>
