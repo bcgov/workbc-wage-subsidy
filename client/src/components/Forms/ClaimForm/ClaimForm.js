@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { withRouter } from 'react-router-dom'
-import { Formik, Form, Field, yupToFormErrors } from 'formik'
+import { Formik, Form, Field, yupToFormErrors, useFormik } from 'formik'
 import { feedBackClassName, feedBackInvalid } from '../shared/ValidationMessages'
 import { DatePickerField } from '../shared/DatePickerField'
 import * as Yup from 'yup'
@@ -10,7 +10,6 @@ class ClaimForm extends Component {
         super()
     }
 
-    // temp logic in the getters until dynamic fields are done
     totalHoursWorked(values) {
         return Number(values.hoursWorked1) + Number(values.hoursWorked2) + Number(values.hoursWorked3) + Number(values.hoursWorked4) + Number(values.hoursWorked5);
     }
@@ -63,17 +62,17 @@ class ClaimForm extends Component {
                                 hoursWorkedTotal1: 0,
                                 hourlyWageTotal1: 0,
                                 totalTotal1: '',
-                                
+
                             }}
                             validationSchema={Yup.object({
                                 employerAddress1: Yup.string().required('Required').max(255, 'Address too long, please use address line 2'),
                                 employerAddress2: Yup.string().max(255, 'Address too long'),
                                 employerCity: Yup.string().required('Required').max(100, 'City name too long'),
-                                employerPostal: Yup.string().required('Required').matches(/^[A-Za-z]\d[A-Za-z][ -]?\d[A-Za-z]\d$/,"Please enter a valid Postal Code")
+                                employerPostal: Yup.string().required('Required').matches(/^[A-Za-z]\d[A-Za-z][ -]?\d[A-Za-z]\d$/, "Please enter a valid Postal Code")
                             })}
 
                         >
-                            {({ values, errors, touched }) => (
+                            {({ values, errors, touched, setFieldValue }) => (
                                 <Form>
                                     <div className="form-group">
                                         <h2 id="forms">Wage Subsidy Claim Form</h2>
@@ -146,7 +145,7 @@ class ClaimForm extends Component {
                                         </div>
                                         <div className="form-group">
                                             <label className="col-form-label control-label" htmlFor="employerAddress1">Address 1 <span
-                                                    style={{ color: "red" }}>*</span></label>
+                                                style={{ color: "red" }}>*</span></label>
                                             <small className="text-muted" id="employerAddress1">  Street address, P.O. box, company name, c/o</small>
                                             <Field className={`form-control ${feedBackClassName(errors, touched, "employerAddress1")}`} id="employerAddress1" name="employerAddress1" />
                                             {feedBackInvalid(errors, touched, "employerAddress1")}
@@ -198,39 +197,44 @@ class ClaimForm extends Component {
                                             </thead>
                                             <tbody>
                                                 <tr>
-                                                    <td><DatePickerField  className="form-control" id="dateFrom1" name="dateFrom1" /></td>
-                                                    <td><Field className="form-control" id="dateFrom1" name="hoursWorked1" /></td>
-                                                    <td><Field className="form-control" id="dateFrom1" name="hourlyWage1" /></td>
-                                                    <td><Field className="form-control" id="dateFrom1" name="total1" 
-                                                    value={values.hoursWorked1 * values.hourlyWage1} disabled /></td>
+                                                    <td><DatePickerField className="form-control" id="dateFrom1" name="dateFrom1" /></td>
+                                                    <td><Field className="form-control" id="dateFrom1" name="hoursWorked1"
+                                                        onBlur={() => { setFieldValue('total1', values.hoursWorked1 * values.hourlyWage1) }} /></td>
+                                                    <td><Field className="form-control" id="dateFrom1" name="hourlyWage1"
+                                                        onBlur={() => { setFieldValue('total1', values.hoursWorked1 * values.hourlyWage1) }} /></td>
+                                                    <td><Field className="form-control" id="dateFrom1" name="total1" disabled /></td>
                                                 </tr>
                                                 <tr>
                                                     <td><DatePickerField className="form-control" id="dateFrom2" name="dateFrom2" /></td>
-                                                    <td><Field className="form-control" id="dateFrom2" name="hoursWorked2" /></td>
-                                                    <td><Field className="form-control" id="dateFrom2" name="hourlyWage2" /></td>
-                                                    <td><Field className="form-control" id="dateFrom2" name="total2" 
-                                                        value={values.hoursWorked2 * values.hourlyWage2} disabled/></td>
+                                                    <td><Field className="form-control" id="dateFrom2" name="hoursWorked2"
+                                                        onBlur={() => { setFieldValue('total2', values.hoursWorked2 * values.hourlyWage2) }} /></td>
+                                                    <td><Field className="form-control" id="dateFrom2" name="hourlyWage2"
+                                                        onBlur={() => { setFieldValue('total2', values.hoursWorked2 * values.hourlyWage2) }} /></td>
+                                                    <td><Field className="form-control" id="dateFrom2" name="total2" disabled /></td>
                                                 </tr>
                                                 <tr>
                                                     <td><DatePickerField className="form-control" id="dateFrom3" name="dateFrom3" /></td>
-                                                    <td><Field className="form-control" id="dateFrom3" name="hoursWorked3" /></td>
-                                                    <td><Field className="form-control" id="dateFrom3" name="hourlyWage3" /></td>
-                                                    <td><Field className="form-control" id="dateFrom3" name="total3" 
-                                                        value={values.hoursWorked3 * values.hourlyWage3} disabled/></td>
+                                                    <td><Field className="form-control" id="dateFrom3" name="hoursWorked3"
+                                                        onBlur={() => { setFieldValue('total3', values.hoursWorked3 * values.hourlyWage3) }} /></td>
+                                                    <td><Field className="form-control" id="dateFrom3" name="hourlyWage3"
+                                                        onBlur={() => { setFieldValue('total3', values.hoursWorked3 * values.hourlyWage3) }} /></td>
+                                                    <td><Field className="form-control" id="dateFrom3" name="total3" disabled /></td>
                                                 </tr>
                                                 <tr>
                                                     <td><DatePickerField className="form-control" id="dateFrom4" name="dateFrom4" /></td>
-                                                    <td><Field className="form-control" id="dateFrom4" name="hoursWorked4" /></td>
-                                                    <td><Field className="form-control" id="dateFrom4" name="hourlyWage4" /></td>
-                                                    <td><Field className="form-control" id="dateFrom4" name="total4" 
-                                                        value={values.hoursWorked4 * values.hourlyWage4} disabled/></td>
+                                                    <td><Field className="form-control" id="dateFrom4" name="hoursWorked4"
+                                                        onBlur={() => { setFieldValue('total4', values.hoursWorked4 * values.hourlyWage4) }} /></td>
+                                                    <td><Field className="form-control" id="dateFrom4" name="hourlyWage4"
+                                                        onBlur={() => { setFieldValue('total4', values.hoursWorked4 * values.hourlyWage4) }} /></td>
+                                                    <td><Field className="form-control" id="dateFrom4" name="total4" disabled /></td>
                                                 </tr>
                                                 <tr>
                                                     <td><DatePickerField className="form-control" id="dateFrom5" name="dateFrom5" /></td>
-                                                    <td><Field className="form-control" id="dateFrom5" name="hoursWorked5" /></td>
-                                                    <td><Field className="form-control" id="dateFrom5" name="hourlyWage5" /></td>
-                                                    <td><Field className="form-control" id="dateFrom5" name="total5" 
-                                                    value={values.hoursWorked5 * values.hourlyWage5} disabled/></td>
+                                                    <td><Field className="form-control" id="dateFrom5" name="hoursWorked5"
+                                                        onBlur={() => { setFieldValue('total5', values.hoursWorked5 * values.hourlyWage5) }} /></td>
+                                                    <td><Field className="form-control" id="dateFrom5" name="hourlyWage5"
+                                                        onBlur={() => { setFieldValue('total5', values.hoursWorked5 * values.hourlyWage5) }} /></td>
+                                                    <td><Field className="form-control" id="dateFrom5" name="total5" disabled /></td>
                                                 </tr>
                                                 <tr>
                                                     <td colspan="4" style={{ verticalAlign: "middle", textAlign: "center" }}>
@@ -239,12 +243,12 @@ class ClaimForm extends Component {
                                                 </tr>
                                                 <tr>
                                                     <td style={{ verticalAlign: "middle" }}><b>Total</b></td>
-                                                    <td><Field className="form-control" id="hoursWorkedTotal1" name="hoursWorkedTotal1" 
-                                                    value={this.totalHoursWorked(values)} disabled/></td>
-                                                    <td><Field className="form-control" id="hourlyWageTotal1" name="hourlyWageTotal1" 
-                                                    value={this.totalHourlyWage(values)} disabled/></td>
-                                                    <td><Field className="form-control" id="totalTotal1" name="totalTotal1" 
-                                                    value={this.totalTotals(values)} disabled/></td> {/* This isn't updating */}
+                                                    <td><Field className="form-control" id="hoursWorkedTotal1" name="hoursWorkedTotal1"
+                                                        value={this.totalHoursWorked(values)} disabled /></td>
+                                                    <td><Field className="form-control" id="hourlyWageTotal1" name="hourlyWageTotal1"
+                                                        value={this.totalHourlyWage(values)} disabled /></td>
+                                                    <td><Field className="form-control" id="totalTotal1" name="totalTotal1"
+                                                        value={this.totalTotals(values)} disabled /></td>
                                                 </tr>
                                             </tbody>
                                         </table>
