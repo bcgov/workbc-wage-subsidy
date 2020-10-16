@@ -7,6 +7,8 @@ var { check, validationResult, matchedData } = require('express-validator')
 var nodemailer = require("nodemailer");
 var csrf = require('csurf');
 var csrfProtection = csrf({ cookie: true });
+var spauth = require('node-sp-auth')
+var request = require('request-promise')
 
 
 var generateHTMLEmail = require('../utils/htmlEmail')
@@ -21,7 +23,12 @@ var confirmationBCC = process.env.CONFIRMATIONBCC || process.env.OPENSHIFT_NODEJ
 var listEmail = process.env.LISTEMAIL || process.env.OPENSHIFT_NODEJS_LISTEMAIL || "";
 var notifyEmail = process.env.NOTIFYEMAIL || process.env.OPENSHIFT_NODEJS_NOTIFYEMAIL || "";
 var clientURL = process.env.CLIENTURL || process.env.OPENSHIFT_NODEJS_CLIENTURL || ""
-
+var listWebURL = process.env.LISTWEBURL || process.env.OPENSHIFT_NODEJS_LISTWEBURL || ""
+var listUser = process.env.LISTUSER || process.env.OPENSHIFT_NODEJS_LISTUSER || ""
+var listPass = process.env.LISTPASS || process.env.OPENSHIFT_NODEJS_LISTPASS || ""
+var listDomain = process.env.LISTDOMAIN || process.env.OPENSHIFT_NODEJS_LISTDOMAIN || ""
+var listParty = process.env.LISTPARTY || process.env.OPENSHIFT_NODEJS_LISTPARTY || ""
+var listADFS = process.env.LISTADFS || process.env.OPENSHIFT_NODEJS_LISTADFS || ""
 
 
 async function sendEmails(values) {
@@ -112,7 +119,78 @@ async function sendEmails(values) {
   }
 }
 
+function saveList() {
+  spauth.getAuth(listWebURL, {
+    username: listUser,
+    password: listPass,
+    domain: listDomain,
+    relyingParty: listParty,
+    adfsUrl: listADFS
+  })
+    .then(data => {
+      try {
+        console.log(data)
+        console.log(data.options)
+        var headers = data.headers;
+        headers['Accept'] = 'application/json;odata=verbose';
+        console.log(headers)
+        var l = listWebURL + "Apps/WageSubsidy/_api/web/lists/getByTitle('Catchment01')/items"
+        console.log(l)
+        request.post({
+          url: listWebURL + 'Apps/WageSubsidy/_api/contextInfo',
+          headers: headers,
+          json: true,
+          /*
+          data: {
+            "__metadata": { "type": "SP.List" },
+            "Title": "newItemTitle"
+          }
+          */
+        }).then(response => {
+          console.log(response.d)
+          var digest = response.d.GetContextWebInformation.FormDigestValue
+          console.log(digest)
+          headers['X-RequestDigest'] = digest
+          headers['Content-Type']="application/json;odata=verbose"
+          console.log(headers)
+          request.post({
+            url: l,
+            headers: headers,
+            json: true,
+            data:{
+              "__metadata": {
+                "type": ""
+              },
+              "Title": "Test"
+            }
+          })
+            .then(response => {
+              //console.log(response)
+            })
+            .catch(err => {
+              console.log(err)
+              console.log("Create error")
+              console.log(err.statusCode)
+            })
+        }).catch(err => {
+          console.log("Digest err")
+          //console.log(err)
+          console.log(err.statusCode)
+        })
+      } catch (e) {
+        console.log(e)
+      }
+    })
+}
+
 router.get('/', csrfProtection, (req, res) => {
+  saveList()
+  console.log(process.env.listWebURL)
+  console.log(process.env.listUser)
+  console.log(process.env.listPass)
+  console.log(process.env.listDomain)
+  console.log(process.env.listParty)
+  console.log(process.env.listADFS)
   var token = req.csrfToken()
   res.cookie('XSRF-TOKEN', token)
   res.send({
@@ -123,8 +201,10 @@ router.get('/', csrfProtection, (req, res) => {
 
 router.post('/', csrfProtection, async (req, res) => {
   //clean the body
+  console.log(req.body)
   clean(req.body);
   //console.log(req.body)
+  /*
   MainFormValidationSchema.validate(req.body, { abortEarly: false })
     .then(async function (value) {
       try {
@@ -157,6 +237,7 @@ router.post('/', csrfProtection, async (req, res) => {
       })
       return
     })
+  */
 })
 
 module.exports = router;
