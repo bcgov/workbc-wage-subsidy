@@ -8,6 +8,7 @@ import {nanoid} from 'nanoid'
 import FormStep1 from '../shared/FormStep1'
 import FormStep2 from '../shared/FormStep2'
 import FormStep3 from '../shared/FormStep3'
+import HaveEmployeeStep2 from './HaveEmployeeStep2'
 import ProgressTracker from '../shared/ProgressTracker'
 
 class HaveEmployeeForm extends Component {
@@ -80,12 +81,71 @@ class HaveEmployeeForm extends Component {
                         <ProgressTracker currentStep={this.state.currentStep}/>
                         <Formik
                             initialValues= {{
-                                            _id: this.state._id,
-                                            //step 1
-
-                                            //step 2
-
-                                            //step 3
+                                    _id: this.state._id,
+                                    //step 1
+                                    operatingName:"",
+                                    businessNumber:"",
+                                    address:"",
+                                    city:"",
+                                    province:"",
+                                    postal:"",
+                                    phone:"",
+                                    fax:"",
+                                    email:"",
+                                    otherWorkAddress: false,
+                                    sectorType:"",
+                                    typeOfIndustry:"",
+                                    organizationSize:"",
+                                    cewsParticipation:"",
+                                    employeeDisplacement:"",
+                                    labourDispute:"",
+                                    unionConcurrence:"",
+                                    liabilityCoverage:"",
+                                    wageSubsidy:"",
+                                    WSBCCoverage:"",
+                                    eligibility: false,
+                                    //step 1:pop-up fields
+                                    employeesClaimed:"",
+                                    WSBCNumber:"",
+                                    address_alt:"",
+                                    city_alt:"",
+                                    province_alt:"",
+                                    postal_alt:"",
+                                    //step 2
+                                    operatingName0: "",
+                                    operatingName1: "",
+                                    operatingName2: "",
+                                    operatingName3: "",
+                                    operatingName4: "",
+                                    numberOfPositions0: "0",
+                                    numberOfPositions1: "0",
+                                    numberOfPositions2: "0",
+                                    numberOfPositions3: "0",
+                                    numberOfPositions4: "0",
+                                    startDate0:"",
+                                    startDate1:"",
+                                    startDate2:"",
+                                    startDate3:"",
+                                    startDate4:"",
+                                    hours0:"",
+                                    hours1:"",
+                                    hours2:"",
+                                    hours3:"",
+                                    hours4:"",
+                                    wage0:"",
+                                    wage1:"",
+                                    wage2:"",
+                                    wage3:"",
+                                    wage4:"",
+                                    duties0:"",
+                                    duties1:"",
+                                    duties2:"",
+                                    duties3:"",
+                                    duties4:"",
+                                    //step 3
+                                    signatoryTitle:"",
+                                    signatory1:"",
+                                    organizationConsent:""
     
 
 
@@ -98,6 +158,7 @@ class HaveEmployeeForm extends Component {
                         >
                             {props => (
                                 <Form>
+                                    {console.log(props)}
                                     <FormStep1 
                                         currentStep={this.state.currentStep}
                                         {...props}
@@ -106,7 +167,11 @@ class HaveEmployeeForm extends Component {
                                         currentStep={this.state.currentStep}
                                         {...props}
                                     />
-                                    <FormStep3
+                                    <HaveEmployeeStep2
+                                        currentStep={this.state.currentStep}
+                                        {...props}
+                                    />
+                                     <FormStep3
                                         currentStep={this.state.currentStep}
                                         {...props}
                                     />
