@@ -252,7 +252,7 @@ class ClaimForm extends Component {
                                                     <td><Field className="form-control" id="hourlyWageTotal1" name="hourlyWageTotal1" 
                                                     value={this.totalHourlyWage(values)} disabled/></td>
                                                     <td><Field className="form-control" id="totalTotal1" name="totalTotal1" 
-                                                    value={this.totalTotals(values)} disabled/></td>
+                                                    value={this.totalTotals(values)} disabled/></td> {/* This isn't updating */}
                                                 </tr>
                                             </tbody>
                                         </table>
