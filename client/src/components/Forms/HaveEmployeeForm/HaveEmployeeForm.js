@@ -10,16 +10,39 @@ import FormStep2 from '../shared/FormStep2'
 import FormStep3 from '../shared/FormStep3'
 import HaveEmployeeStep2 from './HaveEmployeeStep2'
 import ProgressTracker from '../shared/ProgressTracker'
+import { FORM_URL } from '../../../constants/form'
 
 class HaveEmployeeForm extends Component {
     constructor(){
         super()
         this.state={
+            _csrf: '',
             currentStep: 1,
             _id: nanoid(10)
         }
         this._next = this._next.bind(this)
         this._prev = this._prev.bind(this)
+    }
+
+    componentDidMount() {
+        fetch(FORM_URL.mainForm, {
+            credentials: "include"
+        })
+            .then(res => res.json())
+            .then(
+                (result) => {
+                    console.log(result.csrfToken)
+                    this.setState({
+                        _csrf: result.csrfToken,
+                    })
+                },
+                (error) => {
+                    console.log(error)
+                    this.setState({
+                        hasError: true
+                    })
+                }
+            )
     }
 
     handleSubmit = (event) => {
