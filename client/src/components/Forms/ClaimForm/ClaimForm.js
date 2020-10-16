@@ -27,6 +27,8 @@ class ClaimForm extends Component {
                                 employerCity: '',
                                 employerPostal: '',
                                 clientIssues1: '',
+                                hoursWorked1: null,
+                                hourlyWage1: null,
                             }}
 
                         >
@@ -173,7 +175,8 @@ class ClaimForm extends Component {
                                                     <td><DatePickerField  className="form-control" id="dateFrom1" name="dateFrom1" /></td>
                                                     <td><Field className="form-control" id="dateFrom1" name="hoursWorked1" /></td>
                                                     <td><Field className="form-control" id="dateFrom1" name="hourlyWage1" /></td>
-                                                    <td><Field className="form-control" id="dateFrom1" name="total1" /></td>
+                                                    <td><Field className="form-control" id="dateFrom1" name="total1" 
+                                                    value={values.hoursWorked1 * values.hourlyWage1} disabled /></td>
                                                 </tr>
                                                 <tr>
                                                     <td><DatePickerField className="form-control" id="dateFrom2" name="dateFrom2" /></td>
@@ -194,10 +197,10 @@ class ClaimForm extends Component {
                                                     <td><Field className="form-control" id="dateFrom4" name="total4" /></td>
                                                 </tr>
                                                 <tr>
-                                                    <td><DatePickerField className="form-control" id="dateFrom4" name="dateFrom4" /></td>
-                                                    <td><Field className="form-control" id="dateFrom4" name="hoursWorked4" /></td>
-                                                    <td><Field className="form-control" id="dateFrom4" name="hourlyWage4" /></td>
-                                                    <td><Field className="form-control" id="dateFrom4" name="total4" /></td>
+                                                    <td><DatePickerField className="form-control" id="dateFrom5" name="dateFrom5" /></td>
+                                                    <td><Field className="form-control" id="dateFrom5" name="hoursWorked5" /></td>
+                                                    <td><Field className="form-control" id="dateFrom5" name="hourlyWage5" /></td>
+                                                    <td><Field className="form-control" id="dateFrom5" name="total5" /></td>
                                                 </tr>
                                                 <tr>
                                                     <td colspan="4" style={{ verticalAlign: "middle", textAlign: "center" }}>
