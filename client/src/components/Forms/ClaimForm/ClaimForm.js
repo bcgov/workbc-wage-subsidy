@@ -9,6 +9,19 @@ class ClaimForm extends Component {
         super()
     }
 
+    // temp logic in the getters until dynamic fields are done
+    totalHoursWorked(values) {
+        return Number(values.hoursWorked1) + Number(values.hoursWorked2) + Number(values.hoursWorked3) + Number(values.hoursWorked4) + Number(values.hoursWorked5);
+    }
+
+    totalHourlyWage(values) {
+        return Number(values.hourlyWage1) + Number(values.hourlyWage2) + Number(values.hourlyWage3) + Number(values.hourlyWage4) + Number(values.hourlyWage5);
+    }
+
+    totalTotals(values) {
+        return Number(values.total1) + Number(values.total2) + Number(values.total3) + Number(values.total4) + Number(values.total5);
+    }
+
     render() {
         return (
             <div className="container">
@@ -27,8 +40,29 @@ class ClaimForm extends Component {
                                 employerCity: '',
                                 employerPostal: '',
                                 clientIssues1: '',
-                                hoursWorked1: null,
-                                hourlyWage1: null,
+                                hoursWorked1: '',
+                                hourlyWage1: '',
+                                total1: 0,
+                                clientIssues2: '',
+                                hoursWorked2: '',
+                                hourlyWage2: '',
+                                total2: 0,
+                                clientIssues3: '',
+                                hoursWorked3: '',
+                                hourlyWage3: '',
+                                total3: 0,
+                                clientIssues4: '',
+                                hoursWorked4: '',
+                                hourlyWage4: '',
+                                total4: 0,
+                                clientIssues5: '',
+                                hoursWorked5: '',
+                                hourlyWage5: '',
+                                total5: 0,
+                                hoursWorkedTotal1: 0,
+                                hourlyWageTotal1: 0,
+                                totalTotal1: '',
+                                
                             }}
 
                         >
@@ -182,25 +216,29 @@ class ClaimForm extends Component {
                                                     <td><DatePickerField className="form-control" id="dateFrom2" name="dateFrom2" /></td>
                                                     <td><Field className="form-control" id="dateFrom2" name="hoursWorked2" /></td>
                                                     <td><Field className="form-control" id="dateFrom2" name="hourlyWage2" /></td>
-                                                    <td><Field className="form-control" id="dateFrom2" name="total2" /></td>
+                                                    <td><Field className="form-control" id="dateFrom2" name="total2" 
+                                                        value={values.hoursWorked2 * values.hourlyWage2} disabled/></td>
                                                 </tr>
                                                 <tr>
                                                     <td><DatePickerField className="form-control" id="dateFrom3" name="dateFrom3" /></td>
                                                     <td><Field className="form-control" id="dateFrom3" name="hoursWorked3" /></td>
                                                     <td><Field className="form-control" id="dateFrom3" name="hourlyWage3" /></td>
-                                                    <td><Field className="form-control" id="dateFrom3" name="total3" /></td>
+                                                    <td><Field className="form-control" id="dateFrom3" name="total3" 
+                                                        value={values.hoursWorked3 * values.hourlyWage3} disabled/></td>
                                                 </tr>
                                                 <tr>
                                                     <td><DatePickerField className="form-control" id="dateFrom4" name="dateFrom4" /></td>
                                                     <td><Field className="form-control" id="dateFrom4" name="hoursWorked4" /></td>
                                                     <td><Field className="form-control" id="dateFrom4" name="hourlyWage4" /></td>
-                                                    <td><Field className="form-control" id="dateFrom4" name="total4" /></td>
+                                                    <td><Field className="form-control" id="dateFrom4" name="total4" 
+                                                        value={values.hoursWorked4 * values.hourlyWage4} disabled/></td>
                                                 </tr>
                                                 <tr>
                                                     <td><DatePickerField className="form-control" id="dateFrom5" name="dateFrom5" /></td>
                                                     <td><Field className="form-control" id="dateFrom5" name="hoursWorked5" /></td>
                                                     <td><Field className="form-control" id="dateFrom5" name="hourlyWage5" /></td>
-                                                    <td><Field className="form-control" id="dateFrom5" name="total5" /></td>
+                                                    <td><Field className="form-control" id="dateFrom5" name="total5" 
+                                                    value={values.hoursWorked5 * values.hourlyWage5} disabled/></td>
                                                 </tr>
                                                 <tr>
                                                     <td colspan="4" style={{ verticalAlign: "middle", textAlign: "center" }}>
@@ -209,9 +247,12 @@ class ClaimForm extends Component {
                                                 </tr>
                                                 <tr>
                                                     <td style={{ verticalAlign: "middle" }}><b>Total</b></td>
-                                                    <td><Field className="form-control" id="hoursWorkedTotal1" name="hoursWorkedTotal1" /></td>
-                                                    <td><Field className="form-control" id="hourlyWageTotal1" name="hourlyWageTotal1" /></td>
-                                                    <td><Field className="form-control" id="totalTotal1" name="totalTotal1" /></td>
+                                                    <td><Field className="form-control" id="hoursWorkedTotal1" name="hoursWorkedTotal1" 
+                                                    value={this.totalHoursWorked(values)} disabled/></td>
+                                                    <td><Field className="form-control" id="hourlyWageTotal1" name="hourlyWageTotal1" 
+                                                    value={this.totalHourlyWage(values)} disabled/></td>
+                                                    <td><Field className="form-control" id="totalTotal1" name="totalTotal1" 
+                                                    value={this.totalTotals(values)} disabled/></td>
                                                 </tr>
                                             </tbody>
                                         </table>
