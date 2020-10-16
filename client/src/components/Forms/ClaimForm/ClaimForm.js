@@ -1,8 +1,9 @@
 import React, { Component } from 'react'
 import { withRouter } from 'react-router-dom'
-import { Formik, Form, Field } from 'formik'
+import { Formik, Form, Field, yupToFormErrors } from 'formik'
 import { feedBackClassName, feedBackInvalid } from '../shared/ValidationMessages'
 import { DatePickerField } from '../shared/DatePickerField'
+import * as Yup from 'yup'
 
 class ClaimForm extends Component {
     constructor() {
@@ -64,6 +65,12 @@ class ClaimForm extends Component {
                                 totalTotal1: '',
                                 
                             }}
+                            validationSchema={Yup.object({
+                                employerAddress1: Yup.string().required('Required').max(255, 'Address too long, please use address line 2'),
+                                employerAddress2: Yup.string().max(255, 'Address too long'),
+                                employerCity: Yup.string().required('Required').max(100, 'City name too long'),
+                                employerPostal: Yup.string().required('Required').matches(/^[A-Za-z]\d[A-Za-z][ -]?\d[A-Za-z]\d$/,"Please enter a valid Postal Code")
+                            })}
 
                         >
                             {({ values, errors, touched }) => (
@@ -138,7 +145,8 @@ class ClaimForm extends Component {
                                             <legend>Address (if different from previous claim)</legend>
                                         </div>
                                         <div className="form-group">
-                                            <label className="col-form-label control-label" htmlFor="employerAddress1">Address 1 </label>
+                                            <label className="col-form-label control-label" htmlFor="employerAddress1">Address 1 <span
+                                                    style={{ color: "red" }}>*</span></label>
                                             <small className="text-muted" id="employerAddress1">  Street address, P.O. box, company name, c/o</small>
                                             <Field className={`form-control ${feedBackClassName(errors, touched, "employerAddress1")}`} id="employerAddress1" name="employerAddress1" />
                                             {feedBackInvalid(errors, touched, "employerAddress1")}
@@ -151,34 +159,18 @@ class ClaimForm extends Component {
                                         </div>
                                         <div className="form-row">
                                             <div className="form-group col-md-6">
-                                                <label className="col-form-label control-label" htmlFor="employerCity">City </label>
+                                                <label className="col-form-label control-label" htmlFor="employerCity">City <span
+                                                    style={{ color: "red" }}>*</span></label>
                                                 <Field className={`form-control ${feedBackClassName(errors, touched, "employerCity")}`} id="employerCity" name="employerCity" />
                                                 {feedBackInvalid(errors, touched, "employerCity")}
                                             </div>
                                             <div className="form-group col-md-6">
-                                                <label className="col-form-label control-label" htmlFor="employerPostal">Postal Code </label>
+                                                <label className="col-form-label control-label" htmlFor="employerPostal">Postal Code <span
+                                                    style={{ color: "red" }}>*</span></label>
                                                 <small className="text-muted" id="employerPostal">  V0R2V5</small>
                                                 <Field className={`form-control ${feedBackClassName(errors, touched, "employerPostal")}`} id="employerPostal" name="employerPostal" />
                                                 {feedBackInvalid(errors, touched, "employerPostal")}
                                             </div>
-                                        </div>
-                                        <div className="form-group">
-                                            <label className="col-form-label control-label" htmlFor="numberOfClaims">How many claims are you submitting? <span
-                                                style={{ color: "red" }}>*</span></label>
-                                            <Field
-                                                as="select"
-                                                className={`form-control ${feedBackClassName(errors, touched, "numberOfClaims")}`}
-                                                id="numberOfClaims"
-                                                name="numberOfClaims"
-                                            >
-                                                <option value="">Please select</option>
-                                                <option value="1">1</option>
-                                                <option value="2">2</option>
-                                                <option value="3">3</option>
-                                                <option value="4">4</option>
-                                                <option value="5">5</option>
-                                            </Field>
-                                            {feedBackInvalid(errors, touched, "numberOfClaims")}
                                         </div>
                                         <div className="form-row">
 
