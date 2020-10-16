@@ -98,13 +98,12 @@ class NeedEmployeeForm extends Component {
                                             organizationSize:"",
                                             cewsParticipation:"",
                                             employeeDisplacement:"",
-                                            labourDisput:"",
+                                            labourDispute:"",
                                             unionConcurrence:"",
                                             liabilityCoverage:"",
                                             wageSubsidy:"",
                                             WSBCCoverage:"",
                                             eligibility: false,
-
                                             //step 1:pop-up fields
                                             employeesClaimed:"",
                                             WSBCNumber:"",
@@ -154,7 +153,9 @@ class NeedEmployeeForm extends Component {
                                             workExperience3:"",
                                             workExperience4:"",
                                             //step 3
-                                            
+                                            signatoryTitle:"",
+                                            signatory1:"",
+                                            organizationConsent:""
     
 
 
