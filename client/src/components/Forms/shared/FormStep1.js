@@ -61,25 +61,25 @@ class FormStep1 extends Component {
                     <p>Please complete a separate application for each work place</p>
                 </div>
                 <div className="form-group">
-                    <label className="col-form-label control-label" htmlFor="address">Work Address <span
+                    <label className="col-form-label control-label" htmlFor="address_alt">Work Address <span
                         style={{ color: "red" }}>*  </span></label>
-                    <small className="text-muted" id="address">  123 Main St.</small>
-                    <Field className="form-control" id="address" name="address" />
+                    <small className="text-muted" id="address-alt">  123 Main St.</small>
+                    <Field className="form-control" id="address_alt" name="address_alt" />
                 </div>
                 <div className="form-row">
                     <div className="form-group col-md-4">
-                        <label className="col-form-label control-label" htmlFor="city">City / Town <span
+                        <label className="col-form-label control-label" htmlFor="city_alt">City / Town <span
                             style={{ color: "red" }}>*</span></label>
-                        <Field className="form-control" id="city" name="city" />
+                        <Field className="form-control" id="city_alt" name="city_alt" />
                     </div>
                     <div className="form-group col-md-4">
-                        <label className="col-form-label control-label" htmlFor="Province">Province <span
+                        <label className="col-form-label control-label" htmlFor="province_alt">Province <span
                             style={{ color: "red" }}>*</span></label>
                         <Field
                             as="select"
                             className="form-control" 
-                            id="Province" 
-                            name="Province" 
+                            id="province_alt" 
+                            name="province_alt" 
                         >
                             <option value="">Please select</option>
                             <option value="AB">Alberta</option>
@@ -98,10 +98,10 @@ class FormStep1 extends Component {
                         </Field>
                     </div>
                     <div className="form-group col-md-4">
-                        <label className="col-form-label control-label" htmlFor="postal">Postal Code <span
+                        <label className="col-form-label control-label" htmlFor="postal_alt">Postal Code <span
                             style={{ color: "red" }}>*  </span></label>
-                        <small className="text-muted" id="postal">  V0R2V5</small>
-                        <Field className="form-control" id="postal" name="postal" />
+                        <small className="text-muted" id="postal_alt">  V0R2V5</small>
+                        <Field className="form-control" id="postal_alt" name="postal_alt" />
                     </div>
                 </div>
             </div>)
@@ -145,13 +145,13 @@ class FormStep1 extends Component {
                         <Field className="form-control" id="city" name="city" />
                     </div>
                     <div className="form-group col-md-4">
-                        <label className="col-form-label control-label" htmlFor="Province">Province <span
+                        <label className="col-form-label control-label" htmlFor="province">Province <span
                             style={{ color: "red" }}>*</span></label>
                         <Field
                             as="select"
                             className="form-control" 
-                            id="Province" 
-                            name="Province" 
+                            id="province" 
+                            name="province" 
                         >
                             <option value="">Please select</option>
                             <option value="AB">Alberta</option>
@@ -209,45 +209,45 @@ class FormStep1 extends Component {
                 {this.workAddressForm}
                 <div className="form-row">
                     <div className="form-group col-md-6" id="SectorType">
-                        <label className="col-form-label control-label" htmlFor="SectorType">Type of Sector: <span
+                        <label className="col-form-label control-label" htmlFor="sectorType">Type of Sector: <span
                         style={{ color: "red" }}>*</span></label>
                         <div className="form-check">
                             <Field
                                 className="form-check-input"
                                 type="radio"
-                                name="SectorType"
+                                name="sectorType"
                                 value="Private"
                             />
-                            <label className="form-check-label" htmlFor="SectorTypePrivate">Private</label>
+                            <label className="form-check-label" htmlFor="sectorTypePrivate">Private</label>
                         </div>
                         <div className="form-check">
                             <Field
                                 className="form-check-input"
                                 type="radio"
-                                name="SectorType"
+                                name="sectorType"
                                 value="Non-Profit"
                             />
-                            <label className="form-check-label" htmlFor="SectorTypeNon-Profit">Non-Profit</label>
+                            <label className="form-check-label" htmlFor="sectorTypeNon-Profit">Non-Profit</label>
                         </div>
                         <div className="form-check">
                             <Field
                                 className="form-check-input"
                                 type="radio"
-                                name="SectorType"
+                                name="sectorType"
                                 value="Public"
                             />
-                            <label className="form-check-label" htmlFor="SectorTypePublic">Public</label>
+                            <label className="form-check-label" htmlFor="sectorTypePublic">Public</label>
                         </div>
                     </div>
                 </div>
                 <div className="form-row">
                     <div className="form-group col-md-6">
-                        <label className="col-form-label control-label" htmlFor="TypeOfIndustry">Type of Industry <span
+                        <label className="col-form-label control-label" htmlFor="typeOfIndustry">Type of Industry <span
                             style={{ color: "red" }}>*</span></label>
                         <Field
                             as="select"
                             className="form-control" 
-                            id="TypeOfIndustry" 
+                            id="typeOfIndustry" 
                             name="Industry" 
                         >
                             <option value="">Please select</option>
@@ -260,35 +260,35 @@ class FormStep1 extends Component {
                     </div>
                 </div>
                 <div className="form-row">
-                    <div className="form-group col-md-6" id="OrganizationSize">
-                        <label className="col-form-label control-label" htmlFor="OrganizationSize">Size of Organization(number of employees) <span
+                    <div className="form-group col-md-6" id="organizationSize">
+                        <label className="col-form-label control-label" htmlFor="organizationSize">Size of Organization(number of employees) <span
                         style={{ color: "red" }}>*</span></label>
                         <div className="form-check">
                             <Field
                                 className="form-check-input"
                                 type="radio"
-                                name="OrganizationSize"
+                                name="organizationSize"
                                 value="1-49"
                             />
-                            <label className="form-check-label"  htmlFor="OrganizationSize">1-49</label>
+                            <label className="form-check-label"  htmlFor="organizationSize">1-49</label>
                         </div>
                         <div className="form-check">
                             <Field
                                 className="form-check-input"
                                 type="radio"
-                                name="OrganizationSize"
+                                name="organizationSize"
                                 value="49-499"
                             />
-                            <label className="form-check-label"  htmlFor="OrganizationSize">49-499</label>
+                            <label className="form-check-label"  htmlFor="organizationSize">49-499</label>
                         </div>
                         <div className="form-check">
                             <Field
                                 className="form-check-input"
                                 type="radio"
-                                name="OrganizationSize"
+                                name="organizationSize"
                                 value="500+"
                             />
-                            <label className="form-check-label"  htmlFor="OrganizationSize">500+</label>
+                            <label className="form-check-label"  htmlFor="organizationSize">500+</label>
                         </div>
                     </div>
                 </div>
@@ -350,78 +350,78 @@ class FormStep1 extends Component {
                     </div>
                 </div>
                 <div className="form-group">
-                    <label className="col-form-label control-label" htmlFor="LabourDispute">Is there a labour stoppage or labour - management dispute in progress? <span
+                    <label className="col-form-label control-label" htmlFor="labourDispute">Is there a labour stoppage or labour - management dispute in progress? <span
                         style={{ color: "red" }}>*</span></label>
                     <div className="form-check">
                         <Field
                             className="form-check-input"
                             type="radio"
-                            name="LabourDispute"
+                            name="labourDispute"
                             value="yes"
                         />
-                        <label className="form-check-label" htmlFor="LabourDispute">Yes</label>
+                        <label className="form-check-label" htmlFor="labourDispute">Yes</label>
                     </div>
                     <div className="form-check">
                         <Field
                             className="form-check-input"
                             type="radio"
-                            name="LabourDispute"
+                            name="labourDispute"
                             value="no"
                         />
-                        <label className="form-check-label" htmlFor="LabourDispute">No</label>
+                        <label className="form-check-label" htmlFor="labourDispute">No</label>
                     </div>
                 </div>
                 <div className="form-group">
-                    <label className="col-form-label control-label" htmlFor="UnionConcurrence">Is there Union concurrence? <span
+                    <label className="col-form-label control-label" htmlFor="unionConcurrence">Is there Union concurrence? <span
                         style={{ color: "red" }}>*</span></label>
                     <div className="form-check">
                         <Field
                             className="form-check-input"
                             type="radio"
-                            name="UnionConcurrence"
+                            name="unionConcurrence"
                             value="yes"
                         />
-                        <label className="form-check-label" htmlFor="UnionConcurrence">Yes</label>
+                        <label className="form-check-label" htmlFor="unionConcurrence">Yes</label>
                     </div>
                     <div className="form-check">
                         <Field
                             className="form-check-input"
                             type="radio"
-                            name="UnionConcurrence"
+                            name="unionConcurrence"
                             value="no"
                         />
-                        <label className="form-check-label" htmlFor="UnionConcurrence">No</label>
+                        <label className="form-check-label" htmlFor="unionConcurrence">No</label>
                     </div>
                     <div className="form-check">
                         <Field
                             className="form-check-input"
                             type="radio"
-                            name="UnionConcurrence"
+                            name="unionConcurrence"
                             value="N/A"
                         />
-                        <label className="form-check-label" htmlFor="UnionConcurrence">N/A</label>
+                        <label className="form-check-label" htmlFor="unionConcurrence">N/A</label>
                     </div>
                 </div>
                 <div className="form-group">
-                    <label className="col-form-label control-label" htmlFor="LiabilityCoverage">Does your organization have 3rd Party liability coverage? <span
+                    <label className="col-form-label control-label" htmlFor="liabilityCoverage">Does your organization have 3rd Party liability coverage? <span
                         style={{ color: "red" }}>*</span></label>
                     <div className="form-check">
                         <Field
                             className="form-check-input"
                             type="radio"
-                            name="LiabilityCoverage"
+                            name="liabilityCoverage"
                             value="yes"
                         />
-                        <label className="form-check-label" htmlFor="LiabilityCoverage">Yes</label>
+                        <label className="form-check-label" htmlFor="liabilityCoverage">Yes</label>
                     </div>
                     <div className="form-check">
                         <Field
                             className="form-check-input"
                             type="radio"
-                            name="LiabilityCoverage"
+                            name="liabilityCoverage"
                             value="no"
                         />
-                        <label className="form-check-label" htmlFor="LiabilityCoverage">No</label>
+                        <label className="form-check-label" htmlFor="liabilityCoverage">No</label>
                     </div>
                 </div>
                 <div className="form-group">
