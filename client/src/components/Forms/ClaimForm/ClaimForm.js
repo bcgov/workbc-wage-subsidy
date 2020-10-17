@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { withRouter } from 'react-router-dom'
+import { ClaimFormValidationSchema } from './ClaimFormValidationSchema'
 import { Formik, Form, Field, yupToFormErrors, useFormik } from 'formik'
 import { feedBackClassName, feedBackInvalid } from '../shared/ValidationMessages'
 import { DatePickerField } from '../shared/DatePickerField'
@@ -39,38 +39,38 @@ class ClaimForm extends Component {
                                 employerAddress2: '',
                                 employerCity: '',
                                 employerPostal: '',
+                                employeeFirstName: '',
+                                employeeLastName: '',
                                 clientIssues1: '',
+                                dateFrom1: '',
                                 hoursWorked1: '',
                                 hourlyWage1: '',
                                 total1: 0,
                                 clientIssues2: '',
+                                dateFrom2: '',
                                 hoursWorked2: '',
                                 hourlyWage2: '',
                                 total2: 0,
                                 clientIssues3: '',
+                                dateFrom3: '',
                                 hoursWorked3: '',
                                 hourlyWage3: '',
                                 total3: 0,
                                 clientIssues4: '',
+                                dateFrom4: '',
                                 hoursWorked4: '',
                                 hourlyWage4: '',
                                 total4: 0,
                                 clientIssues5: '',
+                                dateFrom5: '',
                                 hoursWorked5: '',
                                 hourlyWage5: '',
                                 total5: 0,
                                 hoursWorkedTotal1: 0,
                                 hourlyWageTotal1: 0,
                                 totalTotal1: '',
-
                             }}
-                            validationSchema={Yup.object({
-                                employerAddress1: Yup.string().required('Required').max(255, 'Address too long, please use address line 2'),
-                                employerAddress2: Yup.string().max(255, 'Address too long'),
-                                employerCity: Yup.string().required('Required').max(100, 'City name too long'),
-                                employerPostal: Yup.string().required('Required').matches(/^[A-Za-z]\d[A-Za-z][ -]?\d[A-Za-z]\d$/, "Please enter a valid Postal Code")
-                            })}
-
+                            validationSchema={ClaimFormValidationSchema}
                         >
                             {({ values, errors, touched, setFieldValue }) => (
                                 <Form>
@@ -197,44 +197,44 @@ class ClaimForm extends Component {
                                             </thead>
                                             <tbody>
                                                 <tr>
-                                                    <td><DatePickerField className="form-control" id="dateFrom1" name="dateFrom1" /></td>
-                                                    <td><Field className="form-control" id="dateFrom1" name="hoursWorked1"
+                                                    <td><DatePickerField className={`form-control ${feedBackClassName(errors, touched, "dateFrom1")}`} id="dateFrom1" name="dateFrom1" /></td>
+                                                    <td><Field className={`form-control ${feedBackClassName(errors, touched, "hoursWorked1")}`} id="dateFrom1" name="hoursWorked1"
                                                         onBlur={() => { setFieldValue('total1', values.hoursWorked1 * values.hourlyWage1) }} /></td>
-                                                    <td><Field className="form-control" id="dateFrom1" name="hourlyWage1"
+                                                    <td><Field className={`form-control ${feedBackClassName(errors, touched, "hourlyWage1")}`} id="dateFrom1" name="hourlyWage1"
                                                         onBlur={() => { setFieldValue('total1', values.hoursWorked1 * values.hourlyWage1) }} /></td>
-                                                    <td><Field className="form-control" id="dateFrom1" name="total1" disabled /></td>
+                                                    <td><Field className={`form-control ${feedBackClassName(errors, touched, "total1")}`} id="dateFrom1" name="total1" disabled /></td>
                                                 </tr>
                                                 <tr>
-                                                    <td><DatePickerField className="form-control" id="dateFrom2" name="dateFrom2" /></td>
-                                                    <td><Field className="form-control" id="dateFrom2" name="hoursWorked2"
+                                                    <td><DatePickerField className={`form-control ${feedBackClassName(errors, touched, "dateFrom2")}`} id="dateFrom2" name="dateFrom2" /></td>
+                                                    <td><Field className={`form-control ${feedBackClassName(errors, touched, "hoursWorked2")}`} id="dateFrom2" name="hoursWorked2"
                                                         onBlur={() => { setFieldValue('total2', values.hoursWorked2 * values.hourlyWage2) }} /></td>
-                                                    <td><Field className="form-control" id="dateFrom2" name="hourlyWage2"
+                                                    <td><Field className={`form-control ${feedBackClassName(errors, touched, "hourlyWage2")}`} id="dateFrom2" name="hourlyWage2"
                                                         onBlur={() => { setFieldValue('total2', values.hoursWorked2 * values.hourlyWage2) }} /></td>
-                                                    <td><Field className="form-control" id="dateFrom2" name="total2" disabled /></td>
+                                                    <td><Field className={`form-control ${feedBackClassName(errors, touched, "total2")}`} id="dateFrom2" name="total2" disabled /></td>
                                                 </tr>
                                                 <tr>
-                                                    <td><DatePickerField className="form-control" id="dateFrom3" name="dateFrom3" /></td>
-                                                    <td><Field className="form-control" id="dateFrom3" name="hoursWorked3"
+                                                    <td><DatePickerField className={`form-control ${feedBackClassName(errors, touched, "dateFrom3")}`} id="dateFrom3" name="dateFrom3" /></td>
+                                                    <td><Field className={`form-control ${feedBackClassName(errors, touched, "hoursWorked3")}`} id="dateFrom3" name="hoursWorked3"
                                                         onBlur={() => { setFieldValue('total3', values.hoursWorked3 * values.hourlyWage3) }} /></td>
-                                                    <td><Field className="form-control" id="dateFrom3" name="hourlyWage3"
+                                                    <td><Field className={`form-control ${feedBackClassName(errors, touched, "hourlyWage3")}`} id="dateFrom3" name="hourlyWage3"
                                                         onBlur={() => { setFieldValue('total3', values.hoursWorked3 * values.hourlyWage3) }} /></td>
-                                                    <td><Field className="form-control" id="dateFrom3" name="total3" disabled /></td>
+                                                    <td><Field className={`form-control ${feedBackClassName(errors, touched, "total3")}`} id="dateFrom3" name="total3" disabled /></td>
                                                 </tr>
                                                 <tr>
-                                                    <td><DatePickerField className="form-control" id="dateFrom4" name="dateFrom4" /></td>
-                                                    <td><Field className="form-control" id="dateFrom4" name="hoursWorked4"
+                                                    <td><DatePickerField className={`form-control ${feedBackClassName(errors, touched, "dateFrom4")}`} id="dateFrom4" name="dateFrom4" /></td>
+                                                    <td><Field className={`form-control ${feedBackClassName(errors, touched, "hoursWorked4")}`} id="dateFrom4" name="hoursWorked4"
                                                         onBlur={() => { setFieldValue('total4', values.hoursWorked4 * values.hourlyWage4) }} /></td>
-                                                    <td><Field className="form-control" id="dateFrom4" name="hourlyWage4"
+                                                    <td><Field className={`form-control ${feedBackClassName(errors, touched, "hourlyWage4")}`} id="dateFrom4" name="hourlyWage4"
                                                         onBlur={() => { setFieldValue('total4', values.hoursWorked4 * values.hourlyWage4) }} /></td>
-                                                    <td><Field className="form-control" id="dateFrom4" name="total4" disabled /></td>
+                                                    <td><Field className={`form-control ${feedBackClassName(errors, touched, "total4")}`} id="dateFrom4" name="total4" disabled /></td>
                                                 </tr>
                                                 <tr>
-                                                    <td><DatePickerField className="form-control" id="dateFrom5" name="dateFrom5" /></td>
-                                                    <td><Field className="form-control" id="dateFrom5" name="hoursWorked5"
+                                                    <td><DatePickerField className={`form-control ${feedBackClassName(errors, touched, "dateFrom5")}`} id="dateFrom5" name="dateFrom5" /></td>
+                                                    <td><Field className={`form-control ${feedBackClassName(errors, touched, "hoursWorked5")}`} id="dateFrom5" name="hoursWorked5"
                                                         onBlur={() => { setFieldValue('total5', values.hoursWorked5 * values.hourlyWage5) }} /></td>
-                                                    <td><Field className="form-control" id="dateFrom5" name="hourlyWage5"
+                                                    <td><Field className={`form-control ${feedBackClassName(errors, touched, "hourlyWage5")}`} id="dateFrom5" name="hourlyWage5"
                                                         onBlur={() => { setFieldValue('total5', values.hoursWorked5 * values.hourlyWage5) }} /></td>
-                                                    <td><Field className="form-control" id="dateFrom5" name="total5" disabled /></td>
+                                                    <td><Field className={`form-control ${feedBackClassName(errors, touched, "total5")}`} id="dateFrom5" name="total5" disabled /></td>
                                                 </tr>
                                                 <tr>
                                                     <td colspan="4" style={{ verticalAlign: "middle", textAlign: "center" }}>
