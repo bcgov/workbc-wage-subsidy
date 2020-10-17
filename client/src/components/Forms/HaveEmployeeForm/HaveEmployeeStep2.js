@@ -1,11 +1,11 @@
 import React, { Component } from 'react'
 import { Field } from 'formik'
 import { DatePickerField } from '../shared/DatePickerField'
-import { NumPositionsInvalid } from '../shared/ValidationMessages'
+import { feedBackClassName, feedBackInvalid,NumPositionsInvalid } from '../shared/ValidationMessages'
 
-window.$buttonStatus = false;
+
 class HaveEmployeeStep2 extends Component {
-    
+   
     state={
         positions:[{operatingName:"", numberOfPositions:"", startDate:"",hours:"",wage:"",duties:""}],
 
@@ -25,22 +25,9 @@ class HaveEmployeeStep2 extends Component {
           this.setState({ [e.target.name]: e.target.value.toUpperCase() })
         }
       }
-    get positionCheck (){
-       let check =  parseInt(this.props.values.numberOfPositions0) + parseInt(this.props.values.numberOfPositions1) + parseInt(this.props.values.numberOfPositions2) + parseInt(this.props.values.numberOfPositions3) + parseInt(this.props.values.numberOfPositions4)
-       console.log(check)
-       if(check >= 5){
-            window.$buttonStatus = true;
-            if(check > 5){
-                console.log("error message");
-            }
-        }
-        else{
-            window.$buttonStatus = false;
-        }
-        return null;
-    }
+    
     addPosition = (e) => {
-        window.$buttonStatus = true;
+        this.props.values.checkPositionInstances = "1";
         this.setState((prevState)=> ({
             positions: [...prevState.positions, {operatingName:"", numberOfPositions:"", startDate:"",hours:"",wage:"",duties:""}]
 
@@ -61,8 +48,7 @@ class HaveEmployeeStep2 extends Component {
                 </div>
                     <div className="form-group">
                       <button className="btn btn-primary" type="button" disabled ={window.$buttonStatus} onClick={this.addPosition}>Add Another Position Title</button><br></br>
-                    </div>
-                    {this.positionCheck}          
+                    </div>        
                 {
                     positions.map((val,Entry)=>{
                         let operatingName=`operatingName${Entry}`, numberOfPositions=`numberOfPositions${Entry}`, startDate=`startDate${Entry}`, hours=`hours${Entry}`, wage=`wage${Entry}`, duties=`duties${Entry}`
@@ -76,15 +62,15 @@ class HaveEmployeeStep2 extends Component {
                                     <div className="form-group col-md-8">
                                         <label className="col-form-label control-label" htmlFor={operatingName}>Organization Name <span
                                             style={{ color: "red" }}>*</span></label>
-                                        <Field className="operatingName form-control" id={operatingName} name={operatingName} data-id={Entry}  />
-                                        
+                                        <Field className={`operatingName form-control ${feedBackClassName(this.props.errors, this.props.touched, operatingName)}`} id={operatingName} name={operatingName} data-id={Entry}  />
+                                        {feedBackInvalid(this.props.errors,this.props.touched, operatingName)}
                                     </div>
                                     <div className="form-group col-md-4">
                                         <label className="col-form-label control-label" htmlFor={numberOfPositions}> Number of Available Positions <span
                                             style={{ color: "red" }}>*</span></label>
                                         <Field
                                             as="select"
-                                            className="numberOfPositions form-control" 
+                                            className={`numberOfPositions form-control ${feedBackClassName(this.props.errors, this.props.touched, numberOfPositions)}`}
                                             id={numberOfPositions} 
                                             name={numberOfPositions}
                                             data-id={Entry}
@@ -96,6 +82,7 @@ class HaveEmployeeStep2 extends Component {
                                             <option value="4">4</option>
                                             <option value="5">5</option>
                                         </Field>
+                                        {feedBackInvalid(this.props.errors,this.props.touched, numberOfPositions)}
                                         {NumPositionsInvalid(this.props.values)}
                                     </div>
                                 </div>
@@ -103,22 +90,28 @@ class HaveEmployeeStep2 extends Component {
                                     <div className="form-group col-md-4">
                                         <label className="col-form-label control-label" htmlFor={startDate}>Anticipated Start Date<span
                                                 style={{ color: "red" }}>*</span></label>
+                                                 {feedBackInvalid(this.props.errors,this.props.touched, startDate)}
                                             <DatePickerField 
                                                 id={startDate}
                                                 name={startDate}
                                                 data-id={Entry}
-                                                className="startDate form-control"
+                                                minDate={new Date()}
+                                                maxDate={new Date("02-29-2030")}
+                                                className= {`startDate form-control ${feedBackClassName(this.props.errors, this.props.touched, startDate)}`}
                                             />
+                                       
                                     </div>
                                     <div className="form-group col-md-4">
                                         <label className="col-form-label control-label" htmlFor={hours}>Hours of Work Per Week<span
                                                 style={{ color: "red" }}>*</span></label>
-                                        <Field className="hours form-control" id={hours} name={hours} data-id={Entry}  />
+                                        <Field className= {`hours form-control ${feedBackClassName(this.props.errors, this.props.touched, hours)}`} id={hours} name={hours} data-id={Entry}  />
+                                        {feedBackInvalid(this.props.errors,this.props.touched, hours)}
                                     </div>
                                     <div className="form-group col-md-4">
                                         <label className="col-form-label control-label" htmlFor={wage}>Hourly Wage<span
                                                 style={{ color: "red" }}>*</span></label>
-                                        <Field className="wage form-control" id={wage} name={wage} data-id={Entry}  />
+                                        <Field className= {`wage form-control ${feedBackClassName(this.props.errors, this.props.touched, wage)}`} id={wage} name={wage} data-id={Entry}  />
+                                        {feedBackInvalid(this.props.errors,this.props.touched, wage)}
                                     </div>
                             </div>
                                 <div className="form-row">
@@ -129,11 +122,12 @@ class HaveEmployeeStep2 extends Component {
                                         as="textarea"
                                         rows="4"
                                         maxLength="700"
-                                        className="duties form-control"
+                                        className={`duties form-control ${feedBackClassName(this.props.errors, this.props.touched, duties)}`}
                                         id={duties} 
                                         name={duties} 
                                         data-id={Entry}  
                                         />
+                                        {feedBackInvalid(this.props.errors,this.props.touched, duties)}
                                     </div>
                                 </div>
                             </div>

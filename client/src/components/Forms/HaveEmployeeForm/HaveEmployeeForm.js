@@ -10,6 +10,7 @@ import FormStep2 from '../shared/FormStep2'
 import FormStep3 from '../shared/FormStep3'
 import HaveEmployeeStep2 from './HaveEmployeeStep2'
 import ProgressTracker from '../shared/ProgressTracker'
+import {HaveEmployeeValidationSchema} from './HaveEmployeeValidationSchema'
 
 class HaveEmployeeForm extends Component {
     constructor(){
@@ -104,6 +105,7 @@ class HaveEmployeeForm extends Component {
                                     wageSubsidy:"",
                                     WSBCCoverage:"",
                                     eligibility: false,
+
                                     //step 1:pop-up fields
                                     employeesClaimed:"",
                                     WSBCNumber:"",
@@ -122,6 +124,7 @@ class HaveEmployeeForm extends Component {
                                     numberOfPositions2: "0",
                                     numberOfPositions3: "0",
                                     numberOfPositions4: "0",
+                                    checkPositionInstances: "0",
                                     startDate0:"",
                                     startDate1:"",
                                     startDate2:"",
@@ -145,18 +148,19 @@ class HaveEmployeeForm extends Component {
                                     //step 3
                                     signatoryTitle:"",
                                     signatory1:"",
-                                    organizationConsent:""
+                                    organizationConsent: false,
     
 
 
                             }}
+                            validationSchema={HaveEmployeeValidationSchema}
                             onSubmit={(values, actions) => {
                                 actions.setSubmitting(false);
                                 this.props.history.push('/thankyou')
                             }}
                         
                         >
-                            {props => (
+                            { props => (
                                 <Form>
                                     {console.log(props)}
                                     <FormStep1 
