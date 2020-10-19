@@ -11,6 +11,7 @@ var spauth = require('node-sp-auth')
 var request = require('request-promise')
 
 
+var HaveEmployeeValidationSchema = require('../schemas/HaveEmployeeValidationSchema')
 var generateHTMLEmail = require('../utils/htmlEmail')
 var notification = require('../utils/applicationReceivedEmail');
 var clean = require('../utils/clean')
@@ -31,6 +32,14 @@ var listParty = process.env.LISTPARTY || process.env.OPENSHIFT_NODEJS_LISTPARTY 
 var listADFS = process.env.LISTADFS || process.env.OPENSHIFT_NODEJS_LISTADFS || ""
 
 
+var spr = spauth.getAuth(listWebURL, {
+  username: listUser,
+  password: listPass,
+  domain: listDomain,
+  relyingParty: listParty,
+  adfsUrl: listADFS
+})
+
 async function sendEmails(values) {
   try {
     let transporter = nodemailer.createTransport({
@@ -43,7 +52,7 @@ async function sendEmails(values) {
     });
     return await transporter.verify()
       .then(function (r) {
-        console.log(r)
+        //console.log(r)
         console.log("Transporter connected.")
         // send mail with defined transport object
         var mailingList;
@@ -119,78 +128,151 @@ async function sendEmails(values) {
   }
 }
 
-function saveList() {
-  spauth.getAuth(listWebURL, {
-    username: listUser,
-    password: listPass,
-    domain: listDomain,
-    relyingParty: listParty,
-    adfsUrl: listADFS
-  })
-    .then(data => {
-      try {
-        console.log(data)
-        console.log(data.options)
-        var headers = data.headers;
-        headers['Accept'] = 'application/json;odata=verbose';
-        console.log(headers)
-        var l = listWebURL + "Apps/WageSubsidy/_api/web/lists/getByTitle('Catchment01')/items"
-        console.log(l)
-        request.post({
+async function saveList(values) {
+  try{
+    var headers;
+  return await spr
+  .then(async data => {
+      //console.log(data)
+      headers = data.headers;
+      headers['Accept'] = 'application/json;odata=verbose';
+      return headers
+      //console.log(headers)
+      //console.log(l)
+      
+  }).then(async response => {
+        //return true
+        //console.log(response)
+        headers = response
+        return request.post({
           url: listWebURL + 'Apps/WageSubsidy/_api/contextInfo',
           headers: headers,
           json: true,
-          /*
-          data: {
-            "__metadata": { "type": "SP.List" },
-            "Title": "newItemTitle"
-          }
-          */
-        }).then(response => {
-          console.log(response.d)
-          var digest = response.d.GetContextWebInformation.FormDigestValue
-          console.log(digest)
-          headers['X-RequestDigest'] = digest
-          headers['Content-Type']="application/json;odata=verbose"
-          console.log(headers)
-          request.post({
-            url: l,
-            headers: headers,
-            json: true,
-            data:{
-              "__metadata": {
-                "type": ""
-              },
-              "Title": "Test"
-            }
-          })
-            .then(response => {
-              //console.log(response)
-            })
-            .catch(err => {
-              console.log(err)
-              console.log("Create error")
-              console.log(err.statusCode)
-            })
-        }).catch(err => {
-          console.log("Digest err")
-          //console.log(err)
-          console.log(err.statusCode)
         })
-      } catch (e) {
-        console.log(e)
+        /*
+        .then(response => {
+          var digest = response.d.GetContextWebInformation.FormDigestValue
+          return digest
+        })
+        .catch(e =>{
+          console.log(e)
+        })
+        */
+    }).then(async response => {
+      //console.log(response.d.GetContextWebInformation.FormDigestValue);
+      var digest = response.d.GetContextWebInformation.FormDigestValue
+      return digest
+    }).then(async response => {
+      //console.log(response)
+      console.log(headers)
+      headers['X-RequestDigest'] = response
+      headers['Content-Type'] = "application/json;odata=verbose"
+      var l = listWebURL + "Apps/WageSubsidy/_api/web/lists/getByTitle('Catchment01')/items"
+      return request.post({
+        url: l,
+        headers: headers,
+        json: true,
+        body: {
+          "__metadata": {
+            "type": "SP.Data.Catchment01ListItem"
+          },
+          "Title": values._id,
+          "ApplicationID" : values._id,
+          "OperatingName":values.operatingName,
+          "BusinessNumber": values.businessNumber,
+          "Address":values.address,
+          "City":values.city,
+          "Province":values.province,
+          "Postal":values.postal,
+          "Phone":values.phone,
+          "Fax":values.fax,
+          "Email":values.email,
+          "OtherWorkAddress":values.otherWorkAddress,
+          "SectorType":"",
+          "TypeOfIndustry":"",
+          "OrganizationSize":"",
+          "CewsParticipation":"",
+          //"EmployeeDisplacement":"",
+          //"LabourDispute":"",
+          "UnionConcurrence":"",
+          //"LiabilityCoverage":"",
+          //"WageSubsidy":"",
+        }
+      })
+    }).then(async response => {
+      //item was created
+      return true
+    })    
+    .catch(err => {
+      //there was an error in the chan
+      //item was not created
+      console.log("error in chain")
+      console.log(err);
+      console.log(err.statusCode)
+      if (err.statusCode == 403){
+        saveList(values)
       }
+      return false
     })
+        /*
+        //console.log(digest)
+        headers['X-RequestDigest'] = digest
+        headers['Content-Type'] = "application/json;odata=verbose"
+        //console.log(headers)
+      request.post({
+          url: l,
+          headers: headers,
+          json: true,
+          body: {
+            "__metadata": {
+              "type": "SP.Data.Catchment01ListItemsss"
+            },
+            "Title": values._id
+          }
+        })
+          .then(response => {
+            console.log("created")
+            //console.log(response)
+            return true
+          })
+          .catch(err => {
+            //console.log(err)
+            console.log("Create error")
+            console.log(err.statusCode)
+            return false
+          })
+      })
+        .catch(err => {
+          console.log("failed to get digest")
+          console.log(err.statusCode)
+          return false
+        })
+    .catch(err => {
+      console.log("spr fail")
+      console.log(err)
+      return false
+    })
+
+    })
+    */
+  
+  //try catch catcher
+  } catch (error) {
+    console.log(error)
+    return false
+  }
 }
 
 router.get('/', csrfProtection, (req, res) => {
-  saveList()
+  //saveList()
+  /*
   console.log(process.env.listWebURL)
   console.log(process.env.listUser)
   console.log(process.env.listPass)
   console.log(process.env.listDomain)
   console.log(process.env.listParty)
   console.log(process.env.listADFS)
+  */
   var token = req.csrfToken()
   res.cookie('XSRF-TOKEN', token)
   res.send({
@@ -201,19 +283,28 @@ router.get('/', csrfProtection, (req, res) => {
 
 router.post('/', csrfProtection, async (req, res) => {
   //clean the body
-  console.log(req.body)
+  //console.log(req.body)
   clean(req.body);
   //console.log(req.body)
-  /*
-  MainFormValidationSchema.validate(req.body, { abortEarly: false })
+  
+  HaveEmployeeValidationSchema.validate(req.body, { abortEarly: false })
     .then(async function (value) {
       try {
         await sendEmails(value)
-          .then(function (sent) {
+          .then(async function (sent) {
             if (sent){
-              res.send({
-                ok: "ok"
-              })
+              await saveList(value)
+                .then(function(saved){
+                  console.log("saved")
+                  console.log(saved)
+                })
+                .catch(function(e){
+                  console.log("error")
+                  console.log(e)
+                })
+                res.send({
+                  ok: "ok"
+                })
             } else if (!sent) {
               res.send({
                 emailErr: "emailErr"
@@ -237,7 +328,6 @@ router.post('/', csrfProtection, async (req, res) => {
       })
       return
     })
-  */
 })
 
 module.exports = router;

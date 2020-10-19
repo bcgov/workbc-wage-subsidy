@@ -199,8 +199,8 @@ class FormStep1 extends Component {
                     </div>
                     <div className="form-group col-md-4">
                             <label className="col-form-label control-label" htmlFor="fax">Fax </label>
-                            <small className="text-muted" id="Fax"> 1-250-555-5555</small>
-                            <Field className={`form-control ${feedBackClassName(this.props.errors, this.props.touched, "fax")}`} id="Fax" name="Fax" />
+                            <small className="text-muted" id="fax"> 1-250-555-5555</small>
+                            <Field className={`form-control ${feedBackClassName(this.props.errors, this.props.touched, "fax")}`} id="fax" name="fax" />
                             {feedBackInvalid(this.props.errors,this.props.touched,"fax")}
                         </div>
                     <div className="form-group col-md-4">
@@ -267,7 +267,7 @@ class FormStep1 extends Component {
                             as="select"
                             className={`form-control ${feedBackClassName(this.props.errors, this.props.touched, "typeOfIndustry")}`}
                             id="typeOfIndustry" 
-                            name="Industry" 
+                            name="typeOfIndustry" 
                         >
                             <option value="">Please select</option>
                             <option value="Primary">Primary(Including Agriculture)</option>

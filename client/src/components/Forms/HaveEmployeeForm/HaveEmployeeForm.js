@@ -26,7 +26,7 @@ class HaveEmployeeForm extends Component {
     }
 
     componentDidMount() {
-        fetch(FORM_URL.mainForm, {
+        fetch(FORM_URL.haveEmployeeForm, {
             credentials: "include"
         })
             .then(res => res.json())
@@ -105,6 +105,7 @@ class HaveEmployeeForm extends Component {
                         <ProgressTracker currentStep={this.state.currentStep}/>
                         <Formik
                             initialValues= {{
+                                    _csrf: this.state._csrf,
                                     _id: this.state._id,
                                     //step 1
                                     operatingName:"",
@@ -176,10 +177,42 @@ class HaveEmployeeForm extends Component {
 
 
                             }}
+                            enableReinitialize={true}
                             validationSchema={HaveEmployeeValidationSchema}
-                            onSubmit={(values, actions) => {
-                                actions.setSubmitting(false);
-                                this.props.history.push('/thankyou')
+                            onSubmit={(values, {resetForm, setErrors, setStatus, setSubmitting }) => {
+                                
+                                fetch(FORM_URL.haveEmployeeForm, {
+                                    method: "POST",
+                                    credentials: 'include',
+                                    headers: {
+                                        'Accept': 'application/json',
+                                        'Content-Type' : 'application/json',
+                                    },
+                                    body: JSON.stringify(values),
+                                })
+                                
+                                .then(res => res.json())
+                                .then(
+                                    (resp) => {
+                                        console.log(resp)
+                                        if (resp.err){
+                                            console.log("errors")
+                                            setSubmitting(false)
+                                            setErrors(resp.err)
+                                        } else if(resp.emailErr){
+                                            console.log("emailError")
+                                            setSubmitting(false)
+                                            this.setState({
+                                                hasError: true
+                                            })
+                                        } else if (resp.ok){
+                                            setSubmitting(false)
+                                            //this.props.history.push('/thankYouOrg',values)
+                                        }
+                                    }
+                                )
+                                
+                                
                             }}
                         
                         >
