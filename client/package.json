@@ -19,7 +19,7 @@
     "react-scripts": "^3.4.3",
     "stable": "^0.1.8",
     "yup": "^0.29.3",
-    "yup-phone": "^1.2.10"
+    "yup-phone": "^1.2.11"
   },
   "devDependencies": {
     "@bcgov/bootstrap-theme": "https://github.com/bcgov/bootstrap-theme/releases/download/v1.1.1/bcgov-bootstrap-theme-1.1.1.tgz",

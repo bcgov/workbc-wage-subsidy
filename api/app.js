@@ -15,7 +15,7 @@ const corsOptions = {
     optionsSuccessStatus: 200,
 };
 
-var formRouter = require('./routes/form')
+var formRouter = require('./routes/haveEmployeeForm')
 //var participantFormRouter = require('./routes/participantForm')
 
 var app = express();
@@ -29,7 +29,7 @@ app.use(cookieParser());
 app.use(helmet());
 
 
-app.use('/api/form', formRouter)
+app.use('/api/haveEmployeeForm', formRouter)
 //app.use('/api/participantForm',participantFormRouter)
 
 module.exports = app;
