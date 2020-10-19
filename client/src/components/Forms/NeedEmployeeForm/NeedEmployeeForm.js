@@ -10,6 +10,7 @@ import FormStep2 from '../shared/FormStep2'
 import FormStep3 from '../shared/FormStep3'
 import NeedEmployeeStep2 from './NeedEmployeeStep2'
 import ProgressTracker from '../shared/ProgressTracker'
+import {NeedEmployeeValidationSchema} from './NeedEmployeeValidationSchema'
 
 class NeedEmployeeForm extends Component {
     constructor(){
@@ -122,6 +123,7 @@ class NeedEmployeeForm extends Component {
                                             numberOfPositions2: "0",
                                             numberOfPositions3: "0",
                                             numberOfPositions4: "0",
+                                            checkPositionInstances: "0",
                                             startDate0:"",
                                             startDate1:"",
                                             startDate2:"",
@@ -160,6 +162,7 @@ class NeedEmployeeForm extends Component {
 
 
                             }}
+                            validationSchema={NeedEmployeeValidationSchema}
                             onSubmit={(values, actions) => {
                                 actions.setSubmitting(false);
                                 this.props.history.push('/thankyou')
