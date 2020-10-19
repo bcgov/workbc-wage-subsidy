@@ -8,26 +8,28 @@ export const HaveEmployeeValidationSchema = yup.object().shape({
     operatingName: yup.string()
         .required('Please enter the Organization name'),
     businessNumber: yup.string()
+        .matches(/^[0-9]{9}[A-Z]{2}[0-9]{4}$/gi,"Number is Incorrect should be in the form: 123456789 BC0001 ")
         .max(15, "Business number must be exactly 15 characters")
         .min(15, "Business number must be exactly 15 characters.")
         .required('Please enter your business number.'),
-    address: yup.string()
+    businessAddress: yup.string()
         .max(255,"Address too long")
         .required("please enter your organizations address"),
-    city:yup.string()
+    businessCity:yup.string()
         .max(100,"City name too long")
         .required("please enter your organizations city"),
-    province:yup.string()
+    businessProvince:yup.string()
         .required("Please enter a valid province"),
-    postal:yup.string()
+    businessPostal:yup.string()
         .matches(/^[A-Za-z]\d[A-Za-z][ -]?\d[A-Za-z]\d$/,"Please enter a valid Postal Code")
-        .required("please enter a valid postal code"),
-    phone:yup.string()
+        .required("Please enter a valid Postal Code"),
+    businessPhone:yup.string()
         .phone("CA", false, "Please enter a valid number.")
         .required("Please enter phone."),
-    fax:yup.string()
-        .phone("CA", false, "Please enter a valid number."),
-    email:yup.string().email("Please enter a valid email.")
+    businessFax:yup.string().test('Is-valid-fax','Invalid fax',
+        value => (value +"").match(/^\d{1}-\d{3}-\d{3}-\d{4}$/gi) || value === undefined,
+        ),
+    businessEmail:yup.string().email("Please enter a valid email.")
         .required("Please enter email"),
     otherWorkAddress: yup.boolean(),
     sectorType:yup.string()
@@ -84,25 +86,27 @@ export const HaveEmployeeValidationSchema = yup.object().shape({
     WSBCNumber: yup.string()
         .when("WSBCCoverage",{
             is:"yes",
-            then: yup.string().max(15, "WorkSafe BC number must be exactly 15 characters").min(15, "WorkSafe BC number must be exactly 15 characters.").required('Please enter your WorkSafe BC number.')
+            then: yup.string().test('Is valid Number','Invalid WSBC number, format should be: BC0001',
+            value => (value +"").match(/^[A-Z]{2}[0-9]{4}$/gi),
+            ),
     }),
-    address_alt:yup.string()
+    addressAlt:yup.string()
         .when("otherWorkAddress",{
             is:true,
             then: yup.string().max(255,"Address too long, please use address line 2.").required("please enter your other work address")
         }),
        
-    city_alt: yup.string()
+    cityAlt: yup.string()
         .when("otherWorkAddress", {
             is: true,
             then: yup.string().max(100,"City name too long").required("Please enter a city")
         }),    
-    province_alt:yup.string()
+    provinceAlt:yup.string()
         .when("otherWorkAddress", {
             is: true,
             then: yup.string().required("Please enter a province")
         }),   
-    postal_alt:yup.string()
+    postalAlt:yup.string()
         .when("otherWorkAddress", {
             is: true,
             then: yup.string().matches(/^[A-Za-z]\d[A-Za-z][ -]?\d[A-Za-z]\d$/,"Please enter a valid Postal Code").required("Please enter a postal code.")
@@ -116,9 +120,21 @@ export const HaveEmployeeValidationSchema = yup.object().shape({
             is: "1",
             then: yup.string().required('Please enter the Organization name'),
         }),
-    operatingName2: yup.string(),
-    operatingName3: yup.string(),
-    operatingName4: yup.string(),
+    operatingName2: yup.string()
+        .when("checkPositionInstances",{
+            is: "1",
+            then: yup.string().required('Please enter the Organization name'),
+        }),
+    operatingName3: yup.string()
+        .when("checkPositionInstances",{
+            is: "1",
+            then: yup.string().required('Please enter the Organization name'),
+        }),
+    operatingName4: yup.string()
+        .when("checkPositionInstances",{
+            is: "1",
+            then: yup.string().required('Please enter the Organization name'),
+        }),
     numberOfPositions0:  yup.mixed()
         .oneOf(["1","2","3","4","5"], "Please choose a valid option.")
         .required("Please select number of applicants."),
@@ -204,18 +220,36 @@ export const HaveEmployeeValidationSchema = yup.object().shape({
             .typeError("must be a decimal number")
             .required("Please enter your employees wage")
     }),  
-    wage2:yup.number().test(
-        'is-decimal',
-        'invalid decimal',
-        value => (value +"").match(/^\d*.{1}\d*$/),),
-    wage3:yup.number().test(
-        'is-decimal',
-        'invalid decimal',
-        value => (value +"").match(/^\d*.{1}\d*$/),),
-    wage4:yup.number().test(
-        'is-decimal',
-        'invalid decimal',
-        value => (value +"").match(/^\d*.{1}\d*$/),),
+    wage2:yup.number()
+        .when("checkPositionInstances",{
+            is: "2",
+            then: yup.number().test(
+                'is-decimal',
+                'invalid decimal',
+                value => (value +"").match(/^\d*.{1}\d*$/),)
+                .typeError("must be a decimal number")
+                .required("Please enter your employees wage")
+        }),  
+    wage3:yup.number()
+        .when("checkPositionInstances",{
+            is: "3",
+            then: yup.number().test(
+                'is-decimal',
+                'invalid decimal',
+                value => (value +"").match(/^\d*.{1}\d*$/),)
+                .typeError("must be a decimal number")
+                .required("Please enter your employees wage")
+        }),  
+    wage4:yup.number()
+        .when("checkPositionInstances",{
+            is: "4",
+            then: yup.number().test(
+                'is-decimal',
+                'invalid decimal',
+                value => (value +"").match(/^\d*.{1}\d*$/),)
+                .typeError("must be a decimal number")
+                .required("Please enter your employees wage")
+        }),  
     duties0:yup.string()
         .max(500, "this field is limited to 500 characters")
         .required('Please enter a description of the duties your employee will be tasked with.'),
@@ -225,11 +259,20 @@ export const HaveEmployeeValidationSchema = yup.object().shape({
             then: yup.string().max(500, "this field is limited to 500 characters").required('Please enter a description of the duties your employee will be tasked with.')
         }),  
     duties2:yup.string()
-        .max(500, "this field is limited to 500 characters"),
+        .when("checkPositionInstances",{
+            is: "2",
+            then: yup.string().max(500, "this field is limited to 500 characters").required('Please enter a description of the duties your employee will be tasked with.')
+        }),  
     duties3:yup.string()
-        .max(500, "this field is limited to 500 characters"),
+        .when("checkPositionInstances",{
+            is: "3",
+            then: yup.string().max(500, "this field is limited to 500 characters").required('Please enter a description of the duties your employee will be tasked with.')
+        }),  
     duties4:yup.string()
-        .max(500, "this field is limited to 500 characters"),
+        .when("checkPositionInstances",{
+            is: "4",
+            then: yup.string().max(500, "this field is limited to 500 characters").required('Please enter a description of the duties your employee will be tasked with.')
+        }),  
     signatoryTitle: yup.string()
         .required("Please enter the title of the organization signatory.")
         .test('match','Signatories must be different',function (signatoryTitle){
