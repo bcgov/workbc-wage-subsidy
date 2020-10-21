@@ -144,20 +144,127 @@ export const HaveEmployeeValidationSchema = yup.object().shape({
             then: yup.mixed().oneOf(["1","2","3","4","5"], "Please choose a valid option.").required("Please select number of applicants.")
         }),
     numberOfPositions2:  yup.mixed()
-    .when("checkPositionInstances",{
-        is: "2",
-        then: yup.mixed().oneOf(["1","2","3","4","5"], "Please choose a valid option.")
-    }),
+        .when("checkPositionInstances",{
+            is: "2",
+            then: yup.mixed().oneOf(["1","2","3","4","5"], "Please choose a valid option.")
+        }),
     numberOfPositions3:  yup.mixed()
-    .when("checkPositionInstances",{
-        is: "3",
-        then: yup.mixed().oneOf(["1","2","3","4","5"], "Please choose a valid option.")
-    }),
+        .when("checkPositionInstances",{
+            is: "3",
+            then: yup.mixed().oneOf(["1","2","3","4","5"], "Please choose a valid option.")
+        }),
     numberOfPositions4:  yup.mixed()
-    .when("checkPositionInstances",{
-        is: "4",
-        then: yup.mixed().oneOf(["1","2","3","4","5"], "Please choose a valid option.")
-    }),
+        .when("checkPositionInstances",{
+            is: "4",
+            then: yup.mixed().oneOf(["1","2","3","4","5"], "Please choose a valid option.")
+        }),
+    
+    position0Email0:yup.string().email("Invalid email")
+        .when("numberOfPositions0", {
+            is: (numberOfPositions0) =>{
+                return (numberOfPositions0 > 0);
+            },
+            then: yup.string().email("Invalid Email").required("An employee email is required")
+        }),
+    position0Email1:yup.string().email("Invalid email")
+        .when("numberOfPositions0", {
+            is: (numberOfPositions0) =>{
+                return (numberOfPositions0 > 1);
+            },
+            then: yup.string().email("Invalid Email").required("An employee email is required")
+        }),
+
+    position0Email2:yup.string().email()
+        .when("numberOfPositions0", {
+            is: (numberOfPositions0) =>{
+                return (numberOfPositions0 > 2);
+            },
+            then: yup.string().email("Invalid Email").required("An employee email is required")
+        }),
+    position0Email3:yup.string().email()
+        .when("numberOfPositions0", {
+            is: (numberOfPositions0) =>{
+                return (numberOfPositions0 > 3);
+            },
+            then: yup.string().email("Invalid Email").required("An employee email is required")
+        }),
+    position0Email4:yup.string().email()
+        .when("numberOfPositions0", {
+            is: (numberOfPositions0) =>{
+                return (numberOfPositions0 > 4);
+            },
+            then: yup.string().email("Invalid Email").required("An employee email is required")
+        }),
+    position1Email0:yup.string().email()
+        .when("numberOfPositions1", {
+            is: (numberOfPositions1) =>{
+                return (numberOfPositions1 > 0);
+            },
+            then: yup.string().email("Invalid Email").required("An employee email is required")
+        }),
+    position1Email1:yup.string().email()
+        .when("numberOfPositions1", {
+            is: (numberOfPositions1) =>{
+                return (numberOfPositions1 > 1);
+            },
+            then: yup.string().email("Invalid Email").required("An employee email is required")
+        }),
+    position1Email2:yup.string().email()
+        .when("numberOfPositions1", {
+            is: (numberOfPositions1) =>{
+                return (numberOfPositions1 > 2);
+            },
+            then: yup.string().email("Invalid Email").required("An employee email is required")
+        }),
+    position1Email3:yup.string().email()
+        .when("numberOfPositions1", {
+            is: (numberOfPositions1) =>{
+                return (numberOfPositions1 > 3);
+            },
+            then: yup.string().email("Invalid Email").required("An employee email is required")
+        }),
+    position2Email0:yup.string().email()
+        .when("numberOfPositions2", {
+            is: (numberOfPositions2) =>{
+                return (numberOfPositions2 > 0);
+            },
+            then: yup.string().email("Invalid Email").required("An employee email is required")
+        }),
+    position2Email1:yup.string().email()
+        .when("numberOfPositions2", {
+            is: (numberOfPositions2) =>{
+                return (numberOfPositions2 > 1);
+            },
+            then: yup.string().email("Invalid Email").required("An employee email is required")
+        }),
+    position2Email2:yup.string().email()
+        .when("numberOfPositions2", {
+            is: (numberOfPositions2) =>{
+                return (numberOfPositions2 > 2);
+            },
+            then: yup.string().email("Invalid Email").required("An employee email is required")
+        }),
+    position3Email0:yup.string().email()
+        .when("numberOfPositions3", {
+            is: (numberOfPositions3) =>{
+                return (numberOfPositions3 > 0);
+            },
+            then: yup.string().email("Invalid Email").required("An employee email is required")
+        }),
+    position3Email1:yup.string().email()
+        .when("numberOfPositions3", {
+            is: (numberOfPositions3) =>{
+                return (numberOfPositions3 > 1);
+            },
+            then: yup.string().email("Invalid Email").required("An employee email is required")
+        }),
+    position4Email0:yup.string().email()
+        .when("numberOfPositions4", {
+            is: (numberOfPositions4) =>{
+                return (numberOfPositions4 > 0);
+            },
+            then: yup.string().email("Invalid Email").required("An employee email is required")
+        }),
     startDate0: yup.date()
         .min(new Date(), "Date must be after today")
         .required("Please Enter your start date"),
@@ -167,20 +274,20 @@ export const HaveEmployeeValidationSchema = yup.object().shape({
             then: yup.date().min(new Date(), 'Date must be after today').required("Please Enter your start date")
         }),
     startDate2:yup.date()
-    .when("checkPositionInstances",{
-        is: "2",
-        then: yup.date().min(new Date(), 'Date must be after today').required("Please Enter your start date")
-    }),      
+        .when("checkPositionInstances",{
+            is: "2",
+            then: yup.date().min(new Date(), 'Date must be after today').required("Please Enter your start date")
+        }),      
     startDate3:yup.date()
-    .when("checkPositionInstances",{
-        is: "3",
-        then: yup.date().min(new Date(), 'Date must be after today').required("Please Enter your start date")
-    }),
+        .when("checkPositionInstances",{
+            is: "3",
+            then: yup.date().min(new Date(), 'Date must be after today').required("Please Enter your start date")
+        }),
     startDate4:yup.date()
-    .when("checkPositionInstances",{
-        is: "4",
-        then: yup.date().min(new Date(), 'Date must be after today').required("Please Enter your start date")
-    }),
+        .when("checkPositionInstances",{
+            is: "4",
+            then: yup.date().min(new Date(), 'Date must be after today').required("Please Enter your start date")
+        }),
     hours0:yup.string()
         .max(2, "hours should not exceed 50 per week")
         .required('Please enter your employees hours per week.'),
@@ -190,20 +297,20 @@ export const HaveEmployeeValidationSchema = yup.object().shape({
             then: yup.string().max(2, "hours should not exceed 50 per week").required('Please enter your employees hours per week.')
         }),
     hours2:yup.string()
-    .when("checkPositionInstances",{
-        is: "2",
-        then: yup.string().max(2, "hours should not exceed 50 per week").required('Please enter your employees hours per week.')
-    }),
+        .when("checkPositionInstances",{
+            is: "2",
+            then: yup.string().max(2, "hours should not exceed 50 per week").required('Please enter your employees hours per week.')
+        }),
     hours3:yup.string()
-    .when("checkPositionInstances",{
-        is: "3",
-        then: yup.string().max(2, "hours should not exceed 50 per week").required('Please enter your employees hours per week.')
-    }),
+        .when("checkPositionInstances",{
+            is: "3",
+            then: yup.string().max(2, "hours should not exceed 50 per week").required('Please enter your employees hours per week.')
+        }),
     hours4:yup.string()
-    .when("checkPositionInstances",{
-        is: "4",
-        then: yup.string().max(2, "hours should not exceed 50 per week").required('Please enter your employees hours per week.')
-    }),
+        .when("checkPositionInstances",{
+            is: "4",
+            then: yup.string().max(2, "hours should not exceed 50 per week").required('Please enter your employees hours per week.')
+        }),
     wage0:yup.number().test(
         'is-decimal',
         'invalid decimal',
@@ -211,15 +318,15 @@ export const HaveEmployeeValidationSchema = yup.object().shape({
         .typeError("must be a decimal number")
         .required("Please enter your employees wage"),
     wage1:yup.number()
-    .when("checkPositionInstances",{
-        is: "1",
-        then: yup.number().test(
-            'is-decimal',
-            'invalid decimal',
-            value => (value +"").match(/^\d*.{1}\d*$/),)
-            .typeError("must be a decimal number")
-            .required("Please enter your employees wage")
-    }),  
+        .when("checkPositionInstances",{
+            is: "1",
+            then: yup.number().test(
+                'is-decimal',
+                'invalid decimal',
+                value => (value +"").match(/^\d*.{1}\d*$/),)
+                .typeError("must be a decimal number")
+                .required("Please enter your employees wage")
+        }),  
     wage2:yup.number()
         .when("checkPositionInstances",{
             is: "2",
