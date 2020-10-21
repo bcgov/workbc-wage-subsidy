@@ -46,7 +46,7 @@ class NeedEmployeeStep2 extends Component {
 
                 </div>
                     <div className="form-group">
-                      <button className="btn btn-primary" type="button" disabled ={window.$buttonStatus} onClick={this.addPosition}>Add Another Position Title</button><br></br>
+                      <button className="btn btn-primary" type="button" disabled ={this.props.values.checkPositionInstances === "1"} onClick={this.addPosition}>Add Another Position Title</button><br></br>
                     </div>
               
                 {

@@ -5,9 +5,8 @@ import { feedBackClassName, feedBackInvalid,NumPositionsInvalid } from '../share
 
 
 class HaveEmployeeStep2 extends Component {
-   
     state={
-        positions:[{operatingName:"", numberOfPositions:"", startDate:"",hours:"",wage:"",duties:""}],
+        positions:[{operatingName:"", numberOfPositions:"", startDate:"",hours:"",wage:"",duties:"",email0:"",email1:"",email2:"",email3:"",email4:""}],
 
     };
     handleStartChange = (e) => {
@@ -17,7 +16,7 @@ class HaveEmployeeStep2 extends Component {
     };
     handleChange = (e) => {
 
-        if (["operatingName", "numberOfPositions", "startDate", "hours", "wage", "duties"].includes(e.target.className.split(" ")[0])) {
+        if (["operatingName", "numberOfPositions", "startDate", "hours", "wage", "duties","email0","email1","email2","email3","email4"].includes(e.target.className.split(" ")[0])) {
           let positions = [...this.state.positions]
           positions[e.target.dataset.id][e.target.className.split(" ")[0]] = e.target.value
           this.setState({ positions }, () => console.log(this.state.positions))
@@ -29,11 +28,40 @@ class HaveEmployeeStep2 extends Component {
     addPosition = (e) => {
         this.props.values.checkPositionInstances = "1";
         this.setState((prevState)=> ({
-            positions: [...prevState.positions, {operatingName:"", numberOfPositions:"", startDate:"",hours:"",wage:"",duties:""}]
+            positions: [...prevState.positions, {operatingName:"", numberOfPositions:"", startDate:"",hours:"",wage:"",duties:"",email0:"",email1:"",email2:"",email3:"",email4:""}]
 
-    }));
+        }));
+    }
+    employeeEmails (Entry) {
+        var returnValue = [];
+        var i = 0;
+        var numPositions = 0;
+        if(Entry === 0)
+            numPositions = this.props.values.numberOfPositions0;
+        else if(Entry === 1)
+            numPositions = this.props.values.numberOfPositions1;
+        else if(Entry === 2)
+            numPositions = this.props.values.numberOfPositions2;
+        else if(Entry === 3)
+            numPositions = this.props.values.numberOfPositions3;
+        else
+            numPositions = this.props.values.numberOfPositions4;
+            
+        for (i = 0; i<numPositions; i++) {
+            var name = "position"+Entry+"Email"+i;
+            returnValue.push(<div key={name} className="form-group col-md-4">
+                                <label className="col-form-label control-label" htmlFor={name}>Employee Email Address <span
+                                        style={{ color: "red" }}>*</span></label>
+                                <small className="text-muted" id={name}> someone@example.com</small>
+                                <Field className={`email${numPositions} form-control ${feedBackClassName(this.props.errors, this.props.touched, name)}`} id={name} name={name} />
+                                {feedBackInvalid(this.props.errors,this.props.touched, name)}
+                            </div>
+                            );
+        }
+       return returnValue;
     }
     handleSubmit = (e) => { e.preventDefault() }
+
     render() {
         let { positions} = this.state
         if (this.props.currentStep !== 2) {
@@ -47,11 +75,11 @@ class HaveEmployeeStep2 extends Component {
 
                 </div>
                     <div className="form-group">
-                      <button className="btn btn-primary" type="button" disabled ={window.$buttonStatus} onClick={this.addPosition}>Add Another Position Title</button><br></br>
+                      <button className="btn btn-primary" type="button" disabled ={this.props.values.checkPositionInstances === "1"} onClick={this.addPosition}>Add Another Position Title</button><br></br>
                     </div>        
                 {
                     positions.map((val,Entry)=>{
-                        let operatingName=`operatingName${Entry}`, numberOfPositions=`numberOfPositions${Entry}`, startDate=`startDate${Entry}`, hours=`hours${Entry}`, wage=`wage${Entry}`, duties=`duties${Entry}`
+                        let operatingName=`operatingName${Entry}`, numberOfPositions=`numberOfPositions${Entry}`, startDate=`startDate${Entry}`, hours=`hours${Entry}`, wage=`wage${Entry}`, duties=`duties${Entry}`, email0=`position${Entry}Email0`, email1=`position${Entry}Email1`, email2=`position${Entry}Email2`, email3=`position${Entry}Email3`, email4=`position${Entry}Email4`
                     
                         return(
                           
@@ -74,6 +102,7 @@ class HaveEmployeeStep2 extends Component {
                                             id={numberOfPositions} 
                                             name={numberOfPositions}
                                             data-id={Entry}
+                                            
                                             >
                                             <option value="0">Please select</option>
                                             <option value="1">1</option>
@@ -85,6 +114,9 @@ class HaveEmployeeStep2 extends Component {
                                         {feedBackInvalid(this.props.errors,this.props.touched, numberOfPositions)}
                                         {NumPositionsInvalid(this.props.values)}
                                     </div>
+                                </div>
+                                <div className="form-row">
+                                    {this.employeeEmails(Entry)}
                                 </div>
                                 <div className="form-row">
                                     <div className="form-group col-md-4">
@@ -131,6 +163,7 @@ class HaveEmployeeStep2 extends Component {
                                     </div>
                                 </div>
                             </div>
+                             
                         )
                     })
                 }
