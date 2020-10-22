@@ -19,7 +19,7 @@ class HaveEmployeeStep2 extends Component {
         if (["operatingName", "numberOfPositions", "startDate", "hours", "wage", "duties","email0","email1","email2","email3","email4"].includes(e.target.className.split(" ")[0])) {
           let positions = [...this.state.positions]
           positions[e.target.dataset.id][e.target.className.split(" ")[0]] = e.target.value
-          this.setState({ positions }, () => console.log(this.state.positions))
+          this.setState({ positions }, () => this.state.positions)
         } else {
           this.setState({ [e.target.name]: e.target.value.toUpperCase() })
         }
@@ -28,10 +28,28 @@ class HaveEmployeeStep2 extends Component {
     addPosition = (e) => {
         this.props.values.checkPositionInstances = "1";
         this.setState((prevState)=> ({
-            positions: [...prevState.positions, {operatingName:"", numberOfPositions:"", startDate:"",hours:"",wage:"",duties:"",email0:"",email1:"",email2:"",email3:"",email4:""}]
+            positions: [...prevState.positions, {operatingName:"", numberOfPositions:"", startDate:"",hours:"",wage:"",duties:"",email0:"",email1:"",email2:"",email3:"",email4:"" }]
 
         }));
     }
+    removePosition = (e) =>{
+            this.props.values.checkPositionInstances = "0";
+            this.props.values.operatingName1 = "";
+            this.props.values.numberOfPositions1 = "0";
+            this.props.values.startDate1 = "";
+            this.props.values.operatingName1 = "";
+            this.props.values.position1Email0 = "";
+            this.props.values.position1Email1 = "";
+            this.props.values.position1Email2 = "";
+            this.props.values.position1Email3 = "";
+            this.props.values.hours1 = "";
+            this.props.values.wage1 = "";
+            this.props.values.skills1 = "";
+            this.setState((prevState)=>({
+                positions: [this.state.positions[0]]
+            }));
+    }
+    
     employeeEmails (Entry) {
         var returnValue = [];
         var i = 0;
@@ -46,7 +64,10 @@ class HaveEmployeeStep2 extends Component {
             numPositions = this.props.values.numberOfPositions3;
         else
             numPositions = this.props.values.numberOfPositions4;
-            
+        
+        if( 5 - Entry < numPositions){
+            numPositions =  5-Entry
+            }         
         for (i = 0; i<numPositions; i++) {
             var name = "position"+Entry+"Email"+i;
             returnValue.push(<div key={name} className="form-group col-md-4">
@@ -75,7 +96,7 @@ class HaveEmployeeStep2 extends Component {
 
                 </div>
                     <div className="form-group">
-                      <button className="btn btn-primary" type="button" disabled ={this.props.values.checkPositionInstances === "1"} onClick={this.addPosition}>Add Another Position Title</button><br></br>
+                      <button className="btn btn-primary" type="button" disabled ={this.props.values.checkPositionInstances === "1"} onClick={this.addPosition}>Add Another Position Title</button>
                     </div>        
                 {
                     positions.map((val,Entry)=>{
@@ -85,7 +106,7 @@ class HaveEmployeeStep2 extends Component {
                           
                             <div key={Entry}>
                                   <h2>Position {Entry+1}</h2>
-                                <hr></hr>
+                                    <hr></hr>
                                  <div className="form-row">
                                     <div className="form-group col-md-8">
                                         <label className="col-form-label control-label" htmlFor={operatingName}>Organization Name <span
@@ -145,7 +166,7 @@ class HaveEmployeeStep2 extends Component {
                                         <Field className= {`wage form-control ${feedBackClassName(this.props.errors, this.props.touched, wage)}`} id={wage} name={wage} data-id={Entry}  />
                                         {feedBackInvalid(this.props.errors,this.props.touched, wage)}
                                     </div>
-                            </div>
+                                </div>
                                 <div className="form-row">
                                     <div className="form-group col-md-12">
                                         <label className="col-form-label control-label" htmlFor={duties}>Description of duties:<span
@@ -167,7 +188,7 @@ class HaveEmployeeStep2 extends Component {
                         )
                     })
                 }
-                
+                  <button className="btn btn-primary" type="button" disabled ={this.props.values.checkPositionInstances === "0"} onClick={this.removePosition}>Remove Last Position Title</button><br/><br/>
             </div>
         )
     }
