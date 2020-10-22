@@ -506,7 +506,7 @@ class FormStep1 extends Component {
                             className="form-check-label control-label" 
                             htmlFor="eligibility"
                         >
-                        <span style={{ color: "red" }}>*</span> I confirm that I have reviewed the employer eligibility criteria and meet the eligibility requirements. 
+                        <span style={{ color: "red" }}>*</span> {this.props.values.operatingName} confirms that they have reviewed the employer eligibility criteria and they meets the eligibility requirements. 
                         {feedBackInvalid(this.props.errors,this.props.touched,"eligibility")}
                         </label>
                         

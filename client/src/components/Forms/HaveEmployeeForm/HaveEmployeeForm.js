@@ -171,7 +171,8 @@ class HaveEmployeeForm extends Component {
                             validationSchema={HaveEmployeeValidationSchema}
                             onSubmit={(values, actions) => {
                                 actions.setSubmitting(false);
-                                this.props.history.push('/thankyou')
+                                this.props.history.push('/thankyouHaveEmployee',values)
+
                             }}
                         
                         >
