@@ -22,6 +22,25 @@ class ClaimForm extends Component {
         return Number(values.total1) + Number(values.total2) + Number(values.total3) + Number(values.total4) + Number(values.total5);
     }
 
+
+    setHoursTotal(func, values, field, amount) {
+        // set line total
+        func(field, amount);
+        // update hours worked totals
+        func('hoursWorkedTotal1', this.totalHoursWorked(values));
+        // update totals total
+        func('totalTotal1', this.totalTotals(values));
+    }
+
+    setWageTotal(func, values, field, amount) {
+        // set line total
+        func(field, amount);
+        // update wage totals
+        func('hourlyWageTotal1', this.totalHourlyWage(values));
+        // update totals total
+        func('totalTotal1', this.totalTotals(values));
+    }
+
     render() {
         return (
             <div className="container">
@@ -72,6 +91,8 @@ class ClaimForm extends Component {
                             }}
                             validationSchema={ClaimFormValidationSchema}
                             onSubmit={(values, actions) => {
+                                // doing this here to avoid any weird edge cases with onBlur and hitting submit
+                                actions.setFieldValue('totalsTotal1', this.totalTotals(values));
                                 actions.setSubmitting(false);
                                 this.props.history.push('/thankyouClaimForm', values);
                             }}
@@ -203,41 +224,41 @@ class ClaimForm extends Component {
                                                 <tr>
                                                     <td><DatePickerField className={`form-control ${feedBackClassName(errors, touched, "dateFrom1")}`} id="dateFrom1" name="dateFrom1" /></td>
                                                     <td><Field className={`form-control ${feedBackClassName(errors, touched, "hoursWorked1")}`} id="dateFrom1" name="hoursWorked1"
-                                                        onBlur={() => { setFieldValue('total1', values.hoursWorked1 * values.hourlyWage1) }} /></td>
+                                                        onBlur={() => { this.setHoursTotal(setFieldValue, values, 'total1', values.hoursWorked1 * values.hourlyWage1) }} /></td>
                                                     <td><Field className={`form-control ${feedBackClassName(errors, touched, "hourlyWage1")}`} id="dateFrom1" name="hourlyWage1"
-                                                        onBlur={() => { setFieldValue('total1', values.hoursWorked1 * values.hourlyWage1) }} /></td>
+                                                        onBlur={() => { this.setWageTotal(setFieldValue, values, 'total1', values.hoursWorked1 * values.hourlyWage1) }} /></td>
                                                     <td><Field className={`form-control ${feedBackClassName(errors, touched, "total1")}`} id="dateFrom1" name="total1" disabled /></td>
                                                 </tr>
                                                 <tr>
                                                     <td><DatePickerField className={`form-control ${feedBackClassName(errors, touched, "dateFrom2")}`} id="dateFrom2" name="dateFrom2" /></td>
                                                     <td><Field className={`form-control ${feedBackClassName(errors, touched, "hoursWorked2")}`} id="dateFrom2" name="hoursWorked2"
-                                                        onBlur={() => { setFieldValue('total2', values.hoursWorked2 * values.hourlyWage2) }} /></td>
+                                                        onBlur={() => { this.setHoursTotal(setFieldValue, values, 'total2', values.hoursWorked2 * values.hourlyWage2) }} /></td>
                                                     <td><Field className={`form-control ${feedBackClassName(errors, touched, "hourlyWage2")}`} id="dateFrom2" name="hourlyWage2"
-                                                        onBlur={() => { setFieldValue('total2', values.hoursWorked2 * values.hourlyWage2) }} /></td>
+                                                        onBlur={() => { this.setWageTotal(setFieldValue, values, 'total2', values.hoursWorked2 * values.hourlyWage2) }} /></td>
                                                     <td><Field className={`form-control ${feedBackClassName(errors, touched, "total2")}`} id="dateFrom2" name="total2" disabled /></td>
                                                 </tr>
                                                 <tr>
                                                     <td><DatePickerField className={`form-control ${feedBackClassName(errors, touched, "dateFrom3")}`} id="dateFrom3" name="dateFrom3" /></td>
                                                     <td><Field className={`form-control ${feedBackClassName(errors, touched, "hoursWorked3")}`} id="dateFrom3" name="hoursWorked3"
-                                                        onBlur={() => { setFieldValue('total3', values.hoursWorked3 * values.hourlyWage3) }} /></td>
+                                                        onBlur={() => { this.setHoursTotal(setFieldValue, values, 'total3', values.hoursWorked3 * values.hourlyWage3) }} /></td>
                                                     <td><Field className={`form-control ${feedBackClassName(errors, touched, "hourlyWage3")}`} id="dateFrom3" name="hourlyWage3"
-                                                        onBlur={() => { setFieldValue('total3', values.hoursWorked3 * values.hourlyWage3) }} /></td>
+                                                        onBlur={() => { this.setWageTotal(setFieldValue, values, 'total3', values.hoursWorked3 * values.hourlyWage3) }} /></td>
                                                     <td><Field className={`form-control ${feedBackClassName(errors, touched, "total3")}`} id="dateFrom3" name="total3" disabled /></td>
                                                 </tr>
                                                 <tr>
                                                     <td><DatePickerField className={`form-control ${feedBackClassName(errors, touched, "dateFrom4")}`} id="dateFrom4" name="dateFrom4" /></td>
                                                     <td><Field className={`form-control ${feedBackClassName(errors, touched, "hoursWorked4")}`} id="dateFrom4" name="hoursWorked4"
-                                                        onBlur={() => { setFieldValue('total4', values.hoursWorked4 * values.hourlyWage4) }} /></td>
+                                                        onBlur={() => { this.setHoursTotal(setFieldValue, values, 'total4', values.hoursWorked4 * values.hourlyWage4) }} /></td>
                                                     <td><Field className={`form-control ${feedBackClassName(errors, touched, "hourlyWage4")}`} id="dateFrom4" name="hourlyWage4"
-                                                        onBlur={() => { setFieldValue('total4', values.hoursWorked4 * values.hourlyWage4) }} /></td>
+                                                        onBlur={() => { this.setWageTotal(setFieldValue, values, 'total4', values.hoursWorked4 * values.hourlyWage4) }} /></td>
                                                     <td><Field className={`form-control ${feedBackClassName(errors, touched, "total4")}`} id="dateFrom4" name="total4" disabled /></td>
                                                 </tr>
                                                 <tr>
                                                     <td><DatePickerField className={`form-control ${feedBackClassName(errors, touched, "dateFrom5")}`} id="dateFrom5" name="dateFrom5" /></td>
                                                     <td><Field className={`form-control ${feedBackClassName(errors, touched, "hoursWorked5")}`} id="dateFrom5" name="hoursWorked5"
-                                                        onBlur={() => { setFieldValue('total5', values.hoursWorked5 * values.hourlyWage5) }} /></td>
+                                                        onBlur={() => { this.setHoursTotal(setFieldValue, values, 'total5', values.hoursWorked5 * values.hourlyWage5) }} /></td>
                                                     <td><Field className={`form-control ${feedBackClassName(errors, touched, "hourlyWage5")}`} id="dateFrom5" name="hourlyWage5"
-                                                        onBlur={() => { setFieldValue('total5', values.hoursWorked5 * values.hourlyWage5) }} /></td>
+                                                        onBlur={() => { this.setWageTotal(setFieldValue, values, 'total5', values.hoursWorked5 * values.hourlyWage5) }} /></td>
                                                     <td><Field className={`form-control ${feedBackClassName(errors, touched, "total5")}`} id="dateFrom5" name="total5" disabled /></td>
                                                 </tr>
                                                 <tr>
@@ -248,11 +269,11 @@ class ClaimForm extends Component {
                                                 <tr>
                                                     <td style={{ verticalAlign: "middle" }}><b>Total</b></td>
                                                     <td><Field className="form-control" id="hoursWorkedTotal1" name="hoursWorkedTotal1"
-                                                        value={this.totalHoursWorked(values)} disabled /></td>
+                                                         disabled /></td>
                                                     <td><Field className="form-control" id="hourlyWageTotal1" name="hourlyWageTotal1"
-                                                        value={this.totalHourlyWage(values)} disabled /></td>
+                                                         disabled /></td>
                                                     <td><Field className="form-control" id="totalTotal1" name="totalTotal1"
-                                                        value={this.totalTotals(values)} disabled /></td>
+                                                         disabled /></td>
                                                 </tr>
                                             </tbody>
                                         </table>
@@ -283,7 +304,7 @@ class ClaimForm extends Component {
                                                             Submitting...
                                                         </div>
                                                         :
-                                                            "Submit"
+                                                        "Submit"
                                                 }
                                             </button>
                                         </div>
