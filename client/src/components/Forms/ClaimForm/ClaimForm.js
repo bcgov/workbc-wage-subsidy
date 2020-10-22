@@ -141,7 +141,7 @@ class ClaimForm extends Component {
                                             </div>
                                         </div>
                                         <div className="form-group">
-                                            <legend>Address (if different from previous claim)</legend>
+                                            <legend>Address</legend>
                                         </div>
                                         <div className="form-group">
                                             <label className="col-form-label control-label" htmlFor="employerAddress1">Address 1 <span
