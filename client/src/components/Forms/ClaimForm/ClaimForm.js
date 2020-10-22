@@ -71,8 +71,12 @@ class ClaimForm extends Component {
                                 totalTotal1: '',
                             }}
                             validationSchema={ClaimFormValidationSchema}
+                            onSubmit={(values, actions) => {
+                                actions.setSubmitting(false);
+                                this.props.history.push('/thankyouClaimForm', values);
+                            }}
                         >
-                            {({ values, errors, touched, setFieldValue }) => (
+                            {({ values, errors, touched, setFieldValue, isSubmitting, isValid }) => (
                                 <Form>
                                     <div className="form-group">
                                         <h2 id="forms">Wage Subsidy Claim Form</h2>
@@ -117,7 +121,7 @@ class ClaimForm extends Component {
                                                 value="no"
                                             />
                                             <label className="form-check-label" htmlFor="isFinalClaim">No</label>
-                                            {feedBackInvalid(errors, touched, "confirmOrganizationNonProfit")}
+                                            {feedBackInvalid(errors, touched, "isFinalClaim")}
                                         </div>
                                         <div className="form-row">
                                             <div className="form-group col-md-4">
@@ -264,6 +268,24 @@ class ClaimForm extends Component {
                                                 rows="4"
                                             />
                                             <small>{values.clientIssues1.length}/700</small>
+                                        </div>
+                                        <div className="form-group">
+                                            <button
+                                                className="btn btn-success btn-block"
+                                                type="submit"
+                                                style={{ marginBottom: "2rem" }}
+                                                disabled={isSubmitting || !isValid}
+                                            >
+                                                {
+                                                    isSubmitting ?
+                                                        <div>
+                                                            <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                                            Submitting...
+                                                        </div>
+                                                        :
+                                                            "Submit"
+                                                }
+                                            </button>
                                         </div>
                                     </div>
                                 </Form>
