@@ -19,7 +19,7 @@ class NeedEmployeeStep2 extends Component {
         if (["operatingName", "numberOfPositions", "startDate", "hours", "wage", "duties", "skills", "workExperience"].includes(e.target.className.split(" ")[0])) {
           let positions = [...this.state.positions]
           positions[e.target.dataset.id][e.target.className.split(" ")[0]] = e.target.value
-          this.setState({ positions }, () => console.log(this.state.positions))
+          this.setState({ positions }, () => this.state.positions)
         } else {
           this.setState({ [e.target.name]: e.target.value.toUpperCase() })
         }
@@ -30,7 +30,22 @@ class NeedEmployeeStep2 extends Component {
         this.setState((prevState)=> ({
             positions: [...prevState.positions, {operatingName:"", numberOfPositions:"", startDate:"",hours:"",wage:"",duties:"",skills:"",workExperience:""}]
 
-    }));
+        }));
+    }
+
+    removePosition = (e) =>{
+        this.props.values.checkPositionInstances = "0";
+        this.props.values.operatingName1 = "";
+        this.props.values.numberOfPositions1 = "0";
+        this.props.values.startDate1 = "";
+        this.props.values.hours1 = "";
+        this.props.values.wage1 = "";
+        this.props.values.skills1 = "";
+        this.props.values.workExperience1 = "";
+        this.setState((prevState)=>({
+            positions: [this.state.positions[0]]
+        }));
+        
     }
     handleSubmit = (e) => { e.preventDefault() }
     render() {
@@ -46,7 +61,7 @@ class NeedEmployeeStep2 extends Component {
 
                 </div>
                     <div className="form-group">
-                      <button className="btn btn-primary" type="button" disabled ={window.$buttonStatus} onClick={this.addPosition}>Add Another Position Title</button><br></br>
+                      <button className="btn btn-primary" type="button" disabled ={this.props.values.checkPositionInstances === "1"} onClick={this.addPosition}>Add Another Position Title</button><br></br>
                     </div>
               
                 {
@@ -166,7 +181,7 @@ class NeedEmployeeStep2 extends Component {
                         )
                     })
                 }
-                
+                  <button className="btn btn-primary" type="button" disabled ={this.props.values.checkPositionInstances === "0"} onClick={this.removePosition}>Remove Last Position Title</button><br/><br/>
             </div>
         )
     }

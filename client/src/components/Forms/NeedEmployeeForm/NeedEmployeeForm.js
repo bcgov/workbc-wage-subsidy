@@ -86,13 +86,13 @@ class NeedEmployeeForm extends Component {
                                             //step 1
                                             operatingName:"",
                                             businessNumber:"",
-                                            address:"",
-                                            city:"",
-                                            province:"",
-                                            postal:"",
-                                            phone:"",
-                                            fax:"",
-                                            email:"",
+                                            businessAddress:"",
+                                            businessCity:"",
+                                            businessProvince:"",
+                                            businessPostal:"",
+                                            businessPhone:"",
+                                            businessFax:"",
+                                            businessEmail:"",
                                             otherWorkAddress: false,
                                             sectorType:"",
                                             typeOfIndustry:"",
@@ -108,10 +108,10 @@ class NeedEmployeeForm extends Component {
                                             //step 1:pop-up fields
                                             employeesClaimed:"",
                                             WSBCNumber:"",
-                                            address_alt:"",
-                                            city_alt:"",
-                                            province_alt:"",
-                                            postal_alt:"",
+                                            addressAlt:"",
+                                            cityAlt:"",
+                                            provinceAlt:"",
+                                            postalAlt:"",
                                             //step 2
                                             operatingName0: "",
                                             operatingName1: "",
@@ -165,7 +165,8 @@ class NeedEmployeeForm extends Component {
                             validationSchema={NeedEmployeeValidationSchema}
                             onSubmit={(values, actions) => {
                                 actions.setSubmitting(false);
-                                this.props.history.push('/thankyou')
+                                this.props.history.push('/thankyouNeedEmployee',values)
+
                             }}
                         
                         >
