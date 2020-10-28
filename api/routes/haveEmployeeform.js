@@ -293,6 +293,7 @@ router.post('/', csrfProtection, async (req, res) => {
         await sendEmails(value)
           .then(async function (sent) {
             if (sent){
+              /*
               await saveList(value)
                 .then(function(saved){
                   console.log("saved")
@@ -302,6 +303,7 @@ router.post('/', csrfProtection, async (req, res) => {
                   console.log("error")
                   console.log(e)
                 })
+                */
                 res.send({
                   ok: "ok"
                 })

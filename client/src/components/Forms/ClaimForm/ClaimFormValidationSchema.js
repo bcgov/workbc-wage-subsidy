@@ -3,18 +3,18 @@ import "yup-phone";
 
 
 export const ClaimFormValidationSchema = yup.object().shape({
-    periodStart1: yup.date().required(),
-    periodStart2: yup.date().required().min(
+    periodStart1: yup.date().required("Please enter a starting date"),
+    periodStart2: yup.date().required("Please enter an ending date").min(
         yup.ref('periodStart1'), 'End date cannot be before start date'
     ),
-    isFinalClaim: yup.boolean().required(),
+    isFinalClaim: yup.string().required("Please select an option"),
     employerName: yup.string().required("Please enter the employer's business name"),
     employerContact: yup.string().required("Please enter a contact name"),
     employerPhone: yup.string()
         .phone("CA", false, "Please enter a valid number.")
         .required("Please enter phone number"),
     employerAddress1: yup.string()
-        .max(255, "Address too long, please use address line 2.").required(),
+        .max(255, "Address too long, please use address line 2.").required("Please enter an address"),
     employerAddress2: yup.string()
         .max(255, "Address too long"),
     employerCity: yup.string()
@@ -23,8 +23,8 @@ export const ClaimFormValidationSchema = yup.object().shape({
     employerPostal: yup.string()
         .matches(/^[A-Za-z]\d[A-Za-z][ -]?\d[A-Za-z]\d$/, "Please enter a valid Postal Code")
         .required("Please enter a postal code."),
-    employeeFirstName: yup.string().required(),
-    employeeLastName: yup.string().required(),
+    employeeFirstName: yup.string().required("Please enter a first name"),
+    employeeLastName: yup.string().required("Please enter a last ame"),
     clientIssues1: yup.string().max(700),
     dateFrom1: yup.date(),
     hoursWorked1: yup.number(),
