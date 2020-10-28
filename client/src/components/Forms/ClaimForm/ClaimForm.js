@@ -1,13 +1,41 @@
 import React, { Component } from 'react'
+import '../../../utils/polyfills'
 import { ClaimFormValidationSchema } from './ClaimFormValidationSchema'
-import { Formik, Form, Field, yupToFormErrors, useFormik } from 'formik'
+import { Formik, Form, Field } from 'formik'
 import { feedBackClassName, feedBackInvalid } from '../shared/ValidationMessages'
 import { DatePickerField } from '../shared/DatePickerField'
-import * as Yup from 'yup'
+import { FORM_URL } from '../../../constants/form'
+import { nanoid } from 'nanoid'
+import { generateAlert } from '../shared/Alert'
 
 class ClaimForm extends Component {
     constructor() {
-        super()
+        super();
+        this.state = {
+            _csrf: '',
+            _id: nanoid(10)
+        }
+    }
+
+    componentDidMount() {
+        fetch(FORM_URL.claimForm, {
+            credentials: "include"
+        })
+            .then(res => res.json())
+            .then(
+                (result) => {
+                    console.log(result.csrfToken)
+                    this.setState({
+                        _csrf: result.csrfToken,
+                    })
+                },
+                (error) => {
+                    console.log(error)
+                    this.setState({
+                        hasError: true
+                    })
+                }
+            )
     }
 
     totalHoursWorked(values) {
@@ -46,6 +74,9 @@ class ClaimForm extends Component {
             <div className="container">
                 <div className="row">
                     <div className="col-md-12">
+                    {this.state.hasError && (
+                            generateAlert("alert-danger","An error has occurred, please refresh the page. If the error persists, please try again later.")
+                        )}
                         <Formik
                             initialValues={{
                                 periodStart1: '',
@@ -93,8 +124,33 @@ class ClaimForm extends Component {
                             onSubmit={(values, actions) => {
                                 // doing this here to avoid any weird edge cases with onBlur and hitting submit
                                 actions.setFieldValue('totalsTotal1', this.totalTotals(values));
-                                actions.setSubmitting(false);
-                                this.props.history.push('/thankyouClaimForm', values);
+                                // post form
+                                fetch(FORM_URL.claimForm, {
+                                    method: "POST",
+                                    credentials: "include",
+                                    headers: {
+                                        'Accept': 'application/json',
+                                        'Content-Type':'application/json',
+                                    },
+                                    body: JSON.stringify(values),
+                                })
+                                .then(res => res.json())
+                                .then((
+                                    resp => {
+                                        if (resp.err) {
+                                            actions.setSubmitting(false);
+                                            actions.setErrors(resp.err);
+                                            this.setState({
+                                                hasError: true
+                                            })
+                                        } else {
+                                            actions.setSubmitting(false);
+                                            this.props.history.push('/thankyouClaimForm', values);
+                                        }
+                                    }
+                                ));
+                                // actions.setSubmitting(false);
+                                // this.props.history.push('/thankyouClaimForm', values);
                             }}
                         >
                             {({ values, errors, touched, setFieldValue, isSubmitting, isValid }) => (
@@ -269,11 +325,11 @@ class ClaimForm extends Component {
                                                 <tr>
                                                     <td style={{ verticalAlign: "middle" }}><b>Total</b></td>
                                                     <td><Field className="form-control" id="hoursWorkedTotal1" name="hoursWorkedTotal1"
-                                                         disabled /></td>
+                                                        disabled /></td>
                                                     <td><Field className="form-control" id="hourlyWageTotal1" name="hourlyWageTotal1"
-                                                         disabled /></td>
+                                                        disabled /></td>
                                                     <td><Field className="form-control" id="totalTotal1" name="totalTotal1"
-                                                         disabled /></td>
+                                                        disabled /></td>
                                                 </tr>
                                             </tbody>
                                         </table>
