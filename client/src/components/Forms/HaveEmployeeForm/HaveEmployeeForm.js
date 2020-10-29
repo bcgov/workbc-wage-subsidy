@@ -12,6 +12,7 @@ import HaveEmployeeStep2 from './HaveEmployeeStep2'
 import ProgressTracker from '../shared/ProgressTracker'
 import { FORM_URL } from '../../../constants/form'
 import {HaveEmployeeValidationSchema} from './HaveEmployeeValidationSchema'
+import { generateAlert } from '../shared/Alert'
 
 class HaveEmployeeForm extends Component {
     constructor(){
@@ -103,6 +104,9 @@ class HaveEmployeeForm extends Component {
                 <div className="row">
                     <div className="col-md-12">
                         <ProgressTracker currentStep={this.state.currentStep}/>
+                        {this.state.hasError && (
+                            generateAlert("alert-danger","An error has occurred, please refresh the page. If the error persists, please try again later.")
+                        )}
                         <Formik
                             initialValues= {{
                                     _csrf: this.state._csrf,

@@ -4,15 +4,41 @@ import { Formik, Form, Field } from 'formik'
 import { feedBackClassName, feedBackInvalid } from '../shared/ValidationMessages'
 import { DatePickerField } from '../shared/DatePickerField'
 import CollectionNotice from './CollectionNotice'
-import {ParticipantValidationSchema} from './ParticipantValidationSchema'
+import { ParticipantValidationSchema } from './ParticipantValidationSchema'
+import { FORM_URL } from '../../../constants/form'
+import { nanoid } from 'nanoid'
+import { generateAlert } from '../shared/Alert'
 
 class ParticipantForm extends Component {
 
     constructor() {
         super()
         this.state = {
+            _csrf: '',
+            _id: nanoid(10),
             hasError: false
         }
+    }
+
+    componentDidMount() {
+        fetch(FORM_URL.clientForm, {
+            credentials: "include"
+        })
+            .then(res => res.json())
+            .then(
+                (result) => {
+                    console.log(result.csrfToken)
+                    this.setState({
+                        _csrf: result.csrfToken,
+                    })
+                },
+                (error) => {
+                    console.log(error)
+                    this.setState({
+                        hasError: true
+                    })
+                }
+            )
     }
 
     handleApplicationId(id, hasId, errors, touched) {
@@ -44,6 +70,9 @@ class ParticipantForm extends Component {
             <div className="container">
                 <div className="row">
                     <div className="col-md-12">
+                    {this.state.hasError && (
+                            generateAlert("alert-danger", "An error has occurred, please refresh the page. If the error persists, please try again later.")
+                        )}
                         <Formik
                             initialValues={{
                                 _csrf: '',
@@ -55,6 +84,38 @@ class ParticipantForm extends Component {
                                 participantConsent: false,
                             }}
                             validationSchema={ParticipantValidationSchema}
+                            onSubmit={(values, actions) => {
+                                fetch(FORM_URL.clientForm, {
+                                    method: "POST",
+                                    credentials: "include",
+                                    headers: {
+                                        'Accept': 'application/json',
+                                        'Content-Type': 'application/json',
+                                    },
+                                    body: JSON.stringify(values),
+                                })
+                                    .then(res => res.json())
+                                    .then((
+                                        resp => {
+                                            if (resp.err) {
+                                                actions.setSubmitting(false);
+                                                actions.setErrors(resp.err);
+                                                this.setState({
+                                                    hasError: true
+                                                })
+                                            } else if (resp.emailErr) {
+                                                console.log("emailError")
+                                                actions.setSubmitting(false)
+                                                this.setState({
+                                                    hasError: true
+                                                })
+                                            }
+                                            else if (resp.ok) {
+                                                actions.setSubmitting(false);
+                                            }
+                                        }
+                                    ));
+                            }}
                         >
                             {({ values, errors, touched, isSubmitting }) => (
                                 <Form>
