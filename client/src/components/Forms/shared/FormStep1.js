@@ -542,8 +542,19 @@ class FormStep1 extends Component {
                         >
                         <span style={{ color: "red" }}>*</span> {this.props.values.operatingName} meets the eligibility criteria and acknowledges that all the obligations the employer owes to or has with respect to its other employees under the various listed statutes and all other applicable laws apply equally to an individual employed in a wage subsidy placement. 
                         {feedBackInvalid(this.props.errors,this.props.touched,"eligibility")}
-                        </label>
-                        
+                        </label> 
+                    </div>
+                </div>
+                <div className="form-group">
+                    <div className="form-check">
+                        <Field type="checkbox" className={`form-check-input ${feedBackClassName(this.props.errors, this.props.touched, "lawCompliance")}`} id="lawCompliance" name="lawCompliance"/>
+                        <label 
+                            className="form-check-label control-label" 
+                            htmlFor="lawCompliance"
+                        >
+                        <span style={{ color: "red" }}>*</span> {this.props.values.operatingName} certifies that it is in full compliance with all applicable laws, including the <span className="font-italic">Employment Standards Act</span>, the <span className="font-italic">Workers Compensation Act</span> and the <span className="font-italic">Human Rights Code</span>. 
+                        {feedBackInvalid(this.props.errors,this.props.touched,"lawCompliance")}
+                        </label> 
                     </div>
                 </div>
 

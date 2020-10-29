@@ -104,6 +104,7 @@ class NeedEmployeeForm extends Component {
                                             liabilityCoverage:"",
                                             wageSubsidy:"",
                                             WSBCCoverage:"",
+                                            lawCompliance: false,
                                             eligibility: false,
                                             //step 1:pop-up fields
                                             employeesClaimed:"",
