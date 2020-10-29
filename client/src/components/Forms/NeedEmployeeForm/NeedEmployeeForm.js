@@ -11,6 +11,8 @@ import FormStep3 from '../shared/FormStep3'
 import NeedEmployeeStep2 from './NeedEmployeeStep2'
 import ProgressTracker from '../shared/ProgressTracker'
 import {NeedEmployeeValidationSchema} from './NeedEmployeeValidationSchema'
+import { FORM_URL } from '../../../constants/form'
+import { generateAlert } from '../shared/Alert'
 
 class NeedEmployeeForm extends Component {
     constructor(){
@@ -21,6 +23,27 @@ class NeedEmployeeForm extends Component {
         }
         this._next = this._next.bind(this)
         this._prev = this._prev.bind(this)
+    }
+
+    componentDidMount() {
+        fetch(FORM_URL.needEmployeeForm, {
+            credentials: "include"
+        })
+            .then(res => res.json())
+            .then(
+                (result) => {
+                    console.log(result.csrfToken)
+                    this.setState({
+                        _csrf: result.csrfToken,
+                    })
+                },
+                (error) => {
+                    console.log(error)
+                    this.setState({
+                        hasError: true
+                    })
+                }
+            )
     }
 
     handleSubmit = (event) => {
@@ -80,6 +103,9 @@ class NeedEmployeeForm extends Component {
                 <div className="row">
                     <div className="col-md-12">
                         <ProgressTracker currentStep={this.state.currentStep}/>
+                        {this.state.hasError && (
+                            generateAlert("alert-danger", "An error has occurred, please refresh the page. If the error persists, please try again later.")
+                        )}
                         <Formik
                             initialValues= {{
                                             _id: this.state._id,
@@ -164,8 +190,37 @@ class NeedEmployeeForm extends Component {
                             }}
                             validationSchema={NeedEmployeeValidationSchema}
                             onSubmit={(values, actions) => {
-                                actions.setSubmitting(false);
-                                this.props.history.push('/thankyouNeedEmployee',values)
+                                fetch(FORM_URL.NeedEmployeeForm, {
+                                    method: "POST",
+                                    credentials: "include",
+                                    headers: {
+                                        'Accept': 'application/json',
+                                        'Content-Type': 'application/json',
+                                    },
+                                    body: JSON.stringify(values),
+                                })
+                                    .then(res => res.json())
+                                    .then((
+                                        resp => {
+                                            if (resp.err) {
+                                                actions.setSubmitting(false);
+                                                actions.setErrors(resp.err);
+                                                this.setState({
+                                                    hasError: true
+                                                })
+                                            } else if (resp.emailErr) {
+                                                console.log("emailError")
+                                                actions.setSubmitting(false)
+                                                this.setState({
+                                                    hasError: true
+                                                })
+                                            }
+                                            else if (resp.ok) {
+                                                actions.setSubmitting(false);
+                                                this.props.history.push('/thankyouNeedEmployee', values);
+                                            }
+                                        }
+                                    ));
 
                             }}
                         

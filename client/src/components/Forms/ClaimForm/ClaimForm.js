@@ -74,8 +74,8 @@ class ClaimForm extends Component {
             <div className="container">
                 <div className="row">
                     <div className="col-md-12">
-                    {this.state.hasError && (
-                            generateAlert("alert-danger","An error has occurred, please refresh the page. If the error persists, please try again later.")
+                        {this.state.hasError && (
+                            generateAlert("alert-danger", "An error has occurred, please refresh the page. If the error persists, please try again later.")
                         )}
                         <Formik
                             initialValues={{
@@ -130,25 +130,32 @@ class ClaimForm extends Component {
                                     credentials: "include",
                                     headers: {
                                         'Accept': 'application/json',
-                                        'Content-Type':'application/json',
+                                        'Content-Type': 'application/json',
                                     },
                                     body: JSON.stringify(values),
                                 })
-                                .then(res => res.json())
-                                .then((
-                                    resp => {
-                                        if (resp.err) {
-                                            actions.setSubmitting(false);
-                                            actions.setErrors(resp.err);
-                                            this.setState({
-                                                hasError: true
-                                            })
-                                        } else {
-                                            actions.setSubmitting(false);
-                                            this.props.history.push('/thankyouClaimForm', values);
+                                    .then(res => res.json())
+                                    .then((
+                                        resp => {
+                                            if (resp.err) {
+                                                actions.setSubmitting(false);
+                                                actions.setErrors(resp.err);
+                                                this.setState({
+                                                    hasError: true
+                                                })
+                                            } else if (resp.emailErr) {
+                                                console.log("emailError")
+                                                actions.setSubmitting(false)
+                                                this.setState({
+                                                    hasError: true
+                                                })
+                                            }
+                                            else if (resp.ok) {
+                                                actions.setSubmitting(false);
+                                                this.props.history.push('/thankyouClaimForm', values);
+                                            }
                                         }
-                                    }
-                                ));
+                                    ));
                                 // actions.setSubmitting(false);
                                 // this.props.history.push('/thankyouClaimForm', values);
                             }}
