@@ -136,7 +136,7 @@ class HaveEmployeeForm extends Component {
                                     WSBCNumber:"",
                                     addressAlt:"",
                                     cityAlt:"",
-                                    provinceAlt:"",
+                                    provinceAlt:"BC",
                                     postalAlt:"",
                                     //step 2
                                     operatingName0: "",
