@@ -24,6 +24,7 @@ class FormStep1 extends Component {
                         let coordinates = result.features[0].geometry.coordinates
                         let ca = getCatchment(coordinates[1],coordinates[0])
                         console.log(ca)
+                        this.props.setFieldValue("_ca",ca)
                     })
                 }
             }
@@ -217,6 +218,7 @@ class FormStep1 extends Component {
                     </div>
                 </div>
                 {this.props.values.businessProvince !== "BC" && <p>Please note that the workplace must be based in BC.</p>}
+                {this.props.values._ca !== "" && <p>CA: {this.props.values._ca}</p>}
                 <div className="form-row">
                     <div className="form-group col-md-4">
                             <label className="col-form-label control-label" htmlFor="businessPhone">Phone Number <span
