@@ -1,8 +1,34 @@
 import React, { Component } from 'react'
 import {Field} from 'formik'
 import { feedBackClassName, feedBackInvalid } from '../shared/ValidationMessages'
+import {getCatchment} from '../shared/AddressToCatchment'
 
 class FormStep1 extends Component {
+
+    componentDidUpdate(prevProps){
+        console.log(prevProps.values.businessAddress)
+        let address1 = this.props.values.businessAddress
+        let city = this.props.values.businessCity
+        console.log(city)
+        console.log(address1)
+        console.log(this.props.values.businessPostal)
+        let province = "BC"
+        if (address1 !== "" || city !== "" || this.props.values.businessPostal !== ""){
+            if (city.length > 3 && address1.length > 4 && this.props.values.businessPostal.length >= 6){
+                if (address1 !== prevProps.values.businessAddress || city !== prevProps.values.businessCity || this.props.values.businessPostal !== prevProps.values.businessPostal){
+                    fetch(`https://geocoder.api.gov.bc.ca/addresses.geojson?addressString=${address1},${city},${province}`,{
+                    })
+                    .then(res => res.json())
+                    .then(result => {
+                        console.log(result)
+                        let coordinates = result.features[0].geometry.coordinates
+                        let ca = getCatchment(coordinates[1],coordinates[0])
+                        console.log(ca)
+                    })
+                }
+            }
+        }
+    }
 
     get WageSubsidyEmployees() {
         let subsidy = this.props.values.wageSubsidy;
@@ -121,6 +147,7 @@ class FormStep1 extends Component {
         }
         //Else return step 1
         return (
+
             <div>
                 <div className="form-group">
                     <br /><h2 id="forms">Business Information</h2>
@@ -189,6 +216,7 @@ class FormStep1 extends Component {
                         {feedBackInvalid(this.props.errors,this.props.touched,"businessPostal")}
                     </div>
                 </div>
+                {this.props.values.businessProvince !== "BC" && <p>Please note that the workplace must be based in BC.</p>}
                 <div className="form-row">
                     <div className="form-group col-md-4">
                             <label className="col-form-label control-label" htmlFor="businessPhone">Phone Number <span
