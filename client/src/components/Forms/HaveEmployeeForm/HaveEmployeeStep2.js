@@ -102,7 +102,7 @@ class HaveEmployeeStep2 extends Component {
                 </div>
                 {
                     positions.map((val, Entry) => {
-                        let operatingName = `operatingName${Entry}`, numberOfPositions = `numberOfPositions${Entry}`, startDate = `startDate${Entry}`, hours = `hours${Entry}`, wage = `wage${Entry}`, duties = `duties${Entry}`, email0 = `position${Entry}Email0`, email1 = `position${Entry}Email1`, email2 = `position${Entry}Email2`, email3 = `position${Entry}Email3`, email4 = `position${Entry}Email4`
+                        let operatingName = `operatingName${Entry}`, numberOfPositions = `numberOfPositions${Entry}`, startDate = `startDate${Entry}`, hours = `hours${Entry}`, wage = `wage${Entry}`, duties = `duties${Entry}` /*, email0 = `position${Entry}Email0`, email1 = `position${Entry}Email1`, email2 = `position${Entry}Email2`, email3 = `position${Entry}Email3`, email4 = `position${Entry}Email4`*/
 
                         return (
                             <div key={Entry}>
