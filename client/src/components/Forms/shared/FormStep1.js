@@ -42,8 +42,8 @@ class FormStep1 extends Component {
                         <Field
                             as="select"
                             className={`form-control ${feedBackClassName(this.props.errors, this.props.touched, "employeesClaimed")}`}
-                            id="EmployeesClaimed" 
-                            name="claims" 
+                            id="employeesClaimed" 
+                            name="employeesClaimed" 
                         >
                             <option value="">0</option>
                             <option value="1">1</option>

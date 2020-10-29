@@ -124,4 +124,4 @@ class ParticipantForm extends Component {
         )
     }
 }
-export default ParticipantForm
+export default withRouter(ParticipantForm);

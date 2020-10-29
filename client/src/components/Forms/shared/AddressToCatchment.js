@@ -1,4 +1,3 @@
-import React from 'react'
 import {pins} from '../../../constants/pins'
 import {calcDistance} from '../../../utils/distance'
 
