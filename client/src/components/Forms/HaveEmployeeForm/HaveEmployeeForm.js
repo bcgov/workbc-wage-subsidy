@@ -129,6 +129,7 @@ class HaveEmployeeForm extends Component {
                                     liabilityCoverage:"",
                                     wageSubsidy:"",
                                     WSBCCoverage:"",
+                                    lawCompliance: false,
                                     eligibility: false,
 
                                     //step 1:pop-up fields
