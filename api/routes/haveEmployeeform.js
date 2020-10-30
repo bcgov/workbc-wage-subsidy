@@ -46,10 +46,6 @@ async function sendEmails(values) {
       host: "apps.smtp.gov.bc.ca",
       port: 25,
       secure: false,
-      auth: {
-        user: "Wes.Reid@gov.bc.ca",
-        pass: "dbW62aRp7NUwx9H"
-      },
       tls: {
         rejectUnauthorized: false
       } // true for 465, false for other ports
@@ -101,6 +97,7 @@ async function sendEmails(values) {
         };
         let info = transporter.sendMail(message1, (error, info) => {
           if (error) {
+            console.log("error:", error);
             console.log("Error sending confirmation for " + values._id)
           } else {
             console.log("Message sent: %s", info.messageId);
@@ -108,6 +105,7 @@ async function sendEmails(values) {
         });
         info = transporter.sendMail(message2, (error, info) => {
           if (error) {
+            console.log("error:", error);
             console.log("Error sending list notification for " + values._id)
           } else {
             console.log("Message sent: %s", info.messageId);
@@ -115,6 +113,7 @@ async function sendEmails(values) {
         });
         info = transporter.sendMail(message3, (error, info) => {
           if (error) {
+            console.log("error:", error);
             console.log("Error sending notification for " + values._id)
           } else {
             console.log("Message sent: %s", info.messageId);
