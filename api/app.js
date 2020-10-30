@@ -15,8 +15,10 @@ const corsOptions = {
     optionsSuccessStatus: 200,
 };
 
-var formRouter = require('./routes/haveEmployeeForm')
-//var participantFormRouter = require('./routes/participantForm')
+var formRouter = require('./routes/haveEmployeeForm');
+var participantFormRouter = require('./routes/participantForm');
+var claimFormRouter = require('./routes/claimForm');
+var needEmployeeRouter = require('./routes/needEmployeeForm');
 
 var app = express();
 
@@ -30,6 +32,8 @@ app.use(helmet());
 
 
 app.use('/api/haveEmployeeForm', formRouter)
-//app.use('/api/participantForm',participantFormRouter)
+app.use('/api/participantForm',participantFormRouter)
+app.use('/api/claimForm', claimFormRouter)
+app.use('/api/needEmployeeForm', needEmployeeRouter);
 
 module.exports = app;

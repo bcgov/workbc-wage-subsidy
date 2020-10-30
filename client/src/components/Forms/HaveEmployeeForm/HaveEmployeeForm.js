@@ -215,11 +215,11 @@ class HaveEmployeeForm extends Component {
                                     (resp) => {
                                         console.log(resp)
                                         if (resp.err){
-                                            console.log("errors")
+                                            console.log("errors", resp)
                                             setSubmitting(false)
                                             setErrors(resp.err)
                                         } else if(resp.emailErr){
-                                            console.log("emailError")
+                                            console.log("emailError", resp)
                                             setSubmitting(false)
                                             this.setState({
                                                 hasError: true

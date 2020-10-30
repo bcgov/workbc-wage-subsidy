@@ -9,7 +9,7 @@ var spauth = require('node-sp-auth')
 var request = require('request-promise')
 
 
-var ParticipantFormValidationSchema = require('../schemas/ParticipantFormValidationSchema')
+var NeedEmployeeValidationSchema = require('../schemas/NeedEmployeeValidationSchema')
 var generateHTMLEmail = require('../utils/htmlEmail')
 var notification = require('../utils/applicationReceivedEmail');
 var clean = require('../utils/clean')
