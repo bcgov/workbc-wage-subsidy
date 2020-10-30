@@ -7,6 +7,7 @@ var { check, validationResult, matchedData } = require('express-validator')
 var nodemailer = require("nodemailer");
 var csrf = require('csurf');
 var csrfProtection = csrf({ cookie: true });
+var ClaimFormValidationSchema = require('../schemas/ClaimFormValidationSchema');
 
 
 var generateHTMLEmail = require('../utils/htmlEmail')

@@ -32,13 +32,13 @@ var listParty = process.env.LISTPARTY || process.env.OPENSHIFT_NODEJS_LISTPARTY 
 var listADFS = process.env.LISTADFS || process.env.OPENSHIFT_NODEJS_LISTADFS || ""
 
 
-var spr = spauth.getAuth(listWebURL, {
-  username: listUser,
-  password: listPass,
-  domain: listDomain,
-  relyingParty: listParty,
-  adfsUrl: listADFS
-})
+// var spr = spauth.getAuth(listWebURL, {
+//   username: listUser,
+//   password: listPass,
+//   domain: listDomain,
+//   relyingParty: listParty,
+//   adfsUrl: listADFS
+// })
 
 async function sendEmails(values) {
   try {
@@ -46,6 +46,10 @@ async function sendEmails(values) {
       host: "apps.smtp.gov.bc.ca",
       port: 25,
       secure: false,
+      auth: {
+        user: "Wes.Reid@gov.bc.ca",
+        pass: "dbW62aRp7NUwx9H"
+      },
       tls: {
         rejectUnauthorized: false
       } // true for 465, false for other ports
