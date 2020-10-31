@@ -11,9 +11,13 @@ module.exports = {
     },
 
     generateListNotification: function(values) {
-        var html = `
-   
-        `
+        var html = "";
+        // loop through each property
+        for (var key in values) {
+            // add key/val to html
+            html += `<p><b>${key}:</b> ${strings.orEmpty(values[key])}</p>`;
+        }
+
         return html;
     },
 
