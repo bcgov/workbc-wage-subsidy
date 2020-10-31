@@ -16,7 +16,7 @@ var generateHTMLEmail = require('../utils/htmlEmail')
 var notification = require('../utils/applicationReceivedEmail');
 var clean = require('../utils/clean')
 var confirmData = require('../utils/confirmationData');
-const { getSubmitted } = require('../utils/confirmationData');
+const { getHaveEmployeeSubmitted } = require('../utils/confirmationData');
 
 var confirmationEmail1 = process.env.CONFIRMATIONONE || process.env.OPENSHIFT_NODEJS_CONFIRMATIONONE || "";
 var confirmationEmail2 = process.env.CONFIRMATIONTWO || process.env.OPENSHIFT_NODEJS_CONFIRMATIONTWO || "";
@@ -80,7 +80,7 @@ async function sendEmails(values) {
               `<a href="${clientURL}/${values._id}">${clientURL}/${values._id}</a>`,
               ,
             ],
-            getSubmitted(values)
+            getHaveEmployeeSubmitted(values)
           ) // html body
         };
         let message2 = {
