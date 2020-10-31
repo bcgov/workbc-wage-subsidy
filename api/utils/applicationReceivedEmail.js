@@ -4,9 +4,10 @@ module.exports = {
 
     generateNotification: function (values) {
 
-        var html = /*html*/`
-
-    `
+        var html = "";
+        for (var key in values) {
+            html += `${key} ${strings.orEmpty(values[key])} `;
+        }
         return html
     },
 
