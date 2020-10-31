@@ -61,6 +61,9 @@ async function sendEmails(values) {
         } else {
           mailingList = [values.contactEmail, values.emailAlternate]
         }
+        var positionEmails = [values.position0Email0, values.position0Email1, values.position0Email2, 
+            values.position0Email3, values.position0Email4]
+            .filter(e => e != null); // filter out empty addresses
         // send mail with defined transport object
         let message1 = {
           from: 'WorkBC Wage Subsidy <donotreply@gov.bc.ca>', // sender address
@@ -95,6 +98,21 @@ async function sendEmails(values) {
           subject: "A grant application has been received - " + values._id, // Subject line
           html: notification.generateNotification(values) // html body
         };
+        let message4 = {
+          from: 'WorkBC Wage Subsidy <donotreply@gov.bc.ca>', // sender address
+          to: positionEmails,// list of receivers
+          subject: "Application Confirmation - " + values._id, // Subject line
+          html: generateHTMLEmail("Thank you, your application has been received",
+            [
+              `Application ID: ${values._id}`,
+              `Please visit the following URL in order to provide your consent to the Ministry.`,
+              `<a href="${clientURL}/${values._id}">${clientURL}/${values._id}</a>`,
+              ,
+            ],
+            [],
+            
+          ) // html body
+        };
         let info = transporter.sendMail(message1, (error, info) => {
           if (error) {
             console.log("error:", error);
@@ -115,6 +133,14 @@ async function sendEmails(values) {
           if (error) {
             console.log("error:", error);
             console.log("Error sending notification for " + values._id)
+          } else {
+            console.log("Message sent: %s", info.messageId);
+          }
+        });
+        info = transporter.sendMail(message4, (error, info) => {
+          if (error) {
+            console.log ("error:", error);
+            console.log("Error sending position email(s) for " + values._id);
           } else {
             console.log("Message sent: %s", info.messageId);
           }
