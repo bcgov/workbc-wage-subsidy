@@ -55,13 +55,13 @@ async function sendEmails(values) {
           from: 'WorkBC Wage Subsidy <donotreply@gov.bc.ca>', // sender address
           to: claimListEmail,// list of receivers
           subject: "A Claim grant application has been received", // Subject line
-          html: notification.generateClaimListNotification(values) // html body
+          html: notification.generateListNotification(values) // html body
         };
         let message3 = {
           from: 'WorkBC Wage Subsidy <donotreply@gov.bc.ca>', // sender address
           to: claimNotifyEmail,// list of receivers
           subject: "A Claim grant application has been received", // Subject line
-          html: notification.generateClaimNotification(values) // html body
+          html: notification.generateNotification(values) // html body
         };
         let info = transporter.sendMail(message1, (error, info) => {
           if (error) {
