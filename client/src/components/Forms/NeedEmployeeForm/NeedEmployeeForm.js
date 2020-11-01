@@ -190,14 +190,16 @@ class NeedEmployeeForm extends Component {
                             }}
                             validationSchema={NeedEmployeeValidationSchema}
                             onSubmit={(values, actions) => {
-                                fetch(FORM_URL.NeedEmployeeForm, {
+                                let jsonVals = JSON.stringify(values);
+                                console.log("jsonVals look like this:", jsonVals);
+                                fetch(FORM_URL.needEmployeeForm, {
                                     method: "POST",
                                     credentials: "include",
                                     headers: {
                                         'Accept': 'application/json',
                                         'Content-Type': 'application/json',
                                     },
-                                    body: JSON.stringify(values),
+                                    body: jsonVals,
                                 })
                                     .then(res => res.json())
                                     .then((
@@ -220,7 +222,7 @@ class NeedEmployeeForm extends Component {
                                                 this.props.history.push('/thankyouNeedEmployee', values);
                                             }
                                         }
-                                    ));
+                                    )).catch(err => console.log(err));
 
                             }}
                         
