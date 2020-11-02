@@ -15,6 +15,7 @@ var notification = require('../utils/applicationReceivedEmail');
 var clean = require('../utils/clean')
 var confirmData = require('../utils/confirmationData');
 const { getNeedEmployeeSubmitted } = require('../utils/confirmationData');
+const {saveNeedEmployeeValues} = require('../utils/mongoOperations');
 
 // env var info here...
 var confirmationEmail1 = process.env.CONFIRMATIONONE || process.env.OPENSHIFT_NODEJS_CONFIRMATIONONE || "";
@@ -139,6 +140,13 @@ router.post('/', csrfProtection, async (req, res) => {
   
   NeedEmployeeValidationSchema.validate(req.body, { abortEarly: false })
     .then(async function (value) {
+            // save values to mongo db
+            try {
+              saveNeedEmployeeValues(value);
+            }
+            catch (error) {
+              console.log(error);
+            }
       try {
         await sendEmails(value)
           .then(async function (sent) {
