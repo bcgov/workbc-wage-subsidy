@@ -14,6 +14,7 @@ var generateHTMLEmail = require('../utils/htmlEmail')
 var notification = require('../utils/applicationReceivedEmail');
 var clean = require('../utils/clean')
 const { getClaimSubmitted } = require('../utils/confirmationData');
+const {saveClaimValues} = require('../utils/mongoOperations');
 
 var claimConfirmationEmail = process.env.CLAIM_CONFIRMATION_EMAIL || process.env.OPENSHIFT_NODEJS_CLAIM_CONFIRMATION_EMAIL || "";
 var claimConfirmationBCC = process.env.CLAIM_CONFIRMATION_BCC || process.env.OPENSHIFT_NODEJS_CLAIM_CONFIRMATION_BCC || "";
@@ -114,6 +115,13 @@ router.post('/', csrfProtection, async (req, res) => {
   console.log(req.body)
   ClaimFormValidationSchema.validate(req.body, { abortEarly: false })
     .then(async function (value) {
+            // save values to mongo db
+            try {
+              saveClaimValues(value);
+            }
+            catch (error) {
+              console.log(error);
+            }
       try {
         await sendEmails(value)
           .then(function (sent) {
