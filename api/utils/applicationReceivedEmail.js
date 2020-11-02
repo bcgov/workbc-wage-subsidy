@@ -4,16 +4,21 @@ module.exports = {
 
     generateNotification: function (values) {
 
-        var html = /*html*/`
-
-    `
+        var html = "";
+        for (var key in values) {
+            html += `${key} ${strings.orEmpty(values[key])} `;
+        }
         return html
     },
 
     generateListNotification: function(values) {
-        var html = `
-   
-        `
+        var html = "";
+        // loop through each property
+        for (var key in values) {
+            // add key/val to html
+            html += `<p><b>${key}:</b> ${strings.orEmpty(values[key])}</p>`;
+        }
+
         return html;
     },
 

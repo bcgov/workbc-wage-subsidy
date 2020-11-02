@@ -1,29 +1,36 @@
 var express = require('express');
 var router = express.Router();
-const yup = require('yup')
-const yupPhone = require('yup-phone')
 
 var { check, validationResult, matchedData } = require('express-validator')
 var nodemailer = require("nodemailer");
 var csrf = require('csurf');
 var csrfProtection = csrf({ cookie: true });
+var spauth = require('node-sp-auth')
+var request = require('request-promise')
 
 
+var NeedEmployeeValidationSchema = require('../schemas/NeedEmployeeValidationSchema')
 var generateHTMLEmail = require('../utils/htmlEmail')
 var notification = require('../utils/applicationReceivedEmail');
 var clean = require('../utils/clean')
 var confirmData = require('../utils/confirmationData');
-const { getSubmitted } = require('../utils/confirmationData');
+const { getNeedEmployeeSubmitted } = require('../utils/confirmationData');
+const {saveNeedEmployeeValues} = require('../utils/mongoOperations');
 
+// env var info here...
 var confirmationEmail1 = process.env.CONFIRMATIONONE || process.env.OPENSHIFT_NODEJS_CONFIRMATIONONE || "";
 var confirmationEmail2 = process.env.CONFIRMATIONTWO || process.env.OPENSHIFT_NODEJS_CONFIRMATIONTWO || "";
 var confirmationBCC = process.env.CONFIRMATIONBCC || process.env.OPENSHIFT_NODEJS_CONFIRMATIONBCC || "";
 var listEmail = process.env.LISTEMAIL || process.env.OPENSHIFT_NODEJS_LISTEMAIL || "";
 var notifyEmail = process.env.NOTIFYEMAIL || process.env.OPENSHIFT_NODEJS_NOTIFYEMAIL || "";
 var clientURL = process.env.CLIENTURL || process.env.OPENSHIFT_NODEJS_CLIENTURL || ""
-
-
-
+var listWebURL = process.env.LISTWEBURL || process.env.OPENSHIFT_NODEJS_LISTWEBURL || ""
+var listUser = process.env.LISTUSER || process.env.OPENSHIFT_NODEJS_LISTUSER || ""
+var listPass = process.env.LISTPASS || process.env.OPENSHIFT_NODEJS_LISTPASS || ""
+var listDomain = process.env.LISTDOMAIN || process.env.OPENSHIFT_NODEJS_LISTDOMAIN || ""
+var listParty = process.env.LISTPARTY || process.env.OPENSHIFT_NODEJS_LISTPARTY || ""
+var listADFS = process.env.LISTADFS || process.env.OPENSHIFT_NODEJS_LISTADFS || ""
+// send email func
 async function sendEmails(values) {
   try {
     let transporter = nodemailer.createTransport({
@@ -36,7 +43,7 @@ async function sendEmails(values) {
     });
     return await transporter.verify()
       .then(function (r) {
-        console.log(r)
+        //console.log(r)
         console.log("Transporter connected.")
         // send mail with defined transport object
         var mailingList;
@@ -64,7 +71,7 @@ async function sendEmails(values) {
               `<a href="${clientURL}/${values._id}">${clientURL}/${values._id}</a>`,
               ,
             ],
-            getSubmitted(values)
+            getNeedEmployeeSubmitted(values)
           ) // html body
         };
         let message2 = {
@@ -79,8 +86,10 @@ async function sendEmails(values) {
           subject: "A grant application has been received - " + values._id, // Subject line
           html: notification.generateNotification(values) // html body
         };
+
         let info = transporter.sendMail(message1, (error, info) => {
           if (error) {
+            console.log("error:", error);
             console.log("Error sending confirmation for " + values._id)
           } else {
             console.log("Message sent: %s", info.messageId);
@@ -88,6 +97,7 @@ async function sendEmails(values) {
         });
         info = transporter.sendMail(message2, (error, info) => {
           if (error) {
+            console.log("error:", error);
             console.log("Error sending list notification for " + values._id)
           } else {
             console.log("Message sent: %s", info.messageId);
@@ -95,11 +105,13 @@ async function sendEmails(values) {
         });
         info = transporter.sendMail(message3, (error, info) => {
           if (error) {
+            console.log("error:", error);
             console.log("Error sending notification for " + values._id)
           } else {
             console.log("Message sent: %s", info.messageId);
           }
         });
+
         return true
       }).catch(function (e) {
         console.log(e)
@@ -111,29 +123,48 @@ async function sendEmails(values) {
     return false
   }
 }
-
+// get
 router.get('/', csrfProtection, (req, res) => {
   var token = req.csrfToken()
   res.cookie('XSRF-TOKEN', token)
   res.send({
     csrfToken: token
   });
-
-})
-
+});
+// post
 router.post('/', csrfProtection, async (req, res) => {
   //clean the body
+  //console.log(req.body)
   clean(req.body);
   //console.log(req.body)
-  MainFormValidationSchema.validate(req.body, { abortEarly: false })
+  
+  NeedEmployeeValidationSchema.validate(req.body, { abortEarly: false })
     .then(async function (value) {
+            // save values to mongo db
+            try {
+              saveNeedEmployeeValues(value);
+            }
+            catch (error) {
+              console.log(error);
+            }
       try {
         await sendEmails(value)
-          .then(function (sent) {
+          .then(async function (sent) {
             if (sent){
-              res.send({
-                ok: "ok"
-              })
+              /*
+              await saveList(value)
+                .then(function(saved){
+                  console.log("saved")
+                  console.log(saved)
+                })
+                .catch(function(e){
+                  console.log("error")
+                  console.log(e)
+                })
+                */
+                res.send({
+                  ok: "ok"
+                })
             } else if (!sent) {
               res.send({
                 emailErr: "emailErr"
@@ -159,4 +190,4 @@ router.post('/', csrfProtection, async (req, res) => {
     })
 })
 
-module.exports = router;
+  module.exports = router;

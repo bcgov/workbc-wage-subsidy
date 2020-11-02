@@ -7,12 +7,14 @@ var { check, validationResult, matchedData } = require('express-validator')
 var nodemailer = require("nodemailer");
 var csrf = require('csurf');
 var csrfProtection = csrf({ cookie: true });
+var ClaimFormValidationSchema = require('../schemas/ClaimFormValidationSchema');
 
 
 var generateHTMLEmail = require('../utils/htmlEmail')
 var notification = require('../utils/applicationReceivedEmail');
 var clean = require('../utils/clean')
 const { getClaimSubmitted } = require('../utils/confirmationData');
+const {saveClaimValues} = require('../utils/mongoOperations');
 
 var claimConfirmationEmail = process.env.CLAIM_CONFIRMATION_EMAIL || process.env.OPENSHIFT_NODEJS_CLAIM_CONFIRMATION_EMAIL || "";
 var claimConfirmationBCC = process.env.CLAIM_CONFIRMATION_BCC || process.env.OPENSHIFT_NODEJS_CLAIM_CONFIRMATION_BCC || "";
@@ -54,13 +56,13 @@ async function sendEmails(values) {
           from: 'WorkBC Wage Subsidy <donotreply@gov.bc.ca>', // sender address
           to: claimListEmail,// list of receivers
           subject: "A Claim grant application has been received", // Subject line
-          html: notification.generateClaimListNotification(values) // html body
+          html: notification.generateListNotification(values) // html body
         };
         let message3 = {
           from: 'WorkBC Wage Subsidy <donotreply@gov.bc.ca>', // sender address
           to: claimNotifyEmail,// list of receivers
           subject: "A Claim grant application has been received", // Subject line
-          html: notification.generateClaimNotification(values) // html body
+          html: notification.generateNotification(values) // html body
         };
         let info = transporter.sendMail(message1, (error, info) => {
           if (error) {
@@ -113,6 +115,13 @@ router.post('/', csrfProtection, async (req, res) => {
   console.log(req.body)
   ClaimFormValidationSchema.validate(req.body, { abortEarly: false })
     .then(async function (value) {
+            // save values to mongo db
+            try {
+              saveClaimValues(value);
+            }
+            catch (error) {
+              console.log(error);
+            }
       try {
         await sendEmails(value)
           .then(function (sent) {

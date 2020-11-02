@@ -1,5 +1,7 @@
 {
   "dependencies": {
-    "react-scripts": "^3.4.3"
+    "node-sp-auth": "^3.0.1",
+    "react-scripts": "^3.4.3",
+    "request-promise": "^4.2.6"
   }
 }
