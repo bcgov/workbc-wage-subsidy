@@ -1,8 +1,50 @@
 import React, { Component } from 'react'
 import {Field} from 'formik'
 import { feedBackClassName, feedBackInvalid } from '../shared/ValidationMessages'
+import {getCatchment} from '../shared/AddressToCatchment'
 
 class FormStep1 extends Component {
+
+    componentDidUpdate(prevProps){
+        
+        let address1, city, postal,prevAddress1,prevCity,prevPostal,province
+        if (this.props.values.otherWorkAddress) {
+            address1 = this.props.values.addressAlt
+            city = this.props.values.cityAlt
+            postal = this.props.values.postalAlt
+            province = this.props.values.provinceAlt
+            prevAddress1 = prevProps.values.addressAlt
+            prevCity = prevProps.values.cityAlt
+            prevPostal = prevProps.values.postalAlt
+        } else {
+            address1 = this.props.values.businessAddress
+            city = this.props.values.businessCity
+            postal = this.props.values.businessPostal
+            province = this.props.values.businessProvince
+            prevAddress1 = prevProps.values.businessAddress
+            prevCity = prevProps.values.businessCity
+            prevPostal = prevProps.values.businessPostal
+        }
+        if (postal !== "BC"){
+            return
+        }
+        if (address1 !== "" || city !== "" || postal !== ""){
+            if (city.length > 3 && address1.length > 4 && postal.length >= 6){
+                if (address1 !== prevAddress1 || city !== prevCity || postal !== prevPostal){
+                    fetch(`https://geocoder.api.gov.bc.ca/addresses.geojson?addressString=${address1},${city},${province}`,{
+                    })
+                    .then(res => res.json())
+                    .then(result => {
+                        console.log(result)
+                        let coordinates = result.features[0].geometry.coordinates
+                        let ca = getCatchment(coordinates[1],coordinates[0])
+                        console.log(ca)
+                        this.props.setFieldValue("_ca",ca)
+                    })
+                }
+            }
+        }
+    }
 
     get WageSubsidyEmployees() {
         let subsidy = this.props.values.wageSubsidy;
@@ -15,8 +57,8 @@ class FormStep1 extends Component {
                         <Field
                             as="select"
                             className={`form-control ${feedBackClassName(this.props.errors, this.props.touched, "employeesClaimed")}`}
-                            id="EmployeesClaimed" 
-                            name="claims" 
+                            id="employeesClaimed" 
+                            name="employeesClaimed" 
                         >
                             <option value="">0</option>
                             <option value="1">1</option>
@@ -81,27 +123,14 @@ class FormStep1 extends Component {
                         <label className="col-form-label control-label" htmlFor="provinceAlt">Province <span
                             style={{ color: "red" }}>*</span></label>
                         <Field
-                            as="select"
                             className={`form-control ${feedBackClassName(this.props.errors, this.props.touched, "provinceAlt")}`}
                             id="provinceAlt" 
                             name="provinceAlt" 
+                            disabled
                         >
-                            <option value="">Please select</option>
-                            <option value="AB">Alberta</option>
-                            <option value="BC">British Columbia</option>
-                            <option value="MB">Manitoba</option>
-                            <option value="NB">New Brunswick</option>
-                            <option value="NL">Newfoundland and Labrador</option>
-                            <option value="NT">Northwest Territories</option>
-                            <option value="NS">Nova Scotia</option>
-                            <option value="NU">Nunavut</option>
-                            <option value="ON">Ontario</option>
-                            <option value="PE">Prince Edward Island</option>
-                            <option value="QC">Quebec</option>
-                            <option value="SK">Saskatchewan</option>
-                            <option value="YT">Yukon</option>
                         </Field>
                         {feedBackInvalid(this.props.errors,this.props.touched,"provinceAlt")}
+                        
                     </div>
                     <div className="form-group col-md-4">
                         <label className="col-form-label control-label" htmlFor="postalAlt">Postal Code <span
@@ -111,6 +140,7 @@ class FormStep1 extends Component {
                         {feedBackInvalid(this.props.errors,this.props.touched,"postalAlt")}
                     </div>
                 </div>
+                {(this.props.values._ca !== "" && this.props.values.otherWorkAddress) && <p>CA: {this.props.values._ca}</p>}
             </div>)
         }
         return null;
@@ -121,6 +151,7 @@ class FormStep1 extends Component {
         }
         //Else return step 1
         return (
+
             <div>
                 <div className="form-group">
                     <br /><h2 id="forms">Business Information</h2>
@@ -189,6 +220,9 @@ class FormStep1 extends Component {
                         {feedBackInvalid(this.props.errors,this.props.touched,"businessPostal")}
                     </div>
                 </div>
+                <p className="small text-muted">Please note that the workplace must be located in BC, in order to be eligible.</p>
+                {(this.props.values.businessProvince !== "BC" && this.props.values.businessProvince !== "") && <p className="text-danger">Please check the box below to provide the workplace address located in BC.</p>}
+                {(this.props.values._ca !== "" && !this.props.values.otherWorkAddress) && <p>CA: {this.props.values._ca}</p>}
                 <div className="form-row">
                     <div className="form-group col-md-4">
                             <label className="col-form-label control-label" htmlFor="businessPhone">Phone Number <span
@@ -323,7 +357,7 @@ class FormStep1 extends Component {
                             name="cewsParticipation"
                             value="yes"
                         />
-                        <label className="form-check-label" htmlFor="cewsParticipation">yes</label>
+                        <label className="form-check-label" htmlFor="cewsParticipation">Yes</label>
                     </div>
                     <div className="form-check">
                         <Field
@@ -332,7 +366,7 @@ class FormStep1 extends Component {
                             name="cewsParticipation"
                             value="no"
                         />
-                        <label className="form-check-label" htmlFor="cewsParticipation">no</label>
+                        <label className="form-check-label" htmlFor="cewsParticipation">No</label>
                     </div>
                     <div className="form-check">
                         <Field
@@ -341,7 +375,7 @@ class FormStep1 extends Component {
                             name="cewsParticipation"
                             value="notSure"
                         />
-                        <label className="form-check-label" htmlFor="cewsParticipation">not sure</label>
+                        <label className="form-check-label" htmlFor="cewsParticipation">Not sure</label>
                         {feedBackInvalid(this.props.errors,this.props.touched,"cewsParticipation")}
                     </div>
                     {
@@ -359,7 +393,7 @@ class FormStep1 extends Component {
                             name="employeeDisplacement"
                             value="yes"
                         />
-                        <label className="form-check-label" htmlFor="employeeDisplacement">yes</label>
+                        <label className="form-check-label" htmlFor="employeeDisplacement">Yes</label>
                     </div>
                     <div className="form-check">
                         <Field
@@ -368,7 +402,7 @@ class FormStep1 extends Component {
                             name="employeeDisplacement"
                             value="no"
                         />
-                        <label className="form-check-label" htmlFor="employeeDisplacement">no</label>
+                        <label className="form-check-label" htmlFor="employeeDisplacement">No</label>
                         {feedBackInvalid(this.props.errors,this.props.touched,"employeeDisplacement")}
                     </div>
                 </div>
@@ -382,7 +416,7 @@ class FormStep1 extends Component {
                             name="labourDispute"
                             value="yes"
                         />
-                        <label className="form-check-label" htmlFor="labourDispute">yes</label>
+                        <label className="form-check-label" htmlFor="labourDispute">Yes</label>
                     </div>
                     <div className="form-check">
                         <Field
@@ -391,7 +425,7 @@ class FormStep1 extends Component {
                             name="labourDispute"
                             value="no"
                         />
-                        <label className="form-check-label" htmlFor="labourDispute">no</label>
+                        <label className="form-check-label" htmlFor="labourDispute">No</label>
                         {feedBackInvalid(this.props.errors,this.props.touched,"labourDispute")}
                     </div>
                 </div>
@@ -405,7 +439,7 @@ class FormStep1 extends Component {
                             name="unionConcurrence"
                             value="yes"
                         />
-                        <label className="form-check-label" htmlFor="unionConcurrence">yes</label>
+                        <label className="form-check-label" htmlFor="unionConcurrence">Yes</label>
                     </div>
                     <div className="form-check">
                         <Field
@@ -414,7 +448,7 @@ class FormStep1 extends Component {
                             name="unionConcurrence"
                             value="no"
                         />
-                        <label className="form-check-label" htmlFor="unionConcurrence">no</label>
+                        <label className="form-check-label" htmlFor="unionConcurrence">No</label>
                     </div>
                     <div className="form-check">
                         <Field
@@ -437,7 +471,7 @@ class FormStep1 extends Component {
                             name="liabilityCoverage"
                             value="yes"
                         />
-                        <label className="form-check-label" htmlFor="liabilityCoverage">yes</label>
+                        <label className="form-check-label" htmlFor="liabilityCoverage">Yes</label>
                     </div>
                     <div className="form-check">
                         <Field
@@ -446,7 +480,7 @@ class FormStep1 extends Component {
                             name="liabilityCoverage"
                             value="no"
                         />
-                        <label className="form-check-label" htmlFor="liabilityCoverage">no</label>
+                        <label className="form-check-label" htmlFor="liabilityCoverage">No</label>
                         {feedBackInvalid(this.props.errors,this.props.touched,"liabilityCoverage")}
                     </div>
                 </div>
@@ -460,7 +494,7 @@ class FormStep1 extends Component {
                             name="wageSubsidy"
                             value="yes"
                         />
-                        <label className="form-check-label" htmlFor="wageSubsidy">yes</label>
+                        <label className="form-check-label" htmlFor="wageSubsidy">Yes</label>
                     </div>
                     <div className="form-check">
                         <Field
@@ -469,7 +503,7 @@ class FormStep1 extends Component {
                             name="wageSubsidy"
                             value="no"
                         />
-                        <label className="form-check-label" htmlFor="wageSubsidy">no</label>
+                        <label className="form-check-label" htmlFor="wageSubsidy">No</label>
                         {feedBackInvalid(this.props.errors,this.props.touched,"wageSubsidy")}
                     </div>
                 </div>
@@ -485,7 +519,7 @@ class FormStep1 extends Component {
                             name="WSBCCoverage"
                             value="yes"
                         />
-                        <label className="form-check-label" htmlFor="WSBCCoverage">yes</label>
+                        <label className="form-check-label" htmlFor="WSBCCoverage">Yes</label>
                     </div>
                     <div className="form-check">
                         <Field
@@ -494,7 +528,7 @@ class FormStep1 extends Component {
                             name="WSBCCoverage"
                             value="no"
                         />
-                        <label className="form-check-label" htmlFor="WSBCCoverage">no</label>
+                        <label className="form-check-label" htmlFor="WSBCCoverage">No</label>
                         {feedBackInvalid(this.props.errors,this.props.touched,"WSBCCoverage")}
                     </div>
                 </div>
@@ -506,10 +540,21 @@ class FormStep1 extends Component {
                             className="form-check-label control-label" 
                             htmlFor="eligibility"
                         >
-                        <span style={{ color: "red" }}>*</span> {this.props.values.operatingName} confirms that they have reviewed the employer eligibility criteria and they meets the eligibility requirements. 
+                        <span style={{ color: "red" }}>*</span> {this.props.values.operatingName} meets the eligibility criteria and acknowledges that all the obligations the employer owes to or has with respect to its other employees under the various listed statutes and all other applicable laws apply equally to an individual employed in a wage subsidy placement. 
                         {feedBackInvalid(this.props.errors,this.props.touched,"eligibility")}
-                        </label>
-                        
+                        </label> 
+                    </div>
+                </div>
+                <div className="form-group">
+                    <div className="form-check">
+                        <Field type="checkbox" className={`form-check-input ${feedBackClassName(this.props.errors, this.props.touched, "lawCompliance")}`} id="lawCompliance" name="lawCompliance"/>
+                        <label 
+                            className="form-check-label control-label" 
+                            htmlFor="lawCompliance"
+                        >
+                        <span style={{ color: "red" }}>*</span> {this.props.values.operatingName} certifies that it is in full compliance with all applicable laws, including the <span className="font-italic">Employment Standards Act</span>, the <span className="font-italic">Workers Compensation Act</span> and the <span className="font-italic">Human Rights Code</span>. 
+                        {feedBackInvalid(this.props.errors,this.props.touched,"lawCompliance")}
+                        </label> 
                     </div>
                 </div>
 
