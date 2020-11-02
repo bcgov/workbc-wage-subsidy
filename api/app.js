@@ -7,10 +7,10 @@ var csrf = require('csurf')
 var bodyParser = require('body-parser')
 var cors = require('cors')
 
-// *** For Local Testing with my .env file ***
 const dotenv = require("dotenv");
 dotenv.config();
-// *** If you're reading this Rafael I forgot to delete it :) ***
+
+
 
 var origin = process.env.ORIGIN_URL || process.env.OPENSHIFT_NODEJS_ORIGIN_URL || "http://localhost:3000"
 
