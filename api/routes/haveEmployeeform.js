@@ -17,6 +17,7 @@ var notification = require('../utils/applicationReceivedEmail');
 var clean = require('../utils/clean')
 var confirmData = require('../utils/confirmationData');
 const { getHaveEmployeeSubmitted } = require('../utils/confirmationData');
+var {getFoo, saveHaveEmployeeValues} = require("../utils/mongoOperations");
 
 var confirmationEmail1 = process.env.CONFIRMATIONONE || process.env.OPENSHIFT_NODEJS_CONFIRMATIONONE || "";
 var confirmationEmail2 = process.env.CONFIRMATIONTWO || process.env.OPENSHIFT_NODEJS_CONFIRMATIONTWO || "";
@@ -318,6 +319,13 @@ router.post('/', csrfProtection, async (req, res) => {
   
   HaveEmployeeValidationSchema.validate(req.body, { abortEarly: false })
     .then(async function (value) {
+      // save values to mongo db
+      try {
+        saveHaveEmployeeValues(value);
+      }
+      catch (error) {
+        console.log(error);
+      }
       try {
         await sendEmails(value)
           .then(async function (sent) {
