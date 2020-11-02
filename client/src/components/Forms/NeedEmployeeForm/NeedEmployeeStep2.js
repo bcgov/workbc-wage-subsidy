@@ -61,7 +61,9 @@ class NeedEmployeeStep2 extends Component {
 
                 </div>
                     <div className="form-group">
-                      <button className="btn btn-primary" type="button" disabled ={this.props.values.checkPositionInstances === "1"} onClick={this.addPosition}>Add Another Position Title</button><br></br>
+                    {(this.props.values.numberOfPositions0 !== "0" && Number(this.props.values.numberOfPositions0) < 5 && this.props.values.checkPositionInstances !== "1") &&
+                        <button className="btn btn-primary" type="button" disabled={this.props.values.checkPositionInstances === "1" || this.props.values.numberOfPositions0 === "0"} onClick={this.addPosition}>Add Another Position Title</button>
+                    }
                     </div>
               
                 {
@@ -181,7 +183,7 @@ class NeedEmployeeStep2 extends Component {
                         )
                     })
                 }
-                  <button className="btn btn-primary" type="button" disabled ={this.props.values.checkPositionInstances === "0"} onClick={this.removePosition}>Remove Last Position Title</button><br/><br/>
+                {this.props.values.checkPositionInstances !== "0" && <div><button className="btn btn-primary" type="button" disabled={this.props.values.checkPositionInstances === "0"} onClick={this.removePosition}>Remove Last Position Title</button><br /><br /></div>}
             </div>
         )
     }

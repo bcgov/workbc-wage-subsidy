@@ -37,10 +37,7 @@ class FormStep3 extends Component {
                     <div className="form-check">
                         <Field type="checkbox" className={`form-check-input ${feedBackClassName(this.props.errors, this.props.touched, "organizationConsent")}`} id="organizationConsent" name="organizationConsent" />
                         {feedBackInvalid(this.props.errors,this.props.touched,"organizationConsent")}
-                        <label className="form-check-label" htmlFor="organizationConsent"><span style={{ color: "red" }}>*</span> I acknowledge and understand that by clicking the "submit" icon,
-                    I am attaching my electronic signature to this form.
-                    I am authorized to act and to enter into this Agreement on behalf of the Organization.
-                    On the Organization's behalf, I do hereby accept and agree to the terms and conditions of this Agreement</label>
+                        <label className="form-check-label" htmlFor="organizationConsent"><span style={{ color: "red" }}>*</span> I acknowledge and understand that by clicking the "submit" icon I am attaching my electronic signature to this form and that by doing so I acquire the same rights, incur the same obligations and confer the same consent as I would by manually signing a physical copy of this form.</label>
                     </div>
                 </div>
                 <button

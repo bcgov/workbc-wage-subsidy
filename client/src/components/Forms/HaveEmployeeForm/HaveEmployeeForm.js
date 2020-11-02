@@ -111,6 +111,7 @@ class HaveEmployeeForm extends Component {
                             initialValues= {{
                                     _csrf: this.state._csrf,
                                     _id: this.state._id,
+                                    _ca: "",
                                     //step 1
                                     operatingName:"",
                                     businessNumber:"",
@@ -132,6 +133,7 @@ class HaveEmployeeForm extends Component {
                                     liabilityCoverage:"",
                                     wageSubsidy:"",
                                     WSBCCoverage:"",
+                                    lawCompliance: false,
                                     eligibility: false,
 
                                     //step 1:pop-up fields
@@ -139,7 +141,7 @@ class HaveEmployeeForm extends Component {
                                     WSBCNumber:"",
                                     addressAlt:"",
                                     cityAlt:"",
-                                    provinceAlt:"",
+                                    provinceAlt:"BC",
                                     postalAlt:"",
                                     //step 2
                                     operatingName0: "",

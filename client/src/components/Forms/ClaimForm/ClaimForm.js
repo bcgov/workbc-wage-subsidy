@@ -36,6 +36,23 @@ class ClaimForm extends Component {
                     })
                 }
             )
+import React, { Component, useEffect } from 'react'
+import { ClaimFormValidationSchema } from './ClaimFormValidationSchema'
+import { Formik, Form, Field} from 'formik'
+import { feedBackClassName, feedBackInvalid } from '../shared/ValidationMessages'
+import { DatePickerField } from '../shared/DatePickerField'
+import {pins} from '../../../constants/pins'
+
+class ClaimForm extends Component {
+    constructor() {
+        super()
+        this.state = {
+            address1: "",
+            address2: "",
+            city: "",
+            coordinates: [],
+        }
+        this.addressToCatchment = this.addressToCatchment.bind(this)
     }
 
     totalHoursWorked(values) {
@@ -50,6 +67,72 @@ class ClaimForm extends Component {
         return Number(values.total1) + Number(values.total2) + Number(values.total3) + Number(values.total4) + Number(values.total5);
     }
 
+    addressToCatchment(address1, address2, city,province,postal){
+        if (address1 === "" || city === "" || postal === ""){
+            return null
+        }else {
+            if (city.length > 3 && address1.length > 4 && postal.length >= 6){
+                if (address1 === this.state.address1 && city === this.state.city){
+                    return null
+                }
+                fetch(`https://geocoder.api.gov.bc.ca/addresses.geojson?addressString=${address1},${city},${province}`,{
+
+                })
+                .then(res => res.json())
+                .then(result => {
+                    console.log(result)
+                    let coordinates = result.features[0].geometry.coordinates
+                    let min = 99999
+                    let closestIndex
+                    for (const [index,value] of pins.features.entries()){
+                        console.log(index)
+                        console.log(value.geometry.coordinates) 
+                        let distance = this.distance(coordinates[1],coordinates[0],value.geometry.coordinates[1],value.geometry.coordinates[0],'K')
+                        if (distance < min){
+                            min = distance
+                            closestIndex = index
+                        }
+                    }
+                    this.setState({
+                        coordinates: coordinates
+                    })
+                    console.log(pins.features[closestIndex].properties.name)
+                    //return <p>Closest WorkBC Centre: {pins.features[closestIndex].properties.name}</p>
+                })
+                this.setState({
+                    address1: address1,
+                    address2: address2,
+                    city: city
+                    
+                })
+            } else {
+                return null
+            }
+            
+        }
+    }
+
+    distance(lat1, lon1, lat2, lon2, unit) {
+        if ((lat1 === lat2) && (lon1 === lon2)) {
+            return 0;
+        }
+        else {
+            var radlat1 = Math.PI * lat1/180;
+            var radlat2 = Math.PI * lat2/180;
+            var theta = lon1-lon2;
+            var radtheta = Math.PI * theta/180;
+            var dist = Math.sin(radlat1) * Math.sin(radlat2) + Math.cos(radlat1) * Math.cos(radlat2) * Math.cos(radtheta);
+            if (dist > 1) {
+                dist = 1;
+            }
+            dist = Math.acos(dist);
+            dist = dist * 180/Math.PI;
+            dist = dist * 60 * 1.1515;
+            if (unit==="K") { dist = dist * 1.609344 }
+            if (unit==="N") { dist = dist * 0.8684 }
+            return dist;
+        }
+    }
 
     setHoursTotal(func, values, field, amount) {
         // set line total
@@ -162,6 +245,7 @@ class ClaimForm extends Component {
                         >
                             {({ values, errors, touched, setFieldValue, isSubmitting, isValid }) => (
                                 <Form>
+                                    {console.log(pins)}
                                     <div className="form-group">
                                         <h2 id="forms">Wage Subsidy Claim Form</h2>
                                     </div>
@@ -259,6 +343,11 @@ class ClaimForm extends Component {
                                                 {feedBackInvalid(errors, touched, "employerPostal")}
                                             </div>
                                         </div>
+                                        {
+                                        useEffect(() => {
+                                            this.addressToCatchment(values.employerAddress1, values.employerAddress2,values.employerCity,"BC",values.employerPostal)
+                                        }, [values.employerAddress1, values.employerAddress2,values.employerCity,values.employerPostal,setFieldValue])
+                                        }
                                         <div className="form-row">
 
                                             <div className="form-group col-md-6">
