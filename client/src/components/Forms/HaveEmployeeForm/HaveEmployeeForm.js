@@ -239,7 +239,6 @@ class HaveEmployeeForm extends Component {
                         >
                             { props => (
                                 <Form>
-                                    {console.log(props)}
                                     <FormStep1 
                                         currentStep={this.state.currentStep}
                                         {...props}

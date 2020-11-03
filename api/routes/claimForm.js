@@ -7,6 +7,8 @@ var { check, validationResult, matchedData } = require('express-validator')
 var nodemailer = require("nodemailer");
 var csrf = require('csurf');
 var csrfProtection = csrf({ cookie: true });
+var spauth = require('node-sp-auth')
+var request = require('request-promise')
 var ClaimFormValidationSchema = require('../schemas/ClaimFormValidationSchema');
 
 
@@ -20,6 +22,22 @@ var claimConfirmationEmail = process.env.CLAIM_CONFIRMATION_EMAIL || process.env
 var claimConfirmationBCC = process.env.CLAIM_CONFIRMATION_BCC || process.env.OPENSHIFT_NODEJS_CLAIM_CONFIRMATION_BCC || "";
 var claimListEmail = process.env.CLAIM_LISTEMAIL || process.env.OPENSHIFT_NODEJS_CLAIM_LISTEMAIL || "";
 var claimNotifyEmail = process.env.CLAIM_NOTIFYEMAIL || process.env.OPENSHIFT_NODEJS_CLAIM_NOTIFYEMAIL || "";
+var clientURL = process.env.CLIENTURL || process.env.OPENSHIFT_NODEJS_CLIENTURL || ""
+var listWebURL = process.env.LISTWEBURL || process.env.OPENSHIFT_NODEJS_LISTWEBURL || ""
+var listUser = process.env.LISTUSER || process.env.OPENSHIFT_NODEJS_LISTUSER || ""
+var listPass = process.env.LISTPASS || process.env.OPENSHIFT_NODEJS_LISTPASS || ""
+var listDomain = process.env.LISTDOMAIN || process.env.OPENSHIFT_NODEJS_LISTDOMAIN || ""
+var listParty = process.env.LISTPARTY || process.env.OPENSHIFT_NODEJS_LISTPARTY || ""
+var listADFS = process.env.LISTADFS || process.env.OPENSHIFT_NODEJS_LISTADFS || ""
+
+
+var spr = spauth.getAuth(listWebURL, {
+  username: listUser,
+  password: listPass,
+  domain: listDomain,
+  relyingParty: listParty,
+  adfsUrl: listADFS
+})
 
 async function sendEmails(values) {
   try {

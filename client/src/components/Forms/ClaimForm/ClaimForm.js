@@ -7,14 +7,20 @@ import { DatePickerField } from '../shared/DatePickerField'
 import { FORM_URL } from '../../../constants/form'
 import { nanoid } from 'nanoid'
 import { generateAlert } from '../shared/Alert'
+import {pins} from '../../../constants/pins'
 
 class ClaimForm extends Component {
     constructor() {
         super();
         this.state = {
             _csrf: '',
-            _id: nanoid(10)
+            _id: nanoid(10),
+            address1: "",
+            address2: "",
+            city: "",
+            coordinates: [],
         }
+        this.addressToCatchment = this.addressToCatchment.bind(this)
     }
 
     componentDidMount() {
@@ -36,24 +42,8 @@ class ClaimForm extends Component {
                     })
                 }
             )
-import React, { Component, useEffect } from 'react'
-import { ClaimFormValidationSchema } from './ClaimFormValidationSchema'
-import { Formik, Form, Field} from 'formik'
-import { feedBackClassName, feedBackInvalid } from '../shared/ValidationMessages'
-import { DatePickerField } from '../shared/DatePickerField'
-import {pins} from '../../../constants/pins'
-
-class ClaimForm extends Component {
-    constructor() {
-        super()
-        this.state = {
-            address1: "",
-            address2: "",
-            city: "",
-            coordinates: [],
-        }
-        this.addressToCatchment = this.addressToCatchment.bind(this)
     }
+
 
     totalHoursWorked(values) {
         return Number(values.hoursWorked1) + Number(values.hoursWorked2) + Number(values.hoursWorked3) + Number(values.hoursWorked4) + Number(values.hoursWorked5);
@@ -344,9 +334,13 @@ class ClaimForm extends Component {
                                             </div>
                                         </div>
                                         {
+                                        //no longer needed as center will be chosen from dropdown
+                                        /*
                                         useEffect(() => {
                                             this.addressToCatchment(values.employerAddress1, values.employerAddress2,values.employerCity,"BC",values.employerPostal)
                                         }, [values.employerAddress1, values.employerAddress2,values.employerCity,values.employerPostal,setFieldValue])
+                                        
+                                        */
                                         }
                                         <div className="form-row">
 

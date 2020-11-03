@@ -119,6 +119,7 @@ var HaveEmployeeValidationSchema = yup.object().shape({
             is: "1",
             then: yup.string().required('Please enter the Organization name'),
         }),
+    /*
     operatingName2: yup.string()
         .when("checkPositionInstances", {
             is: "1",
@@ -134,6 +135,7 @@ var HaveEmployeeValidationSchema = yup.object().shape({
             is: "1",
             then: yup.string().required('Please enter the Organization name'),
         }),
+    */
     numberOfPositions0: yup.mixed()
         .oneOf(["1", "2", "3", "4", "5"], "Please choose a valid option.")
         .required("Please select number of applicants."),
