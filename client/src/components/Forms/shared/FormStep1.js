@@ -155,8 +155,9 @@ class FormStep1 extends Component {
         return (
 
             <div>
+                <p>If you are having difficulty completing the application for Wage Subsidy, please contact your local <a href="https://www.workbc.ca/Employment-Services/WorkBC-Centres/Find-Your-WorkBC-Centre.aspx" target="_blank" rel="noopener noreferrer">WorkBC office</a></p>
                 <div className="form-group">
-                    <br /><h2 id="forms">Business Information</h2>
+                    <h2 id="forms">Business Information</h2>
                 </div>
                 <div className="form-row">
                     <div className="form-group col-md-8">
