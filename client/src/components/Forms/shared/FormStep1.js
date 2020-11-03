@@ -7,7 +7,7 @@ class FormStep1 extends Component {
 
     componentDidUpdate(prevProps){
         
-        let address1, city, postal,prevAddress1,prevCity,prevPostal,province
+        let address1, city, postal,prevAddress1,prevCity,prevPostal,province,prevProvince
         if (this.props.values.otherWorkAddress) {
             address1 = this.props.values.addressAlt
             city = this.props.values.cityAlt
@@ -16,6 +16,7 @@ class FormStep1 extends Component {
             prevAddress1 = prevProps.values.addressAlt
             prevCity = prevProps.values.cityAlt
             prevPostal = prevProps.values.postalAlt
+            prevProvince = prevProps.values.provinceAlt
         } else {
             address1 = this.props.values.businessAddress
             city = this.props.values.businessCity
@@ -24,13 +25,14 @@ class FormStep1 extends Component {
             prevAddress1 = prevProps.values.businessAddress
             prevCity = prevProps.values.businessCity
             prevPostal = prevProps.values.businessPostal
+            prevProvince = prevProps.values.businessProvince
         }
-        if (postal !== "BC"){
+        if (province !== "BC"){
             return
         }
         if (address1 !== "" || city !== "" || postal !== ""){
             if (city.length > 3 && address1.length > 4 && postal.length >= 6){
-                if (address1 !== prevAddress1 || city !== prevCity || postal !== prevPostal){
+                if (address1 !== prevAddress1 || city !== prevCity || postal !== prevPostal || province !== prevProvince){
                     fetch(`https://geocoder.api.gov.bc.ca/addresses.geojson?addressString=${address1},${city},${province}`,{
                     })
                     .then(res => res.json())

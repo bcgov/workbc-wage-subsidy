@@ -9,6 +9,8 @@ function getClient() {
     // don't have to do it this way to connect locally 
     // docs @ http://mongodb.github.io/node-mongodb-native/3.6/api/MongoClient.html
     let uri = `mongodb://${process.env.MONGO_USERNAME || "superuser"}:${process.env.MONGO_PASSWORD || "password"}@${process.env.MONGO_CONNECTION_URI || 'localhost'}/${process.env.MONGO_DB_NAME || 'test'}`;
+    uri = `mongodb://${process.env.MONGO_CONNECTION_URI || 'localhost'}/${process.env.MONGO_DB_NAME || 'test'}`;
+    
     let client = new MongoClient(uri, { useUnifiedTopology: true });
     return client;
 }
@@ -23,7 +25,7 @@ module.exports = {
             let db = mClient.db();
             // add our values to db (they are always new)
             db.collection("HaveEmployee").insertOne({
-                _id                 : values._id,                                     // id is provided
+                applicationID       : values._id,                                     // id is provided
                 savedToSP           : false,                                          // default to false for now
                 operatingName       : strings.orEmpty(values.operatingName),
                 businessNumber      : strings.orEmpty(values.businessNumber),
@@ -83,7 +85,7 @@ module.exports = {
             let db = mClient.db();
             // add our values to db (they are always new)
             db.collection("NeedEmployee").insertOne({
-                _id                 : strings.orEmpty(values._id),
+                applicationID                 : strings.orEmpty(values._id),
                 savedToSP           : false,
                 operatingName       : strings.orEmpty(values.operatingName),
                 businessNumber      : strings.orEmpty(values.businessNumber),
@@ -136,7 +138,6 @@ module.exports = {
             let db = mClient.db();
             // add our values to db (they are always new)
             db.collection("NeedEmployee").insertOne({
-                _id              : strings.orEmpty(values._id),
                 savedToSP        : false,
                 periodStart1     : strings.orEmpty(values.periodStart1),
                 periodStart2     : strings.orEmpty(values.periodStart2),

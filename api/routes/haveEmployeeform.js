@@ -22,6 +22,7 @@ var {getFoo, saveHaveEmployeeValues} = require("../utils/mongoOperations");
 var confirmationEmail1 = process.env.CONFIRMATIONONE || process.env.OPENSHIFT_NODEJS_CONFIRMATIONONE || "";
 var confirmationEmail2 = process.env.CONFIRMATIONTWO || process.env.OPENSHIFT_NODEJS_CONFIRMATIONTWO || "";
 var confirmationBCC = process.env.CONFIRMATIONBCC || process.env.OPENSHIFT_NODEJS_CONFIRMATIONBCC || "";
+var pEmail = process.env.PARTICIPANTEMAIL || process.env.OPENSHIFT_NODEJS_PARTICIPANTEMAIL || "";
 var listEmail = process.env.LISTEMAIL || process.env.OPENSHIFT_NODEJS_LISTEMAIL || "";
 var notifyEmail = process.env.NOTIFYEMAIL || process.env.OPENSHIFT_NODEJS_NOTIFYEMAIL || "";
 var clientURL = process.env.CLIENTURL || process.env.OPENSHIFT_NODEJS_CLIENTURL || ""
@@ -33,13 +34,13 @@ var listParty = process.env.LISTPARTY || process.env.OPENSHIFT_NODEJS_LISTPARTY 
 var listADFS = process.env.LISTADFS || process.env.OPENSHIFT_NODEJS_LISTADFS || ""
 
 
-// var spr = spauth.getAuth(listWebURL, {
-//   username: listUser,
-//   password: listPass,
-//   domain: listDomain,
-//   relyingParty: listParty,
-//   adfsUrl: listADFS
-// })
+var spr = spauth.getAuth(listWebURL, {
+  username: listUser,
+  password: listPass,
+  domain: listDomain,
+  relyingParty: listParty,
+  adfsUrl: listADFS
+})
 
 async function sendEmails(values) {
   try {
@@ -62,9 +63,14 @@ async function sendEmails(values) {
         } else {
           mailingList = [values.contactEmail, values.emailAlternate]
         }
-        var positionEmails = [values.position0Email0, values.position0Email1, values.position0Email2, 
-            values.position0Email3, values.position0Email4]
-            .filter(e => e != null); // filter out empty addresses
+        var positionEmails;
+        if (pEmail === ""){
+          positionEmails = [values.position0Email0, values.position0Email1, values.position0Email2, 
+            values.position0Email3, values.position0Email4, values.position1Email0, values.position1Email1, values.position1Email2,values.position1Email3].filter(e => e != null);
+        } else {
+          positionEmails = pEmail
+        }
+             // filter out empty addresses
         // send mail with defined transport object
         let message1 = {
           from: 'WorkBC Wage Subsidy <donotreply@gov.bc.ca>', // sender address
@@ -74,15 +80,10 @@ async function sendEmails(values) {
           html: generateHTMLEmail("Thank you, your application has been received",
             [
               `<b>Application ID: ${values._id}</b>`,
-              `Your application has been successfully received. You can print this page for your records. A confirmation email has also been sent to the two contacts provided on the form.`,
+              `Your application has been successfully received. You can print this page for your records.`,
               `<b>Next Steps:</b>`,
-              `Please provide your participants the following instructions:`,
             ],
             [
-              `Application ID: ${values._id}`,
-              `Please visit the following URL in order to provide your consent to the Ministry.`,
-              `<a href="${clientURL}/${values._id}">${clientURL}/${values._id}</a>`,
-              ,
             ],
             getHaveEmployeeSubmitted(values)
           ) // html body
@@ -90,30 +91,31 @@ async function sendEmails(values) {
         let message2 = {
           from: 'WorkBC Wage Subsidy <donotreply@gov.bc.ca>', // sender address
           to: listEmail,// list of receivers
-          subject: "A grant application has been received - " + values._id, // Subject line
+          subject: "A Wage Subsidy application has been received - " + values._id, // Subject line
           html: notification.generateListNotification(values) // html body
         };
         let message3 = {
           from: 'WorkBC Wage Subsidy <donotreply@gov.bc.ca>', // sender address
           to: notifyEmail,// list of receivers
-          subject: "A grant application has been received - " + values._id, // Subject line
+          subject: "A Wage Subsidy application has been received - " + values._id, // Subject line
           html: notification.generateNotification(values) // html body
         };
         let message4 = {
           from: 'WorkBC Wage Subsidy <donotreply@gov.bc.ca>', // sender address
-          to: positionEmails,// list of receivers
-          subject: "Application Confirmation - " + values._id, // Subject line
+          to: [],
+          bcc: positionEmails,// list of receivers
+          subject: "A Wage Subsidy Application has been submitted", // Subject line
           html: generateHTMLEmail("Thank you, your application has been received",
             [
-              `Application ID: ${values._id}`,
-              `Please visit the following URL in order to provide your consent to the Ministry.`,
-              `<a href="${clientURL}/${values._id}">${clientURL}/${values._id}</a>`,
-              ,
+              `A Wage Subsidy application has been submitted for you`,
+              `I am an existing client`,
+              `I'm a new client`,
             ],
             [],
-            
+            []
           ) // html body
         };
+        /*
         let info = transporter.sendMail(message1, (error, info) => {
           if (error) {
             console.log("error:", error);
@@ -133,6 +135,7 @@ async function sendEmails(values) {
         info = transporter.sendMail(message3, (error, info) => {
           if (error) {
             console.log("error:", error);
+
             console.log("Error sending notification for " + values._id)
           } else {
             console.log("Message sent: %s", info.messageId);
@@ -146,6 +149,7 @@ async function sendEmails(values) {
             console.log("Message sent: %s", info.messageId);
           }
         });
+        */
         return true
       }).catch(function (e) {
         console.log(e)
@@ -163,13 +167,9 @@ async function saveList(values) {
     var headers;
   return await spr
   .then(async data => {
-      //console.log(data)
       headers = data.headers;
       headers['Accept'] = 'application/json;odata=verbose';
       return headers
-      //console.log(headers)
-      //console.log(l)
-      
   }).then(async response => {
         //return true
         //console.log(response)
@@ -179,54 +179,70 @@ async function saveList(values) {
           headers: headers,
           json: true,
         })
-        /*
-        .then(response => {
-          var digest = response.d.GetContextWebInformation.FormDigestValue
-          return digest
-        })
-        .catch(e =>{
-          console.log(e)
-        })
-        */
     }).then(async response => {
-      //console.log(response.d.GetContextWebInformation.FormDigestValue);
       var digest = response.d.GetContextWebInformation.FormDigestValue
       return digest
     }).then(async response => {
-      //console.log(response)
       console.log(headers)
       headers['X-RequestDigest'] = response
       headers['Content-Type'] = "application/json;odata=verbose"
-      var l = listWebURL + "Apps/WageSubsidy/_api/web/lists/getByTitle('Catchment01')/items"
+      var l = listWebURL + `Apps/WageSubsidy/_api/web/lists/getByTitle('Catchment${values._ca}')/items`
+      console.log(l)
       return request.post({
         url: l,
         headers: headers,
         json: true,
         body: {
           "__metadata": {
-            "type": "SP.Data.Catchment01ListItem"
+            "type": `SP.Data.Catchment${values._ca}ListItem`
           },
-          "Title": values._id,
+          "Title": `${values.operatingName} - ${values._id}`,
+          "CatchmentNo": values._ca,
+          "FormType": "WS",
           "ApplicationID" : values._id,
           "OperatingName":values.operatingName,
           "BusinessNumber": values.businessNumber,
-          "Address":values.address,
-          "City":values.city,
-          "Province":values.province,
-          "Postal":values.postal,
-          "Phone":values.phone,
-          "Fax":values.fax,
-          "Email":values.email,
+          "BusinessAddress1":values.businessAddress,
+          "BusinessCity":values.businessCity,
+          "BusinessProvince":values.businessProvince,
+          "BusinessPostal":values.businessPostal,
+          "BusinessPhone":values.businessPhone,
+          "BusinessFax":values.businessFax,
+          "BusinessEmail":values.businessEmail,
           "OtherWorkAddress":values.otherWorkAddress,
-          "SectorType":"",
-          "TypeOfIndustry":"",
-          "OrganizationSize":"",
-          "CewsParticipation":"",
-          //"EmployeeDisplacement":"",
-          //"LabourDispute":"",
-          "UnionConcurrence":"",
-          //"LiabilityCoverage":"",
-          //"WageSubsidy":"",
+          "SectorType":values.sectorType,
+          "TypeOfIndustry":values.typeOfIndustry,
+          "OrganizationSize":values.organizationSize,
+          "CewsParticipation":values.cewsParticipation,
+          "EmployeeDisplacement":values.employeeDisplacement === "yes",
+          "LabourDispute":values.labourDispute === "yes",
+          "UnionConcurrence":values.unionConcurrence,
+          "LiabilityCoverage":values.liabilityCoverage === "yes",
+          "WageSubsidy":values.wageSubsidy === "yes",
+          "WSBCCoverage":values.WSBCCoverage === "yes",
+          "LawComplianceConsent": values.lawCompliance,
+          "OrgEligibilityConsent": values.eligibility,
+          "EmployeesClaimed": values.employeesClaimed,
+          "WSBCNumber": values.WSBCNumber,
+          "ProvinceAlt": values.provinceAlt,
+          "PostalAlt": values.postalAlt,
+          "OperatingName0": values.operatingName0,
+          "OperatingName1": values.operationName1,
+          "NumberOfPositions0": values.numberOfPositions0,
+          "NumberOfPositions1": values.numberOfPositions1,
+          "ParticipantEmail0": values.position0Email0,
+          "ParticipantEmail1": "",
+          "ParticipantEmail2": "",
+          "ParticipantEmail3": "",
+          "ParticipantEmail4": "",
+          "StartDate0": values.startDate0,
+          "StartDate1": values.startDate1,
+          "Duties0": values.duties0,
+          "Duties1": values.duties1,
+          "SignatoryTitle": values.signatoryTitle,
+          "Signatory1": values.signatory1,
+          "OrganizationConsent": values.organizationConsent
+          //"": values.,
         }
       })
     }).then(async response => {
@@ -237,11 +253,13 @@ async function saveList(values) {
       //there was an error in the chan
       //item was not created
       console.log("error in chain")
-      console.log(err);
+      //console.log(err);
       console.log(err.statusCode)
+      /*
       if (err.statusCode == 403){
         saveList(values)
       }
+      */
       return false
     })
         /*
@@ -296,13 +314,15 @@ async function saveList(values) {
 router.get('/', csrfProtection, (req, res) => {
   //saveList()
   /*
-  console.log(process.env.listWebURL)
-  console.log(process.env.listUser)
-  console.log(process.env.listPass)
-  console.log(process.env.listDomain)
-  console.log(process.env.listParty)
-  console.log(process.env.listADFS)
+  console.log(process.env)
+  console.log(listWebURL)
+  console.log(listUser)
+  console.log(listPass)
+  console.log(listDomain)
+  console.log(listParty)
+  console.log(listADFS)
   */
+  
   var token = req.csrfToken()
   res.cookie('XSRF-TOKEN', token)
   res.send({
@@ -315,7 +335,7 @@ router.post('/', csrfProtection, async (req, res) => {
   //clean the body
   //console.log(req.body)
   clean(req.body);
-  //console.log(req.body)
+  console.log(req.body)
   
   HaveEmployeeValidationSchema.validate(req.body, { abortEarly: false })
     .then(async function (value) {
@@ -330,7 +350,6 @@ router.post('/', csrfProtection, async (req, res) => {
         await sendEmails(value)
           .then(async function (sent) {
             if (sent){
-              /*
               await saveList(value)
                 .then(function(saved){
                   console.log("saved")
@@ -340,7 +359,6 @@ router.post('/', csrfProtection, async (req, res) => {
                   console.log("error")
                   console.log(e)
                 })
-                */
                 res.send({
                   ok: "ok"
                 })
