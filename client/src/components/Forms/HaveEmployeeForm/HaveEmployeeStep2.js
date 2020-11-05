@@ -5,10 +5,13 @@ import { feedBackClassName, feedBackInvalid, NumPositionsInvalid } from '../shar
 
 
 class HaveEmployeeStep2 extends Component {
-    state = {
-        positions: [{ operatingName: "", numberOfPositions: "", startDate: "", hours: "", wage: "", duties: "", email0: "", email1: "", email2: "", email3: "", email4: "" }],
+    constructor(){
+        super()
+        this.state = {
+            positions: [{ operatingName: "", numberOfPositions: "", startDate: "", hours: "", wage: "", duties: "", email0: "", email1: "", email2: "", email3: "", email4: "" }],
+        };
+    }
 
-    };
     handleStartChange = (e) => {
         this.setState({
             startDate: e

@@ -2,9 +2,7 @@ import React, { Component } from 'react'
 import {withRouter} from 'react-router-dom'
 import {Formik, Form} from 'formik'
 import '../../../utils/polyfills'
-import {nanoid} from 'nanoid'
-
-
+import {customAlphabet} from 'nanoid'
 import FormStep1 from '../shared/FormStep1'
 import FormStep2 from '../shared/FormStep2'
 import FormStep3 from '../shared/FormStep3'
@@ -17,10 +15,12 @@ import { generateAlert } from '../shared/Alert'
 class HaveEmployeeForm extends Component {
     constructor(){
         super()
+        const nanoid = customAlphabet('0123456789abcdefghijklmnopqrstuvwxyz',10)
         this.state={
             _csrf: '',
             currentStep: 1,
-            _id: nanoid(10)
+            _id: nanoid(),
+            hasError: false
         }
         this._next = this._next.bind(this)
         this._prev = this._prev.bind(this)
@@ -83,14 +83,17 @@ class HaveEmployeeForm extends Component {
         return null;
     }
 
-    get nextButton(){
+    nextButton(ca){
         let currentStep = this.state.currentStep;
 
         if(currentStep < 3){
           return (
             <button 
               className="btn btn-primary float-right" 
-              type="button" onClick={this._next}>
+              type="button" 
+              onClick={this._next}
+              //disabled={ca === "" || this.state.hasError}
+            >
             Next
             </button>        
           )
@@ -256,7 +259,7 @@ class HaveEmployeeForm extends Component {
                                         {...props}
                                     />
                                     {this.previousButton}
-                                    {this.nextButton}
+                                    {this.nextButton(props.values._ca)}
 
                                 </Form>
                             )}
