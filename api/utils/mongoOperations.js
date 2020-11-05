@@ -18,15 +18,16 @@ function getClient() {
 
 
 module.exports = {
-    saveHaveEmployeeValues: function (values) {
+    saveHaveEmployeeValues: function (values, savedToSP) {
         const client = getClient();
         client.connect().then(mClient => {
             // get a handle on the db
             let db = mClient.db();
             // add our values to db (they are always new)
             db.collection("HaveEmployee").insertOne({
-                applicationID       : values._id,                                     // id is provided
-                savedToSP           : false,                                          // default to false for now
+                applicationID       : values._id,// id is provided
+                ca                  : strings.orEmpty(values._ca),                                     
+                savedToSP           : savedToSP,                                          // default to false for now
                 operatingName       : strings.orEmpty(values.operatingName),
                 businessNumber      : strings.orEmpty(values.businessNumber),
                 businessAddress     : strings.orEmpty(values.businessAddress),
@@ -78,15 +79,16 @@ module.exports = {
             });
         });
     },
-    saveNeedEmployeeValues: function(values) {
+    saveNeedEmployeeValues: function(values, savedToSP) {
         const client = getClient();
         client.connect().then(mClient => {
             // get a handle on the db
             let db = mClient.db();
             // add our values to db (they are always new)
             db.collection("NeedEmployee").insertOne({
-                applicationID                 : strings.orEmpty(values._id),
-                savedToSP           : false,
+                applicationID       : strings.orEmpty(values._id),
+                ca                  : strings.orEmpty(values._ca),
+                savedToSP           : savedToSP,
                 operatingName       : strings.orEmpty(values.operatingName),
                 businessNumber      : strings.orEmpty(values.businessNumber),
                 businessAddress     : strings.orEmpty(values.businessAddress),
@@ -131,14 +133,15 @@ module.exports = {
             });
         });
     },
-    saveClaimValues: function(values) {
+    saveClaimValues: function(values, savedToSP) {
         const client = getClient();
         client.connect().then(mClient => {
             // get a handle on the db
             let db = mClient.db();
             // add our values to db (they are always new)
-            db.collection("NeedEmployee").insertOne({
-                savedToSP        : false,
+            db.collection("Claim").insertOne({
+                savedToSP        : savedToSP,
+                ca               : strings.orEmpty(values.workbcCentre), 
                 periodStart1     : strings.orEmpty(values.periodStart1),
                 periodStart2     : strings.orEmpty(values.periodStart2),
                 isFinalClaim     : strings.orEmpty(values.isFinalClaim),
