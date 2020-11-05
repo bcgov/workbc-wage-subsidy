@@ -4,11 +4,13 @@ import { DatePickerField } from '../shared/DatePickerField'
 import { feedBackClassName, feedBackInvalid,NumPositionsInvalid } from '../shared/ValidationMessages'
 
 class NeedEmployeeStep2 extends Component {
-    
-    state={
-        positions:[{operatingName:"", numberOfPositions:"", startDate:"",hours:"",wage:"",duties:"",skills:"",workExperience:""}],
+    constructor(){
+        super()
+        this.state={
+            positions:[{operatingName:"", numberOfPositions:"", startDate:"",hours:"",wage:"",duties:"",skills:"",workExperience:""}],
+        };
+    }
 
-    };
     handleStartChange = (e) => {
         this.setState({
             startDate: e
