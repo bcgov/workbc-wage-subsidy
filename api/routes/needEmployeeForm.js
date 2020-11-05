@@ -164,7 +164,7 @@ async function saveList(values) {
           },
           "Title": `${values.operatingName} - ${values._id}`,
           "CatchmentNo": values._ca,
-          "FormType": "WS",
+          "FormType": "wage",
           "ApplicationID" : values._id,
           "OperatingName":values.operatingName,
           "BusinessNumber": values.businessNumber,
@@ -247,28 +247,32 @@ router.post('/', csrfProtection, async (req, res) => {
   
   NeedEmployeeValidationSchema.validate(req.body, { abortEarly: false })
     .then(async function (value) {
-            // save values to mongo db
-            try {
-              saveNeedEmployeeValues(value);
-            }
-            catch (error) {
-              console.log(error);
-            }
       try {
         await sendEmails(value)
           .then(async function (sent) {
-            if (sent){
-              /*
+            if (sent){        
               await saveList(value)
                 .then(function(saved){
                   console.log("saved")
                   console.log(saved)
+                  // save values to mongo db
+                  try {
+                    saveNeedEmployeeValues(value, true);
+                  }
+                  catch (error) {
+                    console.log(error);
+                  }
                 })
                 .catch(function(e){
                   console.log("error")
                   console.log(e)
+                  try {
+                    saveNeedEmployeeValues(value, false);
+                  }
+                  catch (error) {
+                    console.log(error);
+                  }
                 })
-                */
                 res.send({
                   ok: "ok"
                 })
