@@ -15,12 +15,7 @@ class ClaimForm extends Component {
         this.state = {
             _csrf: '',
             _id: nanoid(10),
-            address1: "",
-            address2: "",
-            city: "",
-            coordinates: [],
         }
-        this.addressToCatchment = this.addressToCatchment.bind(this)
     }
 
     componentDidMount() {
@@ -57,6 +52,7 @@ class ClaimForm extends Component {
         return Number(values.total1) + Number(values.total2) + Number(values.total3) + Number(values.total4) + Number(values.total5);
     }
 
+    /*
     addressToCatchment(address1, address2, city,province,postal){
         if (address1 === "" || city === "" || postal === ""){
             return null
@@ -101,7 +97,8 @@ class ClaimForm extends Component {
             
         }
     }
-
+    */
+    /*
     distance(lat1, lon1, lat2, lon2, unit) {
         if ((lat1 === lat2) && (lon1 === lon2)) {
             return 0;
@@ -123,6 +120,7 @@ class ClaimForm extends Component {
             return dist;
         }
     }
+    */
 
     setHoursTotal(func, values, field, amount) {
         // set line total
@@ -152,6 +150,8 @@ class ClaimForm extends Component {
                         )}
                         <Formik
                             initialValues={{
+                                _csrf: this.state._csrf,
+                                _id: this.state._id,
                                 periodStart1: '',
                                 periodStart2: '',
                                 isFinalClaim: '',
@@ -192,7 +192,9 @@ class ClaimForm extends Component {
                                 hoursWorkedTotal1: 0,
                                 hourlyWageTotal1: 0,
                                 totalTotal1: '',
+                                workbcCentre: '',
                             }}
+                            enableReinitialize={true}
                             validationSchema={ClaimFormValidationSchema}
                             onSubmit={(values, actions) => {
                                 // doing this here to avoid any weird edge cases with onBlur and hitting submit
@@ -225,7 +227,7 @@ class ClaimForm extends Component {
                                             }
                                             else if (resp.ok) {
                                                 actions.setSubmitting(false);
-                                                this.props.history.push('/thankyouClaimForm', values);
+                                                //this.props.history.push('/thankyouClaimForm', values);
                                             }
                                         }
                                     ));
@@ -357,7 +359,7 @@ class ClaimForm extends Component {
                                                 {feedBackInvalid(errors, touched, "employeeLastName")}
                                             </div>
                                         </div>
-                                        <table class="table table-bordered table-hover">
+                                        <table className="table table-bordered table-hover">
                                             <thead>
                                                 <tr>
                                                     <th>Date From</th>
@@ -408,7 +410,7 @@ class ClaimForm extends Component {
                                                     <td><Field className={`form-control ${feedBackClassName(errors, touched, "total5")}`} id="dateFrom5" name="total5" disabled /></td>
                                                 </tr>
                                                 <tr>
-                                                    <td colspan="4" style={{ verticalAlign: "middle", textAlign: "center" }}>
+                                                    <td colSpan="4" style={{ verticalAlign: "middle", textAlign: "center" }}>
                                                         <b>Total MERCS for claim period</b>
                                                     </td>
                                                 </tr>
@@ -436,6 +438,26 @@ class ClaimForm extends Component {
                                             />
                                             <small>{values.clientIssues1.length}/700</small>
                                         </div>
+                                        <hr></hr>
+                                        <div className="form-group">
+                                            <label className="col-form-label control-label" htmlFor="workbcCentre">Please select the WorkBC Centre to submit your claim to: <span
+                                                style={{ color: "red" }}>*</span></label>
+                                            <Field
+                                                as="select"
+                                                className={`form-control ${feedBackClassName(errors,touched,"workbcCentre")}`} 
+                                                id="workbcCentre" 
+                                                name="workbcCentre" 
+                                            >
+                                                <option value="00">Please select</option>
+                                                {
+                                                pins.features.map((item) =>
+                                                <option value={item.properties.catchmentId}>{item.properties.name}</option>
+                                                )
+                                                }
+                                            </Field>
+                                            {feedBackInvalid(errors,touched,"workbcCentre")}
+                                        </div> 
+                                        <hr></hr>  
                                         <div className="form-group">
                                             <button
                                                 className="btn btn-success btn-block"
