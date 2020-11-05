@@ -43,6 +43,7 @@ var spr = spauth.getAuth(listWebURL, {
 })
 
 async function sendEmails(values) {
+  return true
   try {
     let transporter = nodemailer.createTransport({
       host: "apps.smtp.gov.bc.ca",
@@ -162,7 +163,7 @@ async function sendEmails(values) {
   }
 }
 
-async function saveList(values) {
+async function saveList(values, email) {
   try{
     var headers;
   return await spr
@@ -183,7 +184,7 @@ async function saveList(values) {
       var digest = response.d.GetContextWebInformation.FormDigestValue
       return digest
     }).then(async response => {
-      console.log(headers)
+      //console.log(headers)
       headers['X-RequestDigest'] = response
       headers['Content-Type'] = "application/json;odata=verbose"
       var l = listWebURL + `Apps/WageSubsidy/_api/web/lists/getByTitle('Catchment${values._ca}')/items`
@@ -198,7 +199,7 @@ async function saveList(values) {
           },
           "Title": `${values.operatingName} - ${values._id}`,
           "CatchmentNo": values._ca,
-          "FormType": "WS",
+          "FormType": "wage",
           "ApplicationID" : values._id,
           "OperatingName":values.operatingName,
           "BusinessNumber": values.businessNumber,
@@ -230,11 +231,7 @@ async function saveList(values) {
           "OperatingName1": values.operationName1,
           "NumberOfPositions0": values.numberOfPositions0,
           "NumberOfPositions1": values.numberOfPositions1,
-          "ParticipantEmail0": values.position0Email0,
-          "ParticipantEmail1": "",
-          "ParticipantEmail2": "",
-          "ParticipantEmail3": "",
-          "ParticipantEmail4": "",
+          "ParticipantEmail0": email,
           "StartDate0": values.startDate0,
           "StartDate1": values.startDate1,
           "Duties0": values.duties0,
@@ -262,47 +259,6 @@ async function saveList(values) {
       */
       return false
     })
-        /*
-        //console.log(digest)
-        headers['X-RequestDigest'] = digest
-        headers['Content-Type'] = "application/json;odata=verbose"
-        //console.log(headers)
-      request.post({
-          url: l,
-          headers: headers,
-          json: true,
-          body: {
-            "__metadata": {
-              "type": "SP.Data.Catchment01ListItemsss"
-            },
-            "Title": values._id
-          }
-        })
-          .then(response => {
-            console.log("created")
-            //console.log(response)
-            return true
-          })
-          .catch(err => {
-            //console.log(err)
-            console.log("Create error")
-            console.log(err.statusCode)
-            return false
-          })
-      })
-        .catch(err => {
-          console.log("failed to get digest")
-          console.log(err.statusCode)
-          return false
-        })
-    .catch(err => {
-      console.log("spr fail")
-      console.log(err)
-      return false
-    })
-
-    })
-    */
   
   //try catch catcher
   } catch (error) {
@@ -335,33 +291,48 @@ router.post('/', csrfProtection, async (req, res) => {
   //clean the body
   //console.log(req.body)
   clean(req.body);
-  console.log(req.body)
+  //console.log(req.body)
   
   HaveEmployeeValidationSchema.validate(req.body, { abortEarly: false })
     .then(async function (value) {
-      // save values to mongo db
-      try {
-        saveHaveEmployeeValues(value);
-      }
-      catch (error) {
-        console.log(error);
-      }
+
       try {
         await sendEmails(value)
           .then(async function (sent) {
             if (sent){
-              await saveList(value)
+              var pE = [
+                value.position0Email0, value.position0Email1, value.position0Email2, 
+                value.position0Email3, value.position0Email4, value.position1Email0, 
+                value.position1Email1, value.position1Email2,value.position1Email3].filter(e => e != null);
+              for (const email of pE){
+                console.log(email)
+                await saveList(value,email)
                 .then(function(saved){
                   console.log("saved")
                   console.log(saved)
+                  // save values to mongo db
+                  try {
+                    saveHaveEmployeeValues(value, true);
+                  }
+                  catch (error) {
+                    console.log(error);
+                  }
                 })
                 .catch(function(e){
                   console.log("error")
                   console.log(e)
-                })
-                res.send({
-                  ok: "ok"
-                })
+                  //save failed one
+                  try {
+                    saveHaveEmployeeValues(value, false);
+                  }
+                  catch (error) {
+                    console.log(error);
+                  }
+                })               
+              }
+              res.send({
+                ok: "ok"
+              }) 
             } else if (!sent) {
               res.send({
                 emailErr: "emailErr"
@@ -385,6 +356,7 @@ router.post('/', csrfProtection, async (req, res) => {
       })
       return
     })
+    
 })
 
 module.exports = router;
