@@ -5,6 +5,8 @@ import 'core-js/stable';
 
 export const NeedEmployeeValidationSchema = yup.object().shape({
     //step 1
+    _ca: yup.string()
+        .required("Please verify your workplace or organization address."),
     operatingName: yup.string()
        .required('Please enter the Organization name'),
     businessNumber: yup.string()
@@ -21,7 +23,7 @@ export const NeedEmployeeValidationSchema = yup.object().shape({
     businessProvince:yup.string()
        .required("Please enter a valid province"),
     businessPostal:yup.string()
-       .matches(/^[A-Za-z]\d[A-Za-z][ -]?\d[A-Za-z]\d$/,"Please enter a valid Postal Code")
+       .matches(/^[A-Za-z]\d[A-Za-z]\d[A-Za-z]\d$/,"Please enter a valid Postal Code")
        .required("Please enter a valid Postal Code"),
     businessPhone:yup.string()
        .phone("CA", false, "Please enter a valid number.")
@@ -109,7 +111,7 @@ export const NeedEmployeeValidationSchema = yup.object().shape({
     postalAlt:yup.string()
        .when("otherWorkAddress", {
            is: true,
-           then: yup.string().matches(/^[A-Za-z]\d[A-Za-z][ -]?\d[A-Za-z]\d$/,"Please enter a valid Postal Code").required("Please enter a postal code.")
+           then: yup.string().matches(/^[A-Za-z]\d[A-Za-z]\d[A-Za-z]\d$/,"Please enter a valid Postal Code").required("Please enter a postal code.")
        }),   
    
     //step 2
