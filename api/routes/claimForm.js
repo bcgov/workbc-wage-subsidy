@@ -40,6 +40,7 @@ var spr = spauth.getAuth(listWebURL, {
 })
 
 async function sendEmails(values) {
+  return true
   try {
     let transporter = nodemailer.createTransport({
       host: "apps.smtp.gov.bc.ca",
@@ -117,6 +118,105 @@ async function sendEmails(values) {
   }
 }
 
+async function saveList(values, email) {
+  try{
+    var headers;
+  return await spr
+  .then(async data => {
+      headers = data.headers;
+      headers['Accept'] = 'application/json;odata=verbose';
+      return headers
+  }).then(async response => {
+        //return true
+        //console.log(response)
+        headers = response
+        return request.post({
+          url: listWebURL + 'Apps/WageSubsidy/_api/contextInfo',
+          headers: headers,
+          json: true,
+        })
+    }).then(async response => {
+      var digest = response.d.GetContextWebInformation.FormDigestValue
+      return digest
+    }).then(async response => {
+      //console.log(headers)
+      headers['X-RequestDigest'] = response
+      headers['Content-Type'] = "application/json;odata=verbose"
+      var l = listWebURL + `Apps/WageSubsidy/_api/web/lists/getByTitle('Catchment${values.workbcCentre}')/items`
+      console.log(l)
+      return request.post({
+        url: l,
+        headers: headers,
+        json: true,
+        body: {
+          "__metadata": {
+            "type": `SP.Data.Catchment${values.workbcCentre}ListItem`
+          },
+          "Title": `Claim - ${values.employerName} - ${values._id}`,
+          "CatchmentNo": values.workbcCentre,
+          "FormType": "claim",
+          "ApplicationID" : values._id,
+          "OperatingName":values.employerName,
+          "EmployerContact":values.employerContact,
+          "BusinessAddress1":values.employerAddress1,
+          "BusinessAddress2":values.employerAddress2,
+          "BusinessCity":values.employerCity,
+          "BusinessPostal":values.employerPostal,
+          "BusinessPhone":values.employerPhone,
+          "EmployeeFirstName":values.employeeFirstName,
+          "EmployeeLastName":values.employeeLastName,
+          "DateFrom1":values.dateFrom1,
+          "DateFrom2":values.dateFrom2,
+          "DateFrom3":values.dateFrom3,
+          "DateFrom4":values.dateFrom4,
+          "DateFrom5":values.dateFrom5,
+          "HoursWorked1":Number(values.hoursWorked1),
+          "HoursWorked2":Number(values.hoursWorked2),
+          "HoursWorked3":Number(values.hoursWorked3),
+          "HoursWorked4":Number(values.hoursWorked4),
+          "HoursWorked5":Number(values.hoursWorked5),
+          "HourlyWage1":Number(values.hourlyWage1),
+          "HourlyWage2":Number(values.hourlyWage2),
+          "HourlyWage3":Number(values.hourlyWage3),
+          "HourlyWage4":Number(values.hourlyWage4),
+          "HourlyWage5":Number(values.hourlyWage5),
+          "TotalWage1":Number(values.total1),
+          "TotalWage2":Number(values.total2),
+          "TotalWage3":Number(values.total3),
+          "TotalWage4":Number(values.total4),
+          "TotalWage5":Number(values.total5),
+          "FinalHours":Number(values.hoursWorkedTotal1),
+          "FinalWage":Number(values.hourlyWageTotal1),
+          "FinalTotal":Number(values.totalTotal1),
+          "clientIssues":values.clientIssues1,
+          //"OrganizationConsent":values.organizationConsent
+          //"": values.,
+        }
+      })
+    }).then(async response => {
+      //item was created
+      return true
+    })    
+    .catch(err => {
+      //there was an error in the chan
+      //item was not created
+      console.log("error in chain")
+      //console.log(err);
+      console.log(err.statusCode)
+      /*
+      if (err.statusCode == 403){
+        saveList(values)
+      }
+      */
+      return false
+    })
+  
+  //try catch catcher
+  } catch (error) {
+    console.log(error)
+    return false
+  }
+}
 
 router.get('/', csrfProtection, (req, res) => {
   var token = req.csrfToken()
@@ -133,17 +233,32 @@ router.post('/', csrfProtection, async (req, res) => {
   console.log(req.body)
   ClaimFormValidationSchema.validate(req.body, { abortEarly: false })
     .then(async function (value) {
-            // save values to mongo db
-            try {
-              saveClaimValues(value);
-            }
-            catch (error) {
-              console.log(error);
-            }
       try {
         await sendEmails(value)
-          .then(function (sent) {
+          .then(async function (sent) {
             if (sent){
+              await saveList(value)
+              .then(function(saved){
+                console.log("saved")
+                console.log(saved)
+                // save values to mongo db
+                try {
+                  saveClaimValues(value, true);
+                }
+                catch (error) {
+                  console.log(error);
+                }
+              })
+              .catch(function(e){
+                console.log("error")
+                console.log(e)
+                try {
+                  saveClaimValues(value, false);
+                }
+                catch (error) {
+                  console.log(error);
+                }
+              })
               res.send({
                 ok: "ok"
               })
