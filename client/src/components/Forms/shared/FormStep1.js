@@ -5,8 +5,16 @@ import {getCatchment} from '../shared/AddressToCatchment'
 
 class FormStep1 extends Component {
 
+    constructor(){
+        super()
+        this.state = {
+            validatedClick: false,
+            addressValidated: false,
+            validAddress: ''
+        }
+    }
+    /*
     componentDidUpdate(prevProps){
-        
         let address1, city, postal,prevAddress1,prevCity,prevPostal,province,prevProvince
         if (this.props.values.otherWorkAddress) {
             address1 = this.props.values.addressAlt
@@ -44,6 +52,56 @@ class FormStep1 extends Component {
                         this.props.setFieldValue("_ca",ca)
                     })
                 }
+            }
+        }
+        
+    }
+    */
+
+    validateAddress = (e) => {
+        e.preventDefault()
+        this.setState({
+            validatedClick: true
+        })
+        let address1, city, postal,province
+        if (this.props.values.otherWorkAddress) {
+            address1 = this.props.values.addressAlt
+            city = this.props.values.cityAlt
+            postal = this.props.values.postalAlt
+            province = this.props.values.provinceAlt
+        } else {
+            address1 = this.props.values.businessAddress
+            city = this.props.values.businessCity
+            postal = this.props.values.businessPostal
+            province = this.props.values.businessProvince
+        }
+        if (province !== "BC"){
+            return
+        }
+        if (address1 !== "" || city !== "" || postal !== ""){
+            if (city.length > 3 && address1.length > 4 && postal.length >= 6){
+                fetch(`https://geocoder.api.gov.bc.ca/addresses.geojson?addressString=${address1},${city},${province}`,{
+                })
+                .then(res => res.json())
+                .then(result => {
+                    if (result.features[0].properties.score < 50){
+                        this.setState({
+                            addressValidated: false
+                        })
+                        return
+                    }
+                    console.log(result)
+                    let coordinates = result.features[0].geometry.coordinates
+                    let ca = getCatchment(coordinates[1],coordinates[0])
+                    console.log(ca)
+                    this.setState({
+                        addressValidated: true,
+                        validAddress: result.features[0].properties.fullAddress
+                    })
+                    this.props.setFieldValue("_ca",ca)
+                    return
+                })
+                return
             }
         }
     }
@@ -142,6 +200,15 @@ class FormStep1 extends Component {
                         {feedBackInvalid(this.props.errors,this.props.touched,"postalAlt")}
                     </div>
                 </div>
+                <button 
+                    className="btn btn-success d-print-none" 
+                    onClick={this.validateAddress}
+                    disabled={this.props.values.businessAddress.length < 4 || this.props.values.businessCity.length < 3 || this.props.values.businessPostal.length < 6}
+                >
+                    Validate Address
+                </button>
+                {this.state.addressValidated && <p className="text-success">Address validated as: {this.state.validAddress}</p>}
+                {(this.props.values._ca === "" && !this.state.addressValidated && this.state.validatedClick) && <p className="text-danger">Address could not be validated, please verify your address.</p>}
                 {(this.props.values._ca !== "" && this.props.values.otherWorkAddress) && <p>CA: {this.props.values._ca}</p>}
             </div>)
         }
@@ -155,6 +222,7 @@ class FormStep1 extends Component {
         return (
 
             <div>
+                {console.log(this)}
                 <p>If you are having difficulty completing the application for Wage Subsidy, please contact your local <a href="https://www.workbc.ca/Employment-Services/WorkBC-Centres/Find-Your-WorkBC-Centre.aspx" target="_blank" rel="noopener noreferrer">WorkBC office</a></p>
                 <div className="form-group">
                     <h2 id="forms">Business Information</h2>
@@ -178,7 +246,20 @@ class FormStep1 extends Component {
                         <label className="col-form-label control-label" htmlFor="businessAddress">Address <span
                             style={{ color: "red" }}>*  </span></label>
                         <small className="text-muted" id="businessAddress">  123 Main St.</small>
-                        <Field className={`form-control ${feedBackClassName(this.props.errors, this.props.touched, "businessAddress")}`} id="businessAddress" name="businessAddress" />
+                        <Field 
+                            className={`form-control ${feedBackClassName(this.props.errors, this.props.touched, "businessAddress")}`} 
+                            id="businessAddress" 
+                            name="businessAddress"
+                            onChange={e => {
+                                this.props.handleChange(e)
+                                this.props.setFieldValue("_ca","")
+                                if (this.state.addressValidated){
+                                    this.setState({
+                                        addressValidated: false
+                                    })
+                                }
+                            }} 
+                        />
                         {feedBackInvalid(this.props.errors,this.props.touched,"businessAddress")}
                     </div>
                 </div>
@@ -186,7 +267,20 @@ class FormStep1 extends Component {
                     <div className="form-group col-md-4">
                         <label className="col-form-label control-label" htmlFor="businessCity">City / Town <span
                             style={{ color: "red" }}>*</span></label>
-                        <Field className={`form-control ${feedBackClassName(this.props.errors, this.props.touched, "businessCity")}`} id="businessCity" name="businessCity" />
+                        <Field 
+                            className={`form-control ${feedBackClassName(this.props.errors, this.props.touched, "businessCity")}`} 
+                            id="businessCity" 
+                            name="businessCity"
+                            onChange={e => {
+                                this.props.handleChange(e)
+                                this.props.setFieldValue("_ca","")
+                                if (this.state.addressValidated){
+                                    this.setState({
+                                        addressValidated: false
+                                    })
+                                }
+                            }} 
+                        />
                         {feedBackInvalid(this.props.errors,this.props.touched,"businessCity")}
                     </div>
                     <div className="form-group col-md-4">
@@ -196,7 +290,16 @@ class FormStep1 extends Component {
                             as="select"
                             className={`form-control ${feedBackClassName(this.props.errors, this.props.touched, "businessProvince")}`}
                             id="businessProvince" 
-                            name="businessProvince" 
+                            name="businessProvince"
+                            onChange={e => {
+                                this.props.handleChange(e)
+                                this.props.setFieldValue("_ca","")
+                                if (this.state.addressValidated){
+                                    this.setState({
+                                        addressValidated: false
+                                    })
+                                }
+                            }} 
                         >
                             <option value="">Please select</option>
                             <option value="AB">Alberta</option>
@@ -219,11 +322,36 @@ class FormStep1 extends Component {
                         <label className="col-form-label control-label" htmlFor="businessPostal">Postal Code <span
                             style={{ color: "red" }}>*  </span></label>
                         <small className="text-muted" id="businessPostal">  V0R2V5</small>
-                        <Field className={`form-control ${feedBackClassName(this.props.errors, this.props.touched, "businessPostal")}`} id="businessPostal" name="businessPostal" />
+                        <Field 
+                            className={`form-control ${feedBackClassName(this.props.errors, this.props.touched, "businessPostal")}`} 
+                            id="businessPostal" 
+                            name="businessPostal"
+                            onChange={e => {
+                                this.props.handleChange(e)
+                                this.props.setFieldValue("_ca","")
+                                if (this.state.addressValidated){
+                                    this.setState({
+                                        addressValidated: false
+                                    })
+                                }
+                            }}  
+                        />
                         {feedBackInvalid(this.props.errors,this.props.touched,"businessPostal")}
                     </div>
                 </div>
+                {
+                (!this.props.values.otherWorkAddress && (this.props.values.businessProvince === "BC" || this.props.values.businessProvince === "") && !this.state.addressValidated) &&
+                <button 
+                    className="btn btn-success d-print-none" 
+                    onClick={this.validateAddress}
+                    disabled={this.props.values.businessAddress.length < 4 || this.props.values.businessCity.length < 3 || this.props.values.businessPostal.length < 6 || this.props.values.businessProvince !== "BC"}
+                >
+                    Validate Address
+                </button>
+                }
                 <p className="small text-muted">Please note that the workplace must be located in BC, in order to be eligible.</p>
+                {this.state.addressValidated && <p className="text-success">Address validated as: {this.state.validAddress}</p>}
+                {(this.props.values._ca === "" && !this.state.addressValidated && this.state.validatedClick) && <p className="text-danger">Address could not be validated, please verify your address.</p>}
                 {(this.props.values.businessProvince !== "BC" && this.props.values.businessProvince !== "") && <p className="text-danger">Please check the box below to provide the workplace address located in BC.</p>}
                 {(this.props.values._ca !== "" && !this.props.values.otherWorkAddress) && <p>CA: {this.props.values._ca}</p>}
                 <div className="form-row">
