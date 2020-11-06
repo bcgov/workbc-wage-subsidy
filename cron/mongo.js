@@ -16,18 +16,84 @@ function getClient() {
 
 
 module.exports = {
-    getHaveEmployeeNotSP: function (values) {
+    getClient: async function (values) {
         const client = getClient();
-        client.connect().then(mClient => {
+        return await client.connect()
+        /*
+        .then(mClient => {
             // get a handle on the db
             let db = mClient.db();
-            // add our values to db (they are always new)
+            return db
+        })
+        */
+        /*
+        .then(db => {
+        // add our values to db (they are always new)
             db.collection("HaveEmployee").findOne({savedToSP: false},function(err, doc){
-                console.log(err)
-                console.log(doc)
+                //console.log(err)
+                //console.log(doc)
                 return doc
             })
-        });
+        })
+        */
+        
+    },
+    getHaveEmployeeNotSP: async function () {
+        const client = getClient();
+        return await client.connect()
+        .then(mClient => {
+            // get a handle on the db
+            return mClient.db();
+            //return db
+        })
+        .then(async db => {
+        // add our values to db (they are always new)
+            return db.collection("HaveEmployee").find({savedToSP: false})
+                //console.log(err)
+                //console.log(doc)
+        }).then(doc =>{
+            return doc
+        })
+        
+        
+    },
+    getNeedEmployeeNotSP: async function () {
+        const client = getClient();
+        return await client.connect()
+        .then(mClient => {
+            // get a handle on the db
+            return mClient.db();
+            //return db
+        })
+        .then(async db => {
+        // add our values to db (they are always new)
+            return db.collection("NeedEmployee").find({savedToSP: false})
+                //console.log(err)
+                //console.log(doc)
+        }).then(doc =>{
+            return doc
+        })
+        
+        
+    },
+    getClaimNotSP: async function () {
+        const client = getClient();
+        return await client.connect()
+        .then(mClient => {
+            // get a handle on the db
+            return mClient.db();
+            //return db
+        })
+        .then(async db => {
+        // add our values to db (they are always new)
+            return db.collection("Claim").find({savedToSP: false})
+                //console.log(err)
+                //console.log(doc)
+        }).then(doc =>{
+            return doc
+        })
+        
+        
     },
     printValues: function(collection) {
         const client = getClient();
