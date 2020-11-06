@@ -1,0 +1,137 @@
+apiVersion: template.openshift.io/v1
+kind: Template
+metadata:
+  creationTimestamp: null
+  name: workbc-wage-subsidy-cron
+labels:
+  template: workbc-wage-subsidy-cron
+objects:
+- apiVersion: v1
+  kind: ImageStream
+  metadata:
+    creationTimestamp: null
+    name: ${NAME}
+  spec:
+    lookupPolicy:
+      local: false
+- apiVersion: v1
+  kind: DeploymentConfig
+  metadata:
+    creationTimestamp: null
+    name: ${NAME}${SUFFIX}
+  spec:
+    replicas: 2
+    selector:
+      deploymentconfig: ${NAME}${SUFFIX}
+    strategy:
+      resources:
+        requests:
+          cpu: '100m'
+        limits:
+          cpu: '150m'
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          deploymentconfig: ${NAME}${SUFFIX}
+      spec:
+        containers:
+        - image: ${NAME}:${TAG}
+          name: workbc-wage-subsidy-cron
+          ports:
+          - containerPort: 8000
+            protocol: TCP
+          resources:
+            requests:
+              cpu: '100m'
+            limits:
+              cpu: '150m'
+          env:
+          - name: OPENSHIFT_NODEJS_LISTWEBURL
+            value: ${OPENSHIFT_NODEJS_LISTWEBURL}
+          - name: OPENSHIFT_NODEJS_LISTUSER
+            value: ${OPENSHIFT_NODEJS_LISTUSER}
+          - name: OPENSHIFT_NODEJS_LISTPASS
+            value: ${OPENSHIFT_NODEJS_LISTPASS}
+          - name: OPENSHIFT_NODEJS_LISTDOMAIN
+            value: ${OPENSHIFT_NODEJS_LISTDOMAIN}
+          - name: OPENSHIFT_NODEJS_LISTPARTY
+            value: ${OPENSHIFT_NODEJS_LISTPARTY}
+          - name: OPENSHIFT_NODEJS_LISTADFS
+            value: ${OPENSHIFT_NODEJS_LISTADFS}
+    test: false
+    triggers:
+    - type: ConfigChange
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+        - workbc-wage-subsidy-cron
+        from:
+          kind: ImageStreamTag
+          name: ${NAME}:${TAG}
+          namespace: ${IMAGE_NAMESPACE}
+      type: ImageChange
+- apiVersion: v1
+  kind: Service
+  metadata:
+    creationTimestamp: null
+    name: ${NAME}${SUFFIX}
+  spec:
+    ports:
+    - name: api
+      port: 8000
+      protocol: TCP
+      targetPort: 8000
+    selector:
+      deploymentconfig: ${NAME}${SUFFIX}
+parameters:
+- description: A name used for all objects
+  displayName: Name
+  name: NAME
+  required: true
+  value: workbc-wage-subsidy-cron
+- description: A name suffix used for all objects
+  displayName: Suffix
+  name: SUFFIX
+  required: false
+  value: ''
+- description: Tag used for the image tags
+  displayName: tag
+  name: TAG
+  required: true
+  value: latest
+- description: List Web URL
+  displayName: List Web URL
+  name: OPENSHIFT_NODEJS_LISTWEBURL
+  required: true
+  value: ''
+- description: List User
+  displayName: List User
+  name: OPENSHIFT_NODEJS_LISTUSER
+  required: true
+  value: ''
+- description: List Pass
+  displayName: List Pass
+  name: OPENSHIFT_NODEJS_LISTPASS
+  required: true
+  value: ''
+- description: List Domain
+  displayName: List Domain
+  name: OPENSHIFT_NODEJS_LISTDOMAIN
+  required: true
+  value: ''
+- description: List Party
+  displayName: List Party
+  name: OPENSHIFT_NODEJS_LISTPARTY
+  required: true
+  value: ''
+- description: List ADFS
+  displayName: List ADFS
+  name: OPENSHIFT_NODEJS_LISTADFS
+  required: true
+  value: ''
+- description: The namespace of the OS project containing the imagestreams
+  displayName: Image Namespace
+  name: IMAGE_NAMESPACE
+  required: true
+  value: myproject-tools
