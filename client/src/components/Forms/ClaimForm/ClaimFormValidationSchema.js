@@ -21,32 +21,57 @@ export const ClaimFormValidationSchema = yup.object().shape({
         .max(100, "City name too long")
         .required("Please enter city"),
     employerPostal: yup.string()
-        .matches(/^[A-Za-z]\d[A-Za-z][ -]?\d[A-Za-z]\d$/, "Please enter a valid Postal Code")
+        .matches(/^[A-Za-z]\d[A-Za-z]\d[A-Za-z]\d$/, "Please enter a valid Postal Code")
         .required("Please enter a postal code."),
     employeeFirstName: yup.string().required("Please enter a first name"),
     employeeLastName: yup.string().required("Please enter a last ame"),
     clientIssues1: yup.string().max(700),
-    dateFrom1: yup.date(),
+    dateFrom1: yup.date()
+        .min(yup.ref('periodStart1'),'Date From must be on or after the period start date.')
+        .max(yup.ref('periodStart2'),'Date From must be on or before the period end date.'),
+    dateTo1: yup.date()
+        .min(yup.ref('dateFrom1'),'Date To cannot be before Date From.')
+        .max(yup.ref('periodStart2'),'Date To must be on or before the period end date.'),
     hoursWorked1: yup.number(),
     hourlyWage1: yup.number(),
     total1: yup.number(),
     clientIssues2: yup.string().max(700),
-    dateFrom2: yup.date(),
+    dateFrom2: yup.date()
+        .min(yup.ref('periodStart1'),'Date From must be on or after the period start date.')
+        .max(yup.ref('periodStart2'),'Date From must be on or before the period end date.'),
+    dateTo2: yup.date()
+        .min(yup.ref('dateFrom2'),'Date To cannot be before Date From.')
+        .max(yup.ref('periodStart2'),'Date To must be on or before the period end date.'),
     hoursWorked2: yup.number(),
     hourlyWage2: yup.number(),
     total2: yup.number(),
     clientIssues3: yup.string().max(700),
-    dateFrom3: yup.date(),
+    dateFrom3: yup.date()
+        .min(yup.ref('periodStart1'),'Date From must be on or after the period start date.')
+        .max(yup.ref('periodStart2'),'Date From must be on or before the period end date.'),
+    dateTo3: yup.date()
+        .min(yup.ref('dateFrom3'),'Date To cannot be before Date From.')
+        .max(yup.ref('periodStart2'),'Date To must be on or before the period end date.'),
     hoursWorked3: yup.number(),
     hourlyWage3: yup.number(),
     total3: yup.number(),
     clientIssues4: yup.string().max(700),
-    dateFrom4: yup.date(),
+    dateFrom4: yup.date()
+        .min(yup.ref('periodStart1'),'Date From must be on or after the period start date.')
+        .max(yup.ref('periodStart2'),'Date From must be on or before the period end date.'),
+    dateTo4: yup.date()
+        .min(yup.ref('dateFrom4'),'Date To cannot be before Date From.')
+        .max(yup.ref('periodStart2'),'Date To must be on or before the period end date.'),
     hoursWorked4: yup.number(),
     hourlyWage4: yup.number(),
     total4: yup.number(),
     clientIssues5: yup.string().max(700),
-    dateFrom5: yup.date(),
+    dateFrom5: yup.date()
+        .min(yup.ref('periodStart1'),'Date From must be on or after the period start date.')
+        .max(yup.ref('periodStart2'),'Date From must be on or before the period end date.'),
+    dateTo5: yup.date()
+        .min(yup.ref('dateFrom5'),'Date To cannot be before Date From.')
+        .max(yup.ref('periodStart2'),'Date To must be on or before the period end date.'),
     hoursWorked5: yup.number(),
     hourlyWage5: yup.number(),
     total5: yup.number(),
