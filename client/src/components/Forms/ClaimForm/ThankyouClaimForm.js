@@ -9,7 +9,6 @@ class ThankyouClaimForm extends Component {
                         <h1>The following information was recieved:</h1>
                         <br />
                         <hr />
-                        {console.log(this.props.location.state)}
                         <p><b>Period Claim Start: </b> {this.props.location.state !== undefined && (<span>{this.props.location.state.periodStart1.getDate()}/{this.props.location.state.periodStart1.getMonth() + 1}/{this.props.location.state.periodStart1.getFullYear()}</span>)}</p>
                         <p><b>Period Claim End: </b> {this.props.location.state !== undefined && (<span>{this.props.location.state.periodStart2.getDate()}/{this.props.location.state.periodStart2.getMonth() + 1}/{this.props.location.state.periodStart2.getFullYear()}</span>)}</p>
                         <p><b>Final Claim: </b>{this.props.location.state && this.props.location.state.isFinalClaim}</p>
@@ -20,7 +19,7 @@ class ThankyouClaimForm extends Component {
                         <p><b>Address 2: </b>{this.props.location.state && this.props.location.state.employerAddress2}</p>
                         <p><b>City: </b>{this.props.location.state && this.props.location.state.employerCity}</p>
                         <p><b>Postal Code: </b>{this.props.location.state && this.props.location.state.employerPostal}</p>
-                        <p><b>Empoyee First Name: </b>{this.props.location.state && this.props.location.state.employeeFirstName}</p>
+                        <p><b>Employee First Name: </b>{this.props.location.state && this.props.location.state.employeeFirstName}</p>
                         <p><b>Employee Last Name: </b>{this.props.location.state && this.props.location.state.employeeLastName}</p>
                         <h2>Work Period Information</h2>
                         <h3>1st Date</h3>
