@@ -115,7 +115,9 @@ async function sendEmails(values) {
               `If you are NOT already participating in WorkBC Services, please follow these steps:`,
               `<b>Step 1:</b> Register for Online Employment Services.`,
               `<b>Step 2:</b> Complete an online application. Click here to get started and ensure you select WorkBC Self-Serve to begin your application.`,
+              `<img class="img-fluid" src="${clientURL}/images/workbc_self_serve.png" alt="WorkBC Self Serve Option" style="height: auto; line-height: 100%; outline: none; text-decoration: none; width: 100%; max-width: 100%; border: 0 none;">`
               `When selecting your WorkBC Centre, select the community where your job is located.`,
+              `<img class="img-fluid" src="${clientURL}/images/workbc_community_select.png" alt="WorkBC Community Selector" style="height: auto; line-height: 100%; outline: none; text-decoration: none; width: 100%; max-width: 100%; border: 0 none;">`
               `<b>Step 3:</b> Let your employer know you have applied! A team member will be in touch soon.`,
             ],
             [
