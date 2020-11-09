@@ -29,4 +29,18 @@ jobs:
           # Oc command to be executed
           cmd: |
             'version'
-            'start-build workbc-wage-subsidy -n ${{secrets.PROJECT_TOOLS}} --follow'
+            'start-build workbc-wage-subsidy -n ${{secrets.PROJECT_TOOLS}}'
+      - name: OpenShift4 Action
+        uses: redhat-developer/openshift-actions@v2.1.0
+        with:
+          # Choose the oc version you want to use to execute the command. It can be a version or an url where to download oc cli desired. If left blank latest oc cli will be used.
+          version: latest
+          # The URL of the Openshift cluster
+          openshift_server_url: ${{secrets.OCP4_SERVER_URL}}
+          # JSON with values to connect to the Openshift cluster
+          parameters: '{"apitoken": "${{ secrets.API_TOKEN_4 }}", "acceptUntrustedCerts": "true"}'
+          # Oc command to be executed
+          cmd: |
+            'start-build workbc-wage-subsidy -n ${{secrets.PROJECT_TOOLS_4}}'
+            'start-build workbc-wage-subsidy-api -n ${{secrets.PROJECT_TOOLS_4}}'
+            'start-build workbc-wage-subsidy-cron -n ${{secrets.PROJECT_TOOLS_4}}'
