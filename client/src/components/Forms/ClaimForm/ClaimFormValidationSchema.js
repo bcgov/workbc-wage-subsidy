@@ -28,12 +28,18 @@ export const ClaimFormValidationSchema = yup.object().shape({
     clientIssues1: yup.string().max(700),
     dateFrom1: yup.date()
         .min(yup.ref('periodStart1'),'Date From must be on or after the period start date.')
-        .max(yup.ref('periodStart2'),'Date From must be on or before the period end date.'),
+        .max(yup.ref('periodStart2'),'Date From must be on or before the period end date.')
+        .required("You must provide at least one line for date from."),
     dateTo1: yup.date()
         .min(yup.ref('dateFrom1'),'Date To cannot be before Date From.')
-        .max(yup.ref('periodStart2'),'Date To must be on or before the period end date.'),
-    hoursWorked1: yup.number(),
-    hourlyWage1: yup.number(),
+        .max(yup.ref('periodStart2'),'Date To must be on or before the period end date.')
+        .required("You must provide at least one line for date to."),
+    hoursWorked1: yup.number()
+        .typeError("Hours worked must be a number.")
+        .required("Please enter at least one line for hours worked."),
+    hourlyWage1: yup.number()
+        .typeError("Hourly wage must be a number.")
+        .required("Please enter at least one line for hourly wage."),
     total1: yup.number(),
     clientIssues2: yup.string().max(700),
     dateFrom2: yup.date()
@@ -42,8 +48,10 @@ export const ClaimFormValidationSchema = yup.object().shape({
     dateTo2: yup.date()
         .min(yup.ref('dateFrom2'),'Date To cannot be before Date From.')
         .max(yup.ref('periodStart2'),'Date To must be on or before the period end date.'),
-    hoursWorked2: yup.number(),
-    hourlyWage2: yup.number(),
+    hoursWorked2: yup.number()
+        .typeError("Hours worked must be a number."),
+    hourlyWage2: yup.number()
+        .typeError("Hourly wage must be a number."),
     total2: yup.number(),
     clientIssues3: yup.string().max(700),
     dateFrom3: yup.date()
@@ -52,8 +60,10 @@ export const ClaimFormValidationSchema = yup.object().shape({
     dateTo3: yup.date()
         .min(yup.ref('dateFrom3'),'Date To cannot be before Date From.')
         .max(yup.ref('periodStart2'),'Date To must be on or before the period end date.'),
-    hoursWorked3: yup.number(),
-    hourlyWage3: yup.number(),
+    hoursWorked3: yup.number()
+        .typeError("Hours worked must be a number."),
+    hourlyWage3: yup.number()
+        .typeError("Hourly wage must be a number."),
     total3: yup.number(),
     clientIssues4: yup.string().max(700),
     dateFrom4: yup.date()
@@ -62,8 +72,10 @@ export const ClaimFormValidationSchema = yup.object().shape({
     dateTo4: yup.date()
         .min(yup.ref('dateFrom4'),'Date To cannot be before Date From.')
         .max(yup.ref('periodStart2'),'Date To must be on or before the period end date.'),
-    hoursWorked4: yup.number(),
-    hourlyWage4: yup.number(),
+    hoursWorked4: yup.number()
+        .typeError("Hours worked must be a number."),
+    hourlyWage4: yup.number()
+        .typeError("Hourly wage must be a number."),
     total4: yup.number(),
     clientIssues5: yup.string().max(700),
     dateFrom5: yup.date()
@@ -72,8 +84,13 @@ export const ClaimFormValidationSchema = yup.object().shape({
     dateTo5: yup.date()
         .min(yup.ref('dateFrom5'),'Date To cannot be before Date From.')
         .max(yup.ref('periodStart2'),'Date To must be on or before the period end date.'),
-    hoursWorked5: yup.number(),
-    hourlyWage5: yup.number(),
+    hoursWorked5: yup.number()
+        .typeError("Hours worked must be a number."),
+    hourlyWage5: yup.number()
+        .typeError("Hourly wage must be a number."),
+    totalMERCs: yup.number()
+        .typeError("Total MERCs must be a number.")
+        .required("Please enter total MERCs for claim period."),
     total5: yup.number(),
     workbcCentre: yup.string()
         .oneOf([

@@ -194,6 +194,7 @@ class ClaimForm extends Component {
                                 hoursWorked5: '',
                                 hourlyWage5: '',
                                 total5: 0,
+                                totalMERCs: '',
                                 hoursWorkedTotal1: 0,
                                 hourlyWageTotal1: 0,
                                 totalTotal1: '',
@@ -425,7 +426,7 @@ class ClaimForm extends Component {
                                                         <b>Total employer portion of Mandatory Employment Related Costs (EI, CPP, WorkSafeBC, Vacation Pay).</b>
                                                     </td>
                                                     <td>
-                                                        <Field className={`form-control ${feedBackClassName(errors, touched, "totalMERCS")}`} id="totalMERCS" name="totalMERCS" />
+                                                        <Field className={`form-control ${feedBackClassName(errors, touched, "totalMERCs")}`} id="totalMERCs" name="totalMERCs" />
                                                     </td>
                                                 </tr>
                                                 {/* 
