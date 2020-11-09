@@ -27,8 +27,7 @@ module.exports = {
             db.collection("HaveEmployee").insertOne({
                 applicationID       : values._id,// id is provided
                 ca                  : strings.orEmpty(values._ca),                                     
-                savedToSP           : savedToSP,
-                savedReporting      : false,  // default to false for now
+                savedToSP           : savedToSP,                                          // default to false for now
                 operatingName       : strings.orEmpty(values.operatingName),
                 businessNumber      : strings.orEmpty(values.businessNumber),
                 businessAddress     : strings.orEmpty(values.businessAddress),
@@ -90,7 +89,6 @@ module.exports = {
                 applicationID       : strings.orEmpty(values._id),
                 ca                  : strings.orEmpty(values._ca),
                 savedToSP           : savedToSP,
-                savedReporting      : false,  // default to false for now
                 operatingName       : strings.orEmpty(values.operatingName),
                 businessNumber      : strings.orEmpty(values.businessNumber),
                 businessAddress     : strings.orEmpty(values.businessAddress),
@@ -142,9 +140,8 @@ module.exports = {
             let db = mClient.db();
             // add our values to db (they are always new)
             db.collection("Claim").insertOne({
-                ca               : strings.orEmpty(values.workbcCentre), 
                 savedToSP        : savedToSP,
-                savedReporting   : false,  // default to false for now
+                ca               : strings.orEmpty(values.workbcCentre), 
                 periodStart1     : strings.orEmpty(values.periodStart1),
                 periodStart2     : strings.orEmpty(values.periodStart2),
                 isFinalClaim     : strings.orEmpty(values.isFinalClaim),
@@ -157,27 +154,22 @@ module.exports = {
                 employeeFirstName: strings.orEmpty(values.employeeFirstName),
                 employeeLastName : strings.orEmpty(values.employeeLastName),
                 dateFrom1        : strings.orEmpty(values.dateFrom1),
-                dateTo1          : strings.orEmpty(values.dateTo1),
                 hoursWorked1     : strings.orEmpty(values.hoursWorked1),
                 hourlyWage1      : strings.orEmpty(values.hourlyWage1),
                 total1           : strings.orEmpty(values.total1),
                 dateFrom2        : strings.orEmpty(values.dateFrom2),
-                dateTo2          : strings.orEmpty(values.dateTo2),
                 hoursWorked2     : strings.orEmpty(values.hoursWorked2),
                 hourlyWage2      : strings.orEmpty(values.hourlyWage2),
                 total2           : strings.orEmpty(values.total2),
                 dateFrom3        : strings.orEmpty(values.dateFrom3),
-                dateTo3          : strings.orEmpty(values.dateTo3),
                 hoursWorked3     : strings.orEmpty(values.hoursWorked3),
                 hourlyWage3      : strings.orEmpty(values.hourlyWage3),
                 total3           : strings.orEmpty(values.total3),
                 dateFrom4        : strings.orEmpty(values.dateFrom4),
-                dateTo4          : strings.orEmpty(values.dateTo4),
                 hoursWorked4     : strings.orEmpty(values.hoursWorked4),
                 hourlyWage4      : strings.orEmpty(values.hourlyWage4),
                 total4           : strings.orEmpty(values.total4),
                 dateFrom5        : strings.orEmpty(values.dateFrom5),
-                dateTo5          : strings.orEmpty(values.dateTo5),
                 hoursWorked5     : strings.orEmpty(values.hoursWorked5),
                 hourlyWage5      : strings.orEmpty(values.hourlyWage5),
                 total5           : strings.orEmpty(values.total5),
