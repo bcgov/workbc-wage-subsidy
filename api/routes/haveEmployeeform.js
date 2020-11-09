@@ -25,7 +25,6 @@ var confirmationBCC = process.env.CONFIRMATIONBCC || process.env.OPENSHIFT_NODEJ
 var pEmail = process.env.PARTICIPANTEMAIL || process.env.OPENSHIFT_NODEJS_PARTICIPANTEMAIL || "";
 var listEmail = process.env.LISTEMAIL || process.env.OPENSHIFT_NODEJS_LISTEMAIL || "";
 var notifyEmail = process.env.NOTIFYEMAIL || process.env.OPENSHIFT_NODEJS_NOTIFYEMAIL || "";
-var clientURL = process.env.CLIENTURL || process.env.OPENSHIFT_NODEJS_CLIENTURL || ""
 var listWebURL = process.env.LISTWEBURL || process.env.OPENSHIFT_NODEJS_LISTWEBURL || ""
 var listUser = process.env.LISTUSER || process.env.OPENSHIFT_NODEJS_LISTUSER || ""
 var listPass = process.env.LISTPASS || process.env.OPENSHIFT_NODEJS_LISTPASS || ""
@@ -43,7 +42,6 @@ var spr = spauth.getAuth(listWebURL, {
 })
 
 async function sendEmails(values) {
-  return true
   try {
     let transporter = nodemailer.createTransport({
       host: "apps.smtp.gov.bc.ca",
@@ -81,8 +79,7 @@ async function sendEmails(values) {
           html: generateHTMLEmail("Thank you, your application has been received",
             [
               `<b>Application ID: ${values._id}</b>`,
-              `Your application has been successfully received. You can print this page for your records.`,
-              `<b>Next Steps:</b>`,
+              `Thank you for your interest in WorkBC Wage Subsidy services. Your application has been received and a WorkBC staff member will be in touch with you soon.`,
             ],
             [
             ],
@@ -105,18 +102,37 @@ async function sendEmails(values) {
           from: 'WorkBC Wage Subsidy <donotreply@gov.bc.ca>', // sender address
           to: [],
           bcc: positionEmails,// list of receivers
-          subject: "A Wage Subsidy Application has been submitted", // Subject line
-          html: generateHTMLEmail("Thank you, your application has been received",
+          subject: "WorkBC Wage Subsidy Application - Next Steps", // Subject line
+          html: generateHTMLEmail("WorkBC Wage Subsidy Application - Next Steps",
             [
-              `A Wage Subsidy application has been submitted for you`,
-              `I am an existing client`,
-              `I'm a new client`,
+              `Hello,`
+              `You’re receiving this email because your future employer recently applied for a WorkBC Wage Subsidy.`,
+              `WorkBC is a provincial government service that helps residents of B.C. improve their skills, explore career options, and find employment.`,
             ],
-            [],
-            []
+            [
+              `Only a few steps remain before you are back at work.`,
+              `If you are participating in WorkBC Services, contact your Employment Counsellor right away, before taking the steps below.`,
+              `If you are NOT already participating in WorkBC Services, please follow these steps:`,
+              `<b>Step 1:</b> Register for Online Employment Services.`,
+              `<b>Step 2:</b> Complete an online application. Click here to get started and ensure you select WorkBC Self-Serve to begin your application.`,
+              `When selecting your WorkBC Centre, select the community where your job is located.`,
+              `<b>Step 3:</b> Let your employer know you have applied! A team member will be in touch soon.`,
+            ],
+            [
+              `<b>Why use WorkBC?</b></p><p>
+              <ul>
+                <li>
+                  <b>Expertise: </b>We're ready to help you start career planning now or get you ready for the next phase of BC's COVID-19 Restart Plan.</li>
+                <li>
+                  <b>Free Services: </b>We offer skills training and personalized, one-on-one job counselling. WorkBC services are completely free.</li>
+                <li>
+                  <b>Benefits: </b>You might also be eligible for exclusive benefits.</li>
+              </ul>
+              `,
+              `Sincerely,<br><b>Your WorkBC team<br></b>`
+            ]
           ) // html body
-        };
-        /*
+        };      
         let info = transporter.sendMail(message1, (error, info) => {
           if (error) {
             console.log("error:", error);
@@ -150,7 +166,6 @@ async function sendEmails(values) {
             console.log("Message sent: %s", info.messageId);
           }
         });
-        */
         return true
       }).catch(function (e) {
         console.log(e)
@@ -312,7 +327,7 @@ router.post('/', csrfProtection, async (req, res) => {
                   console.log(saved)
                   // save values to mongo db
                   try {
-                    saveHaveEmployeeValues(value, true);
+                    saveHaveEmployeeValues(value, email, true);
                   }
                   catch (error) {
                     console.log(error);
@@ -323,7 +338,7 @@ router.post('/', csrfProtection, async (req, res) => {
                   console.log(e)
                   //save failed one
                   try {
-                    saveHaveEmployeeValues(value, false);
+                    saveHaveEmployeeValues(value, email, false);
                   }
                   catch (error) {
                     console.log(error);
