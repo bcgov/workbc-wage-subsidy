@@ -67,9 +67,19 @@ objects:
       server {
         listen 8080;
         root /var/www/html/build/;
+        location /api/haveEmployeeForm {
+            proxy_pass ${API_URL};
+        }
+        location /api/needEmployeeForm {
+            proxy_pass ${API_URL};
+        }
+        location /api/claimForm {
+            proxy_pass ${API_URL};
+        }
         location / {
           try_files $uri /index.html;
         }
+
       }
   kind: ConfigMap
   metadata:
