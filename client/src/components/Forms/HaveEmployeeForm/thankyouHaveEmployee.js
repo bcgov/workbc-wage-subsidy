@@ -10,21 +10,18 @@ class thankyouHaveEmployee extends Component {
                 <div className="row">
                     <div className="col-md-12">
                         <h1>Thank you, your application has been received</h1>
-                        {console.log(this.props)}
-                        {console.log(this.props.location)}
                         <h3>Application ID: {this.props.location.state !== undefined && this.props.location.state._id}</h3>
                         <button className="btn btn-success d-print-none" onClick={() => window.print()}>Print Confirmation</button><br /><br />
-                        <p>A confirmation email has been sent to the email address provided.</p>
+                        <p>Thank you for your interest in WorkBC Wage Subsidy services. Your application has been received and a WorkBC staff member will be in touch with you soon.</p>
                         <p>
                             The following information was received:
                         </p>
                         <br />
-                        <hr />
-                        {console.log(this.props.location.state)}  
+                        <hr /> 
                                 <p>Application ID:  {this.props.location.state !== undefined && this.props.location.state._id}</p>
                                 <p>Operating Name:  {this.props.location.state !== undefined && this.props.location.state.operatingName}</p>
                                 
-                                <h5> Business Address Information</h5>
+                                <h5>Business Address Information</h5>
                                 <p>Business Number:  {this.props.location.state !== undefined && this.props.location.state.businessNumber}</p>
                                 <p>Business Address:  {this.props.location.state !== undefined && this.props.location.state.businessAddress}</p>
                                 <p>Business City:  {this.props.location.state !== undefined && this.props.location.state.businessCity}</p>
