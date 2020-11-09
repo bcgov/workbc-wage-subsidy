@@ -6,7 +6,20 @@ function Home() {
             <div className="row">
                 <div className="col-md-12">
                     <h1>WorkBC Wage Subsidy</h1>
-                    <p>The WorkBC Wage Subsidy service provides funding to eligible employers to hire and provide work experience and on-the-job training to an individual who has been identified as needing work experience, to hire new employees or recall laid off employees. Eligible Employers who need an employee can either:</p>
+                    <p>The WorkBC Wage Subsidy program provides funding to eligible employers to hire, provide work experience and on-the-job training.</p>
+                    <p>Wage subsidy offers employers:</p>
+                    <ul>
+                        <li>A portion of employee wages</li>
+                        <li>Support for ongoing operations and expansion</li>
+                        <li>Disability supports to reduce work-related barriers for an employee</li>
+                        <li>An opportunity to:</li>
+                        <ul>
+                            <li>Re-hire laid off employees</li>
+                            <li>Hire new employees</li>
+                            <li>Better connect job seekers and employers to meet hiring needs</li>
+                        </ul>
+                    </ul>
+                    <p>Employers who need an employee can either:</p>
                     <ol>
                         <li>Apply to be matched to a WorkBC Client; or</li>
                         <li>Apply with their identified employee.</li>
