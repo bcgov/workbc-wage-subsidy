@@ -8,7 +8,6 @@ var nodemailer = require("nodemailer");
 var csrf = require('csurf');
 var csrfProtection = csrf({ cookie: true });
 var spauth = require('node-sp-auth')
-var request = require('request-promise')
 
 
 var HaveEmployeeValidationSchema = require('../schemas/HaveEmployeeValidationSchema')
