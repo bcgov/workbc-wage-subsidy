@@ -144,6 +144,11 @@ parameters:
   name: VOLUME_NAME
   required: false
   value: nginx-config
+- description: The API URL to pass requests to 
+  displayName: API URL
+  name: API_URL
+  required: true
+  value: ''
 - description: The namespace of the OS project containing the imagestreams
   displayName: Image Namespace
   name: IMAGE_NAMESPACE
