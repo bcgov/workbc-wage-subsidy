@@ -7,11 +7,6 @@ var csrf = require('csurf')
 var bodyParser = require('body-parser')
 var cors = require('cors')
 
-const dotenv = require("dotenv");
-dotenv.config();
-
-
-
 var origin = process.env.ORIGIN_URL || process.env.OPENSHIFT_NODEJS_ORIGIN_URL || "http://localhost:3000"
 
 const corsOptions = {
