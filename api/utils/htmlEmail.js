@@ -39,7 +39,7 @@ module.exports = function (title, mainContent, boxContent, endContent) {
         <tr>
           <td style="border-spacing: 0px; border-collapse: collapse; line-height: 24px; font-size: 15px; width: 100%; margin: 0;" align="left">
             <div>
-        <img class="img-fluid" width="800" height="160" border="0" id="BC_WorkBC_Banner_Top" src="https://workbcei-email.pathfinder.gov.bc.ca/images/emailBannerTop.png" alt="BC WorkBC Logo" style="height: auto; line-height: 100%; outline: none; text-decoration: none; width: 100%; max-width: 100%; border: 0 none;">
+        <img class="img-fluid" width="800" height="160" border="0" id="BC_WorkBC_Banner_Top" src="${clientURL}/images/emailBannerTop.png" alt="BC WorkBC Logo" style="height: auto; line-height: 100%; outline: none; text-decoration: none; width: 100%; max-width: 100%; border: 0 none;">
         <table class="card-body" border="0" cellpadding="0" cellspacing="0" style="font-family: Helvetica, Arial, sans-serif; mso-table-lspace: 0pt; mso-table-rspace: 0pt; border-spacing: 0px; border-collapse: collapse; width: 100%;">
       <tbody>
         <tr>
@@ -133,7 +133,7 @@ module.exports = function (title, mainContent, boxContent, endContent) {
             </tr>
           </tbody>
         </table>
-          <img class="img-fluid" border="0" width="800" height="78" id="Canada_BC_Banner_Bottom" src="https://workbcei-email.pathfinder.gov.bc.ca/images/emailBannerBottom.png" alt="Canada BC Funding Acknowledgement" style="height: auto; line-height: 100%; outline: none; text-decoration: none; width: 100%; max-width: 100%; border: 0 none;">
+          <img class="img-fluid" border="0" width="800" height="78" id="Canada_BC_Banner_Bottom" src="${clientURL}/images/emailBannerBottom.png" alt="Canada BC Funding Acknowledgement" style="height: auto; line-height: 100%; outline: none; text-decoration: none; width: 100%; max-width: 100%; border: 0 none;">
           </div>
               </td>
             </tr>
