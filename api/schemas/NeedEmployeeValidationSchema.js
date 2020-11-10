@@ -120,21 +120,23 @@ var NeedEmployeeValidationSchema = yup.object().shape({
             is: "1",
             then: yup.string().required('Please enter the Organization name'),
         }),
+    /*
     operatingName2: yup.string()
-        .when("checkPositionInstances", {
-            is: "1",
-            then: yup.string().required('Please enter the Organization name'),
-        }),
+       .when("checkPositionInstances",{
+           is: "1",
+           then: yup.string().required('Please enter the Organization name'),
+       }),
     operatingName3: yup.string()
-        .when("checkPositionInstances", {
-            is: "1",
-            then: yup.string().required('Please enter the Organization name'),
-        }),
+       .when("checkPositionInstances",{
+           is: "1",
+           then: yup.string().required('Please enter the Organization name'),
+       }),
     operatingName4: yup.string()
-        .when("checkPositionInstances", {
-            is: "1",
-            then: yup.string().required('Please enter the Organization name'),
-        }),
+       .when("checkPositionInstances",{
+           is: "1",
+           then: yup.string().required('Please enter the Organization name'),
+       }),
+    */
     numberOfPositions0: yup.mixed()
         .oneOf(["1", "2", "3", "4", "5"], "Please choose a valid option.")
         .required("Please select number of applicants."),
@@ -181,28 +183,51 @@ var NeedEmployeeValidationSchema = yup.object().shape({
             is: "4",
             then: yup.date().min(new Date(), 'Date must be after today').required("Please Enter your start date")
         }),
-    hours0: yup.string()
-        .max(2, "hours should not exceed 50 per week")
+    hours0: yup.number().test(
+        'is-decimal',
+        'invalid decimal',
+        value => (value + "").match(/^\d*.{1}\d*$/))
+        .typeError("Must be a decimal number")
         .required('Please enter your employees hours per week.'),
-    hours1: yup.string()
+    hours1: yup.number()
         .when("checkPositionInstances", {
             is: "1",
-            then: yup.string().max(2, "hours should not exceed 50 per week").required('Please enter your employees hours per week.')
+            then: yup.number().test(
+                'is-decimal',
+                'invalid decimal',
+                value => (value + "").match(/^\d*.{1}\d*$/))
+                .typeError("Must be a decimal number")
+                .required('Please enter your employees hours per week.'),
         }),
-    hours2: yup.string()
+    hours2: yup.number()
         .when("checkPositionInstances", {
             is: "2",
-            then: yup.string().max(2, "hours should not exceed 50 per week").required('Please enter your employees hours per week.')
+            then: yup.number().test(
+                'is-decimal',
+                'invalid decimal',
+                value => (value + "").match(/^\d*.{1}\d*$/))
+                .typeError("Must be a decimal number")
+                .required('Please enter your employees hours per week.'),
         }),
-    hours3: yup.string()
+    hours3: yup.number()
         .when("checkPositionInstances", {
             is: "3",
-            then: yup.string().max(2, "hours should not exceed 50 per week").required('Please enter your employees hours per week.')
+            then: yup.number().test(
+                'is-decimal',
+                'invalid decimal',
+                value => (value + "").match(/^\d*.{1}\d*$/))
+                .typeError("Must be a decimal number")
+                .required('Please enter your employees hours per week.'),
         }),
-    hours4: yup.string()
+    hours4: yup.number()
         .when("checkPositionInstances", {
             is: "4",
-            then: yup.string().max(2, "hours should not exceed 50 per week").required('Please enter your employees hours per week.')
+            then: yup.number().test(
+                'is-decimal',
+                'invalid decimal',
+                value => (value + "").match(/^\d*.{1}\d*$/))
+                .typeError("Must be a decimal number")
+                .required('Please enter your employees hours per week.'),
         }),
     wage0: yup.number().test(
         'is-decimal',
