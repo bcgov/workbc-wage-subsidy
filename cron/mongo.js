@@ -75,6 +75,36 @@ module.exports = {
         
         
     },
+    updateSavedToSP: async function(collection,_id){
+        const client = getClient();
+        return await client.connect()
+        .then(mClient => {
+            // get a handle on the db
+            return mClient.db();
+            //return db
+        })
+        .then(async db => {
+        // add our values to db (they are always new)
+            return db.collection(collection).updateOne(
+                {
+                    _id: _id
+                },
+                { 
+                    $set : {
+                    savedToSP: true
+                    }
+                },
+                {
+                    upsert: false
+                }
+
+            )
+                //console.log(err)
+                //console.log(doc)
+        }).then(result =>{
+            return result
+        })        
+    },
     getHaveEmployeeNotReporting: async function () {
         const client = getClient();
         return await client.connect()
@@ -126,7 +156,7 @@ module.exports = {
             return doc
         })
     },
-    updateClaimReporting: async function(_id){
+    updateReporting: async function(collection,_id){
         const client = getClient();
         return await client.connect()
         .then(mClient => {
@@ -136,7 +166,7 @@ module.exports = {
         })
         .then(async db => {
         // add our values to db (they are always new)
-            return db.collection("Claim").updateOne(
+            return db.collection(collection).updateOne(
                 {
                     _id: _id
                 },
