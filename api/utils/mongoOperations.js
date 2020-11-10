@@ -23,7 +23,7 @@ function getClient() {
 
 
 module.exports = {
-    saveHaveEmployeeValues: function (values, savedToSP) {
+    saveHaveEmployeeValues: function (values, email, savedToSP) {
         const client = getClient();
         client.connect().then(mClient => {
             // get a handle on the db
@@ -71,10 +71,7 @@ module.exports = {
                 duties0             : strings.orEmpty(values.duties0),
                 operatingName1      : strings.orEmpty(values.operatingName1),
                 numberOfPositions1  : strings.orEmpty(values.numberOfPositions1),
-                position1Email0     : strings.orEmpty(values.position1Email0),
-                position1Email1     : strings.orEmpty(values.position1Email1),
-                position1Email2     : strings.orEmpty(values.position1Email2),
-                position1Email3     : strings.orEmpty(values.position1Email3),
+                position1Email0     : strings.orEmpty(email),
                 startDate1          : strings.orEmpty(values.startDate1),
                 hours1              : strings.orEmpty(values.hours1),
                 wage1               : strings.orEmpty(values.wage1),
