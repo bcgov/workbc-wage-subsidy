@@ -6,7 +6,7 @@ class ThankyouClaimForm extends Component {
             <div className="container">
                 <div className="row">
                     <div className="col-md-12">
-                        <h1>The following information was recieved:</h1>
+                        <h1>The following information was received:</h1>
                         <br />
                         <hr />
                         <p><b>Period Claim Start: </b> {this.props.location.state !== undefined && (<span>{this.props.location.state.periodStart1.getDate()}/{this.props.location.state.periodStart1.getMonth() + 1}/{this.props.location.state.periodStart1.getFullYear()}</span>)}</p>
