@@ -1,4 +1,5 @@
 var strings = require("./strings")
+var formatDate = require("../utils/formatDate")
 
 module.exports = {
 
@@ -25,8 +26,8 @@ module.exports = {
     generateClaimNotification: function (values){
         var html = /*html*/`
         <h2>Wage Subsidy Claim application</h2>
-        <p><b>Period Claim Start: </b> ${strings.orEmpty(values.periodStart1)}</p>
-        <p><b>Period Claim End: </b> ${strings.orEmpty(values.periodStart2)}</p>
+        <p><b>Period Claim Start (DD/MM/YYYY): </b> ${formatDate(values.periodStart1)}</p>
+        <p><b>Period Claim End (DD/MM/YYYY): </b> ${formatDate(values.periodStart2)}</p>
         <p><b>Final Claim: </b>${strings.orEmpty(values.isFinalClaim)}</p>
         <p><b>Employer Business Name: </b>${strings.orEmpty(values.employerName)}</p>
         <p><b>Employer Contact: </b>${strings.orEmpty(values.employerContact)}</p>
@@ -39,37 +40,37 @@ module.exports = {
         <p><b>Employee Last Name: </b>${strings.orEmpty(values.employeeLastName)}</p>
         <h2>Work Period Information</h2>
         <h3>1st Date</h3>
-        <p><b>Date From: </b>${strings.orEmpty(values.dateFrom1)}</p>
-        <p><b>Date To:</b>${strings.orEmpty(values.dateTo1)}</p>
+        <p><b>Date From (DD/MM/YYYY): </b>${formatDate(values.dateFrom1)}</p>
+        <p><b>Date To (DD/MM/YYYY):</b>${formatDate(values.dateTo1)}</p>
         <p><b>Hours Worked: </b>${strings.orEmpty(values.hoursWorked1)}</p>
         <p><b>Hourly Wage: </b>${strings.orEmpty(values.hourlyWage1)}</p>
         <p><b>Total: </b>${strings.orEmpty(values.total1)}</p>
         <h3>2nd Date</h3>
-        <p><b>Date From: </b>${strings.orEmpty(values.dateFrom2)}</p>
-        <p><b>Date To:</b>${strings.orEmpty(values.dateTo2)}</p>
+        <p><b>Date From (DD/MM/YYYY): </b>${formatDate(values.dateFrom2)}</p>
+        <p><b>Date To (DD/MM/YYYY):</b>${formatDate(values.dateTo2)}</p>
         <p><b>Hours Worked: </b>${strings.orEmpty(values.hoursWorked2)}</p>
         <p><b>Hourly Wage: </b>${strings.orEmpty(values.hourlyWage2)}</p>
         <p><b>Total: </b>${strings.orEmpty(values.total2)}</p>
         <h3>3rd Date</h3>
-        <p><b>Date From: </b>${strings.orEmpty(values.dateFrom3)}</p>
-        <p><b>Date To:</b>${strings.orEmpty(values.dateTo3)}</p>
+        <p><b>Date From (DD/MM/YYYY): </b>${formatDate(values.dateFrom3)}</p>
+        <p><b>Date To (DD/MM/YYYY):</b>${formatDate(values.dateTo3)}</p>
         <p><b>Hours Worked: </b>${strings.orEmpty(values.hoursWorked3)}</p>
         <p><b>Hourly Wage: </b>${strings.orEmpty(values.hourlyWage3)}</p>
         <p><b>Total: </b>${strings.orEmpty(values.total3)}</p>
         <h3>4th Date</h3>
-        <p><b>Date To:</b>${strings.orEmpty(values.dateTo4)}</p>
-        <p><b>Date From: </b>${strings.orEmpty(values.dateFrom4)}</p>
+        <p><b>Date To (DD/MM/YYYY):</b>${formatDate(values.dateTo4)}</p>
+        <p><b>Date From (DD/MM/YYYY): </b>${formatDate(values.dateFrom4)}</p>
         <p><b>Hours Worked: </b>${strings.orEmpty(values.hoursWorked4)}</p>
         <p><b>Hourly Wage: </b>${strings.orEmpty(values.hourlyWage4)}</p>
         <p><b>Total: </b>${strings.orEmpty(values.total4)}</p>
         <h3>5th Date</h3>
-        <p><b>Date To:</b>${strings.orEmpty(values.dateTo5)}</p>
-        <p><b>Date From: </b>${strings.orEmpty(values.dateFrom5)}</p>
+        <p><b>Date To (DD/MM/YYYY):</b>${formatDate(values.dateTo5)}</p>
+        <p><b>Date From (DD/MM/YYYY): </b>${formatDate(values.dateFrom5)}</p>
         <p><b>Hours Worked: </b>${strings.orEmpty(values.hoursWorked5)}</p>
         <p><b>Hourly Wage: </b>${strings.orEmpty(values.hourlyWage5)}</p>
         <p><b>Total: </b>${strings.orEmpty(values.total5)}</p>
         <h3>Total employer portion of Mandatory Employment Related Costs.<h3>
-        <p><b>Total MERCs for claim Period:<b>${strings.orEmpty(values.totalMERCs)}</p></p>
+        <p><b>Total MERCs for claim Period: </b>${strings.orEmpty(values.totalMERCs)}</p>
         `
         return html       
     },
@@ -119,7 +120,7 @@ module.exports = {
         <p>Employee Email 3:  ${strings.orEmpty(values.position0Email2)}</p>
         <p>Employee Email 4:  ${strings.orEmpty(values.position0Email3)}</p>
         <p>Employee Email 5:  ${strings.orEmpty(values.position0Email4)}</p>
-        <p>StartDate:  ${strings.orEmpty(values.startDate0)}</p>
+        <p>StartDate (DD/MM/YYYY):  ${formatDate(values.startDate0)}</p>
         <p>Hours: ${strings.orEmpty(values.hours0)}</p>
         <p>Wage: ${strings.orEmpty(values.wage0)}</p>
         <p>Duties: ${strings.orEmpty(values.duties0)}</p>
@@ -130,7 +131,7 @@ module.exports = {
         <p>Employee Email 2:  ${strings.orEmpty(values.position1Email1)}</p>
         <p>Employee Email 3:  ${strings.orEmpty(values.position1Email2)}</p>
         <p>Employee Email 4:  ${strings.orEmpty(values.position1Email3)}</p>
-        <p>StartDate:  ${strings.orEmpty(values.startDate1)}</p>
+        <p>StartDate (DD/MM/YYYY):  ${formatDate(values.startDate1)}</p>
         <p>Hours: ${strings.orEmpty(values.hours1)}</p>
         <p>Wage: ${strings.orEmpty(values.wage1)}</p>
         <p>Duties: ${strings.orEmpty(values.duties1)}</p>
@@ -182,7 +183,7 @@ module.exports = {
         <h5>Employee Position 1 </h5>
         <p>Operating Name:  ${strings.orEmpty(values.operatingName0)}</p>
         <p>Number of Positions:  ${strings.orEmpty(values.numberOfPositions0)}</p>
-        <p>StartDate:  ${strings.orEmpty(values.startDate0)}</p>
+        <p>StartDate (DD/MM/YYYY):  ${formatDate(values.startDate0)}</p>
         <p>Hours: ${strings.orEmpty(values.hours0)}</p>
         <p>Wage: ${strings.orEmpty(values.wage0)}</p>
         <p>Duties: ${strings.orEmpty(values.duties0)}</p>
@@ -192,7 +193,7 @@ module.exports = {
         <h5>Employee Position 2 (only if different from above) </h5>
         <p>Operating Name:  ${strings.orEmpty(values.operatingName1)}</p>
         <p>Number of Positions:  ${strings.orEmpty(values.numberOfPositions1)}</p>
-        <p>StartDate:  ${strings.orEmpty(values.startDate1)}</p>
+        <p>StartDate (DD/MM/YYYY):  ${formatDate(values.startDate1)}</p>
         <p>Hours: ${strings.orEmpty(values.hours1)}</p>
         <p>Wage: ${strings.orEmpty(values.wage1)}</p>
         <p>Duties: ${strings.orEmpty(values.duties1)}</p>
