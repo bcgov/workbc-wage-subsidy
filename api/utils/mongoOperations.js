@@ -144,6 +144,7 @@ module.exports = {
             let db = mClient.db();
             // add our values to db (they are always new)
             db.collection("Claim").insertOne({
+                applicationID    : strings.orEmpty(values._id),
                 ca               : strings.orEmpty(values.workbcCentre), 
                 savedToSP        : savedToSP,
                 savedReporting   : false,  // default to false for now
