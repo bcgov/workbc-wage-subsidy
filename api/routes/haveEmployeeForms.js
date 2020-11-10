@@ -55,10 +55,10 @@ async function sendEmails(values) {
         console.log("Transporter connected.")
         // send mail with defined transport object
         var mailingList;
-        if (confirmationEmail1 !== "" && confirmationEmail2 !== "") {
-          mailingList = [confirmationEmail1, confirmationEmail2]
+        if (confirmationEmail1 !== "") {
+          mailingList = confirmationEmail1
         } else {
-          mailingList = [values.contactEmail, values.emailAlternate]
+          mailingList = values.businessEmail
         }
         var positionEmails;
         if (pEmail === ""){
