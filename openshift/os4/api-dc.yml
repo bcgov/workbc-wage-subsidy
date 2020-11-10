@@ -13,6 +13,7 @@ objects:
     name: ${NAME}-mongodb
   stringData:
     password: ${DATABASE_PASSWORD}
+    user: ${DATABASE_USER}
     adminPassword: ${DATABASE_ADMIN_PASSWORD}
 - apiVersion: v1
   kind: PersistentVolumeClaim
@@ -173,6 +174,12 @@ objects:
             value: ${OPENSHIFT_NODEJS_NOTIFYEMAIL}
           - name: OPENSHIFT_NODEJS_CLIENTURL
             value: ${OPENSHIFT_NODEJS_CLIENTURL}
+          - name: OPENSHIFT_NODEJS_CLAIM_CONFIRMATION_EMAIL
+            value: ${OPENSHIFT_NODEJS_CLAIM_CONFIRMATION_EMAIL}
+          - name: OPENSHIFT_NODEJS_CLAIM_CONFIRMATION_BCC
+            value: ${OPENSHIFT_NODEJS_CLAIM_CONFIRMATION_BCC}
+          - name: OPENSHIFT_NODEJS_CLAIM_NOTIFYEMAIL
+            value: ${OPENSHIFT_NODEJS_CLAIM_NOTIFYEMAIL}
           - name: OPENSHIFT_NODEJS_LISTWEBURL
             value: ${OPENSHIFT_NODEJS_LISTWEBURL}
           - name: OPENSHIFT_NODEJS_LISTUSER
@@ -191,6 +198,17 @@ objects:
             value: ${OPENSHIFT_NODEJS_LISTPARTY}
           - name: OPENSHIFT_NODEJS_LISTADFS
             value: ${OPENSHIFT_NODEJS_LISTADFS}
+          - name: MONGO_USERNAME
+            value: ${DATABASE_USER}
+          - name: MONGO_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                key: password
+                name: ${NAME}-mongodb
+          - name: MONGO_CONNECTION_URI
+            value: ${DATABASE_SERVICE_NAME}
+          - name: MONGO_DB_NAME
+            value: ${DATABASE_NAME}
     test: false
     triggers:
     - type: ConfigChange
@@ -265,11 +283,6 @@ parameters:
   name: OPENSHIFT_NODEJS_CONFIRMATIONONE
   required: false
   value: ''
-- description: Email two to send confirmation emails (test)
-  displayName: Confirmation email two
-  name: OPENSHIFT_NODEJS_CONFIRMATIONTWO
-  required: false
-  value: ''
 - description: BCC email to send confirmation emails
   displayName: Confirmation BCC email
   name: OPENSHIFT_NODEJS_CONFIRMATIONBCC
@@ -293,6 +306,21 @@ parameters:
 - description: URL for email
   displayName: Client URL
   name: OPENSHIFT_NODEJS_CLIENTURL
+  required: false
+  value: ''
+- description: Claim confirmation email (test)
+  displayName: Claim confirmation email
+  name: OPENSHIFT_NODEJS_CLAIM_CONFIRMATION_EMAIL
+  required: false
+  value: ''
+- description: Claim confirmation BCC email (test)
+  displayName: Claim confirmation BCC email
+  name: OPENSHIFT_NODEJS_CLAIM_CONFIRMATION_BCC
+  required: false
+  value: ''
+- description: Claim Notify email (test)
+  displayName: Claim Notify email
+  name: OPENSHIFT_NODEJS_CLAIM_NOTIFYEMAIL
   required: false
   value: ''
 - description: List Web URL
