@@ -103,7 +103,7 @@ async function sendEmails(values) {
           subject: "WorkBC Wage Subsidy Application - Next Steps", // Subject line
           html: generateHTMLEmail("WorkBC Wage Subsidy Application - Next Steps",
             [
-              `Hello,`
+              `Hello,`,
               `You’re receiving this email because your future employer recently applied for a WorkBC Wage Subsidy.`,
               `WorkBC is a provincial government service that helps residents of B.C. improve their skills, explore career options, and find employment.`,
             ],
