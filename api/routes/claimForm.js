@@ -56,7 +56,7 @@ async function sendEmails(values) {
         if (claimConfirmationEmail === ""){
           cEmail = values.ClaimEmail
         } else {
-          cEmail = ClaimConfirmationEmail
+          cEmail = claimConfirmationEmail
         }
         if (claimNotifyEmail === ""){
           //TODO
