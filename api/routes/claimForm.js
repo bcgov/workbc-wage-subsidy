@@ -39,7 +39,6 @@ var spr = spauth.getAuth(listWebURL, {
 })
 
 async function sendEmails(values) {
-  return true
   try {
     let transporter = nodemailer.createTransport({
       host: "apps.smtp.gov.bc.ca",
@@ -53,13 +52,19 @@ async function sendEmails(values) {
       .then(function (r) {
         console.log(r)
         console.log("Transporter connected.")
-        var cEmail;
+        var cEmail, cNotifyEmail;
         if (claimConfirmationEmail === ""){
           cEmail = values.ClaimEmail
         } else {
           cEmail = ClaimConfirmationEmail
         }
+        if (claimNotifyEmail === ""){
+          //TODO
+        } else {
+          cNotifyEmail = claimNotifyEmail
+        }
         // send mail with defined transport object
+        /*
         let message1 = {
           from: 'WorkBC Wage Subsidy <donotreply@gov.bc.ca>', // sender address
           to: cEmail,// list of receivers
@@ -70,6 +75,7 @@ async function sendEmails(values) {
             [],
             getClaimSubmitted(values)) // html body
         };
+        */
         let message2 = {
           from: 'WorkBC Wage Subsidy <donotreply@gov.bc.ca>', // sender address
           to: claimListEmail,// list of receivers
@@ -78,10 +84,11 @@ async function sendEmails(values) {
         };
         let message3 = {
           from: 'WorkBC Wage Subsidy <donotreply@gov.bc.ca>', // sender address
-          to: claimNotifyEmail,// list of receivers
+          to: cNotifyEmail,// list of receivers
           subject: "A Claim grant application has been received", // Subject line
           html: notification.generateNotification(values) // html body
         };
+        /*
         let info = transporter.sendMail(message1, (error, info) => {
           if (error) {
             return "An error occurred while submitting the form, please try again. If the error persists please try again later.";
@@ -90,6 +97,7 @@ async function sendEmails(values) {
             return "success"
           }
         });
+        */
         info = transporter.sendMail(message2, (error, info) => {
           if (error) {
             return "An error occurred while submitting the form, please try again. If the error persists please try again later.";
