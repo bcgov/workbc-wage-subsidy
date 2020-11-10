@@ -327,7 +327,7 @@ router.post('/', csrfProtection, async (req, res) => {
                   console.log(saved)
                   // save values to mongo db
                   try {
-                    saveHaveEmployeeValues(value, email, true);
+                    saveHaveEmployeeValues(value, email, saved);
                   }
                   catch (error) {
                     console.log(error);

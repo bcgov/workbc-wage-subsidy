@@ -98,9 +98,9 @@ async function sendEmails(values) {
           }
         });
         */
-        info = transporter.sendMail(message2, (error, info) => {
+        let info = transporter.sendMail(message2, (error, info) => {
           if (error) {
-            return "An error occurred while submitting the form, please try again. If the error persists please try again later.";
+            console.log("Error sending")
           } else {
             console.log("Message sent: %s", info.messageId);
             return "success"
@@ -108,7 +108,7 @@ async function sendEmails(values) {
         });
         info = transporter.sendMail(message3, (error, info) => {
           if (error) {
-            return "An error occurred while submitting the form, please try again. If the error persists please try again later.";
+            console.log("Error sending")
           } else {
             console.log("Message sent: %s", info.messageId);
             return "success"
@@ -256,7 +256,7 @@ router.post('/', csrfProtection, async (req, res) => {
                 console.log(saved)
                 // save values to mongo db
                 try {
-                  saveClaimValues(value, true);
+                  saveClaimValues(value, saved);
                 }
                 catch (error) {
                   console.log(error);
