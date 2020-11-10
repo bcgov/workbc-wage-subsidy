@@ -70,7 +70,7 @@ module.exports = {
         <p><b>Hourly Wage: </b>${strings.orEmpty(values.hourlyWage5)}</p>
         <p><b>Total: </b>${strings.orEmpty(values.total5)}</p>
         <h3>Total employer portion of Mandatory Employment Related Costs.<h3>
-        <p><b>Total MERCs for claim Period: </b>${strings.orEmpty(values.totalMERCs)}</p>
+        <p><b>Total MERCs for claim Period: </b> ${strings.orEmpty(values.totalMERCs)}</p>
         `
         return html       
     },
