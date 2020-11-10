@@ -19,24 +19,6 @@ module.exports = {
     getClient: async function (values) {
         const client = getClient();
         return await client.connect()
-        /*
-        .then(mClient => {
-            // get a handle on the db
-            let db = mClient.db();
-            return db
-        })
-        */
-        /*
-        .then(db => {
-        // add our values to db (they are always new)
-            db.collection("HaveEmployee").findOne({savedToSP: false},function(err, doc){
-                //console.log(err)
-                //console.log(doc)
-                return doc
-            })
-        })
-        */
-        
     },
     getHaveEmployeeNotSP: async function () {
         const client = getClient();
@@ -53,9 +35,7 @@ module.exports = {
                 //console.log(doc)
         }).then(doc =>{
             return doc
-        })
-        
-        
+        })   
     },
     getNeedEmployeeNotSP: async function () {
         const client = getClient();
@@ -94,6 +74,87 @@ module.exports = {
         })
         
         
+    },
+    getHaveEmployeeNotReporting: async function () {
+        const client = getClient();
+        return await client.connect()
+        .then(mClient => {
+            // get a handle on the db
+            return mClient.db();
+            //return db
+        })
+        .then(async db => {
+        // add our values to db (they are always new)
+            return db.collection("HaveEmployee").find({savedToSP: false})
+                //console.log(err)
+                //console.log(doc)
+        }).then(doc =>{
+            return doc
+        })   
+    },
+    getNeedEmployeeNotReporting: async function () {
+        const client = getClient();
+        return await client.connect()
+        .then(mClient => {
+            // get a handle on the db
+            return mClient.db();
+            //return db
+        })
+        .then(async db => {
+        // add our values to db (they are always new)
+            return db.collection("NeedEmployee").find({savedToSP: false})
+                //console.log(err)
+                //console.log(doc)
+        }).then(doc =>{
+            return doc
+        }) 
+    },
+    getClaimNotReporting: async function () {
+        const client = getClient();
+        return await client.connect()
+        .then(mClient => {
+            // get a handle on the db
+            return mClient.db();
+            //return db
+        })
+        .then(async db => {
+        // add our values to db (they are always new)
+            return db.collection("Claim").find({savedReporting: false})
+                //console.log(err)
+                //console.log(doc)
+        }).then(doc =>{
+            return doc
+        })
+    },
+    updateClaimReporting: async function(_id){
+        const client = getClient();
+        return await client.connect()
+        .then(mClient => {
+            // get a handle on the db
+            return mClient.db();
+            //return db
+        })
+        .then(async db => {
+        // add our values to db (they are always new)
+            return db.collection("Claim").updateOne(
+                {
+                    _id: _id
+                },
+                { 
+                    $set : {
+                    savedReporting: true
+                    }
+                },
+                {
+                    upsert: false
+                }
+
+            )
+                //console.log(err)
+                //console.log(doc)
+        }).then(result =>{
+            return result
+        })        
     },
     printValues: function(collection) {
         const client = getClient();
