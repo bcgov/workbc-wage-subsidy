@@ -180,6 +180,8 @@ objects:
             value: ${OPENSHIFT_NODEJS_CLAIM_CONFIRMATION_BCC}
           - name: OPENSHIFT_NODEJS_CLAIM_NOTIFYEMAIL
             value: ${OPENSHIFT_NODEJS_CLAIM_NOTIFYEMAIL}
+          - name: OPENSHIFT_NODEJS_CLAIM_LISTEMAIL
+            value: ${OPENSHIFT_NODEJS_CLAIM_LISTEMAIL}
           - name: OPENSHIFT_NODEJS_LISTWEBURL
             value: ${OPENSHIFT_NODEJS_LISTWEBURL}
           - name: OPENSHIFT_NODEJS_LISTUSER
@@ -321,6 +323,11 @@ parameters:
 - description: Claim Notify email (test)
   displayName: Claim Notify email
   name: OPENSHIFT_NODEJS_CLAIM_NOTIFYEMAIL
+  required: false
+  value: ''
+- description: Claim List email
+  displayName: Claim List email
+  name: OPENSHIFT_NODEJS_CLAIM_LISTEMAIL
   required: false
   value: ''
 - description: List Web URL
