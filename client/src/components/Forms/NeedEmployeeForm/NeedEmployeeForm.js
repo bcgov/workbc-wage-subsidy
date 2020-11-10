@@ -91,7 +91,7 @@ class NeedEmployeeForm extends Component {
               className="btn btn-primary float-right" 
               type="button" 
               onClick={this._next}
-            //disabled={ca === "" || this.state.hasError}
+              disabled={ca === "" || this.state.hasError}
             >
             Next
             </button>        
