@@ -9,7 +9,7 @@ function getClient() {
     // don't have to do it this way to connect locally 
     // docs @ http://mongodb.github.io/node-mongodb-native/3.6/api/MongoClient.html
     let uri;
-    if (process.env.MONGO_USERNAME === ""){
+    if (!process.env.MONGO_USERNAME  || !process.env.MONGO_PASSWORD){
         uri = `mongodb://${process.env.MONGO_CONNECTION_URI || 'localhost'}/${process.env.MONGO_DB_NAME || 'test'}`;
     } else {
         uri = `mongodb://${process.env.MONGO_USERNAME || "superuser"}:${process.env.MONGO_PASSWORD || "password"}@${process.env.MONGO_CONNECTION_URI || 'localhost'}/${process.env.MONGO_DB_NAME || 'test'}`;
