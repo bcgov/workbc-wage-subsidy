@@ -8,6 +8,7 @@ var nodemailer = require("nodemailer");
 var csrf = require('csurf');
 var csrfProtection = csrf({ cookie: true });
 var spauth = require('node-sp-auth')
+var request = require('request-promise')
 var ClaimFormValidationSchema = require('../schemas/ClaimFormValidationSchema');
 
 
@@ -39,6 +40,7 @@ var spr = spauth.getAuth(listWebURL, {
 })
 
 async function sendEmails(values) {
+  return true
   try {
     let transporter = nodemailer.createTransport({
       host: "apps.smtp.gov.bc.ca",
@@ -214,7 +216,7 @@ async function saveList(values, email) {
       //there was an error in the chan
       //item was not created
       console.log("error in chain")
-      //console.log(err);
+      console.log(err);
       console.log(err.statusCode)
       /*
       if (err.statusCode == 403){
