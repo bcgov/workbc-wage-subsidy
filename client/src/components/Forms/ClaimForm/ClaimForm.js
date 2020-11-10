@@ -5,16 +5,19 @@ import { Formik, Form, Field } from 'formik'
 import { feedBackClassName, feedBackInvalid } from '../shared/ValidationMessages'
 import { DatePickerField } from '../shared/DatePickerField'
 import { FORM_URL } from '../../../constants/form'
-import { nanoid } from 'nanoid'
+import '../../../utils/polyfills'
+import {customAlphabet} from 'nanoid'
 import { generateAlert } from '../shared/Alert'
 import {pins} from '../../../constants/pins'
 
 class ClaimForm extends Component {
     constructor() {
         super();
+        const nanoid = customAlphabet('0123456789abcdefghijklmnopqrstuvwxyz',10)
         this.state = {
             _csrf: '',
-            _id: nanoid(10),
+            _id: nanoid(),
+            hasError: false
         }
     }
 
@@ -243,7 +246,6 @@ class ClaimForm extends Component {
                         >
                             {({ values, errors, touched, setFieldValue, isSubmitting, isValid }) => (
                                 <Form>
-                                    {console.log(pins)}
                                     <div className="form-group">
                                         <h2 id="forms">Wage Subsidy Claim Form</h2>
                                     </div>
