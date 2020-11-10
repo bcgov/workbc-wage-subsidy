@@ -16,7 +16,7 @@ var notification = require('../utils/applicationReceivedEmail');
 var clean = require('../utils/clean')
 var confirmData = require('../utils/confirmationData');
 const { getHaveEmployeeSubmitted } = require('../utils/confirmationData');
-var {getFoo, saveHaveEmployeeValues} = require("../utils/mongoOperations");
+var {saveHaveEmployeeValues} = require("../utils/mongoOperations");
 
 var confirmationEmail1 = process.env.CONFIRMATIONONE || process.env.OPENSHIFT_NODEJS_CONFIRMATIONONE || "";
 var confirmationBCC = process.env.CONFIRMATIONBCC || process.env.OPENSHIFT_NODEJS_CONFIRMATIONBCC || "";
@@ -96,7 +96,7 @@ async function sendEmails(values) {
           from: 'WorkBC Wage Subsidy <donotreply@gov.bc.ca>', // sender address
           to: notifyEmail,// list of receivers
           subject: "A Wage Subsidy application has been received - " + values._id, // Subject line
-          html: notification.generateNotification(values) // html body
+          html: notification.generateHaveEmployeeNotification(values) // html body
         };
         let message4 = {
           from: 'WorkBC Wage Subsidy <donotreply@gov.bc.ca>', // sender address
