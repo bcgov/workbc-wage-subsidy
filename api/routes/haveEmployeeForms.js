@@ -68,6 +68,7 @@ async function sendEmails(values) {
         } else {
           positionEmails = pEmail
         }
+        console.log(positionEmails)
              // filter out empty addresses
         // send mail with defined transport object
         let message1 = {
@@ -99,7 +100,6 @@ async function sendEmails(values) {
         };
         let message4 = {
           from: 'WorkBC Wage Subsidy <donotreply@gov.bc.ca>', // sender address
-          to: [],
           bcc: positionEmails,// list of receivers
           subject: "WorkBC Wage Subsidy Application - Next Steps", // Subject line
           html: generateHTMLEmail("WorkBC Wage Subsidy Application - Next Steps",
@@ -204,6 +204,7 @@ async function saveList(values, email) {
       headers['X-RequestDigest'] = response
       headers['Content-Type'] = "application/json;odata=verbose"
       var l = listWebURL + `Apps/WageSubsidy/_api/web/lists/getByTitle('Catchment${values._ca}')/items`
+      console.log("webURL:")
       console.log(l)
       return request.post({
         url: l,
