@@ -87,7 +87,7 @@ module.exports = {
             `<p><b>Address 2: </b>${strings.orEmpty(values.employerAddress2)}</p>`,
             `<p><b>City: </b>${strings.orEmpty(values.employerCity)}</p>`,
             `<p><b>Postal Code: </b>${strings.orEmpty(values.employerPostal)}</p>`,
-            `<p><b>Empoyee First Name: </b>${strings.orEmpty(values.employeeFirstName)}</p>`,
+            `<p><b>Employee First Name: </b>${strings.orEmpty(values.employeeFirstName)}</p>`,
             `<p><b>Employee Last Name: </b>${strings.orEmpty(values.employeeLastName)}</p>`,
             `<h2>Work Period Information</h2>`,
             `<h3>1st Date</h3>`,
@@ -115,10 +115,12 @@ module.exports = {
             `<p><b>Hours Worked: </b>${strings.orEmpty(values.hoursWorked5)}</p>`,
             `<p><b>Hourly Wage: </b>${strings.orEmpty(values.hourlyWage5)}</p>`,
             `<p><b>Total: </b>${strings.orEmpty(values.total5)}</p>`,
-            `<h3>Total MERCS</h3>`,
+            `<p><b>Total MERCs for Claim Period:<b>${strings.orEmpty(values.totalMERCs)}</p></p>`,
+            /*
             `<p><b>Hours Worked Total:</b> ${strings.orEmpty(values.hoursWorkedTotal1)}</p>`,
             `<p><b>Hourly Wage Total: </b>${strings.orEmpty(values.hourlyWageTotal1)}</p>`,
             `<p><b>Total Total:</b>${strings.orEmpty(values.totalTotal1)}</p>`,
+            */
         ]
         return data
     },
