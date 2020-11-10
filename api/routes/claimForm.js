@@ -164,6 +164,9 @@ async function saveList(values, email) {
           "CatchmentNo": values.workbcCentre,
           "FormType": "claim",
           "ApplicationID" : values._id,
+          "PeriodStart1" : values.periodStart1,
+          "PeriodStart2": values.periodStart2,
+          "IsFinalClaim": values.isFinalClaim,
           "OperatingName":values.employerName,
           "EmployerContact":values.employerContact,
           "BusinessAddress1":values.employerAddress1,
@@ -198,9 +201,11 @@ async function saveList(values, email) {
           "TotalWage3":Number(values.total3),
           "TotalWage4":Number(values.total4),
           "TotalWage5":Number(values.total5),
+          /*
           "FinalHours":Number(values.hoursWorkedTotal1),
           "FinalWage":Number(values.hourlyWageTotal1),
           "FinalTotal":Number(values.totalTotal1),
+          */
           "TotalMERCs":Number(values.totalMERCs),
           "clientIssues":values.clientIssues1,
           //"OrganizationConsent":values.organizationConsent
