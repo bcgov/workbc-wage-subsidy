@@ -236,7 +236,7 @@ class ClaimForm extends Component {
                                             }
                                             else if (resp.ok) {
                                                 actions.setSubmitting(false);
-                                                //this.props.history.push('/thankyouClaimForm', values);
+                                                this.props.history.push('/thankyouClaimForm', values);
                                             }
                                         }
                                     ));
