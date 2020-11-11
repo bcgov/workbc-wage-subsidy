@@ -166,7 +166,7 @@ async function saveList(values, email) {
           "ApplicationID" : values._id,
           "PeriodStart1" : values.periodStart1,
           "PeriodStart2": values.periodStart2,
-          "IsFinalClaim": values.isFinalClaim,
+          "IsFinalClaim": values.isFinalClaim === "yes",
           "OperatingName":values.employerName,
           "EmployerContact":values.employerContact,
           "BusinessAddress1":values.employerAddress1,

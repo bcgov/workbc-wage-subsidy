@@ -61,7 +61,7 @@ async function saveListClaim(values,ca) {
           "ApplicationID" : values.applicationID,
           "PeriodStart1" : values.periodStart1,
           "PeriodStart2": values.periodStart2,
-          "IsFinalClaim": values.isFinalClaim,          
+          "IsFinalClaim": values.isFinalClaim === "yes",          
           "OperatingName":values.employerName,
           "EmployerContact":values.employerContact,
           "BusinessAddress1":values.employerAddress1,
