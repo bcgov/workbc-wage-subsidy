@@ -231,7 +231,7 @@ class HaveEmployeeForm extends Component {
                                             })
                                         } else if (resp.ok){
                                             setSubmitting(false)
-                                            //this.props.history.push('/thankYouOrg',values)
+                                            this.props.history.push('/thankYouHaveEmployee',values)
                                         }
                                     }
                                 )
