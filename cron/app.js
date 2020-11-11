@@ -114,7 +114,9 @@ async function saveListClaim(values,ca) {
       //there was an error in the chan
       //item was not created
       console.log("error in chain")
-      console.log(err);
+      if (err.statusCode !== 403){
+        console.log(err);
+      }
       console.log(err.statusCode)
       /*
       if (err.statusCode == 403){
@@ -223,7 +225,9 @@ async function saveListHaveEmployee(values,email,ca) {
       //there was an error in the chan
       //item was not created
       console.log("error in chain")
-      console.log(err);
+      if (err.statusCode !== 403){
+        console.log(err);
+      }
       console.log(err.statusCode)
       /*
       if (err.statusCode == 403){
@@ -330,7 +334,9 @@ async function saveListNeedEmployee(values,ca) {
       //there was an error in the chan
       //item was not created
       console.log("error in chain")
-      console.log(err);
+      if (err.statusCode !== 403){
+        console.log(err);
+      }
       console.log(err.statusCode)
       /*
       if (err.statusCode == 403){
