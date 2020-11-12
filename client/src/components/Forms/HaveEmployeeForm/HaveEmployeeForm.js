@@ -8,8 +8,8 @@ import FormStep2 from '../shared/FormStep2'
 import FormStep3 from '../shared/FormStep3'
 import HaveEmployeeStep2 from './HaveEmployeeStep2'
 import ProgressTracker from '../shared/ProgressTracker'
-import { FORM_URL } from '../../../constants/form'
 import {HaveEmployeeValidationSchema} from './HaveEmployeeValidationSchema'
+import { FORM_URL } from '../../../constants/form'
 import { generateAlert } from '../shared/Alert'
 
 class HaveEmployeeForm extends Component {
@@ -219,17 +219,20 @@ class HaveEmployeeForm extends Component {
                                 .then(
                                     (resp) => {
                                         console.log(resp)
+
                                         if (resp.err){
                                             console.log("errors", resp)
                                             setSubmitting(false)
                                             setErrors(resp.err)
+
                                         } else if(resp.emailErr){
                                             console.log("emailError", resp)
                                             setSubmitting(false)
                                             this.setState({
                                                 hasError: true
                                             })
-                                        } else if (resp.ok){
+                                        } 
+                                        else if (resp.ok){
                                             setSubmitting(false)
                                             this.props.history.push('/thankYouHaveEmployee',values)
                                         }
