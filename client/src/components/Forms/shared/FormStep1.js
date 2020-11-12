@@ -79,13 +79,15 @@ class FormStep1 extends Component {
             return
         }
         if (address1 !== "" || city !== "" || postal !== ""){
-            if (city.length > 3 && address1.length > 4 && postal.length >= 6){
+            if (city.length > 3 && address1.length > 4 && postal.length === 6){
                 fetch(`https://geocoder.api.gov.bc.ca/addresses.geojson?addressString=${address1},${city},${province}`,{
                 })
                 
                 .then(res => res.json())
                 .then(result => {
-                    if (result.features[0].properties.score < 95 || (postal.match(/^[A-Za-z]\d[A-Za-z]\d[A-Za-z]\d$/)).length > 0 ){
+                    console.log(result.features[0].properties.score)
+                    console.log((postal.match(/^[A-Za-z]\d[A-Za-z]\d[A-Za-z]\d$/)).length)
+                    if (result.features[0].properties.score < 95 || (postal.match(/^[A-Za-z]\d[A-Za-z]\d[A-Za-z]\d$/)).length === 0 ){
                         this.setState({
                             addressValidated: false
                         })
