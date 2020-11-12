@@ -82,9 +82,10 @@ class FormStep1 extends Component {
             if (city.length > 3 && address1.length > 4 && postal.length >= 6){
                 fetch(`https://geocoder.api.gov.bc.ca/addresses.geojson?addressString=${address1},${city},${province}`,{
                 })
+                
                 .then(res => res.json())
                 .then(result => {
-                    if (result.features[0].properties.score < 50){
+                    if (result.features[0].properties.score < 95 || postal.match(/^[A-Za-z]\d[A-Za-z]\d[A-Za-z]\d$/).length > 0 ){
                         this.setState({
                             addressValidated: false
                         })
@@ -94,6 +95,7 @@ class FormStep1 extends Component {
                     let coordinates = result.features[0].geometry.coordinates
                     let ca = getCatchment(coordinates[1],coordinates[0])
                     console.log(ca)
+                    
                     this.setState({
                         addressValidated: true,
                         validAddress: result.features[0].properties.fullAddress
