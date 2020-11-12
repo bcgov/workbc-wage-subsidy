@@ -6,14 +6,14 @@ import { feedBackClassName, feedBackInvalid } from '../shared/ValidationMessages
 import { DatePickerField } from '../shared/DatePickerField'
 import { FORM_URL } from '../../../constants/form'
 import '../../../utils/polyfills'
-import {customAlphabet} from 'nanoid'
+import { customAlphabet } from 'nanoid'
 import { generateAlert } from '../shared/Alert'
-import {pins} from '../../../constants/pins'
+import { pins } from '../../../constants/pins'
 
 class ClaimForm extends Component {
     constructor() {
         super();
-        const nanoid = customAlphabet('0123456789abcdefghijklmnopqrstuvwxyz',10)
+        const nanoid = customAlphabet('0123456789abcdefghijklmnopqrstuvwxyz', 10)
         this.state = {
             _csrf: '',
             _id: nanoid(),
@@ -344,13 +344,13 @@ class ClaimForm extends Component {
                                             </div>
                                         </div>
                                         {
-                                        //no longer needed as center will be chosen from dropdown
-                                        /*
-                                        useEffect(() => {
-                                            this.addressToCatchment(values.employerAddress1, values.employerAddress2,values.employerCity,"BC",values.employerPostal)
-                                        }, [values.employerAddress1, values.employerAddress2,values.employerCity,values.employerPostal,setFieldValue])
-                                        
-                                        */
+                                            //no longer needed as center will be chosen from dropdown
+                                            /*
+                                            useEffect(() => {
+                                                this.addressToCatchment(values.employerAddress1, values.employerAddress2,values.employerCity,"BC",values.employerPostal)
+                                            }, [values.employerAddress1, values.employerAddress2,values.employerCity,values.employerPostal,setFieldValue])
+                                            
+                                            */
                                         }
                                         <div className="form-row">
 
@@ -426,6 +426,8 @@ class ClaimForm extends Component {
                                                 <tr>
                                                     <td colSpan="4" style={{ verticalAlign: "middle", textAlign: "center" }}>
                                                         <b>Total employer portion of Mandatory Employment Related Costs (EI, CPP, WorkSafeBC, Vacation Pay).</b>
+                                                        <span
+                                                            style={{ color: "red" }}>*</span>
                                                     </td>
                                                     <td>
                                                         <Field className={`form-control ${feedBackClassName(errors, touched, "totalMERCs")}`} id="totalMERCs" name="totalMERCs" />
@@ -464,20 +466,20 @@ class ClaimForm extends Component {
                                                 style={{ color: "red" }}>*</span></label>
                                             <Field
                                                 as="select"
-                                                className={`form-control ${feedBackClassName(errors,touched,"workbcCentre")}`} 
-                                                id="workbcCentre" 
-                                                name="workbcCentre" 
+                                                className={`form-control ${feedBackClassName(errors, touched, "workbcCentre")}`}
+                                                id="workbcCentre"
+                                                name="workbcCentre"
                                             >
                                                 <option value="00">Please select</option>
                                                 {
-                                                pins.features.map((item, index) =>
-                                                <option value={item.properties.catchmentId} key={index}>{item.properties.name}</option>
-                                                )
+                                                    pins.features.map((item, index) =>
+                                                        <option value={item.properties.catchmentId} key={index}>{item.properties.name}</option>
+                                                    )
                                                 }
                                             </Field>
-                                            {feedBackInvalid(errors,touched,"workbcCentre")}
-                                        </div> 
-                                        <hr></hr>  
+                                            {feedBackInvalid(errors, touched, "workbcCentre")}
+                                        </div>
+                                        <hr></hr>
                                         <div className="form-group">
                                             <button
                                                 className="btn btn-success btn-block"
