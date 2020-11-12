@@ -212,20 +212,20 @@ class NeedEmployeeForm extends Component {
                                     .then((
                                         resp => {
                                             if (resp.err) {
-                                                actions.setSubmitting(false);
-                                                actions.setErrors(resp.err);
+                                                setSubmitting(false);
+                                                setErrors(resp.err);
                                                 this.setState({
                                                     hasError: true
                                                 })
                                             } else if (resp.emailErr) {
                                                 console.log("emailError")
-                                                actions.setSubmitting(false)
+                                                setSubmitting(false)
                                                 this.setState({
                                                     hasError: true
                                                 })
                                             }
                                             else if (resp.ok) {
-                                                actions.setSubmitting(false);
+                                                setSubmitting(false);
                                                 this.props.history.push('/thankyouNeedEmployee', values);
                                             }
                                         }
