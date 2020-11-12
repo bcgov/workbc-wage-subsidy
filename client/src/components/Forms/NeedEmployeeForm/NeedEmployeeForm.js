@@ -17,6 +17,7 @@ class NeedEmployeeForm extends Component {
         super()
         const nanoid = customAlphabet('0123456789abcdefghijklmnopqrstuvwxyz',10)
         this.state={
+            _csrf: '',
             currentStep: 1,
             _id: nanoid(),
             hasError: false
@@ -111,7 +112,9 @@ class NeedEmployeeForm extends Component {
                         )}
                         <Formik
                             initialValues= {{
+                                            _csrf: this.state._csrf,
                                             _id: this.state._id,
+                                            _ca: "",
                                             //step 1
                                             operatingName:"",
                                             businessNumber:"",
@@ -192,10 +195,10 @@ class NeedEmployeeForm extends Component {
 
 
                             }}
+                            enableReinitialize={true}
                             validationSchema={NeedEmployeeValidationSchema}
-                            onSubmit={(values, actions) => {
-                                let jsonVals = JSON.stringify(values);
-                                console.log("jsonVals look like this:", jsonVals);
+                            onSubmit={(values, {resetForm, setErrors, setStatus, setSubmitting }) => {
+
                                 fetch(FORM_URL.needEmployeeForm, {
                                     method: "POST",
                                     credentials: "include",
@@ -203,7 +206,7 @@ class NeedEmployeeForm extends Component {
                                         'Accept': 'application/json',
                                         'Content-Type': 'application/json',
                                     },
-                                    body: jsonVals,
+                                    body: JSON.stringify(values),
                                 })
                                     .then(res => res.json())
                                     .then((
@@ -250,7 +253,7 @@ class NeedEmployeeForm extends Component {
                                         {...props}
                                     />
                                     {this.previousButton}
-                                    {this.nextButton}
+                                    {this.nextButton(props.values._ca)}
 
                                 </Form>
                             )}
