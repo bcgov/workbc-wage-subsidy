@@ -85,7 +85,7 @@ class FormStep1 extends Component {
                 
                 .then(res => res.json())
                 .then(result => {
-                    if (result.features[0].properties.score < 95 || postal.match(/^[A-Za-z]\d[A-Za-z]\d[A-Za-z]\d$/).length > 0 ){
+                    if (result.features[0].properties.score < 95 || (postal.match(/^[A-Za-z]\d[A-Za-z]\d[A-Za-z]\d$/)).length > 0 ){
                         this.setState({
                             addressValidated: false
                         })
