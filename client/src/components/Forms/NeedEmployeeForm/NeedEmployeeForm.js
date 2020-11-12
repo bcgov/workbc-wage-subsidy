@@ -208,28 +208,30 @@ class NeedEmployeeForm extends Component {
                                     },
                                     body: JSON.stringify(values),
                                 })
+
                                     .then(res => res.json())
-                                    .then((
+                                    .then(
                                         resp => {
+                                            console.log(resp)
+
                                             if (resp.err) {
-                                                actions.setSubmitting(false);
-                                                actions.setErrors(resp.err);
-                                                this.setState({
-                                                    hasError: true
-                                                })
-                                            } else if (resp.emailErr) {
-                                                console.log("emailError")
-                                                actions.setSubmitting(false)
+                                                console.log("errors", resp)
+                                                setSubmitting(false)
+                                                setErrors(resp.err)
+
+                                            } else if(resp.emailErr){
+                                                console.log("emailError", resp)
+                                                setSubmitting(false)
                                                 this.setState({
                                                     hasError: true
                                                 })
                                             }
                                             else if (resp.ok) {
-                                                actions.setSubmitting(false);
+                                                setSubmitting(false);
                                                 this.props.history.push('/thankyouNeedEmployee', values);
                                             }
                                         }
-                                    )).catch(err => console.log(err));
+                                    )
 
                             }}
                         
