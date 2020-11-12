@@ -369,7 +369,7 @@ class FormStep1 extends Component {
                             {feedBackInvalid(this.props.errors,this.props.touched,"businessFax")}
                         </div>
                     <div className="form-group col-md-4">
-                        <label className="col-form-label control-label" htmlFor="businessEmail">Employer's E-mail Address <span
+                        <label className="col-form-label control-label" htmlFor="businessEmail">Employer E-mail Address <span
                                 style={{ color: "red" }}>*</span></label>
                         <small className="text-muted" id="businessEmail">  someone@example.com</small>
                         <Field className={`form-control ${feedBackClassName(this.props.errors, this.props.touched, "businessEmail")}`} id="businessEmail" name="businessEmail" />
