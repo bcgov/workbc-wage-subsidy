@@ -466,9 +466,9 @@ class FormStep1 extends Component {
                                 className={`form-check-input ${feedBackClassName(this.props.errors, this.props.touched, "organizationSize")}`}
                                 type="radio"
                                 name="organizationSize"
-                                value="49-499"
+                                value="50-499"
                             />
-                            <label className="form-check-label"  htmlFor="organizationSize">49-499</label>
+                            <label className="form-check-label"  htmlFor="organizationSize">50-499</label>
                         </div>
                         <div className="form-check">
                             <Field
