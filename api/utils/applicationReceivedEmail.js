@@ -76,10 +76,10 @@ module.exports = {
     },
 
     generateHaveEmployeeNotification: function(values){
-        const alternativeAddress = this.props.location.state.otherWorkAddress;
-        const WorkSafeBCNumber = (this.props.location.state.WSBCCoverage === "yes");
-        const employeePositions = (this.props.location.state.numberOfPositions1 > 0);
-        const businessFaxProvided = (this.props.location.state.businessFax !== "");
+        const alternativeAddress = values.otherWorkAddress;
+        const WorkSafeBCNumber = (values.WSBCCoverage === "yes");
+        const employeePositions = (values.numberOfPositions1 > 0);
+        const businessFaxProvided = (values.businessFax !== "");
         var html = /*html*/`
         <h2>Wage Subsidy application</h2>
         <p>Application ID:  ${strings.orEmpty(values._id)}</p>
