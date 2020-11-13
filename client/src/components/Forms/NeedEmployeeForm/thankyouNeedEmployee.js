@@ -60,7 +60,7 @@ class thankyouNeedEmployee extends Component {
                                 <p>Union Concurrence:  {this.props.location.state !== undefined && this.props.location.state.unionConcurrence}</p>
                                 <p>Has 3rd party Liability Coverage:  {this.props.location.state !== undefined && this.props.location.state.liabilityCoverage}</p>
                                 <p>Currently receiving WorkBC wage subsidy funding:  {this.props.location.state !== undefined && this.props.location.state.wageSubsidy}</p>
-                                <p>Eligibility Confirmed:  {this.props.location.state !== undefined && this.props.location.state.eligibility}</p>
+                                <p>Eligibility Confirmed:  {this.props.location.state !== undefined && this.props.location.state.eligibility.toString()}</p>
                                 
                                 {WorkSafeBCNumber ? (
                                     <div>
