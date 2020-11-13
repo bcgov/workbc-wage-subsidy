@@ -79,7 +79,7 @@ class NeedEmployeeStep2 extends Component {
                                 <hr></hr>
                                 <div className="form-row">
                                     <div className="form-group col-md-8">
-                                        <label className="col-form-label control-label" htmlFor={operatingName}>Organization Name <span
+                                        <label className="col-form-label control-label" htmlFor={operatingName}>Position Title <span
                                             style={{ color: "red" }}>*</span></label>
                                         <Field className={`operatingName form-control ${feedBackClassName(this.props.errors, this.props.touched, operatingName)}`} id={operatingName} name={operatingName} data-id={Entry}  />
                                         {feedBackInvalid(this.props.errors,this.props.touched, operatingName)}

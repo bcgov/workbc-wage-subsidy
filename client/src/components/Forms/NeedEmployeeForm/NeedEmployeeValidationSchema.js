@@ -10,7 +10,7 @@ export const NeedEmployeeValidationSchema = yup.object().shape({
     operatingName: yup.string()
         .required('Please enter the Organization name'),
     businessNumber: yup.string()
-        .matches(/^[0-9]{9}[A-Z]{2}[0-9]{4}$/gi, "Number is Incorrect should be in the form: 123456789 BC0001 ")
+        .matches(/^[0-9]{9}[A-Z]{2}[0-9]{4}$/gi, "Number is Incorrect should be in the form: 123456789BC0001 ")
         .max(15, "Business number must be exactly 15 characters")
         .min(15, "Business number must be exactly 15 characters.")
         .required('Please enter your business number.'),
@@ -43,8 +43,8 @@ export const NeedEmployeeValidationSchema = yup.object().shape({
         .required('Please select your industry type.'),
     organizationSize: yup.string()
         .oneOf(["1-49",
-            "49-499",
-            "500+"], "Please select a valid field.")
+                "50-499",
+                "500+"], "Please select a valid field.")
         .required('Please select your organization size'),
     cewsParticipation: yup.string()
         .oneOf(["yes",

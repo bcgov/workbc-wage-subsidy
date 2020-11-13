@@ -208,9 +208,11 @@ class NeedEmployeeForm extends Component {
                                     },
                                     body: JSON.stringify(values),
                                 })
+
                                     .then(res => res.json())
-                                    .then((
+                                    .then(
                                         resp => {
+                                            console.log(resp)
                                             if (resp.err) {
                                                 setSubmitting(false);
                                                 setErrors(resp.err);
@@ -218,18 +220,16 @@ class NeedEmployeeForm extends Component {
                                                     hasError: true
                                                 })
                                             } else if (resp.emailErr) {
-                                                console.log("emailError")
+                                                console.log("errors", resp)
+                                                alert("Please review your form, a field is incomplete.")
                                                 setSubmitting(false)
-                                                this.setState({
-                                                    hasError: true
-                                                })
+                                                setErrors(resp.err)
                                             }
                                             else if (resp.ok) {
                                                 setSubmitting(false);
                                                 this.props.history.push('/thankyouNeedEmployee', values);
                                             }
-                                        }
-                                    )).catch(err => console.log(err));
+                                    )
 
                             }}
                         
