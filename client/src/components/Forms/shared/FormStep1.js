@@ -212,7 +212,7 @@ class FormStep1 extends Component {
                     Validate Address
                 </button>
                 {this.state.addressValidated && <p className="text-success">Address validated as: {this.state.validAddress}</p>}
-                {(!this.state.addressValidated && this.state.validatedClick) && <p className="text-danger">Address could not be validated, please verify your address.</p>}
+                {(!this.state.addressValidated && this.state.validatedClick && this.props.values.otherWorkAddress) && <p className="text-danger">Address could not be validated, please verify your address.</p>}
                 {(this.props.values._ca !== "" && this.props.values.otherWorkAddress) && <p>CA: {this.props.values._ca}</p>}
             </div>)
         }
@@ -344,11 +344,11 @@ class FormStep1 extends Component {
                     </div>
                 </div>
                 {
-                (!this.props.values.otherWorkAddress && (this.props.values.businessProvince === "BC" || this.props.values.businessProvince === "") && !this.state.addressValidated) &&
+                (!this.props.values.otherWorkAddress && (this.props.values.businessProvince === "BC" || this.props.values.businessProvince === "")) &&
                 <button 
                     className="btn btn-success d-print-none" 
                     onClick={this.validateAddress}
-                    disabled={this.props.values.businessAddress.length < 4 || this.props.values.businessCity.length < 3 || this.props.values.businessPostal.length < 6 || this.props.values.businessProvince !== "BC"}
+                    disabled={this.props.values.businessAddress.length < 4 || this.props.values.businessCity.length < 3 || this.props.values.businessPostal.length < 6 || this.props.values.businessProvince !== "BC" }
                 >
                     Validate Address
                 </button>
