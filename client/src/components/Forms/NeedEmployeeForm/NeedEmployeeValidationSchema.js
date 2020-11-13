@@ -43,8 +43,8 @@ export const NeedEmployeeValidationSchema = yup.object().shape({
         .required('Please select your industry type.'),
     organizationSize: yup.string()
         .oneOf(["1-49",
-            "50-499",
-            "500+"], "Please select a valid field.")
+                "50-499",
+                "500+"], "Please select a valid field.")
         .required('Please select your organization size'),
     cewsParticipation: yup.string()
         .oneOf(["yes",
