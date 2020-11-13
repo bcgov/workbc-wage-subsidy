@@ -10,7 +10,7 @@ export const NeedEmployeeValidationSchema = yup.object().shape({
     operatingName: yup.string()
         .required('Please enter the Organization name'),
     businessNumber: yup.string()
-        .matches(/^[0-9]{9}[A-Z]{2}[0-9]{4}$/gi, "Number is Incorrect should be in the form: 123456789 BC0001 ")
+        .matches(/^[0-9]{9}[A-Z]{2}[0-9]{4}$/gi, "Number is Incorrect should be in the form: 123456789BC0001 ")
         .max(15, "Business number must be exactly 15 characters")
         .min(15, "Business number must be exactly 15 characters.")
         .required('Please enter your business number.'),
