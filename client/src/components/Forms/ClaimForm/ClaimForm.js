@@ -131,7 +131,7 @@ class ClaimForm extends Component {
         // update hours worked totals
         func('hoursWorkedTotal1', this.totalHoursWorked(values));
         // update totals total
-        func('totalTotal1', this.totalTotals(values));
+        //func('totalTotal1', this.totalTotals(values));
     }
 
     setWageTotal(func, values, field, amount) {
@@ -140,7 +140,7 @@ class ClaimForm extends Component {
         // update wage totals
         func('hourlyWageTotal1', this.totalHourlyWage(values));
         // update totals total
-        func('totalTotal1', this.totalTotals(values));
+        //func('totalTotal1', this.totalTotals(values));
     }
 
     render() {
@@ -207,7 +207,15 @@ class ClaimForm extends Component {
                             validationSchema={ClaimFormValidationSchema}
                             onSubmit={(values, actions) => {
                                 // doing this here to avoid any weird edge cases with onBlur and hitting submit
-                                actions.setFieldValue('totalsTotal1', this.totalTotals(values));
+                                let totalTotal = this.totalTotals(values);
+                                // SHOULD do it like this:
+                                // actions.setFieldValue('totalTotal1', totalTotal);
+                                // but that doesn't actually do anything.
+
+                                // Doing it this way feels wrong and dirty
+                                // but it works so here we are
+                                values.totalTotal1 = totalTotal;
+                                
                                 // post form
                                 fetch(FORM_URL.claimForm, {
                                     method: "POST",
@@ -433,9 +441,9 @@ class ClaimForm extends Component {
                                                         <Field className={`form-control ${feedBackClassName(errors, touched, "totalMERCs")}`} id="totalMERCs" name="totalMERCs" />
                                                     </td>
                                                 </tr>
-                                                {/* 
-                                                //Removed Total Totals
-                                                <tr>
+                                                
+                                                
+                                                {/* <tr>
                                                     <td style={{ verticalAlign: "middle" }}><b>Total</b></td>
                                                     <td><Field className="form-control" id="hoursWorkedTotal1" name="hoursWorkedTotal1"
                                                         disabled /></td>
@@ -443,8 +451,8 @@ class ClaimForm extends Component {
                                                         disabled /></td>
                                                     <td><Field className="form-control" id="totalTotal1" name="totalTotal1"
                                                         disabled /></td>
-                                                </tr>
-                                                */}
+                                                </tr> */}
+                                               
                                             </tbody>
                                         </table>
                                         <div className="form-group">
