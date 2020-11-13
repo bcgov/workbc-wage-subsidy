@@ -4,6 +4,12 @@ import React, { Component } from 'react'
 class thankyouNeedEmployee extends Component {
     
     render() {
+
+        const alternativeAddress = this.props.location.state.otherWorkAddress;
+        const WorkSafeBCNumber = (this.props.location.state.WSBCCoverage === "yes");
+        const employeePositions = (this.props.location.state.numberOfPositions1 > 0);
+        const businessFaxProvided = (this.props.location.state.businessFax !== "");
+
         return (
             
             <div className="container">
@@ -27,14 +33,23 @@ class thankyouNeedEmployee extends Component {
                                 <p>Business Postal:  {this.props.location.state !== undefined && this.props.location.state.businessPostal}</p>
                                 <p>Business Email:  {this.props.location.state !== undefined && this.props.location.state.businessEmail}</p>
                                 <p>Business Phone:  {this.props.location.state !== undefined && this.props.location.state.businessPhone}</p>
-                                <p>Business Fax:  {this.props.location.state !== undefined && this.props.location.state.businessFax}</p>
+                                {businessFaxProvided ? (
+                                    <div>
+                                        <p>Business Fax:  {this.props.location.state !== undefined && this.props.location.state.businessFax}</p>
+                                    </div>) : (<div></div>)
+                                }
 
-                                <h5>Alternative Address (only if different from contact)</h5>
-                                <p>Alternative Address:  {this.props.location.state !== undefined && this.props.location.state.addressAlt}</p>
-                                <p>Alternative City:  {this.props.location.state !== undefined && this.props.location.state.cityAlt}</p>
-                                <p>Alternative Province:  {this.props.location.state !== undefined && this.props.location.state.provinceAlt}</p>
-                                <p>Alternative Postal:  {this.props.location.state !== undefined && this.props.location.state.postalAlt}</p>
-  
+                                {alternativeAddress ? (
+                                    <div>
+                                        <h5>Alternative Address (only if different from contact)</h5>
+                                        <p>Alternative Address:  {this.props.location.state !== undefined && this.props.location.state.addressAlt}</p>
+                                        <p>Alternative City:  {this.props.location.state !== undefined && this.props.location.state.cityAlt}</p>
+                                        <p>Alternative Province:  {this.props.location.state !== undefined && this.props.location.state.provinceAlt}</p>
+                                        <p>Alternative Postal:  {this.props.location.state !== undefined && this.props.location.state.postalAlt}</p>
+                                    </div>
+                                 ) : (<div></div>) 
+                                 }
+
                                 <h5>Business Questions</h5>
                                 <p>Sector Type:  {this.props.location.state !== undefined && this.props.location.state.sectorType}</p>
                                 <p>Type of Industry:  {this.props.location.state !== undefined && this.props.location.state.typeOfIndustry}</p>
@@ -47,11 +62,15 @@ class thankyouNeedEmployee extends Component {
                                 <p>Currently receiving WorkBC wage subsidy funding:  {this.props.location.state !== undefined && this.props.location.state.wageSubsidy}</p>
                                 <p>Eligibility Confirmed:  {this.props.location.state !== undefined && this.props.location.state.eligibility}</p>
                                 
-                                <h5>WorkBC Insurance Coverage (only if has coverage)</h5>
-                                <p>WorkSafeBC Insurance Coverage Number:  {this.props.location.state !== undefined && this.props.location.state.WSBCNumber.toString()}</p>
+                                {WorkSafeBCNumber ? (
+                                    <div>
+                                        <h5>WorkBC Insurance Coverage (only if has coverage)</h5>
+                                        <p>WorkSafeBC Insurance Coverage Number:  {this.props.location.state !== undefined && this.props.location.state.WSBCNumber.toString()}</p>
+                                    </div> ):(<div></div>)
+                                }
   
                                 <h5>Employee Position 1 </h5>
-                                <p>Operating Name:  {this.props.location.state !== undefined && this.props.location.state.operatingName0}</p>
+                                <p>Position Title:  {this.props.location.state !== undefined && this.props.location.state.operatingName0}</p>
                                 <p>Number of Positions:  {this.props.location.state !== undefined && this.props.location.state.numberOfPositions0.toString()}</p>
                                 <p>StartDate:  {this.props.location.state !== undefined && this.props.location.state.startDate0.toString()}</p>
                                 <p>Hours: {this.props.location.state !== undefined && this.props.location.state.hours0.toString()}</p>
@@ -60,15 +79,19 @@ class thankyouNeedEmployee extends Component {
                                 <p>Skills: {this.props.location.state !== undefined && this.props.location.state.skills0}</p>
                                 <p>Work Experience: {this.props.location.state !== undefined && this.props.location.state.workExperience0}</p>
 
-                                <h5>Employee Position 2 (only if different from above) </h5>
-                                <p>Operating Name:  {this.props.location.state !== undefined && this.props.location.state.operatingName1}</p>
-                                <p>Number of Positions:  {this.props.location.state !== undefined && this.props.location.state.numberOfPositions1.toString()}</p>
-                                <p>StartDate:  {this.props.location.state !== undefined && this.props.location.state.startDate0.toString()}</p>
-                                <p>Hours: {this.props.location.state !== undefined && this.props.location.state.hours1.toString()}</p>
-                                <p>Wage: {this.props.location.state !== undefined && this.props.location.state.wage1.toString()}</p>
-                                <p>Duties: {this.props.location.state !== undefined && this.props.location.state.duties1}</p>
-                                <p>Skills: {this.props.location.state !== undefined && this.props.location.state.skills1}</p>
-                                <p>Work Experience: {this.props.location.state !== undefined && this.props.location.state.workExperience1}</p>
+                                {employeePositions ? (
+                                    <div>
+                                        <h5>Employee Position 2 (only if different from above) </h5>
+                                        <p>Position Title:  {this.props.location.state !== undefined && this.props.location.state.operatingName1}</p>
+                                        <p>Number of Positions:  {this.props.location.state !== undefined && this.props.location.state.numberOfPositions1.toString()}</p>
+                                        <p>StartDate:  {this.props.location.state !== undefined && this.props.location.state.startDate0.toString()}</p>
+                                        <p>Hours: {this.props.location.state !== undefined && this.props.location.state.hours1.toString()}</p>
+                                        <p>Wage: {this.props.location.state !== undefined && this.props.location.state.wage1.toString()}</p>
+                                        <p>Duties: {this.props.location.state !== undefined && this.props.location.state.duties1}</p>
+                                        <p>Skills: {this.props.location.state !== undefined && this.props.location.state.skills1}</p>
+                                        <p>Work Experience: {this.props.location.state !== undefined && this.props.location.state.workExperience1}</p>
+                                    </div>) : (<div></div>)
+                                }
                                 
                                 {/* 
                                 <h5>Employee Position 3 (only if different from above) </h5>
