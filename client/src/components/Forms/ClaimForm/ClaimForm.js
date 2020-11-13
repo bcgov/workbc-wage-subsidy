@@ -215,7 +215,7 @@ class ClaimForm extends Component {
                                 // Doing it this way feels wrong and dirty
                                 // but it works so here we are
                                 values.totalTotal1 = totalTotal;
-                                
+
                                 // post form
                                 fetch(FORM_URL.claimForm, {
                                     method: "POST",
@@ -387,8 +387,10 @@ class ClaimForm extends Component {
                                             </thead>
                                             <tbody>
                                                 <tr>
-                                                    <td><DatePickerField className={`form-control ${feedBackClassName(errors, touched, "dateFrom1")}`} id="dateFrom1" name="dateFrom1" /></td>
-                                                    <td><DatePickerField className={`form-control ${feedBackClassName(errors, touched, "dateTo1")}`} id="dateTo1" name="dateTo1" /></td>
+                                                    <td><DatePickerField className={`form-control ${feedBackClassName(errors, touched, "dateFrom1")}`} id="dateFrom1" name="dateFrom1"
+                                                        minDate={values.periodStart1} maxDate={values.periodStart2} /></td>
+                                                    <td><DatePickerField className={`form-control ${feedBackClassName(errors, touched, "dateTo1")}`} id="dateTo1" name="dateTo1"
+                                                        minDate={values.periodStart1} maxDate={values.periodStart2} /></td>
                                                     <td><Field className={`form-control ${feedBackClassName(errors, touched, "hoursWorked1")}`} id="dateFrom1" name="hoursWorked1"
                                                         onBlur={() => { this.setHoursTotal(setFieldValue, values, 'total1', parseFloat(values.hoursWorked1 * values.hourlyWage1).toFixed(2)) }} /></td>
                                                     <td><Field className={`form-control ${feedBackClassName(errors, touched, "hourlyWage1")}`} id="dateFrom1" name="hourlyWage1"
@@ -396,8 +398,10 @@ class ClaimForm extends Component {
                                                     <td><Field className={`form-control ${feedBackClassName(errors, touched, "total1")}`} id="dateFrom1" name="total1" disabled /></td>
                                                 </tr>
                                                 <tr>
-                                                    <td><DatePickerField className={`form-control ${feedBackClassName(errors, touched, "dateFrom2")}`} id="dateFrom2" name="dateFrom2" /></td>
-                                                    <td><DatePickerField className={`form-control ${feedBackClassName(errors, touched, "dateTo2")}`} id="dateTo2" name="dateTo2" /></td>
+                                                    <td><DatePickerField className={`form-control ${feedBackClassName(errors, touched, "dateFrom2")}`} id="dateFrom2" name="dateFrom2"
+                                                        minDate={values.periodStart1} maxDate={values.periodStart2} /></td>
+                                                    <td><DatePickerField className={`form-control ${feedBackClassName(errors, touched, "dateTo2")}`} id="dateTo2" name="dateTo2"
+                                                        minDate={values.periodStart1} maxDate={values.periodStart2} /></td>
                                                     <td><Field className={`form-control ${feedBackClassName(errors, touched, "hoursWorked2")}`} id="dateFrom2" name="hoursWorked2"
                                                         onBlur={() => { this.setHoursTotal(setFieldValue, values, 'total2', parseFloat(values.hoursWorked2 * values.hourlyWage2).toFixed(2)) }} /></td>
                                                     <td><Field className={`form-control ${feedBackClassName(errors, touched, "hourlyWage2")}`} id="dateFrom2" name="hourlyWage2"
@@ -405,8 +409,10 @@ class ClaimForm extends Component {
                                                     <td><Field className={`form-control ${feedBackClassName(errors, touched, "total2")}`} id="dateFrom2" name="total2" disabled /></td>
                                                 </tr>
                                                 <tr>
-                                                    <td><DatePickerField className={`form-control ${feedBackClassName(errors, touched, "dateFrom3")}`} id="dateFrom3" name="dateFrom3" /></td>
-                                                    <td><DatePickerField className={`form-control ${feedBackClassName(errors, touched, "dateTo3")}`} id="dateTo3" name="dateTo3" /></td>
+                                                    <td><DatePickerField className={`form-control ${feedBackClassName(errors, touched, "dateFrom3")}`} id="dateFrom3" name="dateFrom3"
+                                                        minDate={values.periodStart1} maxDate={values.periodStart2} /></td>
+                                                    <td><DatePickerField className={`form-control ${feedBackClassName(errors, touched, "dateTo3")}`} id="dateTo3" name="dateTo3"
+                                                        minDate={values.periodStart1} maxDate={values.periodStart2} /></td>
                                                     <td><Field className={`form-control ${feedBackClassName(errors, touched, "hoursWorked3")}`} id="dateFrom3" name="hoursWorked3"
                                                         onBlur={() => { this.setHoursTotal(setFieldValue, values, 'total3', parseFloat(values.hoursWorked3 * values.hourlyWage3).toFixed(2)) }} /></td>
                                                     <td><Field className={`form-control ${feedBackClassName(errors, touched, "hourlyWage3")}`} id="dateFrom3" name="hourlyWage3"
@@ -414,8 +420,10 @@ class ClaimForm extends Component {
                                                     <td><Field className={`form-control ${feedBackClassName(errors, touched, "total3")}`} id="dateFrom3" name="total3" disabled /></td>
                                                 </tr>
                                                 <tr>
-                                                    <td><DatePickerField className={`form-control ${feedBackClassName(errors, touched, "dateFrom4")}`} id="dateFrom4" name="dateFrom4" /></td>
-                                                    <td><DatePickerField className={`form-control ${feedBackClassName(errors, touched, "dateTo4")}`} id="dateTo4" name="dateTo4" /></td>
+                                                    <td><DatePickerField className={`form-control ${feedBackClassName(errors, touched, "dateFrom4")}`} id="dateFrom4" name="dateFrom4"
+                                                        minDate={values.periodStart1} maxDate={values.periodStart2} /></td>
+                                                    <td><DatePickerField className={`form-control ${feedBackClassName(errors, touched, "dateTo4")}`} id="dateTo4" name="dateTo4"
+                                                        minDate={values.periodStart1} maxDate={values.periodStart2} /></td>
                                                     <td><Field className={`form-control ${feedBackClassName(errors, touched, "hoursWorked4")}`} id="hoursWorked4" name="hoursWorked4"
                                                         onBlur={() => { this.setHoursTotal(setFieldValue, values, 'total4', parseFloat(values.hoursWorked4 * values.hourlyWage4).toFixed(2)) }} /></td>
                                                     <td><Field className={`form-control ${feedBackClassName(errors, touched, "hourlyWage4")}`} id="hourlyWage4" name="hourlyWage4"
@@ -423,8 +431,10 @@ class ClaimForm extends Component {
                                                     <td><Field className={`form-control ${feedBackClassName(errors, touched, "total4")}`} id="total4" name="total4" disabled /></td>
                                                 </tr>
                                                 <tr>
-                                                    <td><DatePickerField className={`form-control ${feedBackClassName(errors, touched, "dateFrom5")}`} id="dateFrom5" name="dateFrom5" /></td>
-                                                    <td><DatePickerField className={`form-control ${feedBackClassName(errors, touched, "dateTo5")}`} id="dateTo5" name="dateTo5" /></td>
+                                                    <td><DatePickerField className={`form-control ${feedBackClassName(errors, touched, "dateFrom5")}`} id="dateFrom5" name="dateFrom5"
+                                                        minDate={values.periodStart1} maxDate={values.periodStart2} /></td>
+                                                    <td><DatePickerField className={`form-control ${feedBackClassName(errors, touched, "dateTo5")}`} id="dateTo5" name="dateTo5"
+                                                        minDate={values.periodStart1} maxDate={values.periodStart2} /></td>
                                                     <td><Field className={`form-control ${feedBackClassName(errors, touched, "hoursWorked5")}`} id="hoursWorked5" name="hoursWorked5"
                                                         onBlur={() => { this.setHoursTotal(setFieldValue, values, 'total5', parseFloat(values.hoursWorked5 * values.hourlyWage5).toFixed(2)) }} /></td>
                                                     <td><Field className={`form-control ${feedBackClassName(errors, touched, "hourlyWage5")}`} id="hourlyWage5" name="hourlyWage5"
@@ -441,8 +451,8 @@ class ClaimForm extends Component {
                                                         <Field className={`form-control ${feedBackClassName(errors, touched, "totalMERCs")}`} id="totalMERCs" name="totalMERCs" />
                                                     </td>
                                                 </tr>
-                                                
-                                                
+
+
                                                 {/* <tr>
                                                     <td style={{ verticalAlign: "middle" }}><b>Total</b></td>
                                                     <td><Field className="form-control" id="hoursWorkedTotal1" name="hoursWorkedTotal1"
@@ -452,7 +462,7 @@ class ClaimForm extends Component {
                                                     <td><Field className="form-control" id="totalTotal1" name="totalTotal1"
                                                         disabled /></td>
                                                 </tr> */}
-                                               
+
                                             </tbody>
                                         </table>
                                         <div className="form-group">
