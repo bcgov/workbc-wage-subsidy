@@ -207,7 +207,7 @@ class FormStep1 extends Component {
                 <button 
                     className="btn btn-success d-print-none" 
                     onClick={this.validateAddress}
-                    disabled={this.props.values.businessAddress.length < 4 || this.props.values.businessCity.length < 3 || this.props.values.businessPostal.length < 6}
+                    disabled={this.props.values.addressAlt.length < 4 || this.props.values.cityAlt.length < 3 || this.props.values.postalAlt.length < 6}
                 >
                     Validate Address
                 </button>
@@ -354,9 +354,9 @@ class FormStep1 extends Component {
                 </button>
                 }
                 <p className="small text-muted">Please note that the workplace must be located in BC, in order to be eligible.</p>
-                {this.state.addressValidated && <p className="text-success">Address validated as: {this.state.validAddress}</p>}
-                {(this.props.values._ca === "" && !this.state.addressValidated && this.state.validatedClick) && <p className="text-danger">Address could not be validated, please verify your address.</p>}
-                {(this.props.values.businessProvince !== "BC" && this.props.values.businessProvince !== "") && <p className="text-danger">Please check the box below to provide the workplace address located in BC.</p>}
+                {this.state.addressValidated  && !this.props.values.otherWorkAddress && <p className="text-success">Address validated as: {this.state.validAddress}</p>}
+                {(this.props.values._ca === "" && !this.state.addressValidated && this.state.validatedClick  && !this.props.values.otherWorkAddress) && <p className="text-danger">Address could not be validated, please verify your address.</p>}
+                {(this.props.values.businessProvince !== "BC" && this.props.values.businessProvince !== ""  && !this.props.values.otherWorkAddress) && <p className="text-danger">Please check the box below to provide the workplace address located in BC.</p>}
                 {(this.props.values._ca !== "" && !this.props.values.otherWorkAddress) && <p>CA: {this.props.values._ca}</p>}
                 <div className="form-row">
                     <div className="form-group col-md-4">
