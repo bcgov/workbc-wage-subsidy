@@ -344,11 +344,11 @@ class FormStep1 extends Component {
                     </div>
                 </div>
                 {
-                (!this.props.values.otherWorkAddress && (this.props.values.businessProvince === "BC" || this.props.values.businessProvince === "") && !this.state.addressValidated) &&
+                (!this.props.values.otherWorkAddress && (this.props.values.businessProvince === "BC" || this.props.values.businessProvince === "") && !this.state.addressValidated && (this.state.validAddress.split(",")[1] === this.props.values.businessCity)) &&
                 <button 
                     className="btn btn-success d-print-none" 
                     onClick={this.validateAddress}
-                    disabled={this.props.values.businessAddress.length < 4 || this.props.values.businessCity.length < 3 || this.props.values.businessPostal.length < 6 || this.props.values.businessProvince !== "BC"}
+                    disabled={this.props.values.businessAddress.length < 4 || this.props.values.businessCity.length < 3 || this.props.values.businessPostal.length < 6 || this.props.values.businessProvince !== "BC" }
                 >
                     Validate Address
                 </button>
