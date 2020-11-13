@@ -79,13 +79,13 @@ async function sendEmails(values) {
         let message2 = {
           from: 'WorkBC Wage Subsidy <donotreply@gov.bc.ca>', // sender address
           to: listEmail,// list of receivers
-          subject: "A grant application has been received - " + values._id, // Subject line
+          subject: "A Wage Subsidy application has been received - " + values._id, // Subject line
           html: notification.generateListNotification(values) // html body
         };
         let message3 = {
           from: 'WorkBC Wage Subsidy <donotreply@gov.bc.ca>', // sender address
           to: notifyEmail,// list of receivers
-          subject: "A grant application has been received - " + values._id, // Subject line
+          subject: "A Wage Subsidy application has been received - " + values._id, // Subject line
           html: notification.generateNeedEmployeeNotification(values) // html body
         };
 
