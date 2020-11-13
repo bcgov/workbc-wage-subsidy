@@ -31,6 +31,7 @@ class thankyouHaveEmployee extends Component {
                                 <p>Business Phone:  {this.props.location.state !== undefined && this.props.location.state.businessPhone}</p>
                                 <p>Business Fax:  {this.props.location.state !== undefined && this.props.location.state.businessFax}</p>
 
+                                
                                 <h5>Alternative Address (only if different from contact)</h5>
                                 <p>Alternative Address:  {this.props.location.state !== undefined && this.props.location.state.addressAlt}</p>
                                 <p>Alternative City:  {this.props.location.state !== undefined && this.props.location.state.cityAlt}</p>
@@ -53,7 +54,7 @@ class thankyouHaveEmployee extends Component {
                                 <p>WorkSafeBC Insurance Coverage Number:  {this.props.location.state !== undefined && this.props.location.state.WSBCNumber.toString()}</p>
   
                                 <h5>Employee Position 1 </h5>
-                                <p>Operating Name:  {this.props.location.state !== undefined && this.props.location.state.operatingName0}</p>
+                                <p>Position Title:  {this.props.location.state !== undefined && this.props.location.state.operatingName0}</p>
                                 <p>Number of Positions:  {this.props.location.state !== undefined && this.props.location.state.numberOfPositions0.toString()}</p>
                                 <p>Employee Email 1:  {this.props.location.state !== undefined && this.props.location.state.position0Email0}</p>
                                 <p>Employee Email 2:  {this.props.location.state !== undefined && this.props.location.state.position0Email1}</p>
@@ -65,7 +66,7 @@ class thankyouHaveEmployee extends Component {
                                 <p>Wage: {this.props.location.state !== undefined && this.props.location.state.wage0.toString()}</p>
                                 <p>Duties: {this.props.location.state !== undefined && this.props.location.state.duties0}</p>
                                 <h5>Employee Position 2 (only if different from above) </h5>
-                                <p>Operating Name:  {this.props.location.state !== undefined && this.props.location.state.operatingName1}</p>
+                                <p>Position Title:  {this.props.location.state !== undefined && this.props.location.state.operatingName1}</p>
                                 <p>Number of Positions:  {this.props.location.state !== undefined && this.props.location.state.numberOfPositions1.toString()}</p>
                                 <p>Employee Email 1:  {this.props.location.state !== undefined && this.props.location.state.position1Email0}</p>
                                 <p>Employee Email 2:  {this.props.location.state !== undefined && this.props.location.state.position1Email1}</p>
