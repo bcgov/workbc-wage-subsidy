@@ -222,6 +222,7 @@ class HaveEmployeeForm extends Component {
 
                                             if (resp.err){
                                                 console.log("errors", resp)
+                                                alert("Please review your form, a field is incomplete.")
                                                 setSubmitting(false)
                                                 setErrors(resp.err)
 
