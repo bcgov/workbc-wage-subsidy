@@ -18,13 +18,12 @@ module.exports = {
             `<p>Postal Code:  ${strings.orEmpty(values.businessPostal)}</p>`,
             `<p>Employer Email Address:  ${strings.orEmpty(values.businessEmail)}</p>`,
             `<p>Phone Number:  ${strings.orEmpty(values.businessPhone)}</p>`,
-
-            `<div style={${values.businessFax} == "" ? {display:"block"} :{display:"none"}}>` 
+            `<div style={${values.businessFax} == "" ? {display:"block"} :{display:"none"}}>` ,
             `<p>Fax:  ${strings.orEmpty(values.businessFax)}</p>`,
             `</div>`,
-
+            
             `<hr />`,
-            `<div style={${values.otherWorkAddress} ? {display:"block"} :{display:"none"}}>`        
+            `<div style={${values.otherWorkAddress} ? {display:"block"} :{display:"none"}}>`,        
             `<h5>Work Address (only if different from contact)</h5>`,
             `<p>Work Address:  ${strings.orEmpty(values.addressAlt)}</p>`,
             `<p>City/Town:  ${strings.orEmpty(values.cityAlt)}</p>`,
@@ -32,7 +31,7 @@ module.exports = {
             `<p>Postal Code:  ${strings.orEmpty(values.postalAlt)}</p>`,
             `<hr />`,
             `</div>`,
-
+           
             `<h5>Business Questions</h5>`,
             `<p>Type Of Sector:  ${strings.orEmpty(values.sectorType)}</p>`,
             `<p>Type of Industry:  ${strings.orEmpty(values.typeOfIndustry)}</p>`,
@@ -43,19 +42,16 @@ module.exports = {
             `<p>Is there Union concurrence?  ${strings.orEmpty(values.unionConcurrence)}</p>`,
             `<p>Does your organization have 3rd Party liability coverage?  ${strings.orEmpty(values.liabilityCoverage)}</p>`,
             `<p>Is your organization currently receiving funding under a WorkBC Wage Subsidy agreement?  ${strings.orEmpty(values.wageSubsidy)}</p>`,
-            `<p>meets the eligibility criteria and acknowledges that all the obligations the employer owes to or has with respect to its other
-             employees under the various listed statutes and all other applicable laws apply equally to an individual employed in a wage
-              subsidy placement:  ${strings.orEmpty(values.eligibility)}</p>`,
-            `<p>certifies that it is in full compliance with all applicable laws, including the Employment Standards Act, the Workers Compensation 
-            Act and the Human Rights Code:   ${strings.orEmpty(values.lawCompliance)}</p>`,
+            `<p>meets the eligibility criteria and acknowledges that all the obligations the employer owes to or has with respect to its other employees under the various listed statutes and all other applicable laws apply equally to an individual employed in a wage subsidy placement:  ${strings.orEmpty(values.eligibility)}</p>`,
+            `<p>certifies that it is in full compliance with all applicable laws, including the Employment Standards Act, the Workers Compensation Act and the Human Rights Code:   ${strings.orEmpty(values.lawCompliance)}</p>`,
             `<hr />`,
-
-            `<div style={${values.WSBCCoverage} === "yes" ? {display:"block"} :{display:"none"}}>`  
+            
+            `<div style={${values.WSBCCoverage} === "yes" ? {display:"block"} :{display:"none"}}>`,  
             `<h5>WorkBC Insurance Coverage (only if has coverage)</h5>`,
             `<p>WorkSafeBC Number:  ${strings.orEmpty(values.WSBCNumber)}</p>`,
             `<hr />`,
             `</div>`,
-
+            
             `<h5>Position 1 </h5>`,
             `<p>Position Title:  ${strings.orEmpty(values.operatingName0)}</p>`,
             `<p>Number of Available Positions:  ${strings.orEmpty(values.numberOfPositions0)}</p>`,
@@ -68,8 +64,8 @@ module.exports = {
             `<p>Hours of Work Per Week: ${strings.orEmpty(values.hours0)}</p>`,
             `<p>Hourly Wage: ${strings.orEmpty(values.wage0)}</p>`,
             `<p>Description of Duties: ${strings.orEmpty(values.duties0)}</p>`,
-            
-            `<div style={${values.numberOfPositions1} > 0 ? {display:"block"} :{display:"none"}}>`  
+           
+            `<div style={${values.numberOfPositions1} > 0 ? {display:"block"} :{display:"none"}}>`,  
             `<h5>Position 2 (only if different from above) </h5>`,
             `<p>Position Title:  ${strings.orEmpty(values.operatingName1)}</p>`,
             `<p>Number of Available Positions:  ${strings.orEmpty(values.numberOfPositions1)}</p>`,
@@ -82,14 +78,12 @@ module.exports = {
             `<p>Hourly Wage: ${strings.orEmpty(values.wage1)}</p>`,
             `<p>Description pf Duties: ${strings.orEmpty(values.duties1)}</p>`,
             `</div>`,
+            
             `<hr />                       `,
             `<h5>Declaration and Signature</h5>`,
             `<p>Signatory Authority Full Name:  ${strings.orEmpty(values.signatory1)}</p>`,
             `<p>Signing Authority Title:  ${strings.orEmpty(values.signatoryTitle)}</p>`,
-            `<p>I acknowledge and understand that by clicking the "submit" I am attaching my
-             electronic signature to this form and that by doing so I acquire the same rights, 
-             incur the same obligations and confer the same consent as I would by manually signing
-              a physical copy of this form :  ${strings.orEmpty(values.organizationConsent)}</p>`,
+            `<p>I acknowledge and understand that by clicking the "submit" I am attaching my electronic signature to this form and that by doing so I acquire the same rights, incur the same obligations and confer the same consent as I would by manually signing a physical copy of this form :  ${strings.orEmpty(values.organizationConsent)}</p>`,
         ]
         return data
 
