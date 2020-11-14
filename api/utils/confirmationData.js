@@ -18,19 +18,17 @@ module.exports = {
             `<p>Postal Code:  ${strings.orEmpty(values.businessPostal)}</p>`,
             `<p>Employer Email Address:  ${strings.orEmpty(values.businessEmail)}</p>`,
             `<p>Phone Number:  ${strings.orEmpty(values.businessPhone)}</p>`,
-            `<div style={${values.businessFax} == "" ? {display:"block"} :{display:"none"}}>` ,
-            `<p>Fax:  ${strings.orEmpty(values.businessFax)}</p>`,
-            `</div>`,
+           ((values.businessFax !== "") ?
+            [`<p>Fax:  ${strings.orEmpty(values.businessFax)}</p>`] :[]),
             
             `<hr />`,
-            `<div style={${values.otherWorkAddress} ? {display:"block"} :{display:"none"}}>`,        
-            `<h5>Work Address (only if different from contact)</h5>`,
+            ((values.otherWorkAddress) ?       
+            [`<h5>Work Address (only if different from contact)</h5>`,
             `<p>Work Address:  ${strings.orEmpty(values.addressAlt)}</p>`,
             `<p>City/Town:  ${strings.orEmpty(values.cityAlt)}</p>`,
             `<p>Province:  ${strings.orEmpty(values.provinceAlt)}</p>`,
             `<p>Postal Code:  ${strings.orEmpty(values.postalAlt)}</p>`,
-            `<hr />`,
-            `</div>`,
+            `<hr />`,] :[]),
            
             `<h5>Business Questions</h5>`,
             `<p>Type Of Sector:  ${strings.orEmpty(values.sectorType)}</p>`,
@@ -46,11 +44,10 @@ module.exports = {
             `<p>certifies that it is in full compliance with all applicable laws, including the Employment Standards Act, the Workers Compensation Act and the Human Rights Code:   ${strings.orEmpty(values.lawCompliance)}</p>`,
             `<hr />`,
             
-            `<div style={${values.WSBCCoverage} === "yes" ? {display:"block"} :{display:"none"}}>`,  
-            `<h5>WorkBC Insurance Coverage (only if has coverage)</h5>`,
+            ((values.WSBCCoverage === "yes" )?   
+            [`<h5>WorkBC Insurance Coverage (only if has coverage)</h5>`,
             `<p>WorkSafeBC Number:  ${strings.orEmpty(values.WSBCNumber)}</p>`,
-            `<hr />`,
-            `</div>`,
+            `<hr />`,] : []),
             
             `<h5>Position 1 </h5>`,
             `<p>Position Title:  ${strings.orEmpty(values.operatingName0)}</p>`,
@@ -65,8 +62,8 @@ module.exports = {
             `<p>Hourly Wage: ${strings.orEmpty(values.wage0)}</p>`,
             `<p>Description of Duties: ${strings.orEmpty(values.duties0)}</p>`,
            
-            `<div style={${values.numberOfPositions1} > 0 ? {display:"block"} :{display:"none"}}>`,  
-            `<h5>Position 2 (only if different from above) </h5>`,
+            ((values.numberOfPositions1 > 0 ) ? 
+            [`<h5>Position 2 (only if different from above) </h5>`,
             `<p>Position Title:  ${strings.orEmpty(values.operatingName1)}</p>`,
             `<p>Number of Available Positions:  ${strings.orEmpty(values.numberOfPositions1)}</p>`,
             `<p>Employee Email 1:  ${strings.orEmpty(values.position1Email0)}</p>`,
@@ -76,8 +73,7 @@ module.exports = {
             `<p>Anticipated Start Date (DD/MM/YYYY):  ${formatDate(values.startDate1)}</p>`,
             `<p>Hours of Work Per Week: ${strings.orEmpty(values.hours1)}</p>`,
             `<p>Hourly Wage: ${strings.orEmpty(values.wage1)}</p>`,
-            `<p>Description pf Duties: ${strings.orEmpty(values.duties1)}</p>`,
-            `</div>`,
+            `<p>Description pf Duties: ${strings.orEmpty(values.duties1)}</p>`,] : []),
             
             `<hr />                       `,
             `<h5>Declaration and Signature</h5>`,
