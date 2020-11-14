@@ -60,9 +60,9 @@ class thankyouNeedEmployee extends Component {
                                 <p>Does your organization have 3rd Party liability coverage?  {this.props.location.state !== undefined && this.props.location.state.liabilityCoverage}</p>
                                 <p>Is your organization currently receiving funding under a WorkBC Wage Subsidy agreement?  {this.props.location.state !== undefined && this.props.location.state.wageSubsidy}</p>
                                 <p>meets the eligibility criteria and acknowledges that all the obligations the employer owes to or has with respect to its other employees under the various 
-                                   listed statutes and all other applicable laws apply equally to an individual employed in a wage subsidy placement.:  
+                                   listed statutes and all other applicable laws apply equally to an individual employed in a wage subsidy placement :   
                                    {this.props.location.state !== undefined && this.props.location.state.eligibility.toString()}</p>
-                                 <p> certifies that it is in full compliance with all applicable laws, including the Employment Standards Act, the Workers Compensation Act and the Human Rights Code.
+                                 <p> certifies that it is in full compliance with all applicable laws, including the Employment Standards Act, the Workers Compensation Act and the Human Rights Code : 
                                  {this.props.location.state !== undefined && this.props.location.state.lawCompliance.toString()}
                                  </p>
                                 
@@ -129,7 +129,7 @@ class thankyouNeedEmployee extends Component {
                                 <p>Work Experience: {this.props.location.state !== undefined && this.props.location.state.workExperience4}</p>
                                 */} 
                                                           
-                                                          <h5>SDeclaration and Signature</h5>
+                                <h5>Declaration and Signature</h5>
                                 <p>Signing Authority Full Name:  {this.props.location.state !== undefined && this.props.location.state.signatory1}</p>
                                 <p>Signatory Authority Title:  {this.props.location.state !== undefined && this.props.location.state.signatoryTitle}</p>
                                 <p>I acknowledge and understand that by clicking the "submit" I am attaching my electronic signature to this form and that 
