@@ -16,6 +16,8 @@ export const DatePickerField = ({ ...props }) => {
       showMonthDropdown
       showYearDropdown
       dropdownMode="select"
+      minDate={props.minDate || null}
+      maxDate={props.maxDate || null}
     />
   );
 };
