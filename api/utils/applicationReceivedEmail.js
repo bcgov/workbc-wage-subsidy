@@ -24,10 +24,10 @@ module.exports = {
     },
 
     generateClaimNotification: function (values){
-        const Date2Total = (typeOF(values.total2) !== "undefined" && values.total2 !== null && values.total2 !== "" && values.total2 !== 0);
-        const Date3Total = (typeOF(values.total3) !== "undefined" && values.total3 !== null && values.total3 !== "" && values.total3 !== 0);
-        const Date4Total = (typeOF(values.total4) !== "undefined" && values.total4 !== null && values.total4 !== "" && values.total4 !== 0);
-        const Date5Total = (typeOF(values.total5) !== "undefined" && values.total5 !== null && values.total5 !== "" && values.total5 !== 0);
+        const Date2Total = (typeof(values.total2) !== "undefined" && values.total2 !== null && values.total2 !== "" && values.total2 !== 0);
+        const Date3Total = (typeof(values.total3) !== "undefined" && values.total3 !== null && values.total3 !== "" && values.total3 !== 0);
+        const Date4Total = (typeof(values.total4) !== "undefined" && values.total4 !== null && values.total4 !== "" && values.total4 !== 0);
+        const Date5Total = (typeof(values.total5) !== "undefined" && values.total5 !== null && values.total5 !== "" && values.total5 !== 0);
         var html = /*html*/`
         <h2>Wage Subsidy Claim application</h2>
         <p><b>Period Claim Start (DD/MM/YYYY): </b> ${formatDate(values.periodStart1)}</p>
@@ -95,7 +95,7 @@ module.exports = {
         const alternativeAddress = values.otherWorkAddress;
         const WorkSafeBCNumber = (values.WSBCCoverage === "yes");
         const employeePositions = (values.numberOfPositions1 > 0);
-        const businessFaxProvided = (typeOF(values.businessFax) !== "undefined" && values.businessFax !== null && values.businessFax !== "");
+        const businessFaxProvided = (typeof(values.businessFax) !== "undefined" && values.businessFax !== null && values.businessFax !== "");
         var html = /*html*/`
         <h2>Wage Subsidy application</h2>
         <p>Application ID:  ${strings.orEmpty(values._id)}</p>
@@ -135,7 +135,7 @@ module.exports = {
         html = html +`
         <h5>Business Questions</h5>
         <p>Type of Sector:  ${strings.orEmpty(values.sectorType)}</p>
-        <p>Type of Industry:  ${strings.orEmpty(values.typeOfIndustry)}</p>
+        <p>Type of Industry:  ${strings.orEmpty(values.typeofIndustry)}</p>
         <p>Size of Organization(number of employees):  ${strings.orEmpty(values.organizationSize)}</p>
         <p>Are you actively participating in the Canada Emergency Wage Subsidy program?  ${strings.orEmpty(values.cewsParticipation)}</p>
         <p>Will the subsidy result in the displacement of existing employees or volunteers?  ${strings.orEmpty(values.employeeDisplacement)}</p>
@@ -204,7 +204,7 @@ module.exports = {
         const alternativeAddress = values.otherWorkAddress;
         const WorkSafeBCNumber = (values.WSBCCoverage === "yes");
         const employeePositions = (values.numberOfPositions1 > 0);
-        const businessFaxProvided = (typeOF(values.businessFax) !== "undefined" && values.businessFax !== null && values.businessFax !== "");
+        const businessFaxProvided = (typeof(values.businessFax) !== "undefined" && values.businessFax !== null && values.businessFax !== "");
         var html = /*html*/`
         <h2>Wage Subsidy application</h2>
         <p>Application ID:  ${strings.orEmpty(values._id)}</p>
@@ -244,7 +244,7 @@ module.exports = {
         html = html +`
         <h5>Business Questions</h5>
         <p>Type of Sector:  ${strings.orEmpty(values.sectorType)}</p>
-        <p>Type of Industry:  ${strings.orEmpty(values.typeOfIndustry)}</p>
+        <p>Type of Industry:  ${strings.orEmpty(values.typeofIndustry)}</p>
         <p>Size of Organization(number of employees):  ${strings.orEmpty(values.organizationSize)}</p>
         <p>Are you actively participating in the Canada Emergency Wage Subsidy program?  ${strings.orEmpty(values.cewsParticipation)}</p>
         <p>Will the subsidy result in the displacement of existing employees or volunteers?  ${strings.orEmpty(values.employeeDisplacement)}</p>
