@@ -42,8 +42,11 @@ module.exports = {
             `<p>Is there Union concurrence?  ${strings.orEmpty(values.unionConcurrence)}</p>`,
             `<p>Does your organization have 3rd Party liability coverage?  ${strings.orEmpty(values.liabilityCoverage)}</p>`,
             `<p>Is your organization currently receiving funding under a WorkBC Wage Subsidy agreement?  ${strings.orEmpty(values.wageSubsidy)}</p>`,
-            `<p>meets the eligibility criteria and acknowledges that all the obligations the employer owes to or has with respect to its other employees under the various listed statutes and all other applicable laws apply equally to an individual employed in a wage subsidy placement:  ${strings.orEmpty(values.eligibility)}</p>`,
-            `<p>certifies that it is in full compliance with all applicable laws, including the Employment Standards Act, the Workers Compensation Act and the Human Rights Code:   ${strings.orEmpty(values.lawCompliance)}</p>`,
+            ((values.wageSubsidy === "yes") ?
+            [`<p>How many employees is WorkBC currently subsidizing? ${strings.orEmpty(values.employeesClaimed)}</p>`]:[]),
+
+            `<p>${string.orEmpty(values.operatingName)} meets the eligibility criteria and acknowledges that all the obligations the employer owes to or has with respect to its other employees under the various listed statutes and all other applicable laws apply equally to an individual employed in a wage subsidy placement:  ${strings.orEmpty(values.eligibility)}</p>`,
+            `<p>${string.orEmpty(values.operatingName)} certifies that it is in full compliance with all applicable laws, including the Employment Standards Act, the Workers Compensation Act and the Human Rights Code:   ${strings.orEmpty(values.lawCompliance)}</p>`,
             `<hr />`,
             
             ((values.WSBCCoverage === "yes" )?   
@@ -117,32 +120,32 @@ module.exports = {
             `<p><b>Total: </b>${strings.orEmpty(values.total1)}</p>`,
             ((Date2Total) ? 
            [`<h3>2nd Date</h3>`,
-            `<p><b>Date From (DD/MM/YYYY): </b>${formatDate(values.dateFrom2)}</p>`
-            `<p><b>Date To (DD/MM/YYYY):</b>${formatDate(values.dateTo2)}</p>`
-            `<p><b>Hours Worked: </b>${strings.orEmpty(values.hoursWorked2)}</p>`
-            `<p><b>Hourly Wage: </b>${strings.orEmpty(values.hourlyWage2)}</p>`
-            `<p><b>Total: </b>${strings.orEmpty(values.total2)}</p>`] :[]),
+            `<p><b>Date From (DD/MM/YYYY): </b>${formatDate(values.dateFrom2)}</p>`,
+            `<p><b>Date To (DD/MM/YYYY):</b>${formatDate(values.dateTo2)}</p>`,
+            `<p><b>Hours Worked: </b>${strings.orEmpty(values.hoursWorked2)}</p>`,
+            `<p><b>Hourly Wage: </b>${strings.orEmpty(values.hourlyWage2)}</p>`,
+            `<p><b>Total: </b>${strings.orEmpty(values.total2)}</p>`,] :[]),
             ((Date3Total) ? 
             [`<h3>3rd Date</h3>`,
-            `<p><b>Date From (DD/MM/YYYY): </b>${formatDate(values.dateFrom3)}</p>`
-            `<p><b>Date To (DD/MM/YYYY):</b>${formatDate(values.dateTo3)}</p>`
-            `<p><b>Hours Worked: </b>${strings.orEmpty(values.hoursWorked3)}</p>`
-            `<p><b>Hourly Wage: </b>${strings.orEmpty(values.hourlyWage3)}</p>`
-            `<p><b>Total: </b>${strings.orEmpty(values.total3)}</p>`]:[]),
+            `<p><b>Date From (DD/MM/YYYY): </b>${formatDate(values.dateFrom3)}</p>`,
+            `<p><b>Date To (DD/MM/YYYY):</b>${formatDate(values.dateTo3)}</p>`,
+            `<p><b>Hours Worked: </b>${strings.orEmpty(values.hoursWorked3)}</p>`,
+            `<p><b>Hourly Wage: </b>${strings.orEmpty(values.hourlyWage3)}</p>`,
+            `<p><b>Total: </b>${strings.orEmpty(values.total3)}</p>`,]:[]),
             ((Date4Total) ?
             [`<h3>4th Date</h3>`,
-            `<p><b>Date From (DD/MM/YYYY): </b>${formatDate(values.dateFrom4)}</p>`
-            `<p><b>Date To (DD/MM/YYYY):</b>${formatDate(values.dateTo4)}</p>`
-            `<p><b>Hours Worked: </b>${strings.orEmpty(values.hoursWorked4)}</p>`
-            `<p><b>Hourly Wage: </b>${strings.orEmpty(values.hourlyWage4)}</p>`
-            `<p><b>Total: </b>${strings.orEmpty(values.total4)}</p>`] :[] ),
+            `<p><b>Date From (DD/MM/YYYY): </b>${formatDate(values.dateFrom4)}</p>`,
+            `<p><b>Date To (DD/MM/YYYY):</b>${formatDate(values.dateTo4)}</p>`,
+            `<p><b>Hours Worked: </b>${strings.orEmpty(values.hoursWorked4)}</p>`,
+            `<p><b>Hourly Wage: </b>${strings.orEmpty(values.hourlyWage4)}</p>`,
+            `<p><b>Total: </b>${strings.orEmpty(values.total4)}</p>`,] :[] ),
             ((Date5Total) ?
             [`<h3>5th Date</h3>`,
-            `<p><b>Date From (DD/MM/YYYY): </b>${formatDate(values.dateFrom5)}</p>`
-            `<p><b>Date To (DD/MM/YYYY):</b>${formatDate(values.dateTo5)}</p>`
-            `<p><b>Hours Worked: </b>${strings.orEmpty(values.hoursWorked5)}</p>`
-            `<p><b>Hourly Wage: </b>${strings.orEmpty(values.hourlyWage5)}</p>`
-            `<p><b>Total: </b>${strings.orEmpty(values.total5)}</p>`]:[]),
+            `<p><b>Date From (DD/MM/YYYY): </b>${formatDate(values.dateFrom5)}</p>`,
+            `<p><b>Date To (DD/MM/YYYY):</b>${formatDate(values.dateTo5)}</p>`,
+            `<p><b>Hours Worked: </b>${strings.orEmpty(values.hoursWorked5)}</p>`,
+            `<p><b>Hourly Wage: </b>${strings.orEmpty(values.hourlyWage5)}</p>`,
+            `<p><b>Total: </b>${strings.orEmpty(values.total5)}</p>`,]:[]),
 
             `<p><b>Total MERCs for Claim Period:<b>${strings.orEmpty(values.totalMERCs)}</p></p>`,
             /*
@@ -192,6 +195,8 @@ module.exports = {
             `<p>Is there Union concurrence?  ${strings.orEmpty(values.unionConcurrence)}</p>`,
             `<p>Does your organization have 3rd Party liability coverage?  ${strings.orEmpty(values.liabilityCoverage)}</p>`,
             `<p>Is your organization currently receiving funding under a WorkBC Wage Subsidy agreement?  ${strings.orEmpty(values.wageSubsidy)}</p>`,
+            ((values.wageSubsidy === "yes") ?
+            [`<p>How many employees is WorkBC currently subsidizing? ${strings.orEmpty(values.employeesClaimed)}</p>`]:[]),
             `<p>${string.orEmpty(values.operatingName)} meets the eligibility criteria and acknowledges that all the obligations the employer owes to or has with respect to its other employees under the various listed statutes and all other applicable laws apply equally to an individual employed in a wage subsidy placement:  ${strings.orEmpty(values.eligibility)}</p>`,
             `<p>${string.orEmpty(values.operatingName)} certifies that it is in full compliance with all applicable laws, including the Employment Standards Act, the Workers Compensation Act and the Human Rights Code:   ${strings.orEmpty(values.lawCompliance)}</p>`,
             `<hr />`,
