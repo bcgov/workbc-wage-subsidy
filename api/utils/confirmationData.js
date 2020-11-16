@@ -25,12 +25,12 @@ module.exports = {
             
             `<hr />`,
             ((values.otherWorkAddress) ?       
-            [`<h5>Work Address (only if different from contact)</h5>`
-            `<p>Work Address:  ${strings.orEmpty(values.addressAlt)}</p>`
-            `<p>City/Town:  ${strings.orEmpty(values.cityAlt)}</p>`
-            `<p>Province:  ${strings.orEmpty(values.provinceAlt)}</p>`
-            `<p>Postal Code:  ${strings.orEmpty(values.postalAlt)}</p>`
-            `<hr />`] :[]),
+            [`<h5>Work Address (only if different from contact)</h5>
+            <p>Work Address:  ${strings.orEmpty(values.addressAlt)}</p>
+            <p>City/Town:  ${strings.orEmpty(values.cityAlt)}</p>
+            <p>Province:  ${strings.orEmpty(values.provinceAlt)}</p>
+            <p>Postal Code:  ${strings.orEmpty(values.postalAlt)}</p>
+            <hr />`] :[]),
            
             `<h5>Business Questions</h5>`,
             `<p>Type Of Sector:  ${strings.orEmpty(values.sectorType)}</p>`,
@@ -146,7 +146,7 @@ module.exports = {
             `<p><b>Hours Worked: </b>${strings.orEmpty(values.hoursWorked5)}</p>`
             `<p><b>Hourly Wage: </b>${strings.orEmpty(values.hourlyWage5)}</p>`
             `<p><b>Total: </b>${strings.orEmpty(values.total5)}</p>`]:[]),
-            `<p><b>Total MERCs for Claim Period:<b>${strings.orEmpty(values.totalMERCs)}</p></p>`,
+            `<p><b>Total MERCs for Claim Period:</b>${strings.orEmpty(values.totalMERCs)}</p>`,
             `<p><b>Client Issues (if any)</b>:</p>`,
             `<p>${strings.orEmpty(values.clientIssues1)}</p>`
             /*
@@ -179,12 +179,12 @@ module.exports = {
             
             `<hr />`,
             ((values.otherWorkAddress) ?       
-            [`<h5>Work Address (only if different from contact)</h5>`
-            `<p>Work Address:  ${strings.orEmpty(values.addressAlt)}</p>`
-            `<p>City/Town:  ${strings.orEmpty(values.cityAlt)}</p>`
-            `<p>Province:  ${strings.orEmpty(values.provinceAlt)}</p>`
-            `<p>Postal Code:  ${strings.orEmpty(values.postalAlt)}</p>`
-            `<hr />`] :[]),
+            [`<h5>Work Address (only if different from contact)</h5>
+            <p>Work Address:  ${strings.orEmpty(values.addressAlt)}</p>
+            <p>City/Town:  ${strings.orEmpty(values.cityAlt)}</p>
+            <p>Province:  ${strings.orEmpty(values.provinceAlt)}</p>
+            <p>Postal Code:  ${strings.orEmpty(values.postalAlt)}</p>
+            <hr />`] :[]),
            
             `<h5>Business Questions</h5>`,
             `<p>Type Of Sector:  ${strings.orEmpty(values.sectorType)}</p>`,
