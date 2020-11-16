@@ -4,7 +4,22 @@ import { feedBackClassName, feedBackInvalid } from '../shared/ValidationMessages
 
 class FormStep3 extends Component {
 
-
+    get showErrors() {
+        if (this.props.submitCount > 0) {
+            return (
+                <div>
+                    <p>Please correct the following errors:</p>
+                    <ul>
+                        {Object.values(this.props.errors).map((error, i) => (
+                            <li key={i}>{error}</li>
+                        ))}
+                    </ul>
+                </div>
+            )
+        } else {
+            return null
+        }
+    }
 
     render() {
         if (this.props.currentStep !== 3) {
@@ -39,6 +54,9 @@ class FormStep3 extends Component {
                         {feedBackInvalid(this.props.errors,this.props.touched,"organizationConsent")}
                         <label className="form-check-label" htmlFor="organizationConsent"><span style={{ color: "red" }}>*</span> I acknowledge and understand that by clicking the "submit" I am attaching my electronic signature to this form and that by doing so I acquire the same rights, incur the same obligations and confer the same consent as I would by manually signing a physical copy of this form.</label>
                     </div>
+                </div>
+                <div className="form-group">
+                    {this.showErrors}
                 </div>
                 <button
                     className="btn btn-success btn-block"

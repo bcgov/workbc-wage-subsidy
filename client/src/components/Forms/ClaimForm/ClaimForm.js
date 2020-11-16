@@ -43,6 +43,23 @@ class ClaimForm extends Component {
     }
 
 
+    showErrors(errors,submitCount) {
+        if (submitCount > 0) {
+            return (
+                <div>
+                    <p>Please correct the following errors:</p>
+                    <ul>
+                        {Object.values(errors).map((error, i) => (
+                            <li key={i}>{error}</li>
+                        ))}
+                    </ul>
+                </div>
+            )
+        } else {
+            return null
+        }
+    }
+
     totalHoursWorked(values) {
         return Number(values.hoursWorked1) + Number(values.hoursWorked2) + Number(values.hoursWorked3) + Number(values.hoursWorked4) + Number(values.hoursWorked5);
     }
@@ -123,7 +140,10 @@ class ClaimForm extends Component {
             return dist;
         }
     }
+    dateErrorStyle = {width:"100%",
+   margin-top:"0.25rem",font-size:"80%",color:"#d93e45"}
     */
+   
 
     setHoursTotal(func, values, field, amount) {
         // set line total
@@ -252,7 +272,7 @@ class ClaimForm extends Component {
                                 // this.props.history.push('/thankyouClaimForm', values);
                             }}
                         >
-                            {({ values, errors, touched, setFieldValue, isSubmitting, isValid }) => (
+                            {({ values, errors, touched, setFieldValue, isSubmitting, isValid, submitCount }) => (
                                 <Form>
                                     <div className="form-group">
                                         <h2 id="forms">Wage Subsidy Claim Form</h2>
@@ -498,6 +518,9 @@ class ClaimForm extends Component {
                                             {feedBackInvalid(errors, touched, "workbcCentre")}
                                         </div>
                                         <hr></hr>
+                                        <div className="form-group">
+                                            {this.showErrors(errors,submitCount)}
+                                        </div>
                                         <div className="form-group">
                                             <button
                                                 className="btn btn-success btn-block"

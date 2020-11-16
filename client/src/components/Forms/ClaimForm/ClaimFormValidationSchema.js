@@ -7,7 +7,7 @@ export const ClaimFormValidationSchema = yup.object().shape({
         .max(yup.ref('periodStart2'),'Start date cannot be after end date'),
     periodStart2: yup.date().required("Please enter an ending date").min(
         yup.ref('periodStart1'), 'End date cannot be before start date'),
-    isFinalClaim: yup.string().required("Please select an option"),
+    isFinalClaim: yup.string().required("Please select option for Is final claim?"),
     employerName: yup.string().required("Please enter the employer's business name"),
     employerContact: yup.string().required("Please enter a contact name"),
     employerPhone: yup.string()
