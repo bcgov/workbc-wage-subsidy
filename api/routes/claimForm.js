@@ -29,6 +29,10 @@ var listPass = process.env.LISTPASS || process.env.OPENSHIFT_NODEJS_LISTPASS || 
 var listDomain = process.env.LISTDOMAIN || process.env.OPENSHIFT_NODEJS_LISTDOMAIN || ""
 var listParty = process.env.LISTPARTY || process.env.OPENSHIFT_NODEJS_LISTPARTY || ""
 var listADFS = process.env.LISTADFS || process.env.OPENSHIFT_NODEJS_LISTADFS || ""
+var caEmails = process.env.CAEMAILS.split(' ')
+
+console.log(caEmails)
+console.log(caEmails.length)
 
 
 var spr = spauth.getAuth(listWebURL, {
@@ -51,7 +55,7 @@ async function sendEmails(values) {
     });
     return await transporter.verify()
       .then(function (r) {
-        console.log(r)
+        //console.log(r)
         console.log("Transporter connected.")
         var cEmail, cNotifyEmail;
         if (claimConfirmationEmail === ""){
@@ -60,10 +64,12 @@ async function sendEmails(values) {
           cEmail = claimConfirmationEmail
         }
         if (claimNotifyEmail === ""){
-          //TODO
+          cNotifyEmail = caEmails[values.workbcCentre]
         } else {
           cNotifyEmail = claimNotifyEmail
         }
+        console.log(values.workbcCentre)
+        console.log(cNotifyEmail)
         // send mail with defined transport object
         /*
         let message1 = {

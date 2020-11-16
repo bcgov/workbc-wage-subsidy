@@ -29,6 +29,10 @@ var listPass = process.env.LISTPASS || process.env.OPENSHIFT_NODEJS_LISTPASS || 
 var listDomain = process.env.LISTDOMAIN || process.env.OPENSHIFT_NODEJS_LISTDOMAIN || ""
 var listParty = process.env.LISTPARTY || process.env.OPENSHIFT_NODEJS_LISTPARTY || ""
 var listADFS = process.env.LISTADFS || process.env.OPENSHIFT_NODEJS_LISTADFS || ""
+var caEmails = process.env.CAEMAILS.split(' ')
+
+console.log(caEmails)
+console.log(caEmails.length)
 
 var spr = spauth.getAuth(listWebURL, {
   username: listUser,
@@ -60,6 +64,14 @@ async function sendEmails(values) {
         } else {
           mailingList = values.businessEmail
         }
+        var cNotifyEmail;
+        if (notifyEmail === ""){
+          cNotifyEmail = caEmails[values._ca]
+        } else {
+          cNotifyEmail = notifyEmail
+        }
+        console.log(values._ca)
+        console.log(cNotifyEmail)
         // send mail with defined transport object
         let message1 = {
           from: 'WorkBC Wage Subsidy <donotreply@gov.bc.ca>', // sender address
@@ -84,7 +96,7 @@ async function sendEmails(values) {
         };
         let message3 = {
           from: 'WorkBC Wage Subsidy <donotreply@gov.bc.ca>', // sender address
-          to: notifyEmail,// list of receivers
+          to: cNotifyEmail,// list of receivers
           subject: "A Wage Subsidy application has been received - " + values._id, // Subject line
           html: notification.generateNeedEmployeeNotification(values) // html body
         };
