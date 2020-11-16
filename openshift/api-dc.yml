@@ -209,6 +209,8 @@ objects:
             value: ${DATABASE_SERVICE_NAME}
           - name: MONGO_DB_NAME
             value: ${DATABASE_NAME}
+          - name: CAEMAILS
+            value: ${CAEMAILS}
     test: false
     triggers:
     - type: ConfigChange
@@ -351,6 +353,11 @@ parameters:
 - description: List ADFS
   displayName: List ADFS
   name: OPENSHIFT_NODEJS_LISTADFS
+  required: true
+  value: ''
+- description: CA emails to use start with none, separated by space
+  displayName: CA email
+  name: CAEMAILS
   required: true
   value: ''
 - description: The namespace of the OS project containing the imagestreams
