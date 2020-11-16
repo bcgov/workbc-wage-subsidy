@@ -24,6 +24,10 @@ module.exports = {
     },
 
     generateClaimNotification: function (values){
+        const Date2Total = (typeOF(values.total2) !== "undefined" && values.total2 !== null && values.total2 !== "" && values.total2 !== 0);
+        const Date3Total = (typeOF(values.total3) !== "undefined" && values.total3 !== null && values.total3 !== "" && values.total3 !== 0);
+        const Date4Total = (typeOF(values.total4) !== "undefined" && values.total4 !== null && values.total4 !== "" && values.total4 !== 0);
+        const Date5Total = (typeOF(values.total5) !== "undefined" && values.total5 !== null && values.total5 !== "" && values.total5 !== 0);
         var html = /*html*/`
         <h2>Wage Subsidy Claim application</h2>
         <p><b>Period Claim Start (DD/MM/YYYY): </b> ${formatDate(values.periodStart1)}</p>
@@ -44,32 +48,44 @@ module.exports = {
         <p><b>Date To (DD/MM/YYYY):</b>${formatDate(values.dateTo1)}</p>
         <p><b>Hours Worked: </b>${strings.orEmpty(values.hoursWorked1)}</p>
         <p><b>Hourly Wage: </b>${strings.orEmpty(values.hourlyWage1)}</p>
-        <p><b>Total: </b>${strings.orEmpty(values.total1)}</p>
-        <h3>2nd Date</h3>
+        <p><b>Total: </b>${strings.orEmpty(values.total1)}</p>`
+       if(Date2Total){ 
+        html = html +
+        `<h3>2nd Date</h3>
         <p><b>Date From (DD/MM/YYYY): </b>${formatDate(values.dateFrom2)}</p>
         <p><b>Date To (DD/MM/YYYY):</b>${formatDate(values.dateTo2)}</p>
         <p><b>Hours Worked: </b>${strings.orEmpty(values.hoursWorked2)}</p>
         <p><b>Hourly Wage: </b>${strings.orEmpty(values.hourlyWage2)}</p>
-        <p><b>Total: </b>${strings.orEmpty(values.total2)}</p>
-        <h3>3rd Date</h3>
+        <p><b>Total: </b>${strings.orEmpty(values.total2)}</p>`
+       }
+       if(Date3Total){ 
+        html = html +
+        `<h3>3rd Date</h3>
         <p><b>Date From (DD/MM/YYYY): </b>${formatDate(values.dateFrom3)}</p>
         <p><b>Date To (DD/MM/YYYY):</b>${formatDate(values.dateTo3)}</p>
         <p><b>Hours Worked: </b>${strings.orEmpty(values.hoursWorked3)}</p>
         <p><b>Hourly Wage: </b>${strings.orEmpty(values.hourlyWage3)}</p>
-        <p><b>Total: </b>${strings.orEmpty(values.total3)}</p>
-        <h3>4th Date</h3>
+        <p><b>Total: </b>${strings.orEmpty(values.total3)}</p>`
+       }
+       if(Date4Total){ 
+        html = html +
+        `<h3>4th Date</h3>
         <p><b>Date To (DD/MM/YYYY):</b>${formatDate(values.dateTo4)}</p>
         <p><b>Date From (DD/MM/YYYY): </b>${formatDate(values.dateFrom4)}</p>
         <p><b>Hours Worked: </b>${strings.orEmpty(values.hoursWorked4)}</p>
         <p><b>Hourly Wage: </b>${strings.orEmpty(values.hourlyWage4)}</p>
-        <p><b>Total: </b>${strings.orEmpty(values.total4)}</p>
-        <h3>5th Date</h3>
+        <p><b>Total: </b>${strings.orEmpty(values.total4)}</p>`
+       }
+       if(Date5Total){ 
+        html = html +
+        `<h3>5th Date</h3>
         <p><b>Date To (DD/MM/YYYY):</b>${formatDate(values.dateTo5)}</p>
         <p><b>Date From (DD/MM/YYYY): </b>${formatDate(values.dateFrom5)}</p>
         <p><b>Hours Worked: </b>${strings.orEmpty(values.hoursWorked5)}</p>
         <p><b>Hourly Wage: </b>${strings.orEmpty(values.hourlyWage5)}</p>
-        <p><b>Total: </b>${strings.orEmpty(values.total5)}</p>
-        <h3>Total employer portion of Mandatory Employment Related Costs.<h3>
+        <p><b>Total: </b>${strings.orEmpty(values.total5)}</p>`
+       }
+        html = html+ `<h3>Total employer portion of Mandatory Employment Related Costs.<h3>
         <p><b>Total MERCs for claim Period: </b> ${strings.orEmpty(values.totalMERCs)}</p>
         `
         return html       
@@ -79,7 +95,7 @@ module.exports = {
         const alternativeAddress = values.otherWorkAddress;
         const WorkSafeBCNumber = (values.WSBCCoverage === "yes");
         const employeePositions = (values.numberOfPositions1 > 0);
-        const businessFaxProvided = (values.businessFax !== "");
+        const businessFaxProvided = (typeOF(values.businessFax) !== "undefined" && values.businessFax !== null && values.businessFax !== "");
         var html = /*html*/`
         <h2>Wage Subsidy application</h2>
         <p>Application ID:  ${strings.orEmpty(values._id)}</p>
@@ -188,7 +204,7 @@ module.exports = {
         const alternativeAddress = values.otherWorkAddress;
         const WorkSafeBCNumber = (values.WSBCCoverage === "yes");
         const employeePositions = (values.numberOfPositions1 > 0);
-        const businessFaxProvided = (values.businessFax !== "");
+        const businessFaxProvided = (typeOF(values.businessFax) !== "undefined" && values.businessFax !== null && values.businessFax !== "");
         var html = /*html*/`
         <h2>Wage Subsidy application</h2>
         <p>Application ID:  ${strings.orEmpty(values._id)}</p>
