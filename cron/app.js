@@ -352,8 +352,8 @@ async function saveListNeedEmployee(values,ca) {
   }
 }
 
-cron.schedule('*/5 * * * *', async function() {
-    console.log('running a task every 5 minutes');
+cron.schedule('*/2 * * * *', async function() {
+    console.log('running a task every 2 minutes');
     
     await getHaveEmployeeNotSP()
     .then(async cursor => {
