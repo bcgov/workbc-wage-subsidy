@@ -22,7 +22,6 @@ class thankyouNeedEmployee extends Component {
                         <p>Thank you for your interest in WorkBC Wage Subsidy services. Your application has been received and a WorkBC staff member will be in touch with you soon.</p>
                         <br />
                         <hr />
-                        {console.log(this.props.location.state)}  
                                 <p>Application ID:  {this.props.location.state !== undefined && this.props.location.state._id}</p>
                                 <p>Operating Name:  {this.props.location.state !== undefined && this.props.location.state.operatingName}</p>
                                 

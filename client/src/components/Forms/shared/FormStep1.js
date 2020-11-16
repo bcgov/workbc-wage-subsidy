@@ -85,18 +85,18 @@ class FormStep1 extends Component {
                 
                 .then(res => res.json())
                 .then(result => {
-                    console.log(result.features[0].properties.score)
-                    console.log((postal.match(/^[A-Za-z]\d[A-Za-z]\d[A-Za-z]\d$/)).length)
+                    //console.log(result.features[0].properties.score)
+                    //console.log((postal.match(/^[A-Za-z]\d[A-Za-z]\d[A-Za-z]\d$/)).length)
                     if (result.features[0].properties.score < 95 || (postal.match(/^[A-Za-z]\d[A-Za-z]\d[A-Za-z]\d$/)).length === 0 ){
                         this.setState({
                             addressValidated: false
                         })
                         return
                     }
-                    console.log(result)
+                    //console.log(result)
                     let coordinates = result.features[0].geometry.coordinates
                     let ca = getCatchment(coordinates[1],coordinates[0])
-                    console.log(ca)
+                    //console.log(ca)
                     
                     this.setState({
                         addressValidated: true,
@@ -226,7 +226,6 @@ class FormStep1 extends Component {
         return (
 
             <div>
-                {console.log(this)}
                 <p>
                     If you are having difficulty completing the application for Wage Subsidy, please contact your local <a href="https://www.workbc.ca/Employment-Services/WorkBC-Centres/Find-Your-WorkBC-Centre.aspx" target="_blank" rel="noopener noreferrer">WorkBC office</a>, 
                     a application guide is also available <a href="https://workbc.ca/getmedia/2e608021-09f1-4429-885c-155e6e4bd771/WS-Guide-Nov12.pdf.aspx" target="_blank" rel="noopener noreferrer">here</a>.

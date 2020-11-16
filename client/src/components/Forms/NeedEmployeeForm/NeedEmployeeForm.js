@@ -33,13 +33,13 @@ class NeedEmployeeForm extends Component {
             .then(res => res.json())
             .then(
                 (result) => {
-                    console.log(result.csrfToken)
+                    //console.log(result.csrfToken)
                     this.setState({
                         _csrf: result.csrfToken,
                     })
                 },
                 (error) => {
-                    console.log(error)
+                    //console.log(error)
                     this.setState({
                         hasError: true
                     })
@@ -212,16 +212,16 @@ class NeedEmployeeForm extends Component {
                                     .then(res => res.json())
                                     .then(
                                         resp => {
-                                            console.log(resp)
+                                            //console.log(resp)
 
                                             if (resp.err) {
-                                                console.log("errors", resp)
+                                                //console.log("errors", resp)
                                                 alert("Please review your form, a field is incomplete.")
                                                 setSubmitting(false)
                                                 setErrors(resp.err)
 
                                             } else if(resp.emailErr){
-                                                console.log("emailError", resp)
+                                                //console.log("emailError", resp)
                                                 setSubmitting(false)
                                                 this.setState({
                                                     hasError: true
