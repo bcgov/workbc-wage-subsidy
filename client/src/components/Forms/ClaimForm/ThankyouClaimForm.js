@@ -27,26 +27,34 @@ class ThankyouClaimForm extends Component {
                         <p><b>Hours Worked: </b>{this.props.location.state && this.props.location.state.hoursWorked1}</p>
                         <p><b>Hourly Wage: </b>{this.props.location.state && this.props.location.state.hourlyWage1}</p>
                         <p><b>Total: </b>{this.props.location.state && this.props.location.state.total1}</p>
-                        <h3>2nd Date</h3>
-                        <p><b>Date From: </b>{this.props.location.state !== undefined && this.props.location.state.dateFrom2 && (<span>{this.props.location.state.dateFrom2.getDate()}/{this.props.location.state.dateFrom2.getMonth() + 2}/{this.props.location.state.dateFrom2.getFullYear()}</span>)}</p>
-                        <p><b>Hours Worked: </b>{this.props.location.state && this.props.location.state.hoursWorked2}</p>
-                        <p><b>Hourly Wage: </b>{this.props.location.state && this.props.location.state.hourlyWage2}</p>
-                        <p><b>Total: </b>{this.props.location.state && this.props.location.state.total2}</p>
-                        <h3>3rd Date</h3>
-                        <p><b>Date From: </b>{this.props.location.state !== undefined && this.props.location.state.dateFrom3 && (<span>{this.props.location.state.dateFrom3.getDate()}/{this.props.location.state.dateFrom3.getMonth() + 3}/{this.props.location.state.dateFrom3.getFullYear()}</span>)}</p>
-                        <p><b>Hours Worked: </b>{this.props.location.state && this.props.location.state.hoursWorked3}</p>
-                        <p><b>Hourly Wage: </b>{this.props.location.state && this.props.location.state.hourlyWage3}</p>
-                        <p><b>Total: </b>{this.props.location.state && this.props.location.state.total3}</p>
-                        <h3>4th Date</h3>
-                        <p><b>Date From: </b>{this.props.location.state !== undefined && this.props.location.state.dateFrom4 && (<span>{this.props.location.state.dateFrom4.getDate()}/{this.props.location.state.dateFrom4.getMonth() + 4}/{this.props.location.state.dateFrom4.getFullYear()}</span>)}</p>
-                        <p><b>Hours Worked: </b>{this.props.location.state && this.props.location.state.hoursWorked4}</p>
-                        <p><b>Hourly Wage: </b>{this.props.location.state && this.props.location.state.hourlyWage4}</p>
-                        <p><b>Total: </b>{this.props.location.state && this.props.location.state.total4}</p>
-                        <h3>5th Date</h3>
-                        <p><b>Date From: </b>{this.props.location.state !== undefined && this.props.location.state.dateFrom5 && (<span>{this.props.location.state.dateFrom5.getDate()}/{this.props.location.state.dateFrom5.getMonth() + 5}/{this.props.location.state.dateFrom5.getFullYear()}</span>)}</p>
-                        <p><b>Hours Worked: </b>{this.props.location.state && this.props.location.state.hoursWorked5}</p>
-                        <p><b>Hourly Wage: </b>{this.props.location.state && this.props.location.state.hourlyWage5}</p>
-                        <p><b>Total: </b>{this.props.location.state && this.props.location.state.total5}</p>
+                        <div style={this.props.location.state && this.props.location.state.dateFrom2 ? {display: "block"} : {display: "none"}}>
+                            <h3>2nd Date</h3>
+                            <p><b>Date From: </b>{this.props.location.state !== undefined && this.props.location.state.dateFrom2 && (<span>{this.props.location.state.dateFrom2.getDate()}/{this.props.location.state.dateFrom2.getMonth() + 2}/{this.props.location.state.dateFrom2.getFullYear()}</span>)}</p>
+                            <p><b>Hours Worked: </b>{this.props.location.state && this.props.location.state.hoursWorked2}</p>
+                            <p><b>Hourly Wage: </b>{this.props.location.state && this.props.location.state.hourlyWage2}</p>
+                            <p><b>Total: </b>{this.props.location.state && this.props.location.state.total2}</p>
+                        </div>
+                        <div style={this.props.location.state && this.props.location.state.dateFrom3 ? {display: "block"} : {display: "none"}}>
+                            <h3>3rd Date</h3>
+                            <p><b>Date From: </b>{this.props.location.state !== undefined && this.props.location.state.dateFrom3 && (<span>{this.props.location.state.dateFrom3.getDate()}/{this.props.location.state.dateFrom3.getMonth() + 3}/{this.props.location.state.dateFrom3.getFullYear()}</span>)}</p>
+                            <p><b>Hours Worked: </b>{this.props.location.state && this.props.location.state.hoursWorked3}</p>
+                            <p><b>Hourly Wage: </b>{this.props.location.state && this.props.location.state.hourlyWage3}</p>
+                            <p><b>Total: </b>{this.props.location.state && this.props.location.state.total3}</p>
+                        </div>
+                        <div style={this.props.location.state && this.props.location.state.dateFrom4 ? {display: "block"} : {display: "none"}}>
+                            <h3>4th Date</h3>
+                            <p><b>Date From: </b>{this.props.location.state !== undefined && this.props.location.state.dateFrom4 && (<span>{this.props.location.state.dateFrom4.getDate()}/{this.props.location.state.dateFrom4.getMonth() + 4}/{this.props.location.state.dateFrom4.getFullYear()}</span>)}</p>
+                            <p><b>Hours Worked: </b>{this.props.location.state && this.props.location.state.hoursWorked4}</p>
+                            <p><b>Hourly Wage: </b>{this.props.location.state && this.props.location.state.hourlyWage4}</p>
+                            <p><b>Total: </b>{this.props.location.state && this.props.location.state.total4}</p>
+                        </div>
+                        <div style={this.props.location.state && this.props.location.state.dateFrom5 ? {display: "block"} : {display: "none"}}>
+                            <h3>5th Date</h3>
+                            <p><b>Date From: </b>{this.props.location.state !== undefined && this.props.location.state.dateFrom5 && (<span>{this.props.location.state.dateFrom5.getDate()}/{this.props.location.state.dateFrom5.getMonth() + 5}/{this.props.location.state.dateFrom5.getFullYear()}</span>)}</p>
+                            <p><b>Hours Worked: </b>{this.props.location.state && this.props.location.state.hoursWorked5}</p>
+                            <p><b>Hourly Wage: </b>{this.props.location.state && this.props.location.state.hourlyWage5}</p>
+                            <p><b>Total: </b>{this.props.location.state && this.props.location.state.total5}</p>
+                        </div>
                         <h3>Total MERCS</h3>
                         <p><b>Hours Worked Total:</b> {this.props.location.state && this.props.location.state.hoursWorkedTotal1}</p>
                         <p><b>Hourly Wage Total: </b>{this.props.location.state && this.props.location.state.hourlyWageTotal1}</p>
