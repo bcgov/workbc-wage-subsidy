@@ -33,7 +33,7 @@ module.exports = {
            
             `<h5>Business Questions</h5>`,
             `<p>Type Of Sector:  ${strings.orEmpty(values.sectorType)}</p>`,
-            `<p>Type of Industry:  ${strings.orEmpty(values.typeofIndustry)}</p>`,
+            `<p>Type of Industry:  ${strings.orEmpty(values.typeOfIndustry)}</p>`,
             `<p>Size of Organization(number of employees):  ${strings.orEmpty(values.organizationSize)}</p>`,
             `<p>Are you actively participating in canada emergency wage subsidy program?   ${strings.orEmpty(values.cewsParticipation)}</p>`,
             `<p>Will the subsidy result in the displacement of existing employees or volunteers?  ${strings.orEmpty(values.employeeDisplacement)}</p>`,
@@ -183,7 +183,7 @@ module.exports = {
            
             `<h5>Business Questions</h5>`,
             `<p>Type Of Sector:  ${strings.orEmpty(values.sectorType)}</p>`,
-            `<p>Type of Industry:  ${strings.orEmpty(values.typeofIndustry)}</p>`,
+            `<p>Type of Industry:  ${strings.orEmpty(values.typeOfIndustry)}</p>`,
             `<p>Size of Organization(number of employees):  ${strings.orEmpty(values.organizationSize)}</p>`,
             `<p>Are you actively participating in canada emergency wage subsidy program?   ${strings.orEmpty(values.cewsParticipation)}</p>`,
             `<p>Will the subsidy result in the displacement of existing employees or volunteers?  ${strings.orEmpty(values.employeeDisplacement)}</p>`,
