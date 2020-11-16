@@ -20,19 +20,15 @@ function Home() {
                         </ul>
                     </ul>
                     <p>Employers who need an employee can either:</p>
-                    <ol>
-                        <li>Apply to be matched to a WorkBC Client; or</li>
-                        <li>Apply with their identified employee.</li>
-                    </ol>
                 </div>
             </div>
             <div className="row">
                 <div className="col-md-6">
-                    <h2>I have an employee</h2>
+                    <h3>Apply with their identified employee</h3>
                     <p><a href="/haveEmployee" className="btn btn-lg btn-primary">Start</a><br/></p>
                 </div>
                 <div className="col-md-6">
-                    <h2>I need an employee</h2>
+                    <h3>Apply to be matched to a WorkBC Client</h3>
                     <p><a href="/needEmployee" className="btn btn-lg btn-primary">Start</a><br/></p>
                 </div>
             </div>
