@@ -55,10 +55,17 @@ class ThankyouClaimForm extends Component {
                             <p><b>Hourly Wage: </b>{this.props.location.state && this.props.location.state.hourlyWage5}</p>
                             <p><b>Total: </b>{this.props.location.state && this.props.location.state.total5}</p>
                         </div>
+                        <p><b>Total MERCs for Claim Period:</b>{this.props.location.state && this.props.location.state.totalMERCs}</p>
+                        <p><b>Client Issues (if any)</b>:</p>
+                        <p>{this.props.location.state && this.props.location.state.clientIssues1}</p>
+                        {
+                        /*
                         <h3>Total MERCS</h3>
                         <p><b>Hours Worked Total:</b> {this.props.location.state && this.props.location.state.hoursWorkedTotal1}</p>
                         <p><b>Hourly Wage Total: </b>{this.props.location.state && this.props.location.state.hourlyWageTotal1}</p>
                         <p><b>Total Total:</b>{this.props.location.state && this.props.location.state.totalTotal1}</p>
+                        */
+                        }
                         <hr />
                     </div>
                 </div>
