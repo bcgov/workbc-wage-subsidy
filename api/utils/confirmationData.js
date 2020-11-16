@@ -68,17 +68,17 @@ module.exports = {
             `<p>Description of Duties: ${strings.orEmpty(values.duties0)}</p>`,
            
             ((values.numberOfPositions1 > 0 ) ? 
-            [`<h5>Position 2 (only if different from above) </h5>`
-            `<p>Position Title:  ${strings.orEmpty(values.operatingName1)}</p>`
-            `<p>Number of Available Positions:  ${strings.orEmpty(values.numberOfPositions1)}</p>`
-            `<p>Employee Email 1:  ${strings.orEmpty(values.position1Email0)}</p>`
-            `<p>Employee Email 2:  ${strings.orEmpty(values.position1Email1)}</p>`
-            `<p>Employee Email 3:  ${strings.orEmpty(values.position1Email2)}</p>`
-            `<p>Employee Email 4:  ${strings.orEmpty(values.position1Email3)}</p>`
-            `<p>Anticipated Start Date (DD/MM/YYYY):  ${formatDate(values.startDate1)}</p>`
-            `<p>Hours of Work Per Week: ${strings.orEmpty(values.hours1)}</p>`
-            `<p>Hourly Wage: ${strings.orEmpty(values.wage1)}</p>`
-            `<p>Description pf Duties: ${strings.orEmpty(values.duties1)}</p>`] : []),
+            [`<h5>Position 2 (only if different from above) </h5>
+            <p>Position Title:  ${strings.orEmpty(values.operatingName1)}</p>
+            <p>Number of Available Positions:  ${strings.orEmpty(values.numberOfPositions1)}</p>
+            <p>Employee Email 1:  ${strings.orEmpty(values.position1Email0)}</p>
+            <p>Employee Email 2:  ${strings.orEmpty(values.position1Email1)}</p>
+            <p>Employee Email 3:  ${strings.orEmpty(values.position1Email2)}</p>
+            <p>Employee Email 4:  ${strings.orEmpty(values.position1Email3)}</p>
+            <p>Anticipated Start Date (DD/MM/YYYY):  ${formatDate(values.startDate1)}</p>
+            <p>Hours of Work Per Week: ${strings.orEmpty(values.hours1)}</p>
+            <p>Hourly Wage: ${strings.orEmpty(values.wage1)}</p>
+            <p>Description pf Duties: ${strings.orEmpty(values.duties1)}</p>`] : []),
             
             `<hr />                       `,
             `<h5>Declaration and Signature</h5>`,
@@ -207,7 +207,7 @@ module.exports = {
             <p>WorkSafeBC Number:  ${strings.orEmpty(values.WSBCNumber)}</p>
             <hr />`] : []),
             
-            `<h5>Employee Position 1 </h5>`,
+            `<h5>Position 1 </h5>`,
             `<p>Operating Name:  ${strings.orEmpty(values.operatingName0)}</p>`,
             `<p>Number of Positions:  ${strings.orEmpty(values.numberOfPositions0)}</p>`,
             `<p>StartDate (DD/MM/YYYY):  ${formatDate(values.startDate0)}</p>`,
@@ -218,15 +218,15 @@ module.exports = {
             `<p>Work Experience: ${strings.orEmpty(values.workExperience0)}</p>`,
             `<hr />`,
             ((values.numberOfPositions1 > 0 ) ? 
-            [`<h5>Employee Position 2 (only if different from above) </h5>`
-            `<p>Operating Name:  ${strings.orEmpty(values.operatingName1)}</p>`
-            `<p>Number of Positions:  ${strings.orEmpty(values.numberOfPositions1)}</p>`
-            `<p>StartDate (DD/MM/YYYY):  ${formatDate(values.startDate1)}</p>`
-            `<p>Hours: ${strings.orEmpty(values.hours1)}</p>`
-            `<p>Wage: ${strings.orEmpty(values.wage1)}</p>`
-            `<p>Duties: ${strings.orEmpty(values.duties1)}</p>`
-            `<p>Skills: ${strings.orEmpty(values.skills1)}</p>`
-            `<p>Work Experience: ${strings.orEmpty(values.workExperience1)}</p>`]:[]),
+            [`<h5>Position 2 (only if different from above) </h5>
+            <p>Operating Name:  ${strings.orEmpty(values.operatingName1)}</p>
+            <p>Number of Positions:  ${strings.orEmpty(values.numberOfPositions1)}</p>
+            <p>StartDate (DD/MM/YYYY):  ${formatDate(values.startDate1)}</p>
+            <p>Hours: ${strings.orEmpty(values.hours1)}</p>
+            <p>Wage: ${strings.orEmpty(values.wage1)}</p>
+            <p>Duties: ${strings.orEmpty(values.duties1)}</p>
+            <p>Skills: ${strings.orEmpty(values.skills1)}</p>
+            <p>Work Experience: ${strings.orEmpty(values.workExperience1)}</p>`]:[]),
             
             `<hr />                       `,
             `<h5>Declaration and Signature</h5>`,
