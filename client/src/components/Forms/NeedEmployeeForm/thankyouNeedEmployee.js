@@ -9,6 +9,7 @@ class thankyouNeedEmployee extends Component {
         const WorkSafeBCNumber = (this.props.location.state.WSBCCoverage === "yes");
         const employeePositions = (this.props.location.state.numberOfPositions1 > 0);
         const businessFaxProvided = (this.props.location.state.businessFax !== "");
+        const wageSubsidizedAlready = (this.props.location.state.wageSubsidy === "yes");
 
         return (
             
@@ -59,6 +60,8 @@ class thankyouNeedEmployee extends Component {
                                 <p>Is there Union concurrence? {this.props.location.state !== undefined && this.props.location.state.unionConcurrence}</p>
                                 <p>Does your organization have 3rd Party liability coverage?  {this.props.location.state !== undefined && this.props.location.state.liabilityCoverage}</p>
                                 <p>Is your organization currently receiving funding under a WorkBC Wage Subsidy agreement?  {this.props.location.state !== undefined && this.props.location.state.wageSubsidy}</p>
+                                {wageSubsidizedAlready ?(<div><p>How Many Employees is WorkBC currently Subsidizing? {this.props.location.state !== undefined && this.props.location.state.employeesClaimed.toString()}</p></div>):(<div></div>)}
+                                
                                 <p>{this.props.location.state !== undefined && this.props.location.state.operatingName} meets the eligibility criteria and acknowledges that all the obligations the employer owes to or has with respect to its other employees under the various 
                                    listed statutes and all other applicable laws apply equally to an individual employed in a wage subsidy placement :   
                                    {this.props.location.state !== undefined && this.props.location.state.eligibility.toString()}</p>
