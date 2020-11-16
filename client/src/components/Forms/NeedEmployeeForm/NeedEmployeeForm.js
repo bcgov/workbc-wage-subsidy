@@ -213,22 +213,25 @@ class NeedEmployeeForm extends Component {
                                     .then(
                                         resp => {
                                             console.log(resp)
+
                                             if (resp.err) {
-                                                setSubmitting(false);
-                                                setErrors(resp.err);
-                                                this.setState({
-                                                    hasError: true
-                                                })
-                                            } else if (resp.emailErr) {
                                                 console.log("errors", resp)
                                                 alert("Please review your form, a field is incomplete.")
                                                 setSubmitting(false)
                                                 setErrors(resp.err)
+
+                                            } else if(resp.emailErr){
+                                                console.log("emailError", resp)
+                                                setSubmitting(false)
+                                                this.setState({
+                                                    hasError: true
+                                                })
                                             }
                                             else if (resp.ok) {
                                                 setSubmitting(false);
                                                 this.props.history.push('/thankyouNeedEmployee', values);
                                             }
+                                        }
                                     )
 
                             }}
