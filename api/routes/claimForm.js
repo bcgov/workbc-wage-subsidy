@@ -64,7 +64,7 @@ async function sendEmails(values) {
           cEmail = claimConfirmationEmail
         }
         if (claimNotifyEmail === ""){
-          cNotifyEmail = caEmails[values.workbcCentre]
+          cNotifyEmail = caEmails[Number(values.workbcCentre)]
         } else {
           cNotifyEmail = claimNotifyEmail
         }

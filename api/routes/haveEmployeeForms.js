@@ -76,7 +76,7 @@ async function sendEmails(values) {
         console.log(positionEmails)
         var cNotifyEmail;
         if (notifyEmail === ""){
-          cNotifyEmail = caEmails[values._ca]
+          cNotifyEmail = caEmails[Number(values._ca)]
         } else {
           cNotifyEmail = notifyEmail
         }
