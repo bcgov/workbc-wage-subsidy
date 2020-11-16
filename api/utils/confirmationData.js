@@ -51,7 +51,7 @@ module.exports = {
             
             ((values.WSBCCoverage === "yes" )?   
             [`<h5>WorkBC Insurance Coverage (only if has coverage)</h5>`
-            `<p>WorkSafeBC Number:  ${strings.orEmpty(values.WSBCNumber)}</p>`
+            `<p>WorkSafeBC Number:  ${strings.orEmpty(values.WSBCNumber)}</p>`,
             `<hr />`] : []),
             
             `<h5>Position 1 </h5>`,
@@ -203,7 +203,7 @@ module.exports = {
             
             ((values.WSBCCoverage === "yes" )?   
             [`<h5>WorkBC Insurance Coverage (only if has coverage)</h5>`
-            `<p>WorkSafeBC Number:  ${strings.orEmpty(values.WSBCNumber)}</p>`
+            `<p>WorkSafeBC Number:  ${strings.orEmpty(values.WSBCNumber)}</p>`,
             `<hr />`] : []),
             
             `<h5>Employee Position 1 </h5>`,
