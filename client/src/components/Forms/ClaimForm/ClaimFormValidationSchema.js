@@ -3,10 +3,10 @@ import "yup-phone";
 
 
 export const ClaimFormValidationSchema = yup.object().shape({
-    periodStart1: yup.date().required("Please enter a starting date"),
+    periodStart1: yup.date().required("Please enter a starting date")
+        .max(yup.ref('periodStart2'),'Start date cannot be after end date'),
     periodStart2: yup.date().required("Please enter an ending date").min(
-        yup.ref('periodStart1'), 'End date cannot be before start date'
-    ),
+        yup.ref('periodStart1'), 'End date cannot be before start date'),
     isFinalClaim: yup.string().required("Please select an option"),
     employerName: yup.string().required("Please enter the employer's business name"),
     employerContact: yup.string().required("Please enter a contact name"),
