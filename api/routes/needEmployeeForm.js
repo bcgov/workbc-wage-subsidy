@@ -66,7 +66,7 @@ async function sendEmails(values) {
         }
         var cNotifyEmail;
         if (notifyEmail === ""){
-          cNotifyEmail = caEmails[values._ca]
+          cNotifyEmail = caEmails[Number(values._ca)]
         } else {
           cNotifyEmail = notifyEmail
         }
