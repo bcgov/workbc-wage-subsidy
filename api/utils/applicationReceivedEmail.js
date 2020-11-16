@@ -262,7 +262,7 @@ module.exports = {
             html = html + `<p>How many employees is WorkBC currently subsidizing? ${strings.orEmpty(values.employeesClaimed)}</p>`
         }
 
-        html = html + `<p>${string.orEmpty(values.operatingName)}  meets the eligibility criteria and acknowledges that all the obligations the employer owes to or has with 
+        html = html + `<p>${string.orEmpty(values.operatingName)} meets the eligibility criteria and acknowledges that all the obligations the employer owes to or has with 
         respect to its other employees under the various listed statutes and all other applicable laws apply equally 
         to an individual employed in a wage subsidy placement:      ${strings.orEmpty(values.eligibility)}</p>
         <p>${string.orEmpty(values.operatingName)} certifies that it is in full compliance with all applicable laws, including the Employment Standards Act, 
