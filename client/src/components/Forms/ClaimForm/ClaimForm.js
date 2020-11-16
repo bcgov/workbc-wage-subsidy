@@ -28,13 +28,13 @@ class ClaimForm extends Component {
             .then(res => res.json())
             .then(
                 (result) => {
-                    console.log(result.csrfToken)
+                    //console.log(result.csrfToken)
                     this.setState({
                         _csrf: result.csrfToken,
                     })
                 },
                 (error) => {
-                    console.log(error)
+                    //console.log(error)
                     this.setState({
                         hasError: true
                     })
@@ -256,7 +256,7 @@ class ClaimForm extends Component {
                                                     hasError: true
                                                 })
                                             } else if (resp.emailErr) {
-                                                console.log("emailError")
+                                                //console.log("emailError")
                                                 actions.setSubmitting(false)
                                                 this.setState({
                                                     hasError: true
