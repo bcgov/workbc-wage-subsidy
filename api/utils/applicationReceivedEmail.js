@@ -95,6 +95,7 @@ module.exports = {
         const alternativeAddress = values.otherWorkAddress;
         const WorkSafeBCNumber = (values.WSBCCoverage === "yes");
         const employeePositions = (values.numberOfPositions1 > 0);
+        const wageSubsidizedAlready = (values.wageSubsidy === "yes");
         const businessFaxProvided = (typeof(values.businessFax) !== "undefined" && values.businessFax !== null && values.businessFax !== "");
         var html = /*html*/`
         <h2>Wage Subsidy application</h2>
@@ -142,8 +143,12 @@ module.exports = {
         <p>Is there a labour stoppage or labour - management dispute in progress?  ${strings.orEmpty(values.labourDispute)}</p>
         <p>Is there Union concurrence?  ${strings.orEmpty(values.unionConcurrence)}</p>
         <p>Does your organization have 3rd Party liability coverage?  ${strings.orEmpty(values.liabilityCoverage)}</p>
-        <p>Is your organization currently receiving funding under a WorkBC Wage Subsidy agreement?  ${strings.orEmpty(values.wageSubsidy)}</p>
-        <p>${string.orEmpty(values.operatingName)} meets the eligibility criteria and acknowledges that all the obligations the employer owes to or has with 
+        <p>Is your organization currently receiving funding under a WorkBC Wage Subsidy agreement?  ${strings.orEmpty(values.wageSubsidy)}</p>`
+        if(wageSubsidizedAlready){
+            html = html + `<p>How many employees is WorkBC currently subsidizing? ${strings.orEmpty(values.employeesClaimed)}</p>`
+        }
+
+        html = html + `<p>${string.orEmpty(values.operatingName)} meets the eligibility criteria and acknowledges that all the obligations the employer owes to or has with 
         respect to its other employees under the various listed statutes and all other applicable laws apply equally 
         to an individual employed in a wage subsidy placement:      ${strings.orEmpty(values.eligibility)}</p>
         <p>${string.orEmpty(values.operatingName)} certifies that it is in full compliance with all applicable laws, including the Employment Standards Act, 
@@ -204,6 +209,7 @@ module.exports = {
         const alternativeAddress = values.otherWorkAddress;
         const WorkSafeBCNumber = (values.WSBCCoverage === "yes");
         const employeePositions = (values.numberOfPositions1 > 0);
+        const wageSubsidizedAlready = (values.wageSubsidy === "yes");
         const businessFaxProvided = (typeof(values.businessFax) !== "undefined" && values.businessFax !== null && values.businessFax !== "");
         var html = /*html*/`
         <h2>Wage Subsidy application</h2>
@@ -251,8 +257,12 @@ module.exports = {
         <p>Is there a labour stoppage or labour - management dispute in progress?  ${strings.orEmpty(values.labourDispute)}</p>
         <p>Is there Union concurrence?  ${strings.orEmpty(values.unionConcurrence)}</p>
         <p>Does your organization have 3rd Party liability coverage?  ${strings.orEmpty(values.liabilityCoverage)}</p>
-        <p>Is your organization currently receiving funding under a WorkBC Wage Subsidy agreement?  ${strings.orEmpty(values.wageSubsidy)}</p>
-        <p>${string.orEmpty(values.operatingName)}  meets the eligibility criteria and acknowledges that all the obligations the employer owes to or has with 
+        <p>Is your organization currently receiving funding under a WorkBC Wage Subsidy agreement?  ${strings.orEmpty(values.wageSubsidy)}</p>`
+        if(wageSubsidizedAlready){
+            html = html + `<p>How many employees is WorkBC currently subsidizing? ${strings.orEmpty(values.employeesClaimed)}</p>`
+        }
+
+        html = html + `<p>${string.orEmpty(values.operatingName)}  meets the eligibility criteria and acknowledges that all the obligations the employer owes to or has with 
         respect to its other employees under the various listed statutes and all other applicable laws apply equally 
         to an individual employed in a wage subsidy placement:      ${strings.orEmpty(values.eligibility)}</p>
         <p>${string.orEmpty(values.operatingName)} certifies that it is in full compliance with all applicable laws, including the Employment Standards Act, 
