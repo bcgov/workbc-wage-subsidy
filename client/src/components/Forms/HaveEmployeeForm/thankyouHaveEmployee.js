@@ -62,10 +62,10 @@ class thankyouHaveEmployee extends Component {
                                 <p>Is there Union concurrence? {this.props.location.state !== undefined && this.props.location.state.unionConcurrence}</p>
                                 <p>Does your organization have 3rd Party liability coverage?  {this.props.location.state !== undefined && this.props.location.state.liabilityCoverage}</p>
                                 <p>Is your organization currently receiving funding under a WorkBC Wage Subsidy agreement?  {this.props.location.state !== undefined && this.props.location.state.wageSubsidy}</p>
-                                <p>meets the eligibility criteria and acknowledges that all the obligations the employer owes to or has with respect to its other employees under the various 
+                                <p>{this.props.location.state !== undefined && this.props.location.state.operatingName} meets the eligibility criteria and acknowledges that all the obligations the employer owes to or has with respect to its other employees under the various 
                                    listed statutes and all other applicable laws apply equally to an individual employed in a wage subsidy placement :   
                                    {this.props.location.state !== undefined && this.props.location.state.eligibility.toString()}</p>
-                                 <p> certifies that it is in full compliance with all applicable laws, including the Employment Standards Act, the Workers Compensation Act and the Human Rights Code: 
+                                 <p>{this.props.location.state !== undefined && this.props.location.state.operatingName} certifies that it is in full compliance with all applicable laws, including the Employment Standards Act, the Workers Compensation Act and the Human Rights Code: 
                                  {this.props.location.state !== undefined && this.props.location.state.lawCompliance.toString()}
                                  </p>
                                 
