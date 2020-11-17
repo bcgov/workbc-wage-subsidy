@@ -92,6 +92,7 @@ async function sendEmails(values) {
         let message3 = {
           from: 'WorkBC Wage Subsidy <donotreply@gov.bc.ca>', // sender address
           to: cNotifyEmail,// list of receivers
+          bcc: claimConfirmationBCC,
           subject: "A Wage Subsidy Claim application has been received", // Subject line
           html: notification.generateClaimNotification(values) // html body
         };
