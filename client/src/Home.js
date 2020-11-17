@@ -32,6 +32,13 @@ function Home() {
                     <p><a href="/needEmployee" className="btn btn-lg btn-primary">Start</a><br/></p>
                 </div>
             </div>
+            <div className="row">
+                <div className="col-md-12">
+                    <hr></hr>
+                    <h3>Claim Form</h3>
+                    <p><a href="/claimForm" className="btn btn-lg btn-primary">Start a claim</a><br/></p>
+                </div>
+            </div>
         </div>
     )
 }
