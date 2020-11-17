@@ -247,6 +247,7 @@ class FormStep1 extends Component {
                         {feedBackInvalid(this.props.errors,this.props.touched,"businessNumber")}
                     </div>
                 </div>
+                <p><b>Note:</b> If your workplace address is different from your business address please check the box below to provide it.</p>
                 <div className="form-row">
                     <div className="form-group col-md-12">
                         <label className="col-form-label control-label" htmlFor="businessAddress">Address <span
