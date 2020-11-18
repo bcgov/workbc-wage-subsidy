@@ -438,6 +438,7 @@ cron.schedule('*/2 * * * *', async function() {
     await getClaimNotReporting()
     .then(async cursor => {
         var results = await cursor.toArray()
+        console.log("Claims not saved to reporting")
         console.log(results.length)
         for (const data of results){
           clean(data)
@@ -465,6 +466,7 @@ cron.schedule('*/2 * * * *', async function() {
     await getHaveEmployeeNotReporting()
     .then(async cursor => {
         var results = await cursor.toArray()
+        console.log("Have employee not saved to reporting")
         console.log(results.length)
         for (const data of results){
           clean(data)
@@ -492,6 +494,7 @@ cron.schedule('*/2 * * * *', async function() {
     await getNeedEmployeeNotReporting()
     .then(async cursor => {
         var results = await cursor.toArray()
+        console.log("Need employee not saved to reporting")
         console.log(results.length)
         for (const data of results){
           clean(data)

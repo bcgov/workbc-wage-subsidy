@@ -119,7 +119,7 @@ module.exports = {
         })
         .then(async db => {
         // add our values to db (they are always new)
-            return db.collection("HaveEmployee").find({savedToSP: false})
+            return db.collection("HaveEmployee").find({savedReporting: false})
                 //console.log(err)
                 //console.log(doc)
         }).then(doc =>{
@@ -136,7 +136,7 @@ module.exports = {
         })
         .then(async db => {
         // add our values to db (they are always new)
-            return db.collection("NeedEmployee").find({savedToSP: false})
+            return db.collection("NeedEmployee").find({savedReporting: false})
                 //console.log(err)
                 //console.log(doc)
         }).then(doc =>{
