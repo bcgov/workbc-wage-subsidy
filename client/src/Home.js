@@ -36,7 +36,7 @@ function Home() {
                 <div className="col-md-12">
                     <hr></hr>
                     <h3>Claim Form</h3>
-                    <p><a href="/claimForm" className="btn btn-lg btn-primary">Start a claim</a><br/></p>
+                    <p><a href="/claimForm" className="btn btn-lg btn-primary">Submit a claim</a><br/></p>
                 </div>
             </div>
         </div>
