@@ -265,7 +265,7 @@ async function saveListNeedEmployee(values,ca) {
       var digest = response.d.GetContextWebInformation.FormDigestValue
       return digest
     }).then(async response => {
-      console.log(headers)
+      //console.log(headers)
       headers['X-RequestDigest'] = response
       headers['Content-Type'] = "application/json;odata=verbose"
       var l = listWebURL + `Apps/WageSubsidy/_api/web/lists/getByTitle('Catchment${ca}')/items`
