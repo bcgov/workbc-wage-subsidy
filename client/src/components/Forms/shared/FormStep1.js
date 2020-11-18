@@ -204,13 +204,16 @@ class FormStep1 extends Component {
                         {feedBackInvalid(this.props.errors,this.props.touched,"postalAlt")}
                     </div>
                 </div>
-                <button 
-                    className="btn btn-success d-print-none" 
-                    onClick={this.validateAddress}
-                    disabled={this.props.values.addressAlt.length < 4 || this.props.values.cityAlt.length < 3 || this.props.values.postalAlt.length < 6}
-                >
-                    Validate Address
-                </button>
+                <div className="btn-group">
+                    <button 
+                        className="btn btn-success d-print-none" 
+                        onClick={this.validateAddress}
+                        disabled={this.props.values.addressAlt.length < 4 || this.props.values.cityAlt.length < 3 || this.props.values.postalAlt.length < 6}
+                    >
+                        Validate Address
+                    </button>
+                    <p className="pl-3 pt-3"><span style={{ color: "red" }}>*</span> Validation required to continue.</p>
+                </div>
                 {this.state.addressValidated && <p className="text-success">Address validated as: {this.state.validAddress}</p>}
                 {(!this.state.addressValidated && this.state.validatedClick && this.props.values.otherWorkAddress) && <p className="text-danger">Address could not be validated, please verify your address.</p>}
                 {(this.props.values._ca !== "" && this.props.values.otherWorkAddress) && <p>CA: {this.props.values._ca}</p>}
@@ -348,13 +351,16 @@ class FormStep1 extends Component {
                 </div>
                 {
                 (!this.props.values.otherWorkAddress && (this.props.values.businessProvince === "BC" || this.props.values.businessProvince === "")) &&
-                <button 
-                    className="btn btn-success d-print-none" 
-                    onClick={this.validateAddress}
-                    disabled={this.props.values.businessAddress.length < 4 || this.props.values.businessCity.length < 3 || this.props.values.businessPostal.length < 6 || this.props.values.businessProvince !== "BC" }
-                >
-                    Validate Address
-                </button>
+                <div className="btn-group">
+                    <button 
+                        className="btn btn-success d-print-none" 
+                        onClick={this.validateAddress}
+                        disabled={this.props.values.businessAddress.length < 4 || this.props.values.businessCity.length < 3 || this.props.values.businessPostal.length < 6 || this.props.values.businessProvince !== "BC" }
+                    >
+                        Validate Address
+                    </button>
+                    <p className="pl-3 pt-3"><span style={{ color: "red" }}>*</span> Validation required to continue.</p>
+                </div>
                 }
                 <p className="small text-muted">Please note that the workplace must be located in BC, in order to be eligible.</p>
                 {this.state.addressValidated  && !this.props.values.otherWorkAddress && <p className="text-success">Address validated as: {this.state.validAddress}</p>}
