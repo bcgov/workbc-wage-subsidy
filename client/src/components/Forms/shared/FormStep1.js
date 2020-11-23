@@ -155,6 +155,7 @@ class FormStep1 extends Component {
                         style={{ color: "red" }}>*</span></label>
                         <Field className={`form-control ${feedBackClassName(this.props.errors, this.props.touched, "WSBCNumber")}`} id="WSBCNumber" name="WSBCNumber"/>
                         {feedBackInvalid(this.props.errors,this.props.touched,"WSBCNumber")}
+                        <small className="text-muted" id="WSBCNumber">  Expected format: BCXXXXXXXXX</small>
                     </div>
                 </div>
 
