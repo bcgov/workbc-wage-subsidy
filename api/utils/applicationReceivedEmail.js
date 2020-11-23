@@ -30,6 +30,7 @@ module.exports = {
         const Date5Total = (typeof(values.total5) !== "undefined" && values.total5 !== null && values.total5 !== "" && values.total5 !== 0);
         var html = /*html*/`
         <h2>Wage Subsidy Claim application</h2>
+        <p>CA:  ${strings.orEmpty(values.workbcCentre)}</p>
         <p><b>Period Claim Start (DD/MM/YYYY): </b> ${formatDate(values.periodStart1)}</p>
         <p><b>Period Claim End (DD/MM/YYYY): </b> ${formatDate(values.periodStart2)}</p>
         <p><b>Final Claim: </b>${strings.orEmpty(values.isFinalClaim)}</p>
@@ -102,6 +103,7 @@ module.exports = {
         <h2>Wage Subsidy application</h2>
         <p>Application ID:  ${strings.orEmpty(values._id)}</p>
         <p>Organization Name:  ${strings.orEmpty(values.operatingName)}</p>
+        <p>CA:  ${strings.orEmpty(values._ca)}</p>
         <hr />
         <h5>Business Information</h5>
         <p>CRA Business Number:  ${strings.orEmpty(values.businessNumber)}</p>
@@ -216,6 +218,7 @@ module.exports = {
         <h2>Wage Subsidy application</h2>
         <p>Application ID:  ${strings.orEmpty(values._id)}</p>
         <p>Organization Name:  ${strings.orEmpty(values.operatingName)}</p>
+        <p>CA:  ${strings.orEmpty(values._ca)}</p>
         <hr />
         <h5>Business Information</h5>
         <p>CRA Business Number:  ${strings.orEmpty(values.businessNumber)}</p>
