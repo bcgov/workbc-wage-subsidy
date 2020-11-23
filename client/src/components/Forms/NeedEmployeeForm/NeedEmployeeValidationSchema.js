@@ -26,7 +26,8 @@ export const NeedEmployeeValidationSchema = yup.object().shape({
         .matches(/^[A-Za-z]\d[A-Za-z]\d[A-Za-z]\d$/, "Please enter a valid Postal Code")
         .required("Please enter a valid Postal Code"),
     businessPhone: yup.string()
-        .phone("CA", false, "Please enter a valid number.")
+        .test('Is-valid-phone','Invalid phone',
+        value => (value +"").match(/^\d{3}-\d{3}-\d{4}$/gi))
         .required("Please enter phone."),
     businessFax: yup.string().test('Is-valid-fax', 'Invalid fax',
         value => (value + "").match(/^\d{1}-\d{3}-\d{3}-\d{4}$/gi) || value === undefined,
