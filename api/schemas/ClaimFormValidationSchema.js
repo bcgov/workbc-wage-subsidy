@@ -10,7 +10,8 @@ var ClaimFormValidationSchema = yup.object().shape({
     employerName: yup.string().required("Please enter the employer's business name"),
     employerContact: yup.string().required("Please enter a contact name"),
     employerPhone: yup.string()
-        .phone("CA", false, "Please enter a valid number.")
+        .test('Is-valid-phone','Invalid phone',
+        value => (value +"").match(/^\d{3}-\d{3}-\d{4}$/gi))
         .required("Please enter phone number"),
     employerAddress1: yup.string()
         .max(255, "Address too long, please use address line 2.").required("Please enter an address"),
