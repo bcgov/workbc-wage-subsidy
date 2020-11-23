@@ -87,7 +87,7 @@ var NeedEmployeeValidationSchema = yup.object().shape({
         .when("WSBCCoverage", {
             is: "yes",
             then: yup.string().test('Is valid Number', 'Invalid WSBC number, format should be: BC0001',
-                value => (value + "").match(/^[A-Z]{2}[0-9]{4}$/gi),
+                value => (value + "").match(/^[A-Z]{2}[0-9]{9}$/gi),
             ),
         }),
     addressAlt: yup.string()
