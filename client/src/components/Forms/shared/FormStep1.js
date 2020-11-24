@@ -87,7 +87,7 @@ class FormStep1 extends Component {
                 .then(result => {
                     //console.log(result.features[0].properties.score)
                     //console.log((postal.match(/^[A-Za-z]\d[A-Za-z]\d[A-Za-z]\d$/)).length)
-                    if (result.features[0].properties.score < 95 || (postal.match(/^[A-Za-z]\d[A-Za-z]\d[A-Za-z]\d$/)).length === 0 ){
+                    if (result.features[0].properties.score < 65 || (postal.match(/^[A-Za-z]\d[A-Za-z]\d[A-Za-z]\d$/)).length === 0 ){
                         this.setState({
                             addressValidated: false
                         })
