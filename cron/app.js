@@ -13,13 +13,7 @@ var listADFS = process.env.LISTADFS || process.env.OPENSHIFT_NODEJS_LISTADFS || 
 
 app = express();
 
-var spr = spauth.getAuth(listWebURL, {
-    username: listUser,
-    password: listPass,
-    domain: listDomain,
-    relyingParty: listParty,
-    adfsUrl: listADFS
-})
+var spr;
 
 async function saveListClaim(values,ca) {
   try{
@@ -352,10 +346,16 @@ async function saveListNeedEmployee(values,ca) {
   }
 }
 
-cron.schedule('*/2 * * * *', async function() {
-    console.log('running a task every 2 minutes');
+cron.schedule('*/3 * * * *', async function() {
+    console.log('running a task every 3 minutes');
     //console.log('running a task every 10 seconds');
-
+    spr = spauth.getAuth(listWebURL, {
+      username: listUser,
+      password: listPass,
+      domain: listDomain,
+      relyingParty: listParty,
+      adfsUrl: listADFS
+  })
     
     await getHaveEmployeeNotSP()
     .then(async cursor => {
