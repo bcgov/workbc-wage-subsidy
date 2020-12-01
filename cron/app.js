@@ -520,7 +520,6 @@ cron.schedule('*/2 * * * *', async function() {
               })     
         }
     })
-    process.exit(0)
 });
 
 app.listen(5000);
