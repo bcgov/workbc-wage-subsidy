@@ -148,7 +148,7 @@ module.exports = {
             // add our values to db (they are always new)
             db.collection("Claim").insertOne({
                 applicationID    : strings.orEmpty(values._id),
-                ca               : strings.orEmpty(values.workbcCentre), 
+                ca               : strings.orEmpty(values.workbcCentre.substring(0,2)), 
                 savedToSP        : savedToSP,
                 savedReporting   : false,  // default to false for now
                 periodStart1     : strings.orEmpty(values.periodStart1),

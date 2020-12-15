@@ -272,7 +272,7 @@ class ClaimForm extends Component {
                                 // this.props.history.push('/thankyouClaimForm', values);
                             }}
                         >
-                            {({ values, errors, touched, setFieldValue, isSubmitting, isValid, submitCount }) => (
+                            {({ values, errors, touched, setFieldValue, isSubmitting, isValid, submitCount, handleBlur, handleChange }) => (
                                 <Form>
                                     <div className="form-group">
                                         <h2 id="forms">Wage Subsidy Claim Form</h2>
@@ -511,7 +511,13 @@ class ClaimForm extends Component {
                                                 <option value="00">Please select</option>
                                                 {
                                                     pins.features.map((item, index) =>
-                                                        <option value={item.properties.catchmentId} key={index}>{item.properties.name}</option>
+                                                        
+                                                        <option 
+                                                            value={`${item.properties.catchmentId}-${index}`}
+                                                            key={index}
+                                                        >
+                                                            {item.properties.name}
+                                                        </option>
                                                     )
                                                 }
                                             </Field>

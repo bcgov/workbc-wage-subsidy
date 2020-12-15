@@ -64,11 +64,11 @@ async function sendEmails(values) {
           cEmail = claimConfirmationEmail
         }
         if (claimNotifyEmail === ""){
-          cNotifyEmail = caEmails[Number(values.workbcCentre)]
+          cNotifyEmail = caEmails[Number(values.workbcCentre.substring(0,2))]
         } else {
           cNotifyEmail = claimNotifyEmail
         }
-        console.log(values.workbcCentre)
+        console.log(values.workbcCentre.substring(0,2))
         console.log(cNotifyEmail)
         // send mail with defined transport object
         /*
@@ -157,7 +157,7 @@ async function saveList(values, email) {
       //console.log(headers)
       headers['X-RequestDigest'] = response
       headers['Content-Type'] = "application/json;odata=verbose"
-      var l = listWebURL + `Apps/WageSubsidy/_api/web/lists/getByTitle('Catchment${values.workbcCentre}')/items`
+      var l = listWebURL + `Apps/WageSubsidy/_api/web/lists/getByTitle('Catchment${values.workbcCentre.substring(0,2)}')/items`
       console.log(l)
       return request.post({
         url: l,
@@ -165,10 +165,10 @@ async function saveList(values, email) {
         json: true,
         body: {
           "__metadata": {
-            "type": `SP.Data.Catchment${values.workbcCentre}ListItem`
+            "type": `SP.Data.Catchment${values.workbcCentre.substring(0,2)}ListItem`
           },
           "Title": `Claim - ${values.employerName} - ${values._id}`,
-          "CatchmentNo": values.workbcCentre,
+          "CatchmentNo": values.workbcCentre.substring(0,2),
           "FormType": "claim",
           "ApplicationID" : values._id,
           "PeriodStart1" : values.periodStart1,
@@ -257,6 +257,7 @@ router.post('/', csrfProtection, async (req, res) => {
   //clean the body
   clean(req.body);
   console.log(req.body)
+  console.log(req.body.workbcCentre.substring(0,2))
   ClaimFormValidationSchema.validate(req.body, { abortEarly: false })
     .then(async function (value) {
       try {
