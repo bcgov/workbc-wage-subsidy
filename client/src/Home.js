@@ -19,6 +19,11 @@ function Home() {
                             <li>Better connect job seekers and employers to meet hiring needs</li>
                         </ul>
                     </ul>
+                    <p>In order to submit your application for Wage Subsidy, you will need the following information:</p>
+                    <ul>
+                        <li>Your CRA Business Number</li>
+                        <li>Your employee’s e-mail address (if you have an employee)</li>
+                    </ul>
                     <p>Employers who need an employee can either:</p>
                 </div>
             </div>
