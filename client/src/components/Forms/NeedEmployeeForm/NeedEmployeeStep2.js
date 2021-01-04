@@ -140,7 +140,7 @@ class NeedEmployeeStep2 extends Component {
                                         <Field 
                                         as="textarea"
                                         rows="4"
-                                        maxLength="700"
+                                        maxLength="500"
                                         className={`duties form-control ${feedBackClassName(this.props.errors, this.props.touched, duties)}`}
                                         id={duties} 
                                         name={duties} 
@@ -156,7 +156,7 @@ class NeedEmployeeStep2 extends Component {
                                         <Field 
                                         as="textarea"
                                         rows="4"
-                                        maxLength="700"
+                                        maxLength="500"
                                         className={`skills form-control ${feedBackClassName(this.props.errors, this.props.touched, skills)}`}
                                         id={skills} 
                                         name={skills} 
@@ -172,7 +172,7 @@ class NeedEmployeeStep2 extends Component {
                                         <Field 
                                         as="textarea"
                                         rows="4"
-                                        maxLength="700"
+                                        maxLength="500"
                                         className={`workExperience form-control ${feedBackClassName(this.props.errors, this.props.touched, workExperience)}`}
                                         id={workExperience} 
                                         name={workExperience} 
