@@ -137,6 +137,7 @@ class NeedEmployeeStep2 extends Component {
                                     <div className="form-group col-md-12">
                                         <label className="col-form-label control-label" htmlFor={duties}>Description of duties:<span
                                                 style={{ color: "red" }}>*</span></label>
+                                        <small className="text-muted" id="duties"> 500 characters max.</small>
                                         <Field 
                                         as="textarea"
                                         rows="4"
@@ -153,6 +154,7 @@ class NeedEmployeeStep2 extends Component {
                                     <div className="form-group col-md-12">
                                         <label className="col-form-label control-label" htmlFor={skills}>Skills and experience normally required for this position:<span
                                                 style={{ color: "red" }}>*</span></label>
+                                        <small className="text-muted" id="skills"> 500 characters max.</small>
                                         <Field 
                                         as="textarea"
                                         rows="4"
@@ -169,6 +171,7 @@ class NeedEmployeeStep2 extends Component {
                                     <div className="form-group col-md-12">
                                         <label className="col-form-label control-label" htmlFor={workExperience}>What work experience, training, supervision, etc., will the employee receive during the Wage Subsidy Placement?<span
                                                 style={{ color: "red" }}>*</span></label>
+                                        <small className="text-muted" id="workExperience"> 500 characters max.</small>
                                         <Field 
                                         as="textarea"
                                         rows="4"
