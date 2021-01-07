@@ -190,6 +190,8 @@ module.exports = {
                 hoursWorkedTotal1: strings.orEmpty(values.hoursWorkedTotal1),
                 hourlyWageTotal1 : strings.orEmpty(values.hourlyWageTotal1),
                 totalTotal1      : strings.orEmpty(values.totalTotal1),
+                totalMERCs       : strings.orEmpty(values.totalMERCs),
+                clientIssues1    : strings.orEmpty(values.clientIssues1)
             });
         });
     },
