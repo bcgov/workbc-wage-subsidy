@@ -116,6 +116,8 @@ class HaveEmployeeForm extends Component {
                                     _id: this.state._id,
                                     _ca: "",
                                     //step 1
+                                    workingWithWorkBCCentre: "",
+                                    workbcCentre: "",
                                     operatingName:"",
                                     businessNumber:"",
                                     businessAddress:"",
