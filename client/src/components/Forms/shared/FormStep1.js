@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import {Field} from 'formik'
 import { feedBackClassName, feedBackInvalid } from '../shared/ValidationMessages'
 import {getCatchment} from '../shared/AddressToCatchment'
+import { pins } from '../../../constants/pins'
 
 class FormStep1 extends Component {
 
@@ -102,6 +103,9 @@ class FormStep1 extends Component {
                         addressValidated: true,
                         validAddress: result.features[0].properties.fullAddress
                     })
+                    if (this.props.values.workingWithWorkBCCentre === "yes"){
+                        this.props.setFieldValue("_ca",this.props.values.workbcCentre)
+                    }
                     this.props.setFieldValue("_ca",ca)
                     return
                 })
@@ -209,7 +213,7 @@ class FormStep1 extends Component {
                     <button 
                         className="btn btn-success d-print-none" 
                         onClick={this.validateAddress}
-                        disabled={this.props.values.addressAlt.length < 4 || this.props.values.cityAlt.length < 3 || this.props.values.postalAlt.length < 6}
+                        disabled={this.props.values.addressAlt.length < 4 || this.props.values.cityAlt.length < 3 || this.props.values.postalAlt.length < 6 || this.props.values.workingWithWorkBCCentre === "" || ( this.props.values.workingWithWorkBCCentre === "yes" && (this.props.values.workbcCentre === "00" || this.props.values.workbcCentre === ""))}
                     >
                         Validate Address
                     </button>
@@ -221,6 +225,51 @@ class FormStep1 extends Component {
             </div>)
         }
         return null;
+    }
+    get handleWorkingWithCentre(){
+        if (this.props.values.workingWithWorkBCCentre === "yes"){
+            return (
+                <div className="form-group">
+                    <label className="col-form-label control-label" htmlFor="workbcCentre">Please select the WorkBC Centre you are working with: <span
+                        style={{ color: "red" }}>*</span></label>
+                    <Field
+                        as="select"
+                        className={`form-control ${feedBackClassName(this.props.errors, this.props.touched, "workbcCentre")}`}
+                        id="workbcCentre"
+                        name="workbcCentre"
+                        onChange={e => {
+                            this.props.handleChange(e)
+                            this.props.setFieldValue("_ca","")
+                            if (this.state.addressValidated){
+                                this.setState({
+                                    addressValidated: false
+                                })
+                            }
+                        }}
+                    >
+                        <option value="00">Please select</option>
+                        {
+                            pins.features.map((item, index) =>
+                                
+                                <option 
+                                    value={`${item.properties.catchmentId}-${index}`}
+                                    key={index}
+                                >
+                                    {item.properties.name}
+                                </option>
+                            )
+                        }
+                    </Field>
+                    {feedBackInvalid(this.props.errors, this.props.touched, "workbcCentre")}
+                </div>
+            )            
+        } else if (this.props.values.workingWithWorkBCCentre === "no") {
+            return (
+                <p>You will be matched to the closest WorkBC Centre to the workplace address.</p>
+            )
+        } else {
+            return null;
+        }
     }
     render() {
         if (this.props.currentStep !== 1) {
@@ -237,6 +286,30 @@ class FormStep1 extends Component {
                 <div className="form-group">
                     <h2 id="forms">Business Information</h2>
                 </div>
+                <div className="form-group">
+                    <label className="col-form-label control-label" htmlFor="workingWithWorkBCCentre">Are you currently working with a WorkBC Centre? <span
+                        style={{ color: "red" }}>*</span> </label>
+                    <div className="form-check">
+                        <Field
+                            className={`form-check-input ${feedBackClassName(this.props.errors, this.props.touched, "workingWithWorkBCCentre")}`}
+                            type="radio"
+                            name="workingWithWorkBCCentre"
+                            value="yes"
+                        />
+                        <label className="form-check-label" htmlFor="workingWithWorkBCCentre">Yes</label>
+                    </div>
+                    <div className="form-check">
+                        <Field
+                            className={`form-check-input ${feedBackClassName(this.props.errors, this.props.touched, "workingWithWorkBCCentre")}`}
+                            type="radio"
+                            name="workingWithWorkBCCentre"
+                            value="no"
+                        />
+                        <label className="form-check-label" htmlFor="workingWithWorkBCCentre">No</label>
+                        {feedBackInvalid(this.props.errors,this.props.touched,"workingWithWorkBCCentre")}
+                    </div>
+                </div>
+                {this.handleWorkingWithCentre}
                 <div className="form-row">
                     <div className="form-group col-md-8">
                         <label className="col-form-label control-label" htmlFor="operatingName">Organization Name <span
@@ -356,7 +429,7 @@ class FormStep1 extends Component {
                     <button 
                         className="btn btn-success d-print-none" 
                         onClick={this.validateAddress}
-                        disabled={this.props.values.businessAddress.length < 4 || this.props.values.businessCity.length < 3 || this.props.values.businessPostal.length < 6 || this.props.values.businessProvince !== "BC" }
+                        disabled={this.props.values.businessAddress.length < 4 || this.props.values.businessCity.length < 3 || this.props.values.businessPostal.length < 6 || this.props.values.businessProvince !== "BC" || this.props.values.workingWithWorkBCCentre === "" || ( this.props.values.workingWithWorkBCCentre === "yes" && (this.props.values.workbcCentre === "00" || this.props.values.workbcCentre === ""))}
                     >
                         Validate Address
                     </button>
@@ -367,7 +440,7 @@ class FormStep1 extends Component {
                 {this.state.addressValidated  && !this.props.values.otherWorkAddress && <p className="text-success">Address validated as: {this.state.validAddress}</p>}
                 {(!this.state.addressValidated && this.state.validatedClick  && !this.props.values.otherWorkAddress) && <p className="text-danger">Address could not be validated, please verify your address.</p>}
                 {(this.props.values.businessProvince !== "BC" && this.props.values.businessProvince !== ""  && !this.props.values.otherWorkAddress) && <p className="text-danger">Please check the box below to provide the workplace address located in BC.</p>}
-                {(this.props.values._ca !== "" && !this.props.values.otherWorkAddress) && <p>CA: {this.props.values._ca}</p>}
+                {/*(this.props.values._ca !== "" && !this.props.values.otherWorkAddress) && <p>CA: {this.props.values._ca}</p>*/}
                 <div className="form-row">
                     <div className="form-group col-md-4">
                             <label className="col-form-label control-label" htmlFor="businessPhone">Phone Number <span
