@@ -94,7 +94,7 @@ async function saveListClaim(values,ca) {
           "FinalWage":Number(values.hourlyWageTotal1),
           "FinalTotal":Number(values.totalTotal1),
           "TotalMERCs":Number(values.totalMERCs),
-          "clientIssues":values.clientIssues1,
+          "ClientIssues":values.clientIssues1,
           //"OrganizationConsent":values.organizationConsent
           //"": values.,
         }
