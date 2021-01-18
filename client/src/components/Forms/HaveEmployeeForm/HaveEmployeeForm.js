@@ -105,6 +105,7 @@ class HaveEmployeeForm extends Component {
         return (
             <div className="container">
                 <div className="row">
+                    <h2>Identified Employee Form</h2>
                     <div className="col-md-12">
                         <ProgressTracker currentStep={this.state.currentStep}/>
                         {this.state.hasError && (
@@ -246,7 +247,7 @@ class HaveEmployeeForm extends Component {
                             }}
                         
                         >
-                            { props => (
+                            { props => ( 
                                 <Form>
                                     <FormStep1 
                                         currentStep={this.state.currentStep}

@@ -104,9 +104,10 @@ class FormStep1 extends Component {
                         validAddress: result.features[0].properties.fullAddress
                     })
                     if (this.props.values.workingWithWorkBCCentre === "yes"){
-                        this.props.setFieldValue("_ca",this.props.values.workbcCentre)
+                        this.props.setFieldValue("_ca",this.props.values.workbcCentre.substring(0,2))
+                    } else {
+                        this.props.setFieldValue("_ca",ca)
                     }
-                    this.props.setFieldValue("_ca",ca)
                     return
                 })
                 return
@@ -279,6 +280,7 @@ class FormStep1 extends Component {
         return (
 
             <div>
+                {console.log(this.props)}
                 <p>
                     If you are having difficulty completing the application for Wage Subsidy, please contact your local <a href="https://www.workbc.ca/Employment-Services/WorkBC-Centres/Find-Your-WorkBC-Centre.aspx" target="_blank" rel="noopener noreferrer">WorkBC office</a>, 
                     an application guide is also available <a href="https://workbc.ca/getmedia/2e608021-09f1-4429-885c-155e6e4bd771/WS-Guide-Nov12.pdf.aspx" target="_blank" rel="noopener noreferrer">here</a>.
