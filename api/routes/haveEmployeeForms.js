@@ -347,7 +347,10 @@ router.post('/', csrfProtection, async (req, res) => {
                   console.log(saved)
                   // save values to mongo db
                   try {
-                    saveHaveEmployeeValues(value, email, saved);
+                    await saveHaveEmployeeValues(value, email, saved)
+                    .then(async r => {
+                      console.log(r)
+                    })
                   }
                   catch (error) {
                     console.log(error);
@@ -358,7 +361,10 @@ router.post('/', csrfProtection, async (req, res) => {
                   console.log(e)
                   //save failed one
                   try {
-                    saveHaveEmployeeValues(value, email, false);
+                    await saveHaveEmployeeValues(value, email, false)
+                    .then(async r => {
+                      console.log(r)
+                    })
                   }
                   catch (error) {
                     console.log(error);
