@@ -349,7 +349,7 @@ router.post('/', csrfProtection, async (req, res) => {
                   try {
                     await saveHaveEmployeeValues(value, email, saved)
                     .then(async r => {
-                      console.log(r)
+                      console.log(r.result)
                     })
                   }
                   catch (error) {
@@ -363,7 +363,7 @@ router.post('/', csrfProtection, async (req, res) => {
                   try {
                     await saveHaveEmployeeValues(value, email, false)
                     .then(async r => {
-                      console.log(r)
+                      console.log(r.result)
                     })
                   }
                   catch (error) {

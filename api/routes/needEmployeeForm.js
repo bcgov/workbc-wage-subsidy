@@ -274,7 +274,7 @@ router.post('/', csrfProtection, async (req, res) => {
                   try {
                     await saveNeedEmployeeValues(value, saved)
                     .then(async r => {
-                      console.log(r)
+                      console.log(r.result)
                     })
                   }
                   catch (error) {
@@ -287,7 +287,7 @@ router.post('/', csrfProtection, async (req, res) => {
                   try {
                     await saveNeedEmployeeValues(value, false)
                     .then(async r => {
-                      console.log(r)
+                      console.log(r.result)
                     })
                   }
                   catch (error) {
