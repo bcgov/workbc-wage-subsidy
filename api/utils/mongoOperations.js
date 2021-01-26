@@ -146,7 +146,7 @@ module.exports = {
             });
         });
     },
-    saveClaimValues: function(values, savedToSP) {
+    saveClaimValues: async function(values, savedToSP) {
         return await connection
         .then(mClient => {
             // get a handle on the db

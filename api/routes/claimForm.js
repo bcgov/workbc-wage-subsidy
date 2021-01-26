@@ -265,22 +265,29 @@ router.post('/', csrfProtection, async (req, res) => {
           .then(async function (sent) {
             if (sent){
               await saveList(value)
-              .then(function(saved){
+              .then(async function(saved){
                 console.log("saved")
                 console.log(saved)
                 // save values to mongo db
                 try {
-                  saveClaimValues(value, saved);
+                  await saveClaimValues(value, saved)
+                  .then(async r => {
+                    console.log(r)
+                  })
                 }
                 catch (error) {
-                  console.log(error);
+                  console.log(error)
+                  
                 }
               })
-              .catch(function(e){
+              .catch(async function(e){
                 console.log("error")
                 console.log(e)
                 try {
-                  saveClaimValues(value, false);
+                  await saveClaimValues(value, false)
+                  .then(async r => {
+                    console.log(r)
+                  })
                 }
                 catch (error) {
                   console.log(error);
