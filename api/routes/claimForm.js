@@ -272,7 +272,7 @@ router.post('/', csrfProtection, async (req, res) => {
                 try {
                   await saveClaimValues(value, saved)
                   .then(async r => {
-                    console.log(r)
+                    console.log(r.result)
                   })
                 }
                 catch (error) {
@@ -286,7 +286,7 @@ router.post('/', csrfProtection, async (req, res) => {
                 try {
                   await saveClaimValues(value, false)
                   .then(async r => {
-                    console.log(r)
+                    console.log(r.result)
                   })
                 }
                 catch (error) {
