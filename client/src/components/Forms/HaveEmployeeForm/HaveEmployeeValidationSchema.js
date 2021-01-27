@@ -216,14 +216,48 @@ export const HaveEmployeeValidationSchema = yup.object().shape({
             is: (numberOfPositions0) =>{
                 return (numberOfPositions0 > 0);
             },
-            then: yup.string().email("Invalid Email").required("An employee email is required")
+            then: yup.string()
+                .email("Invalid Email")
+                .test('match','Each identified employee email must be unique.',function(position0Email0){
+                    return (
+                        position0Email0 !== this.options.parent.position0Email1 && 
+                        position0Email0 !== this.options.parent.position0Email2 && 
+                        position0Email0 !== this.options.parent.position0Email3 && 
+                        position0Email0 !== this.options.parent.position0Email4 &&
+                        position0Email0 !== this.options.parent.position1Email0 && 
+                        position0Email0 !== this.options.parent.position1Email1 && 
+                        position0Email0 !== this.options.parent.position1Email2 && 
+                        position0Email0 !== this.options.parent.position1Email3 
+                        )
+                })
+                .test('match','Employee email address cannot be the same as business email address',function(position0Email0){
+                    return (position0Email0 !== this.options.parent.businessEmail)
+                })
+                .required("An employee email is required")
         }),
     position0Email1:yup.string().email("Invalid email")
         .when("numberOfPositions0", {
             is: (numberOfPositions0) =>{
                 return (numberOfPositions0 > 1);
             },
-            then: yup.string().email("Invalid Email").required("An employee email is required")
+            then: yup.string()
+                .email("Invalid Email")
+                .test('match','Each identified employee email must be unique.',function(position0Email1){
+                    return (
+                        position0Email1 !== this.options.parent.position0Email0 && 
+                        position0Email1 !== this.options.parent.position0Email2 && 
+                        position0Email1 !== this.options.parent.position0Email3 && 
+                        position0Email1 !== this.options.parent.position0Email4 &&
+                        position0Email1 !== this.options.parent.position1Email0 && 
+                        position0Email1 !== this.options.parent.position1Email1 && 
+                        position0Email1 !== this.options.parent.position1Email2 && 
+                        position0Email1 !== this.options.parent.position1Email3 
+                        )
+                })
+                .test('match','Employee email address cannot be the same as business email address',function(position0Email1){
+                    return (position0Email1 !== this.options.parent.businessEmail)
+                })
+                .required("An employee email is required")
         }),
 
     position0Email2:yup.string().email()
@@ -231,49 +265,168 @@ export const HaveEmployeeValidationSchema = yup.object().shape({
             is: (numberOfPositions0) =>{
                 return (numberOfPositions0 > 2);
             },
-            then: yup.string().email("Invalid Email").required("An employee email is required")
+            then: yup.string()
+                .email("Invalid Email")
+                .test('match','Each identified employee email must be unique.',function(position0Email2){
+                    return (
+                        position0Email2 !== this.options.parent.position0Email0 && 
+                        position0Email2 !== this.options.parent.position0Email1 && 
+                        position0Email2 !== this.options.parent.position0Email3 && 
+                        position0Email2 !== this.options.parent.position0Email4 &&
+                        position0Email2 !== this.options.parent.position1Email0 && 
+                        position0Email2 !== this.options.parent.position1Email1 && 
+                        position0Email2 !== this.options.parent.position1Email2 && 
+                        position0Email2 !== this.options.parent.position1Email3 
+                        )
+                })
+                .test('match','Employee email address cannot be the same as business email address',function(position0Email2){
+                    return (position0Email2 !== this.options.parent.businessEmail)
+                })
+                .required("An employee email is required")
         }),
     position0Email3:yup.string().email()
         .when("numberOfPositions0", {
             is: (numberOfPositions0) =>{
                 return (numberOfPositions0 > 3);
             },
-            then: yup.string().email("Invalid Email").required("An employee email is required")
+            then: yup.string()
+                .email("Invalid Email")
+                .test('match','Each identified employee email must be unique.',function(position0Email3){
+                    return (
+                        position0Email3 !== this.options.parent.position0Email0 && 
+                        position0Email3 !== this.options.parent.position0Email1 && 
+                        position0Email3 !== this.options.parent.position0Email2 && 
+                        position0Email3 !== this.options.parent.position0Email4 &&
+                        position0Email3 !== this.options.parent.position1Email0 && 
+                        position0Email3 !== this.options.parent.position1Email1 && 
+                        position0Email3 !== this.options.parent.position1Email2 && 
+                        position0Email3 !== this.options.parent.position1Email3 
+                        )
+                })
+                .test('match','Employee email address cannot be the same as business email address',function(position0Email3){
+                    return (position0Email3 !== this.options.parent.businessEmail)
+                })
+                .required("An employee email is required")
         }),
     position0Email4:yup.string().email()
         .when("numberOfPositions0", {
             is: (numberOfPositions0) =>{
                 return (numberOfPositions0 > 4);
             },
-            then: yup.string().email("Invalid Email").required("An employee email is required")
+            then: yup.string()
+                .email("Invalid Email")
+                .test('match','Each identified employee email must be unique.',function(position0Email4){
+                    return (
+                        position0Email4 !== this.options.parent.position0Email0 && 
+                        position0Email4 !== this.options.parent.position0Email1 && 
+                        position0Email4 !== this.options.parent.position0Email2 && 
+                        position0Email4 !== this.options.parent.position0Email3 &&
+                        position0Email4 !== this.options.parent.position1Email0 && 
+                        position0Email4 !== this.options.parent.position1Email1 && 
+                        position0Email4 !== this.options.parent.position1Email2 && 
+                        position0Email4 !== this.options.parent.position1Email3 
+                        )
+                })
+                .test('match','Employee email address cannot be the same as business email address',function(position0Email4){
+                    return (position0Email4 !== this.options.parent.businessEmail)
+                })
+                .required("An employee email is required")
         }),
     position1Email0:yup.string().email()
         .when("numberOfPositions1", {
             is: (numberOfPositions1) =>{
                 return (numberOfPositions1 > 0);
             },
-            then: yup.string().email("Invalid Email").required("An employee email is required")
+            then: yup.string()
+                .email("Invalid Email")
+                .test('match','Each identified employee email must be unique.',function(position1Email0){
+                    return (
+                        position1Email0 !== this.options.parent.position0Email0 && 
+                        position1Email0 !== this.options.parent.position0Email1 && 
+                        position1Email0 !== this.options.parent.position0Email2 && 
+                        position1Email0 !== this.options.parent.position0Email3 &&
+                        position1Email0 !== this.options.parent.position0Email4 &&
+                        position1Email0 !== this.options.parent.position1Email1 && 
+                        position1Email0 !== this.options.parent.position1Email2 && 
+                        position1Email0 !== this.options.parent.position1Email3
+                        )
+                })
+                .test('match','Employee email address cannot be the same as business email address',function(position1Email0){
+                    return (position1Email0 !== this.options.parent.businessEmail)
+                })
+                .required("An employee email is required")
         }),
     position1Email1:yup.string().email()
         .when("numberOfPositions1", {
             is: (numberOfPositions1) =>{
                 return (numberOfPositions1 > 1);
             },
-            then: yup.string().email("Invalid Email").required("An employee email is required")
+            then: yup.string()
+                .email("Invalid Email")
+                .test('match','Each identified employee email must be unique.',function(position1Email1){
+                    return (
+                        position1Email1 !== this.options.parent.position0Email0 && 
+                        position1Email1 !== this.options.parent.position0Email1 && 
+                        position1Email1 !== this.options.parent.position0Email2 && 
+                        position1Email1 !== this.options.parent.position0Email3 &&
+                        position1Email1 !== this.options.parent.position0Email4 &&
+                        position1Email1 !== this.options.parent.position1Email0 && 
+                        position1Email1 !== this.options.parent.position1Email2 && 
+                        position1Email1 !== this.options.parent.position1Email3
+                        )
+                })
+                .test('match','Employee email address cannot be the same as business email address',function(position1Email1){
+                    return (position1Email1 !== this.options.parent.businessEmail)
+                })
+                .required("An employee email is required")
         }),
     position1Email2:yup.string().email()
         .when("numberOfPositions1", {
             is: (numberOfPositions1) =>{
                 return (numberOfPositions1 > 2);
             },
-            then: yup.string().email("Invalid Email").required("An employee email is required")
+            then: yup.string()
+                .email("Invalid Email")
+                .test('match','Each identified employee email must be unique.',function(position1Email2){
+                    return (
+                        position1Email2 !== this.options.parent.position0Email0 && 
+                        position1Email2 !== this.options.parent.position0Email1 && 
+                        position1Email2 !== this.options.parent.position0Email2 && 
+                        position1Email2 !== this.options.parent.position0Email3 &&
+                        position1Email2 !== this.options.parent.position0Email4 &&
+                        position1Email2 !== this.options.parent.position1Email0 && 
+                        position1Email2 !== this.options.parent.position1Email1 && 
+                        position1Email2 !== this.options.parent.position1Email3
+                        )
+                })
+                .test('match','Employee email address cannot be the same as business email address',function(position1Email2){
+                    return (position1Email2 !== this.options.parent.businessEmail)
+                })
+                .required("An employee email is required")
         }),
     position1Email3:yup.string().email()
         .when("numberOfPositions1", {
             is: (numberOfPositions1) =>{
                 return (numberOfPositions1 > 3);
             },
-            then: yup.string().email("Invalid Email").required("An employee email is required")
+            then: yup.string()
+                .email("Invalid Email")
+                .test('match','Each identified employee email must be unique.',function(position1Email3){
+                    return (
+                        position1Email3 !== this.options.parent.position0Email0 && 
+                        position1Email3 !== this.options.parent.position0Email1 && 
+                        position1Email3 !== this.options.parent.position0Email2 && 
+                        position1Email3 !== this.options.parent.position0Email3 &&
+                        position1Email3 !== this.options.parent.position0Email4 &&
+                        position1Email3 !== this.options.parent.position1Email0 && 
+                        position1Email3 !== this.options.parent.position1Email1 && 
+                        position1Email3 !== this.options.parent.position1Email2
+                        )
+                })
+                .test('match','Employee email address cannot be the same as business email address',function(position1Email3){
+                    return (position1Email3 !== this.options.parent.businessEmail)
+                })
+                .required("An employee email is required")
         }),
     position2Email0:yup.string().email()
         .when("numberOfPositions2", {
