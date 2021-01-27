@@ -460,7 +460,17 @@ class FormStep1 extends Component {
                         <label className="col-form-label control-label" htmlFor="businessEmail">Employer E-mail Address <span
                                 style={{ color: "red" }}>*</span></label>
                         <small className="text-muted" id="businessEmail">  someone@example.com</small>
-                        <Field className={`form-control ${feedBackClassName(this.props.errors, this.props.touched, "businessEmail")}`} id="businessEmail" name="businessEmail" />
+                        <Field 
+                            className={`form-control ${feedBackClassName(this.props.errors, this.props.touched, "businessEmail")}`} 
+                            id="businessEmail" 
+                            name="businessEmail" 
+                            onBlur={e => {
+                                this.props.handleBlur(e)
+                                if(!this.props.errors.businessEmail) {
+                                    this.props.setFieldValue("_bEmailDomain", this.props.values.businessEmail.substring(this.props.values.businessEmail.lastIndexOf("@") + 1))
+                                }
+                            }}
+                        />
                         {feedBackInvalid(this.props.errors,this.props.touched,"businessEmail")}
                     </div>
                 </div>

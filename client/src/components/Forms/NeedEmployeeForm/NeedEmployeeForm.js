@@ -115,6 +115,7 @@ class NeedEmployeeForm extends Component {
                             initialValues= {{
                                             _csrf: this.state._csrf,
                                             _id: this.state._id,
+                                            _bEmailDomain: "",
                                             _ca: "",
                                             //step 1
                                             workingWithWorkBCCentre: "",

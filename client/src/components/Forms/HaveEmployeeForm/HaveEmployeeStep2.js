@@ -84,6 +84,32 @@ class HaveEmployeeStep2 extends Component {
         }
         return returnValue;
     }
+
+    get showWarningDomain(){
+        //.substring(this.props.values.businessEmail.lastIndexOf("@") + 1
+        if (this.props.values._bEmailDomain === ""){
+            return null
+        }
+        else if (
+                this.props.values.position0Email0.substring(this.props.values.position0Email0.lastIndexOf("@") + 1) === this.props.values._bEmailDomain ||
+                this.props.values.position0Email1.substring(this.props.values.position0Email1.lastIndexOf("@") + 1) === this.props.values._bEmailDomain ||
+                this.props.values.position0Email2.substring(this.props.values.position0Email2.lastIndexOf("@") + 1) === this.props.values._bEmailDomain ||
+                this.props.values.position0Email3.substring(this.props.values.position0Email3.lastIndexOf("@") + 1) === this.props.values._bEmailDomain ||
+                this.props.values.position0Email4.substring(this.props.values.position0Email4.lastIndexOf("@") + 1) === this.props.values._bEmailDomain ||
+                this.props.values.position1Email0.substring(this.props.values.position1Email0.lastIndexOf("@") + 1) === this.props.values._bEmailDomain ||
+                this.props.values.position1Email1.substring(this.props.values.position1Email1.lastIndexOf("@") + 1) === this.props.values._bEmailDomain ||
+                this.props.values.position1Email2.substring(this.props.values.position1Email2.lastIndexOf("@") + 1) === this.props.values._bEmailDomain ||
+                this.props.values.position1Email3.substring(this.props.values.position1Email3.lastIndexOf("@") + 1) === this.props.values._bEmailDomain
+            ){
+            return (
+                <div class="alert alert-warning" role="alert">
+                    You are entering an employee email address with the same domain as your business email address. If you don't have identified employees please <a href="/needEmployee" class="alert-link">apply to be matched to a WorkBC client</a>.
+                </div>
+            )
+        }
+        return null
+    }
+    
     handleSubmit = (e) => { e.preventDefault() }
 
     render() {
@@ -141,6 +167,7 @@ class HaveEmployeeStep2 extends Component {
                                     </div>
                                 </div>
                                 <div className="form-row">
+                                    {this.showWarningDomain}
                                     {this.employeeEmails(Entry)}
                                 </div>
                                 <div className="form-row">
