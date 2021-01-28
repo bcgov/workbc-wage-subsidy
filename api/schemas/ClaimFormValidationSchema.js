@@ -197,7 +197,10 @@ var ClaimFormValidationSchema = yup.object().shape({
             "45-100",
             "15-1",
         ], "Please select your WorkBC Centre.")
-        .required("Please select your WorkBC Centre.")
+        .required("Please select your WorkBC Centre."),
+    signatory1: yup.string()
+        .max(100, "Please shorten the signatory name.")
+        .required("Please certify information is true and correct.")
 });
 
 module.exports = ClaimFormValidationSchema;
