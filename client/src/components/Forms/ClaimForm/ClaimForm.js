@@ -222,6 +222,7 @@ class ClaimForm extends Component {
                                 hourlyWageTotal1: 0,
                                 totalTotal1: '',
                                 workbcCentre: '',
+                                signatory1: '',
                             }}
                             enableReinitialize={true}
                             validationSchema={ClaimFormValidationSchema}
@@ -524,6 +525,11 @@ class ClaimForm extends Component {
                                             {feedBackInvalid(errors, touched, "workbcCentre")}
                                         </div>
                                         <hr></hr>
+                                        <div className="form-inline">
+                                                
+                                        <p className="control-label">I <Field className={`form-control ${feedBackClassName(errors, touched, "signatory1")}`} id="signatory1" name="signatory1" placeholder="Full Name" /> certify that the information is true and correct to the best of my knowledge and claimed in accordance with the Wage Subsidy Work Experience Agreement.<span style={{ color: "red" }}>*</span></p>
+                                            {feedBackInvalid(errors, touched, "signatory1")}
+                                        </div>
                                         <div className="form-group">
                                             {this.showErrors(errors,submitCount)}
                                         </div>
