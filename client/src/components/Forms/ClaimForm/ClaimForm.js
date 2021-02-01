@@ -487,7 +487,7 @@ class ClaimForm extends Component {
                                             </tbody>
                                         </table>
                                         <div className="form-group">
-                                            <label className="col-form-label control-label" htmlFor="clientIssues1">Note any client issues, if applicable
+                                            <label className="col-form-label control-label" htmlFor="clientIssues1">Provide a summary of the job activities that have taken place since last claim form; include employee’s progress and any issues if applicable.
                                              </label>
                                             <small className="text-muted" id="clientIssues1"> 700 characters max.</small>
                                             <Field
