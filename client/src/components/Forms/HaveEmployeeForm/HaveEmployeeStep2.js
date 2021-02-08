@@ -168,6 +168,9 @@ class HaveEmployeeStep2 extends Component {
                                 </div>
                                 <div className="form-row">
                                     {this.showWarningDomain}
+                                    <div className="alert alert-primary" role="alert">
+                                        Each identified employee email address must be unique and <b>must</b> not match your business email.  The employee will receive an email outlining the next steps required to complete the Wage Subsidy application
+                                    </div>
                                     {this.employeeEmails(Entry)}
                                 </div>
                                 <div className="form-row">

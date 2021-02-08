@@ -532,6 +532,9 @@ class ClaimForm extends Component {
                                         </div>
                                         <div className="form-group">
                                             {this.showErrors(errors,submitCount)}
+                                            <div className="alert alert-primary" role="alert">
+                                                As per your Wage Subsidy agreement, after submitting a claim form send supporting documents, including time sheets and payroll information to your WorkBC Centre.  For more information, contact your <a href="https://www.workbc.ca/Employment-Services/WorkBC-Centres/Find-Your-WorkBC-Centre.aspx" target="_blank" rel="noopener noreferrer">WorkBC Centre</a>.
+                                            </div>
                                         </div>
                                         <div className="form-group">
                                             <button
