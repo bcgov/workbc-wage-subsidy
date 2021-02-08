@@ -612,6 +612,52 @@ export const HaveEmployeeValidationSchema = yup.object().shape({
         .when("checkPositionInstances",{
             is: "4",
             then: yup.string().max(500, "this field is limited to 500 characters").required('Please enter a description of the duties your employee will be tasked with.')
+        }),
+    skills0: yup.string()
+        .max(500, "this field is limited to 500 characters")
+        .required('Please enter a description of the skills your employee should have.'),
+    skills1: yup.string()
+        .when("checkPositionInstances", {
+            is: "1",
+            then: yup.string().max(500, "this field is limited to 500 characters").required('Please enter a description of the skills your employee should have.')
+        }),
+    skills2: yup.string()
+        .when("checkPositionInstances", {
+            is: "2",
+            then: yup.string().max(500, "this field is limited to 500 characters").required('Please enter a description of the skills your employee should have.')
+        }),
+    skills3: yup.string()
+        .when("checkPositionInstances", {
+            is: "3",
+            then: yup.string().max(500, "this field is limited to 500 characters").required('Please enter a description of the skills your employee should have.')
+        }),
+    skills4: yup.string()
+        .when("checkPositionInstances", {
+            is: "4",
+            then: yup.string().max(500, "this field is limited to 500 characters").required('Please enter a description of the skills your employee should have.')
+        }),
+    workExperience0: yup.string()
+        .max(500, "this field is limited to 500 characters")
+        .required('Please enter a description of the workExperience your employee should have.'),
+    workExperience1: yup.string()
+        .when("checkPositionInstances", {
+            is: "1",
+            then: yup.string().max(500, "this field is limited to 500 characters").required('Please enter a description of the workExperience your employee should have.')
+        }),
+    workExperience2: yup.string()
+        .when("checkPositionInstances", {
+            is: "2",
+            then: yup.string().max(500, "this field is limited to 500 characters").required('Please enter a description of the workExperience your employee should have.')
+        }),
+    workExperience3: yup.string()
+        .when("checkPositionInstances", {
+            is: "3",
+            then: yup.string().max(500, "this field is limited to 500 characters").required('Please enter a description of the workExperience your employee should have.')
+        }),
+    workExperience4: yup.string()
+        .when("checkPositionInstances", {
+            is: "4",
+            then: yup.string().max(500, "this field is limited to 500 characters").required('Please enter a description of the workExperience your employee should have.')
         }),  
     signatoryTitle: yup.string()
         .required("Please enter the title of the organization signatory.")
