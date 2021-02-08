@@ -5,11 +5,11 @@ class thankyouHaveEmployee extends Component {
     
     render() {
 
-        const alternativeAddress = this.props.location.state.otherWorkAddress;
-        const WorkSafeBCNumber = (this.props.location.state.WSBCCoverage === "yes");
-        const employeePositions = (this.props.location.state.numberOfPositions1 > 0);
-        const businessFaxProvided = (this.props.location.state.businessFax !== "");
-        const wageSubsidizedAlready = (this.props.location.state.wageSubsidy === "yes");
+        const alternativeAddress = this.props.location.state !== undefined && this.props.location.state.otherWorkAddress;
+        const WorkSafeBCNumber = (this.props.location.state !== undefined && (this.props.location.state.WSBCCoverage === "yes"));
+        const employeePositions = (this.props.location.state !== undefined && (this.props.location.state.numberOfPositions1 > 0));
+        const businessFaxProvided = (this.props.location.state !== undefined && (this.props.location.state.businessFax !== ""));
+        const wageSubsidizedAlready = (this.props.location.state !== undefined && (this.props.location.state.wageSubsidy === "yes"));
 
 
         return (
@@ -20,7 +20,7 @@ class thankyouHaveEmployee extends Component {
                         <h1>Thank you, your application has been received</h1>
                         <h3>Application ID: {this.props.location.state !== undefined && this.props.location.state._id}</h3>
                         <button className="btn btn-success d-print-none" onClick={() => window.print()}>Print Confirmation</button><br /><br />
-                        <p>Thank you for your interest in WorkBC Wage Subsidy services. Your application has been received and a WorkBC staff member will be in touch with you soon.</p>
+                        <p>Thank you for your interest in WorkBC Wage Subsidy services. Your application has been received and a WorkBC staff member will be in touch with you soon to confirm your business qualifies for WorkBC Wage Subsidy and to complete the application process. </p>
                         <p>
                             The following information was received:
                         </p>

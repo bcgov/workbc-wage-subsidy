@@ -92,7 +92,7 @@ async function sendEmails(values) {
           html: generateHTMLEmail("Thank you, your application has been received",
             [
               `<b>Application ID: ${values._id}</b>`,
-              `Thank you for your interest in WorkBC Wage Subsidy services. Your application has been received and a WorkBC staff member will be in touch with you soon.`,
+              `Thank you for your interest in WorkBC Wage Subsidy services. Your application has been received and a WorkBC staff member will be in touch with you soon to confirm your business qualifies for WorkBC Wage Subsidy and to complete the application process. `,
             ],
             [
             ],
@@ -127,7 +127,7 @@ async function sendEmails(values) {
               `If you are participating in WorkBC Services, contact your Employment Counsellor right away, before taking the steps below.`,
               `If you are NOT already participating in WorkBC Services, please follow these steps:`,
               `<b>Step 1:</b> Register for Online Employment Services.`,
-              `<b>Step 2:</b> Complete an online application. Click <a href="https://apply.workbc.ca/">here</a> to get started and ensure you select WorkBC Self-Serve to begin your application.`,
+              `<b>Step 2:</b> Complete an online application. Click <a href="https://apply.workbc.ca/">here</a> to get started and ensure you <b>select WorkBC Self-Serve<b> to begin your application.`,
               `<img class="img-fluid" src="${clientURL}/images/workbc_self_serve.png" alt="WorkBC Self Serve Option" style="height: auto; line-height: 100%; outline: none; text-decoration: none; width: 100%; max-width: 100%; border: 0 none;">`,
               `When selecting your WorkBC Centre, select the community where your job is located.`,
               `<img class="img-fluid" src="${clientURL}/images/workbc_community_select.png" alt="WorkBC Community Selector" style="height: auto; line-height: 100%; outline: none; text-decoration: none; width: 100%; max-width: 100%; border: 0 none;">`,
@@ -177,7 +177,7 @@ async function sendEmails(values) {
           if (error) {
             console.log ("error:", error);
             console.log("Error sending position email(s) for " + values._id);
-          } else {
+          } else {1
             console.log("Message sent: %s", info.messageId);
           }
         });

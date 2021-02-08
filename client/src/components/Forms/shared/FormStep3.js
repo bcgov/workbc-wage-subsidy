@@ -57,7 +57,11 @@ class FormStep3 extends Component {
                 </div>
                 <div className="form-group">
                     {this.showErrors}
+                    <div className="alert alert-primary" role="alert">
+                            Once submitted, a WorkBC representative will contact you to review your application and confirm if your organization qualifies for Wage Subsidy.
+                    </div>
                 </div>
+
                 <button
                     className="btn btn-success btn-block"
                     type="submit"
