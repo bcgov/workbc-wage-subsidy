@@ -131,7 +131,7 @@ class HaveEmployeeStep2 extends Component {
                 </div>
                 {
                     positions.map((val, Entry) => {
-                        let operatingName = `operatingName${Entry}`, numberOfPositions = `numberOfPositions${Entry}`, startDate = `startDate${Entry}`, hours = `hours${Entry}`, wage = `wage${Entry}`, duties = `duties${Entry}` /*, email0 = `position${Entry}Email0`, email1 = `position${Entry}Email1`, email2 = `position${Entry}Email2`, email3 = `position${Entry}Email3`, email4 = `position${Entry}Email4`*/
+                        let operatingName = `operatingName${Entry}`, numberOfPositions = `numberOfPositions${Entry}`, startDate = `startDate${Entry}`, hours = `hours${Entry}`, wage = `wage${Entry}`, duties = `duties${Entry}`,skills=`skills${Entry}`,workExperience=`workExperience${Entry}` /*, email0 = `position${Entry}Email0`, email1 = `position${Entry}Email1`, email2 = `position${Entry}Email2`, email3 = `position${Entry}Email3`, email4 = `position${Entry}Email4`*/
 
                         return (
                             <div key={Entry}>
@@ -213,7 +213,41 @@ class HaveEmployeeStep2 extends Component {
                                         />
                                         {feedBackInvalid(this.props.errors, this.props.touched, duties)}
                                     </div>
+                                </div> 
+                                <div className="form-row">
+                                    <div className="form-group col-md-12">
+                                        <label className="col-form-label control-label" htmlFor={skills}>Skills and experience normally required for this position:<span
+                                                style={{ color: "red" }}>*</span></label>
+                                        <small className="text-muted" id="skills"> 500 characters max.</small>
+                                        <Field 
+                                        as="textarea"
+                                        rows="4"
+                                        maxLength="500"
+                                        className={`skills form-control ${feedBackClassName(this.props.errors, this.props.touched, skills)}`}
+                                        id={skills} 
+                                        name={skills} 
+                                        data-id={Entry}  
+                                        />
+                                         {feedBackInvalid(this.props.errors,this.props.touched, skills)}
+                                    </div>
                                 </div>
+                                <div className="form-row">
+                                    <div className="form-group col-md-12">
+                                        <label className="col-form-label control-label" htmlFor={workExperience}>What work experience, training, supervision, etc., will the employee receive during the Wage Subsidy Placement?<span
+                                                style={{ color: "red" }}>*</span></label>
+                                        <small className="text-muted" id="workExperience"> 500 characters max.</small>
+                                        <Field 
+                                        as="textarea"
+                                        rows="4"
+                                        maxLength="500"
+                                        className={`workExperience form-control ${feedBackClassName(this.props.errors, this.props.touched, workExperience)}`}
+                                        id={workExperience} 
+                                        name={workExperience} 
+                                        data-id={Entry}  
+                                        />
+                                         {feedBackInvalid(this.props.errors,this.props.touched, workExperience)}
+                                    </div>
+                                </div>                              
                             </div>
 
                         )
