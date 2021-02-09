@@ -180,6 +180,8 @@ module.exports = {
         <p>Hours of Work Per Week: ${strings.orEmpty(values.hours0)}</p>
         <p>Hourly Wage: ${strings.orEmpty(values.wage0)}</p>
         <p>Description of Duties: ${strings.orEmpty(values.duties0)}</p>
+        <p>Skills: ${strings.orEmpty(values.skills0)}</p>
+        <p>Work Experience: ${strings.orEmpty(values.workExperience0)}</p>
         `
 
         if(employeePositions){
@@ -195,6 +197,8 @@ module.exports = {
             <p>Hours of Work Per Week: ${strings.orEmpty(values.hours1)}</p>
             <p>Hourly Wage: ${strings.orEmpty(values.wage1)}</p>
             <p>Description of Duties: ${strings.orEmpty(values.duties1)}</p>
+            <p>Skills: ${strings.orEmpty(values.skills1)}</p>
+            <p>Work Experience: ${strings.orEmpty(values.workExperience1)}</p>
             <hr />     
             `
         }
