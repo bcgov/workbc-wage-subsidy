@@ -228,7 +228,7 @@ async function saveList(values, email) {
       //there was an error in the chan
       //item was not created
       console.log("error in chain")
-      console.log(err);
+      //console.log(err);
       console.log(err.statusCode)
       /*
       if (err.statusCode == 403){
