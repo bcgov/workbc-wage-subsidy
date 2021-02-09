@@ -90,7 +90,7 @@ module.exports = {
         `<p><b>Total MERCs for Claim Period:</b>${strings.orEmpty(values.totalMERCs)}</p>
         <p><b>Client Issues (if any)</b>:</p>
         <p>${strings.orEmpty(values.clientIssues1)}</p>
-        <p><b>Signatory: </b> ${strings.orEmpty(signatory1)}</p>`
+        <p><b>Signatory: </b> ${strings.orEmpty(values.signatory1)}</p>`
         return html       
     },
 
