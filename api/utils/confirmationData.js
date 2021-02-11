@@ -151,7 +151,7 @@ module.exports = {
             `<p><b>Hourly Wage: </b>${strings.orEmpty(values.hourlyWage5)}</p>`
             `<p><b>Total: </b>${strings.orEmpty(values.total5)}</p>`]:[]),
             `<p><b>Total MERCs for Claim Period:</b>${strings.orEmpty(values.totalMERCs)}</p>`,
-            `<p><b>Client Issues (if any)</b>:</p>`,
+            `<p><b>Summary of job activities and client issues (if any)</b>:</p>`,
             `<p>${strings.orEmpty(values.clientIssues1)}</p>`,
             `<p><b>Signatory: </b> ${strings.orEmpty(signatory1)}</p>`
             /*
