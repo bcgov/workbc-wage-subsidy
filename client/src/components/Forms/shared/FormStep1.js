@@ -509,6 +509,7 @@ class FormStep1 extends Component {
                             />
                             <label className="form-check-label" htmlFor="sectorTypeNon-Profit">Non-Profit</label>
                         </div>
+                        {/*
                         <div className="form-check">
                             <Field
                                 className={`form-check-input ${feedBackClassName(this.props.errors, this.props.touched, "sectorType")}`}
@@ -520,6 +521,7 @@ class FormStep1 extends Component {
                             <label className="form-check-label" htmlFor="sectorTypePublic">Public</label>
                             {feedBackInvalid(this.props.errors,this.props.touched,"sectorType")}
                         </div>
+                        */}
                     </div>
                 </div>
                 <div className="form-row">
