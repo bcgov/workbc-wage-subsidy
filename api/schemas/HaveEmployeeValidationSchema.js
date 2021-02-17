@@ -773,7 +773,7 @@ var HaveEmployeeValidationSchema = yup.object().shape({
             "44-98",
             "45-99",
             "45-100",
-            "15-1",
+            "15-101",
         ], "Please select the WorkBC Centre you are working with.")
         .required("Please select the WorkBC Centre you are working with.")
     })
