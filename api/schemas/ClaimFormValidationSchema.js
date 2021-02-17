@@ -195,7 +195,7 @@ var ClaimFormValidationSchema = yup.object().shape({
             "44-98",
             "45-99",
             "45-100",
-            "15-1",
+            "15-101",
         ], "Please select your WorkBC Centre.")
         .required("Please select your WorkBC Centre."),
     signatory1: yup.string()
