@@ -8,6 +8,9 @@ class ThankyouClaimForm extends Component {
                     <div className="col-md-12">
                         <h1>The following information was received:</h1>
                         <br />
+                        <div className="alert alert-primary" role="alert">
+                            As per your Wage Subsidy agreement, after submitting a claim form send supporting documents, including time sheets and payroll information to your WorkBC Centre.  For more information, contact your <a href="https://www.workbc.ca/Employment-Services/WorkBC-Centres/Find-Your-WorkBC-Centre.aspx" target="_blank" rel="noopener noreferrer">WorkBC Centre</a>.
+                        </div>
                         <hr />
                         <p><b>Period Claim Start: </b> {this.props.location.state !== undefined && (<span>{this.props.location.state.periodStart1.getDate()}/{this.props.location.state.periodStart1.getMonth() + 1}/{this.props.location.state.periodStart1.getFullYear()}</span>)}</p>
                         <p><b>Period Claim End: </b> {this.props.location.state !== undefined && (<span>{this.props.location.state.periodStart2.getDate()}/{this.props.location.state.periodStart2.getMonth() + 1}/{this.props.location.state.periodStart2.getFullYear()}</span>)}</p>
