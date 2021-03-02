@@ -2,18 +2,22 @@
 const MongoClient = require('mongodb').MongoClient;
 const strings = require("./strings");
 
+let uri;
+if (!process.env.MONGO_USERNAME  || !process.env.MONGO_PASSWORD){
+    uri = `mongodb://${process.env.MONGO_CONNECTION_URI || 'localhost'}/${process.env.MONGO_DB_NAME || 'test'}`;
+} else {
+    uri = `mongodb://${process.env.MONGO_USERNAME || "superuser"}:${process.env.MONGO_PASSWORD || "password"}@${process.env.MONGO_CONNECTION_URI || 'localhost'}/${process.env.MONGO_DB_NAME || 'test'}`;
+}
+
+const client = new MongoClient(uri, { useUnifiedTopology: true });
+var connection = client.connect()
 
 // Private function to get a working client
 function getClient() {
     // i.e: 'mongodb://superuser:password@localhost/test'
     // don't have to do it this way to connect locally 
     // docs @ http://mongodb.github.io/node-mongodb-native/3.6/api/MongoClient.html
-    let uri;
-    if (!process.env.MONGO_USERNAME  || !process.env.MONGO_PASSWORD){
-        uri = `mongodb://${process.env.MONGO_CONNECTION_URI || 'localhost'}/${process.env.MONGO_DB_NAME || 'test'}`;
-    } else {
-        uri = `mongodb://${process.env.MONGO_USERNAME || "superuser"}:${process.env.MONGO_PASSWORD || "password"}@${process.env.MONGO_CONNECTION_URI || 'localhost'}/${process.env.MONGO_DB_NAME || 'test'}`;
-    }
+
 
     
     let client = new MongoClient(uri, { useUnifiedTopology: true });
@@ -23,13 +27,14 @@ function getClient() {
 
 
 module.exports = {
-    saveHaveEmployeeValues: function (values, email, savedToSP) {
-        const client = getClient();
-        client.connect().then(mClient => {
+    saveHaveEmployeeValues: async function (values, email, savedToSP) {
+        return await connection
+        .then(mClient => {
             // get a handle on the db
-            let db = mClient.db();
+            return mClient.db();
+        }).then(async db => {
             // add our values to db (they are always new)
-            db.collection("HaveEmployee").insertOne({
+            return db.collection("HaveEmployee").insertOne({
                 applicationID       : values._id,// id is provided
                 ca                  : strings.orEmpty(values._ca),                                     
                 savedToSP           : savedToSP,
@@ -85,13 +90,14 @@ module.exports = {
             });
         });
     },
-    saveNeedEmployeeValues: function(values, savedToSP) {
-        const client = getClient();
-        client.connect().then(mClient => {
+    saveNeedEmployeeValues: async function(values, savedToSP) {
+        return await connection
+        .then(mClient => {
             // get a handle on the db
-            let db = mClient.db();
+            return mClient.db();
+        }).then(async db => {
             // add our values to db (they are always new)
-            db.collection("NeedEmployee").insertOne({
+            return db.collection("NeedEmployee").insertOne({
                 applicationID       : strings.orEmpty(values._id),
                 ca                  : strings.orEmpty(values._ca),
                 savedToSP           : savedToSP,
@@ -140,13 +146,14 @@ module.exports = {
             });
         });
     },
-    saveClaimValues: function(values, savedToSP) {
-        const client = getClient();
-        client.connect().then(mClient => {
+    saveClaimValues: async function(values, savedToSP) {
+        return await connection
+        .then(mClient => {
             // get a handle on the db
-            let db = mClient.db();
+            return mClient.db();
+        }).then(async db => {
             // add our values to db (they are always new)
-            db.collection("Claim").insertOne({
+            return db.collection("Claim").insertOne({
                 applicationID    : strings.orEmpty(values._id),
                 ca               : strings.orEmpty(values.workbcCentre.substring(0,2)), 
                 savedToSP        : savedToSP,
@@ -195,7 +202,8 @@ module.exports = {
                 signatory1       : strings.orEmpty(values.signatory1)
             });
         });
-    },
+    }
+    /*
     printValues: function(collection) {
         const client = getClient();
         client.connect().then(mc => {
@@ -208,4 +216,5 @@ module.exports = {
             cursor.forEach(iterateFunc, errorFunc);
         });
     }
+    */
 };

@@ -317,7 +317,7 @@ router.get('/', csrfProtection, (req, res) => {
   console.log(listParty)
   console.log(listADFS)
   */
-  
+
   var token = req.csrfToken()
   res.cookie('XSRF-TOKEN', token)
   res.send({
@@ -346,23 +346,29 @@ router.post('/', csrfProtection, async (req, res) => {
               for (const email of pE){
                 console.log(email)
                 await saveList(value,email)
-                .then(function(saved){
+                .then(async function(saved){
                   console.log("saved")
                   console.log(saved)
                   // save values to mongo db
                   try {
-                    saveHaveEmployeeValues(value, email, saved);
+                    await saveHaveEmployeeValues(value, email, saved)
+                    .then(async r => {
+                      console.log(r.result)
+                    })
                   }
                   catch (error) {
                     console.log(error);
                   }
                 })
-                .catch(function(e){
+                .catch(async function(e){
                   console.log("error")
                   console.log(e)
                   //save failed one
                   try {
-                    saveHaveEmployeeValues(value, email, false);
+                    await saveHaveEmployeeValues(value, email, false)
+                    .then(async r => {
+                      console.log(r.result)
+                    })
                   }
                   catch (error) {
                     console.log(error);
