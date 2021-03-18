@@ -126,7 +126,8 @@ export const HaveEmployeeValidationSchema = yup.object().shape({
         .required("Please select an answer on whether your organization has WorkSafe BC coverage"),
     eligibility: yup.boolean()
         .oneOf([true],"Required"),
-
+    lawCompliance: yup.boolean()
+        .oneOf([true],"Please confirm you are in full law compliance."),
     //step 1:pop-up fields
     employeesClaimed:yup.mixed()
         .when("wageSubsidy",{ 
