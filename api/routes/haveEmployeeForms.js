@@ -17,7 +17,8 @@ var notification = require('../utils/applicationReceivedEmail');
 var clean = require('../utils/clean')
 var confirmData = require('../utils/confirmationData');
 const { getHaveEmployeeSubmitted } = require('../utils/confirmationData');
-var {saveHaveEmployeeValues} = require("../utils/mongoOperations");
+var { saveHaveEmployeeValues, saveHaveEmployeeValuesMulti } = require("../utils/mongoOperations");
+var createHaveEmployeeItems = require("../utils/haveEmployeeItems")
 
 var confirmationEmail1 = process.env.CONFIRMATIONONE || process.env.OPENSHIFT_NODEJS_CONFIRMATIONONE || "";
 var confirmationBCC = process.env.CONFIRMATIONBCC || process.env.OPENSHIFT_NODEJS_CONFIRMATIONBCC || "";
@@ -36,7 +37,8 @@ var caEmails = process.env.CAEMAILS.split(' ')
 console.log(caEmails)
 console.log(caEmails.length)
 
-
+//deprecated
+/*
 var spr = spauth.getAuth(listWebURL, {
   username: listUser,
   password: listPass,
@@ -44,8 +46,10 @@ var spr = spauth.getAuth(listWebURL, {
   relyingParty: listParty,
   adfsUrl: listADFS
 })
+*/
 
 async function sendEmails(values) {
+  return true
   try {
     let transporter = nodemailer.createTransport({
       host: "apps.smtp.gov.bc.ca",
@@ -67,22 +71,22 @@ async function sendEmails(values) {
           mailingList = values.businessEmail
         }
         var positionEmails;
-        if (pEmail === ""){
-          positionEmails = [values.position0Email0, values.position0Email1, values.position0Email2, 
-            values.position0Email3, values.position0Email4, values.position1Email0, values.position1Email1, values.position1Email2,values.position1Email3].filter(e => e != null);
+        if (pEmail === "") {
+          positionEmails = [values.position0Email0, values.position0Email1, values.position0Email2,
+          values.position0Email3, values.position0Email4, values.position1Email0, values.position1Email1, values.position1Email2, values.position1Email3].filter(e => e != null);
         } else {
           positionEmails = pEmail
         }
         console.log(positionEmails)
         var cNotifyEmail;
-        if (notifyEmail === ""){
+        if (notifyEmail === "") {
           cNotifyEmail = caEmails[Number(values._ca)]
         } else {
           cNotifyEmail = notifyEmail
         }
         console.log(values._ca)
         console.log(cNotifyEmail)
-             // filter out empty addresses
+        // filter out empty addresses
         // send mail with defined transport object
         let message1 = {
           from: 'WorkBC Wage Subsidy <donotreply@gov.bc.ca>', // sender address
@@ -147,7 +151,7 @@ async function sendEmails(values) {
               `Sincerely,<br><b>Your WorkBC team<br></b>`
             ]
           ) // html body
-        };      
+        };
         let info = transporter.sendMail(message1, (error, info) => {
           if (error) {
             console.log("error:", error);
@@ -175,9 +179,10 @@ async function sendEmails(values) {
         });
         info = transporter.sendMail(message4, (error, info) => {
           if (error) {
-            console.log ("error:", error);
+            console.log("error:", error);
             console.log("Error sending position email(s) for " + values._id);
-          } else {1
+          } else {
+            1
             console.log("Message sent: %s", info.messageId);
           }
         });
@@ -193,15 +198,16 @@ async function sendEmails(values) {
   }
 }
 
+//deprecated
 async function saveList(values, email) {
-  try{
+  try {
     var headers;
-  return await spr
-  .then(async data => {
-      headers = data.headers;
-      headers['Accept'] = 'application/json;odata=verbose';
-      return headers
-  }).then(async response => {
+    return await spr
+      .then(async data => {
+        headers = data.headers;
+        headers['Accept'] = 'application/json;odata=verbose';
+        return headers
+      }).then(async response => {
         //return true
         //console.log(response)
         headers = response
@@ -210,96 +216,96 @@ async function saveList(values, email) {
           headers: headers,
           json: true,
         })
-    }).then(async response => {
-      var digest = response.d.GetContextWebInformation.FormDigestValue
-      return digest
-    }).then(async response => {
-      //console.log(headers)
-      headers['X-RequestDigest'] = response
-      headers['Content-Type'] = "application/json;odata=verbose"
-      var l = listWebURL + `Apps/WageSubsidy/_api/web/lists/getByTitle('Catchment${values._ca}')/items`
-      console.log("webURL:")
-      console.log(l)
-      return request.post({
-        url: l,
-        headers: headers,
-        json: true,
-        body: {
-          "__metadata": {
-            "type": `SP.Data.Catchment${values._ca}ListItem`
-          },
-          "Title": `${values.operatingName} - ${values._id}`,
-          "CatchmentNo": values._ca,
-          "FormType": "wage",
-          "ApplicationID" : values._id,
-          "OperatingName":values.operatingName,
-          "BusinessNumber": values.businessNumber,
-          "BusinessAddress1":values.businessAddress,
-          "BusinessCity":values.businessCity,
-          "BusinessProvince":values.businessProvince,
-          "BusinessPostal":values.businessPostal,
-          "BusinessPhone":values.businessPhone,
-          "BusinessFax":values.businessFax,
-          "BusinessEmail":values.businessEmail,
-          "OtherWorkAddress":values.otherWorkAddress,
-          "SectorType":values.sectorType,
-          "TypeOfIndustry":values.typeOfIndustry,
-          "OrganizationSize":values.organizationSize,
-          "CewsParticipation":values.cewsParticipation,
-          "EmployeeDisplacement":values.employeeDisplacement === "yes",
-          "LabourDispute":values.labourDispute === "yes",
-          "UnionConcurrence":values.unionConcurrence,
-          "LiabilityCoverage":values.liabilityCoverage === "yes",
-          "WageSubsidy":values.wageSubsidy === "yes",
-          "WSBCCoverage":values.WSBCCoverage === "yes",
-          "LawComplianceConsent": values.lawCompliance,
-          "OrgEligibilityConsent": values.eligibility,
-          "EmployeesClaimed": values.employeesClaimed,
-          "WSBCNumber": values.WSBCNumber,
-          "ProvinceAlt": values.provinceAlt,
-          "PostalAlt": values.postalAlt,
-          "ParticipantEmail0": email,
-          "OperatingName0": values.operatingName0,
-          "NumberOfPositions0": values.numberOfPositions0,
-          "StartDate0": values.startDate0,
-          "Hours0": values.hours0,
-          "Wage0": values.wage0,
-          "Duties0": values.duties0,
-          "Skills0": values.skills0,
-          "WorkExperience0": values.workExperience0,
-          "OperatingName1": values.operationName1,
-          "NumberOfPositions1": values.numberOfPositions1,
-          "Duties1": values.duties1,
-          "Skills1": values.skills1,
-          "WorkExperience1": values.workExperience1,
-          "StartDate1": values.startDate1,
-          "Hours1": values.hours1,
-          "Wage1": values.wage1,
-          "SignatoryTitle": values.signatoryTitle,
-          "Signatory1": values.signatory1,
-          "OrganizationConsent": values.organizationConsent
-          //"": values.,
-        }
+      }).then(async response => {
+        var digest = response.d.GetContextWebInformation.FormDigestValue
+        return digest
+      }).then(async response => {
+        //console.log(headers)
+        headers['X-RequestDigest'] = response
+        headers['Content-Type'] = "application/json;odata=verbose"
+        var l = listWebURL + `Apps/WageSubsidy/_api/web/lists/getByTitle('Catchment${values._ca}')/items`
+        console.log("webURL:")
+        console.log(l)
+        return request.post({
+          url: l,
+          headers: headers,
+          json: true,
+          body: {
+            "__metadata": {
+              "type": `SP.Data.Catchment${values._ca}ListItem`
+            },
+            "Title": `${values.operatingName} - ${values._id}`,
+            "CatchmentNo": values._ca,
+            "FormType": "wage",
+            "ApplicationID": values._id,
+            "OperatingName": values.operatingName,
+            "BusinessNumber": values.businessNumber,
+            "BusinessAddress1": values.businessAddress,
+            "BusinessCity": values.businessCity,
+            "BusinessProvince": values.businessProvince,
+            "BusinessPostal": values.businessPostal,
+            "BusinessPhone": values.businessPhone,
+            "BusinessFax": values.businessFax,
+            "BusinessEmail": values.businessEmail,
+            "OtherWorkAddress": values.otherWorkAddress,
+            "SectorType": values.sectorType,
+            "TypeOfIndustry": values.typeOfIndustry,
+            "OrganizationSize": values.organizationSize,
+            "CewsParticipation": values.cewsParticipation,
+            "EmployeeDisplacement": values.employeeDisplacement === "yes",
+            "LabourDispute": values.labourDispute === "yes",
+            "UnionConcurrence": values.unionConcurrence,
+            "LiabilityCoverage": values.liabilityCoverage === "yes",
+            "WageSubsidy": values.wageSubsidy === "yes",
+            "WSBCCoverage": values.WSBCCoverage === "yes",
+            "LawComplianceConsent": values.lawCompliance,
+            "OrgEligibilityConsent": values.eligibility,
+            "EmployeesClaimed": values.employeesClaimed,
+            "WSBCNumber": values.WSBCNumber,
+            "ProvinceAlt": values.provinceAlt,
+            "PostalAlt": values.postalAlt,
+            "ParticipantEmail0": email,
+            "OperatingName0": values.operatingName0,
+            "NumberOfPositions0": values.numberOfPositions0,
+            "StartDate0": values.startDate0,
+            "Hours0": values.hours0,
+            "Wage0": values.wage0,
+            "Duties0": values.duties0,
+            "Skills0": values.skills0,
+            "WorkExperience0": values.workExperience0,
+            "OperatingName1": values.operationName1,
+            "NumberOfPositions1": values.numberOfPositions1,
+            "Duties1": values.duties1,
+            "Skills1": values.skills1,
+            "WorkExperience1": values.workExperience1,
+            "StartDate1": values.startDate1,
+            "Hours1": values.hours1,
+            "Wage1": values.wage1,
+            "SignatoryTitle": values.signatoryTitle,
+            "Signatory1": values.signatory1,
+            "OrganizationConsent": values.organizationConsent
+            //"": values.,
+          }
+        })
+      }).then(async response => {
+        //item was created
+        return true
       })
-    }).then(async response => {
-      //item was created
-      return true
-    })    
-    .catch(err => {
-      //there was an error in the chan
-      //item was not created
-      console.log("error in chain")
-      //console.log(err);
-      console.log(err.statusCode)
-      /*
-      if (err.statusCode == 403){
-        saveList(values)
-      }
-      */
-      return false
-    })
-  
-  //try catch catcher
+      .catch(err => {
+        //there was an error in the chan
+        //item was not created
+        console.log("error in chain")
+        //console.log(err);
+        console.log(err.statusCode)
+        /*
+        if (err.statusCode == 403){
+          saveList(values)
+        }
+        */
+        return false
+      })
+
+    //try catch catcher
   } catch (error) {
     console.log(error)
     return false
@@ -331,50 +337,67 @@ router.post('/', csrfProtection, async (req, res) => {
   //console.log(req.body)
   clean(req.body);
   //console.log(req.body)
-  
+
   HaveEmployeeValidationSchema.validate(req.body, { abortEarly: false })
     .then(async function (value) {
+      try {
+        var pE = [
+          value.position0Email0, value.position0Email1, value.position0Email2,
+          value.position0Email3, value.position0Email4, value.position1Email0,
+          value.position1Email1, value.position1Email2, value.position1Email3].filter(e => e != null);
+        var items = createHaveEmployeeItems(pE, value)
+        try {
+          await saveHaveEmployeeValuesMulti(items)
+            .then(async r => {
+              console.log(r.result)
+              if (r.result.ok === 1) {
+                try {
+                  await sendEmails(value)
+                    .then(async function (sent) {
+                      console.log("emails sent: " + sent)
+                    }).catch(function (e) {
+                      console.log(e)
+                    })
+                  res.send({
+                    ok: "ok"
+                  })
+                } catch (error) {
+                  console.log(error)
+                }
+              }
+            })
+        } catch (error) {
+          console.log(error)
+          res.send({
+            emailErr: "emailErr"
+          })
+        }
+        /*
+        for (const email of pE){
+          console.log(email)
+            try {
+              await saveHaveEmployeeValues(value, email, false)
+              .then(async r => {
+                console.log(r.result)
+              })
+            }
+            catch (error) {
+              console.log(error);
+            }          
+        }
+        */
+      } catch (error) {
+        console.log(error)
+      }
 
+
+
+      /*
       try {
         await sendEmails(value)
           .then(async function (sent) {
             if (sent){
-              var pE = [
-                value.position0Email0, value.position0Email1, value.position0Email2, 
-                value.position0Email3, value.position0Email4, value.position1Email0, 
-                value.position1Email1, value.position1Email2,value.position1Email3].filter(e => e != null);
-              for (const email of pE){
-                console.log(email)
-                await saveList(value,email)
-                .then(async function(saved){
-                  console.log("saved")
-                  console.log(saved)
-                  // save values to mongo db
-                  try {
-                    await saveHaveEmployeeValues(value, email, saved)
-                    .then(async r => {
-                      console.log(r.result)
-                    })
-                  }
-                  catch (error) {
-                    console.log(error);
-                  }
-                })
-                .catch(async function(e){
-                  console.log("error")
-                  console.log(e)
-                  //save failed one
-                  try {
-                    await saveHaveEmployeeValues(value, email, false)
-                    .then(async r => {
-                      console.log(r.result)
-                    })
-                  }
-                  catch (error) {
-                    console.log(error);
-                  }
-                })               
-              }
+              
               res.send({
                 ok: "ok"
               }) 
@@ -391,7 +414,8 @@ router.post('/', csrfProtection, async (req, res) => {
       }
       return
     })
-    .catch(function (errors) {
+    */
+    }).catch(function (errors) {
       var err = {}
       errors.inner.forEach(e => {
         err[e.path] = e.message
@@ -401,7 +425,7 @@ router.post('/', csrfProtection, async (req, res) => {
       })
       return
     })
-    
+
 })
 
 module.exports = router;

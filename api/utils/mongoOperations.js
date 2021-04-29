@@ -27,6 +27,16 @@ function getClient() {
 
 
 module.exports = {
+    saveHaveEmployeeValuesMulti: async function (items) {
+        return await connection
+        .then(mClient => {
+            // get a handle on the db
+            return mClient.db();
+        }).then(async db => {
+            // add our values to db (they are always new)
+            return db.collection("HaveEmployee").insertMany(items)
+        });
+    },
     saveHaveEmployeeValues: async function (values, email, savedToSP) {
         return await connection
         .then(mClient => {
