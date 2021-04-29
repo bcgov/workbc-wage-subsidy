@@ -16,7 +16,7 @@ var generateHTMLEmail = require('../utils/htmlEmail')
 var notification = require('../utils/applicationReceivedEmail');
 var clean = require('../utils/clean')
 const { getClaimSubmitted } = require('../utils/confirmationData');
-const {saveClaimValues} = require('../utils/mongoOperations');
+const { saveClaimValues } = require('../utils/mongoOperations');
 
 var claimConfirmationEmail = process.env.CLAIM_CONFIRMATION_EMAIL || process.env.OPENSHIFT_NODEJS_CLAIM_CONFIRMATION_EMAIL || "";
 var claimConfirmationBCC = process.env.CLAIM_CONFIRMATION_BCC || process.env.OPENSHIFT_NODEJS_CLAIM_CONFIRMATION_BCC || "";
@@ -34,7 +34,8 @@ var caEmails = process.env.CAEMAILS.split(' ')
 console.log(caEmails)
 console.log(caEmails.length)
 
-
+//deprecated
+/*
 var spr = spauth.getAuth(listWebURL, {
   username: listUser,
   password: listPass,
@@ -42,8 +43,10 @@ var spr = spauth.getAuth(listWebURL, {
   relyingParty: listParty,
   adfsUrl: listADFS
 })
+*/
 
 async function sendEmails(values) {
+  return true
   try {
     let transporter = nodemailer.createTransport({
       host: "apps.smtp.gov.bc.ca",
@@ -58,17 +61,17 @@ async function sendEmails(values) {
         //console.log(r)
         console.log("Transporter connected.")
         var cEmail, cNotifyEmail;
-        if (claimConfirmationEmail === ""){
+        if (claimConfirmationEmail === "") {
           cEmail = values.ClaimEmail
         } else {
           cEmail = claimConfirmationEmail
         }
-        if (claimNotifyEmail === ""){
-          cNotifyEmail = caEmails[Number(values.workbcCentre.substring(0,2))]
+        if (claimNotifyEmail === "") {
+          cNotifyEmail = caEmails[Number(values.workbcCentre.substring(0, 2))]
         } else {
           cNotifyEmail = claimNotifyEmail
         }
-        console.log(values.workbcCentre.substring(0,2))
+        console.log(values.workbcCentre.substring(0, 2))
         console.log(cNotifyEmail)
         // send mail with defined transport object
         /*
@@ -133,15 +136,16 @@ async function sendEmails(values) {
   }
 }
 
+//deprecated
 async function saveList(values, email) {
-  try{
+  try {
     var headers;
-  return await spr
-  .then(async data => {
-      headers = data.headers;
-      headers['Accept'] = 'application/json;odata=verbose';
-      return headers
-  }).then(async response => {
+    return await spr
+      .then(async data => {
+        headers = data.headers;
+        headers['Accept'] = 'application/json;odata=verbose';
+        return headers
+      }).then(async response => {
         //return true
         //console.log(response)
         headers = response
@@ -150,95 +154,95 @@ async function saveList(values, email) {
           headers: headers,
           json: true,
         })
-    }).then(async response => {
-      var digest = response.d.GetContextWebInformation.FormDigestValue
-      return digest
-    }).then(async response => {
-      //console.log(headers)
-      headers['X-RequestDigest'] = response
-      headers['Content-Type'] = "application/json;odata=verbose"
-      var l = listWebURL + `Apps/WageSubsidy/_api/web/lists/getByTitle('Catchment${values.workbcCentre.substring(0,2)}')/items`
-      console.log(l)
-      return request.post({
-        url: l,
-        headers: headers,
-        json: true,
-        body: {
-          "__metadata": {
-            "type": `SP.Data.Catchment${values.workbcCentre.substring(0,2)}ListItem`
-          },
-          "Title": `Claim - ${values.employerName} - ${values._id}`,
-          "CatchmentNo": values.workbcCentre.substring(0,2),
-          "FormType": "claim",
-          "ApplicationID" : values._id,
-          "PeriodStart1" : values.periodStart1,
-          "PeriodStart2": values.periodStart2,
-          "IsFinalClaim": values.isFinalClaim === "yes",
-          "OperatingName":values.employerName,
-          "EmployerContact":values.employerContact,
-          "BusinessAddress1":values.employerAddress1,
-          "BusinessAddress2":values.employerAddress2,
-          "BusinessCity":values.employerCity,
-          "BusinessPostal":values.employerPostal,
-          "BusinessPhone":values.employerPhone,
-          "EmployeeFirstName":values.employeeFirstName,
-          "EmployeeLastName":values.employeeLastName,
-          "DateFrom1":values.dateFrom1,
-          "DateFrom2":values.dateFrom2,
-          "DateFrom3":values.dateFrom3,
-          "DateFrom4":values.dateFrom4,
-          "DateFrom5":values.dateFrom5,
-          "DateTo1":values.dateTo1,
-          "DateTo2":values.dateTo2,
-          "DateTo3":values.dateTo3,
-          "DateTo4":values.dateTo4,
-          "DateTo5":values.dateTo5,
-          "HoursWorked1":Number(values.hoursWorked1),
-          "HoursWorked2":Number(values.hoursWorked2),
-          "HoursWorked3":Number(values.hoursWorked3),
-          "HoursWorked4":Number(values.hoursWorked4),
-          "HoursWorked5":Number(values.hoursWorked5),
-          "HourlyWage1":Number(values.hourlyWage1),
-          "HourlyWage2":Number(values.hourlyWage2),
-          "HourlyWage3":Number(values.hourlyWage3),
-          "HourlyWage4":Number(values.hourlyWage4),
-          "HourlyWage5":Number(values.hourlyWage5),
-          "TotalWage1":Number(values.total1),
-          "TotalWage2":Number(values.total2),
-          "TotalWage3":Number(values.total3),
-          "TotalWage4":Number(values.total4),
-          "TotalWage5":Number(values.total5),
-          /*
-          "FinalHours":Number(values.hoursWorkedTotal1),
-          "FinalWage":Number(values.hourlyWageTotal1),
-          "FinalTotal":Number(values.totalTotal1),
-          */
-          "TotalMERCs":Number(values.totalMERCs),
-          "ClientIssues":values.clientIssues1,
-          "Signatory1": values.signatory1,
-          //"OrganizationConsent":values.organizationConsent
-          //"": values.,
-        }
+      }).then(async response => {
+        var digest = response.d.GetContextWebInformation.FormDigestValue
+        return digest
+      }).then(async response => {
+        //console.log(headers)
+        headers['X-RequestDigest'] = response
+        headers['Content-Type'] = "application/json;odata=verbose"
+        var l = listWebURL + `Apps/WageSubsidy/_api/web/lists/getByTitle('Catchment${values.workbcCentre.substring(0, 2)}')/items`
+        console.log(l)
+        return request.post({
+          url: l,
+          headers: headers,
+          json: true,
+          body: {
+            "__metadata": {
+              "type": `SP.Data.Catchment${values.workbcCentre.substring(0, 2)}ListItem`
+            },
+            "Title": `Claim - ${values.employerName} - ${values._id}`,
+            "CatchmentNo": values.workbcCentre.substring(0, 2),
+            "FormType": "claim",
+            "ApplicationID": values._id,
+            "PeriodStart1": values.periodStart1,
+            "PeriodStart2": values.periodStart2,
+            "IsFinalClaim": values.isFinalClaim === "yes",
+            "OperatingName": values.employerName,
+            "EmployerContact": values.employerContact,
+            "BusinessAddress1": values.employerAddress1,
+            "BusinessAddress2": values.employerAddress2,
+            "BusinessCity": values.employerCity,
+            "BusinessPostal": values.employerPostal,
+            "BusinessPhone": values.employerPhone,
+            "EmployeeFirstName": values.employeeFirstName,
+            "EmployeeLastName": values.employeeLastName,
+            "DateFrom1": values.dateFrom1,
+            "DateFrom2": values.dateFrom2,
+            "DateFrom3": values.dateFrom3,
+            "DateFrom4": values.dateFrom4,
+            "DateFrom5": values.dateFrom5,
+            "DateTo1": values.dateTo1,
+            "DateTo2": values.dateTo2,
+            "DateTo3": values.dateTo3,
+            "DateTo4": values.dateTo4,
+            "DateTo5": values.dateTo5,
+            "HoursWorked1": Number(values.hoursWorked1),
+            "HoursWorked2": Number(values.hoursWorked2),
+            "HoursWorked3": Number(values.hoursWorked3),
+            "HoursWorked4": Number(values.hoursWorked4),
+            "HoursWorked5": Number(values.hoursWorked5),
+            "HourlyWage1": Number(values.hourlyWage1),
+            "HourlyWage2": Number(values.hourlyWage2),
+            "HourlyWage3": Number(values.hourlyWage3),
+            "HourlyWage4": Number(values.hourlyWage4),
+            "HourlyWage5": Number(values.hourlyWage5),
+            "TotalWage1": Number(values.total1),
+            "TotalWage2": Number(values.total2),
+            "TotalWage3": Number(values.total3),
+            "TotalWage4": Number(values.total4),
+            "TotalWage5": Number(values.total5),
+            /*
+            "FinalHours":Number(values.hoursWorkedTotal1),
+            "FinalWage":Number(values.hourlyWageTotal1),
+            "FinalTotal":Number(values.totalTotal1),
+            */
+            "TotalMERCs": Number(values.totalMERCs),
+            "ClientIssues": values.clientIssues1,
+            "Signatory1": values.signatory1,
+            //"OrganizationConsent":values.organizationConsent
+            //"": values.,
+          }
+        })
+      }).then(async response => {
+        //item was created
+        return true
       })
-    }).then(async response => {
-      //item was created
-      return true
-    })    
-    .catch(err => {
-      //there was an error in the chan
-      //item was not created
-      console.log("error in chain")
-      //console.log(err);
-      console.log(err.statusCode)
-      /*
-      if (err.statusCode == 403){
-        saveList(values)
-      }
-      */
-      return false
-    })
-  
-  //try catch catcher
+      .catch(err => {
+        //there was an error in the chan
+        //item was not created
+        console.log("error in chain")
+        //console.log(err);
+        console.log(err.statusCode)
+        /*
+        if (err.statusCode == 403){
+          saveList(values)
+        }
+        */
+        return false
+      })
+
+    //try catch catcher
   } catch (error) {
     console.log(error)
     return false
@@ -257,69 +261,39 @@ router.get('/', csrfProtection, (req, res) => {
 router.post('/', csrfProtection, async (req, res) => {
   //clean the body
   clean(req.body);
-  console.log(req.body)
-  console.log(req.body.workbcCentre.substring(0,2))
+  //console.log(req.body)
+  //console.log(req.body.workbcCentre.substring(0, 2))
   ClaimFormValidationSchema.validate(req.body, { abortEarly: false })
     .then(async function (value) {
       try {
-        await sendEmails(value)
-          .then(async function (sent) {
-            if (sent){
-              await saveList(value)
-              .then(async function(saved){
-                console.log("saved")
-                console.log(saved)
-                // save values to mongo db
-                try {
-                  await saveClaimValues(value, saved)
-                  .then(async r => {
-                    console.log(r.result)
-                  })
-                }
-                catch (error) {
-                  console.log(error)
-                  
-                }
-              })
-              .catch(async function(e){
-                console.log("error")
-                console.log(e)
-                try {
-                  await saveClaimValues(value, false)
-                  .then(async r => {
-                    console.log(r.result)
-                  })
-                }
-                catch (error) {
-                  console.log(error);
-                }
-              })
+        await saveClaimValues(value, false)
+          .then(async r => {
+            if (r.result.ok === 1) {
+              await sendEmails(value)
+                .then(async function (sent) {
+                  console.log("emails Sent: " + sent);
+                })
               res.send({
                 ok: "ok"
               })
-            } else if (!sent) {
-              res.send({
-                emailErr: "emailErr"
-              })
             }
-          }).catch(function (e) {
-            console.log(e)
           })
       } catch (error) {
         console.log(error)
+        res.send({
+          emailErr: "emailErr"
+        })
       }
-      return
-    })
-    .catch(function (errors) {
-      var err = {}
-      errors.inner.forEach(e => {
-        err[e.path] = e.message
+    }).catch (function (errors) {
+        var err = {}
+        errors.inner.forEach(e => {
+          err[e.path] = e.message
+        })
+        res.send({
+          err
+        })
+        return
       })
-      res.send({
-        err
-      })
-      return
-    })
 })
 
 

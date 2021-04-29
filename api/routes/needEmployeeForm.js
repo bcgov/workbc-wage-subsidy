@@ -34,6 +34,8 @@ var caEmails = process.env.CAEMAILS.split(' ')
 console.log(caEmails)
 console.log(caEmails.length)
 
+//deprecated
+/*
 var spr = spauth.getAuth(listWebURL, {
   username: listUser,
   password: listPass,
@@ -41,9 +43,11 @@ var spr = spauth.getAuth(listWebURL, {
   relyingParty: listParty,
   adfsUrl: listADFS
 })
+*/
 
 // send email func
 async function sendEmails(values) {
+  return true
   try {
     let transporter = nodemailer.createTransport({
       host: "apps.smtp.gov.bc.ca",
@@ -139,6 +143,7 @@ async function sendEmails(values) {
   }
 }
 
+//deprecated
 async function saveList(values) {
   try{
     var headers;
@@ -267,54 +272,31 @@ router.post('/', csrfProtection, async (req, res) => {
   NeedEmployeeValidationSchema.validate(req.body, { abortEarly: false })
     .then(async function (value) {
       try {
-        await sendEmails(value)
-          .then(async function (sent) {
-            if (sent){        
-              await saveList(value)
-                .then(async function(saved){
-                  console.log("saved")
-                  console.log(saved)
-                  // save values to mongo db
-                  try {
-                    await saveNeedEmployeeValues(value, saved)
-                    .then(async r => {
-                      console.log(r.result)
-                    })
-                  }
-                  catch (error) {
-                    console.log(error);
-                  }
-                })
-                .catch(async function(e){
-                  console.log("error")
-                  console.log(e)
-                  try {
-                    await saveNeedEmployeeValues(value, false)
-                    .then(async r => {
-                      console.log(r.result)
-                    })
-                  }
-                  catch (error) {
-                    console.log(error);
-                  }
-                })
+        await saveNeedEmployeeValues(value, false)
+          .then(async r => {
+            if (r.result.ok === 1) {
+              try {
+                await sendEmails(value)
+                  .then(async function (sent) {
+                    console.log("emails sent: " + sent)
+                  }).catch(function (e) {
+                    console.log(e)
+                  })
                 res.send({
                   ok: "ok"
                 })
-            } else if (!sent) {
-              res.send({
-                emailErr: "emailErr"
-              })
+              } catch (error) {
+                console.log(error)
+              }
             }
-          }).catch(function (e) {
-            console.log(e)
           })
       } catch (error) {
         console.log(error)
+        res.send({
+          emailErr: "emailErr"
+        })
       }
-      return
-    })
-    .catch(function (errors) {
+    }).catch(function (errors) {
       var err = {}
       errors.inner.forEach(e => {
         err[e.path] = e.message
