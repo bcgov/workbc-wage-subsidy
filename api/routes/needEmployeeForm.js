@@ -47,7 +47,6 @@ var spr = spauth.getAuth(listWebURL, {
 
 // send email func
 async function sendEmails(values) {
-  return true
   try {
     let transporter = nodemailer.createTransport({
       host: "apps.smtp.gov.bc.ca",
