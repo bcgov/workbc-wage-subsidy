@@ -710,7 +710,7 @@ async function sendEmailsNeedEmployee(values) {
   }
 }
 
-cron.schedule('*/1 * * * *', async function() {
+cron.schedule('*/3 * * * *', async function() {
     console.log('running a task every 3 minutes');
     //console.log('running a task every 10 seconds');
     /*
