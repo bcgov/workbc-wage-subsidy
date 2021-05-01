@@ -3,7 +3,7 @@ const express = require('express')
 const spauth = require('node-sp-auth')
 const request = require('request-promise')
 var nodemailer = require("nodemailer");
-var {getHaveEmployeeNotSP, getNeedEmployeeNotSP, getClaimNotSP, getHaveEmployeeNotReporting, getNeedEmployeeNotReporting, getClaimNotReporting, updateReporting, updateSavedToSP, getClaimNoEmail, getNeedEmployeeNoEmail, getHaveEmployeeNoEmail, updateEmailSent} = require('./mongo')
+var {getHaveEmployeeNotSP, getNeedEmployeeNotSP, getClaimNotSP, getHaveEmployeeNotReporting, getNeedEmployeeNotReporting, getClaimNotReporting, updateReporting, updateSavedToSP, getClaimNoEmail, getNeedEmployeeNoEmail, getHaveEmployeeNoEmail, updateEmailSent,getHaveEmployeeNoNextStepsEmail, updateNextStepsEmailSent} = require('./mongo')
 var clean = require('./clean')
 var generateHTMLEmail = require('./utils/htmlEmail')
 var notification = require('./utils/applicationReceivedEmail');
@@ -598,7 +598,6 @@ async function sendEmailsHaveEmployee(values) {
             console.log("error:", error);
             console.log("Error sending position email(s) for " + values.applicationID);
           } else {
-            1
             console.log("Message sent: %s", info.messageId);
           }
         });
@@ -698,6 +697,94 @@ async function sendEmailsNeedEmployee(values) {
           }
         });
 
+        return true
+      }).catch(function (e) {
+        console.log(e)
+        console.log("Error connecting to transporter")
+        return false
+      })
+  } catch (error) {
+    console.log(error)
+    return false
+  }
+}
+
+async function sendEmailsNextSteps(values) {
+  try {
+    let transporter = nodemailer.createTransport({
+      host: "apps.smtp.gov.bc.ca",
+      port: 25,
+      secure: false,
+      tls: {
+        rejectUnauthorized: false
+      } // true for 465, false for other ports
+    });
+    return await transporter.verify()
+      .then(function (r) {
+        //console.log(r)
+        console.log("Transporter connected.")
+        // send mail with defined transport object
+        var mailingList;
+        if (confirmationEmail1 !== "") {
+          mailingList = confirmationEmail1
+        } else {
+          mailingList = values.businessEmail
+        }
+        var positionEmails;
+        if (pEmail === "") {
+          positionEmails = [values.position0Email0, values.position0Email1, values.position0Email2,
+          values.position0Email3, values.position0Email4, values.position1Email0, values.position1Email1, values.position1Email2, values.position1Email3, confirmationBCC].filter(e => e != null);
+        } else {
+          positionEmails = pEmail
+        }
+        console.log(positionEmails)
+        console.log(values.ca)
+        // filter out empty addresses
+        // send mail with defined transport object
+        let message4 = {
+          from: 'WorkBC Wage Subsidy <donotreply@gov.bc.ca>', // sender address
+          bcc: positionEmails,// list of receivers
+          subject: "WorkBC Wage Subsidy Application - Next Steps", // Subject line
+          html: generateHTMLEmail("WorkBC Wage Subsidy Application - Next Steps",
+            [
+              `Hello,`,
+              `You’re receiving this email because your future employer recently applied for a WorkBC Wage Subsidy.`,
+              `WorkBC is a provincial government service that helps residents of B.C. improve their skills, explore career options, and find employment.`,
+            ],
+            [
+              `Only a few steps remain before you are back at work.`,
+              `If you are participating in WorkBC Services, contact your Employment Counsellor right away, before taking the steps below.`,
+              `If you are NOT already participating in WorkBC Services, please follow these steps:`,
+              `<b>Step 1:</b> Register for Online Employment Services.`,
+              `<b>Step 2:</b> Complete an online application. Click <a href="https://apply.workbc.ca/">here</a> to get started and ensure you <b>select WorkBC Self-Serve<b> to begin your application.`,
+              `<img class="img-fluid" src="${clientURL}/images/workbc_self_serve.png" alt="WorkBC Self Serve Option" style="height: auto; line-height: 100%; outline: none; text-decoration: none; width: 100%; max-width: 100%; border: 0 none;">`,
+              `When selecting your WorkBC Centre, select the community where your job is located.`,
+              `<img class="img-fluid" src="${clientURL}/images/workbc_community_select.png" alt="WorkBC Community Selector" style="height: auto; line-height: 100%; outline: none; text-decoration: none; width: 100%; max-width: 100%; border: 0 none;">`,
+              `<b>Step 3:</b> Let your employer know you have applied! A team member will be in touch soon.`,
+            ],
+            [
+              `<b>Why use WorkBC?</b></p><p>
+              <ul>
+                <li>
+                  <b>Expertise: </b>We're ready to help you start career planning now or get you ready for the next phase of BC's COVID-19 Restart Plan.</li>
+                <li>
+                  <b>Free Services: </b>We offer skills training and personalized, one-on-one job counselling. WorkBC services are completely free.</li>
+                <li>
+                  <b>Benefits: </b>You might also be eligible for exclusive benefits.</li>
+              </ul>
+              `,
+              `Sincerely,<br><b>Your WorkBC team<br></b>`
+            ]
+          ) // html body
+        };
+        let info = transporter.sendMail(message4, (error, info) => {
+          if (error) {
+            console.log("error:", error);
+            console.log("Error sending position email(s) for " + values.applicationID);
+          } else {
+            console.log("Message sent: %s", info.messageId);
+          }
+        });
         return true
       }).catch(function (e) {
         console.log(e)
@@ -952,6 +1039,32 @@ cron.schedule('*/3 * * * *', async function() {
                 if (sent) {
                   try {
                     updateEmailSent("Claim",data._id);
+                  }
+                  catch (error) {
+                    console.log(error);
+                  }
+                }
+              })
+              .catch(function(e){
+                console.log("error")
+                console.log(e)
+              }) 
+        }
+    })
+    await getHaveEmployeeNoNextStepsEmail()
+    .then(async cursor => {
+        var results = await cursor.toArray()
+        console.log(results.length)
+        for (const data of results){
+          clean(data)
+          await sendEmailsNextSteps(data)
+              .then(function(sent){
+                console.log("email")
+                console.log(sent)
+                // save values to mongo db
+                if (sent) {
+                  try {
+                    updateNextStepsEmailSent("HaveEmployee",data._id);
                   }
                   catch (error) {
                     console.log(error);

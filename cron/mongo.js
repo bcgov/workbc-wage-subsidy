@@ -262,6 +262,51 @@ module.exports = {
             return result
         })     
     },
+    getHaveEmployeeNoNextStepsEmail: async function () {
+        return await connection
+        .then(mClient => {
+            // get a handle on the db
+            return mClient.db();
+            //return db
+        })
+        .then(async db => {
+        // add our values to db (they are always new)
+            return db.collection("HaveEmployee").find({emailNextStepsSent: false})
+                //console.log(err)
+                //console.log(doc)
+        }).then(async doc =>{
+            return doc
+        })    
+    },
+    updateNextStepsEmailSent: async function(collection,_id){
+        return await connection
+        .then(mClient => {
+            // get a handle on the db
+            return mClient.db();
+            //return db
+        })
+        .then(async db => {
+        // add our values to db (they are always new)
+            return db.collection(collection).updateOne(
+                {
+                    _id: _id
+                },
+                { 
+                    $set : {
+                        emailNextStepsSent: true
+                    }
+                },
+                {
+                    upsert: false
+                }
+
+            )
+                //console.log(err)
+                //console.log(doc)
+        }).then(result =>{
+            return result
+        })     
+    },
     /*
     printValues: function(collection) {
         const client = new MongoClient(uri, { useUnifiedTopology: true });
