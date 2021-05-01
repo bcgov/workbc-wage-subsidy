@@ -2,14 +2,34 @@ const cron = require('node-cron')
 const express = require('express')
 const spauth = require('node-sp-auth')
 const request = require('request-promise')
-var {getHaveEmployeeNotSP, getNeedEmployeeNotSP, getClaimNotSP, getHaveEmployeeNotReporting, getNeedEmployeeNotReporting, getClaimNotReporting, updateReporting, updateSavedToSP} = require('./mongo')
+var nodemailer = require("nodemailer");
+var {getHaveEmployeeNotSP, getNeedEmployeeNotSP, getClaimNotSP, getHaveEmployeeNotReporting, getNeedEmployeeNotReporting, getClaimNotReporting, updateReporting, updateSavedToSP, getClaimNoEmail, getNeedEmployeeNoEmail, getHaveEmployeeNoEmail, updateEmailSent} = require('./mongo')
 var clean = require('./clean')
+var generateHTMLEmail = require('./utils/htmlEmail')
+var notification = require('./utils/applicationReceivedEmail');
+const { getHaveEmployeeSubmitted, getNeedEmployeeSubmitted } = require('./utils/confirmationData');
+
 var listWebURL = process.env.LISTWEBURL || process.env.OPENSHIFT_NODEJS_LISTWEBURL || ""
 var listUser = process.env.LISTUSER || process.env.OPENSHIFT_NODEJS_LISTUSER || ""
 var listPass = process.env.LISTPASS || process.env.OPENSHIFT_NODEJS_LISTPASS || ""
 var listDomain = process.env.LISTDOMAIN || process.env.OPENSHIFT_NODEJS_LISTDOMAIN || ""
 var listParty = process.env.LISTPARTY || process.env.OPENSHIFT_NODEJS_LISTPARTY || ""
 var listADFS = process.env.LISTADFS || process.env.OPENSHIFT_NODEJS_LISTADFS || ""
+
+var confirmationEmail1 = process.env.CONFIRMATIONONE || process.env.OPENSHIFT_NODEJS_CONFIRMATIONONE || "";
+var confirmationBCC = process.env.CONFIRMATIONBCC || process.env.OPENSHIFT_NODEJS_CONFIRMATIONBCC || "";
+var pEmail = process.env.PARTICIPANTEMAIL || process.env.OPENSHIFT_NODEJS_PARTICIPANTEMAIL || "";
+var listEmail = process.env.LISTEMAIL || process.env.OPENSHIFT_NODEJS_LISTEMAIL || "";
+var clientURL = process.env.CLIENTURL || process.env.OPENSHIFT_NODEJS_CLIENTURL || ""
+var notifyEmail = process.env.NOTIFYEMAIL || process.env.OPENSHIFT_NODEJS_NOTIFYEMAIL || "";
+var caEmails = process.env.CAEMAILS.split(' ')
+var claimConfirmationEmail = process.env.CLAIM_CONFIRMATION_EMAIL || process.env.OPENSHIFT_NODEJS_CLAIM_CONFIRMATION_EMAIL || "";
+var claimConfirmationBCC = process.env.CLAIM_CONFIRMATION_BCC || process.env.OPENSHIFT_NODEJS_CLAIM_CONFIRMATION_BCC || "";
+var claimListEmail = process.env.CLAIM_LISTEMAIL || process.env.OPENSHIFT_NODEJS_CLAIM_LISTEMAIL || "";
+var claimNotifyEmail = process.env.CLAIM_NOTIFYEMAIL || process.env.OPENSHIFT_NODEJS_CLAIM_NOTIFYEMAIL || "";
+
+console.log(caEmails)
+console.log(caEmails.length)
 
 app = express();
 
@@ -355,9 +375,345 @@ async function saveListNeedEmployee(values,ca) {
   }
 }
 
-cron.schedule('*/3 * * * *', async function() {
+async function sendEmailsClaim(values) {
+  try {
+    let transporter = nodemailer.createTransport({
+      host: "apps.smtp.gov.bc.ca",
+      port: 25,
+      secure: false,
+      tls: {
+        rejectUnauthorized: false
+      } // true for 465, false for other ports
+    });
+    return await transporter.verify()
+      .then(function (r) {
+        //console.log(r)
+        console.log("Transporter connected.")
+        var cEmail, cNotifyEmail;
+        if (claimConfirmationEmail === "") {
+          cEmail = values.ClaimEmail
+        } else {
+          cEmail = claimConfirmationEmail
+        }
+        if (claimNotifyEmail === "") {
+          cNotifyEmail = caEmails[Number(values.ca)]
+        } else {
+          cNotifyEmail = claimNotifyEmail
+        }
+        console.log(values.ca)
+        console.log(cNotifyEmail)
+        // send mail with defined transport object
+        /*
+        let message1 = {
+          from: 'WorkBC Wage Subsidy <donotreply@gov.bc.ca>', // sender address
+          to: cEmail,// list of receivers
+          bcc: claimConfirmationBCC,
+          subject: "Application Confirmation - ", // Subject line
+          html: generateHTMLEmail("Thank you, your application has been received", 
+            ["Thank you your application has been received", "The following information was received:"],  
+            [],
+            getClaimSubmitted(values)) // html body
+        };
+        */
+        let message2 = {
+          from: 'WorkBC Wage Subsidy <donotreply@gov.bc.ca>', // sender address
+          to: claimListEmail,// list of receivers
+          subject: "A Wage Subsidy Claim application has been received", // Subject line
+          html: notification.generateListNotification(values) // html body
+        };
+        let message3 = {
+          from: 'WorkBC Wage Subsidy <donotreply@gov.bc.ca>', // sender address
+          to: cNotifyEmail,// list of receivers
+          bcc: claimConfirmationBCC,
+          subject: "A Wage Subsidy Claim application has been received", // Subject line
+          html: notification.generateClaimNotification(values) // html body
+        };
+        /*
+        let info = transporter.sendMail(message1, (error, info) => {
+          if (error) {
+            return "An error occurred while submitting the form, please try again. If the error persists please try again later.";
+          } else {
+            console.log("Message sent: %s", info.messageId);
+            return "success"
+          }
+        });
+        */
+        let info = transporter.sendMail(message2, (error, info) => {
+          if (error) {
+            console.log("Error sending")
+          } else {
+            console.log("Message sent: %s", info.messageId);
+            return "success"
+          }
+        });
+        info = transporter.sendMail(message3, (error, info) => {
+          if (error) {
+            console.log("Error sending")
+          } else {
+            console.log("Message sent: %s", info.messageId);
+            return "success"
+          }
+        });
+        return true
+      }).catch(function (e) {
+        console.log(e)
+        console.log("Error connecting to transporter")
+        return false
+      })
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+async function sendEmailsHaveEmployee(values) {
+  try {
+    let transporter = nodemailer.createTransport({
+      host: "apps.smtp.gov.bc.ca",
+      port: 25,
+      secure: false,
+      tls: {
+        rejectUnauthorized: false
+      } // true for 465, false for other ports
+    });
+    return await transporter.verify()
+      .then(function (r) {
+        //console.log(r)
+        console.log("Transporter connected.")
+        // send mail with defined transport object
+        var mailingList;
+        if (confirmationEmail1 !== "") {
+          mailingList = confirmationEmail1
+        } else {
+          mailingList = values.businessEmail
+        }
+        var positionEmails;
+        if (pEmail === "") {
+          positionEmails = [values.position0Email0, values.position0Email1, values.position0Email2,
+          values.position0Email3, values.position0Email4, values.position1Email0, values.position1Email1, values.position1Email2, values.position1Email3, confirmationBCC].filter(e => e != null);
+        } else {
+          positionEmails = pEmail
+        }
+        console.log(positionEmails)
+        var cNotifyEmail;
+        if (notifyEmail === "") {
+          cNotifyEmail = caEmails[Number(values.ca)]
+        } else {
+          cNotifyEmail = notifyEmail
+        }
+        console.log(values.ca)
+        console.log(cNotifyEmail)
+        // filter out empty addresses
+        // send mail with defined transport object
+        let message1 = {
+          from: 'WorkBC Wage Subsidy <donotreply@gov.bc.ca>', // sender address
+          to: mailingList,// list of receivers
+          bcc: confirmationBCC,
+          subject: "Application Confirmation - " + values.applicationID, // Subject line
+          html: generateHTMLEmail("Thank you, your application has been received",
+            [
+              `<b>Application ID: ${values.applicationID}</b>`,
+              `Thank you for your interest in WorkBC Wage Subsidy services. Your application has been received and a WorkBC staff member will be in touch with you soon to confirm your business qualifies for WorkBC Wage Subsidy and to complete the application process. `,
+            ],
+            [
+            ],
+            getHaveEmployeeSubmitted(values)
+          ) // html body
+        };
+        let message2 = {
+          from: 'WorkBC Wage Subsidy <donotreply@gov.bc.ca>', // sender address
+          to: listEmail,// list of receivers
+          subject: "A Wage Subsidy application has been received - " + values.applicationID, // Subject line
+          html: notification.generateListNotification(values) // html body
+        };
+        let message3 = {
+          from: 'WorkBC Wage Subsidy <donotreply@gov.bc.ca>', // sender address
+          to: cNotifyEmail,// list of receivers
+          bcc: confirmationBCC,
+          subject: "A Wage Subsidy application has been received - " + values.applicationID, // Subject line
+          html: notification.generateHaveEmployeeNotification(values) // html body
+        };
+        let message4 = {
+          from: 'WorkBC Wage Subsidy <donotreply@gov.bc.ca>', // sender address
+          bcc: positionEmails,// list of receivers
+          subject: "WorkBC Wage Subsidy Application - Next Steps", // Subject line
+          html: generateHTMLEmail("WorkBC Wage Subsidy Application - Next Steps",
+            [
+              `Hello,`,
+              `You’re receiving this email because your future employer recently applied for a WorkBC Wage Subsidy.`,
+              `WorkBC is a provincial government service that helps residents of B.C. improve their skills, explore career options, and find employment.`,
+            ],
+            [
+              `Only a few steps remain before you are back at work.`,
+              `If you are participating in WorkBC Services, contact your Employment Counsellor right away, before taking the steps below.`,
+              `If you are NOT already participating in WorkBC Services, please follow these steps:`,
+              `<b>Step 1:</b> Register for Online Employment Services.`,
+              `<b>Step 2:</b> Complete an online application. Click <a href="https://apply.workbc.ca/">here</a> to get started and ensure you <b>select WorkBC Self-Serve<b> to begin your application.`,
+              `<img class="img-fluid" src="${clientURL}/images/workbc_self_serve.png" alt="WorkBC Self Serve Option" style="height: auto; line-height: 100%; outline: none; text-decoration: none; width: 100%; max-width: 100%; border: 0 none;">`,
+              `When selecting your WorkBC Centre, select the community where your job is located.`,
+              `<img class="img-fluid" src="${clientURL}/images/workbc_community_select.png" alt="WorkBC Community Selector" style="height: auto; line-height: 100%; outline: none; text-decoration: none; width: 100%; max-width: 100%; border: 0 none;">`,
+              `<b>Step 3:</b> Let your employer know you have applied! A team member will be in touch soon.`,
+            ],
+            [
+              `<b>Why use WorkBC?</b></p><p>
+              <ul>
+                <li>
+                  <b>Expertise: </b>We're ready to help you start career planning now or get you ready for the next phase of BC's COVID-19 Restart Plan.</li>
+                <li>
+                  <b>Free Services: </b>We offer skills training and personalized, one-on-one job counselling. WorkBC services are completely free.</li>
+                <li>
+                  <b>Benefits: </b>You might also be eligible for exclusive benefits.</li>
+              </ul>
+              `,
+              `Sincerely,<br><b>Your WorkBC team<br></b>`
+            ]
+          ) // html body
+        };
+        let info = transporter.sendMail(message1, (error, info) => {
+          if (error) {
+            console.log("error:", error);
+            console.log("Error sending confirmation for " + values.applicationID)
+          } else {
+            console.log("Message sent: %s", info.messageId);
+          }
+        });
+        info = transporter.sendMail(message2, (error, info) => {
+          if (error) {
+            console.log("error:", error);
+            console.log("Error sending list notification for " + values.applicationID)
+          } else {
+            console.log("Message sent: %s", info.messageId);
+          }
+        });
+        info = transporter.sendMail(message3, (error, info) => {
+          if (error) {
+            console.log("error:", error);
+
+            console.log("Error sending notification for " + values.applicationID)
+          } else {
+            console.log("Message sent: %s", info.messageId);
+          }
+        });
+        info = transporter.sendMail(message4, (error, info) => {
+          if (error) {
+            console.log("error:", error);
+            console.log("Error sending position email(s) for " + values.applicationID);
+          } else {
+            1
+            console.log("Message sent: %s", info.messageId);
+          }
+        });
+        return true
+      }).catch(function (e) {
+        console.log(e)
+        console.log("Error connecting to transporter")
+        return false
+      })
+  } catch (error) {
+    console.log(error)
+    return false
+  }
+}
+
+async function sendEmailsNeedEmployee(values) {
+  try {
+    let transporter = nodemailer.createTransport({
+      host: "apps.smtp.gov.bc.ca",
+      port: 25,
+      secure: false,
+      tls: {
+        rejectUnauthorized: false
+      } // true for 465, false for other ports
+    });
+    return await transporter.verify()
+      .then(function (r) {
+        //console.log(r)
+        console.log("Transporter connected.")
+        // send mail with defined transport object
+        var mailingList;
+        if (confirmationEmail1 !== "") {
+          mailingList = confirmationEmail1
+        } else {
+          mailingList = values.businessEmail
+        }
+        var cNotifyEmail;
+        if (notifyEmail === ""){
+          cNotifyEmail = caEmails[Number(values.ca)]
+        } else {
+          cNotifyEmail = notifyEmail
+        }
+        console.log(values.ca)
+        console.log(cNotifyEmail)
+        // send mail with defined transport object
+        let message1 = {
+          from: 'WorkBC Wage Subsidy <donotreply@gov.bc.ca>', // sender address
+          to: mailingList,// list of receivers
+          bcc: confirmationBCC,
+          subject: "Application Confirmation - " + values.applicationID, // Subject line
+          html: generateHTMLEmail("Thank you, your application has been received",
+            [
+              `<b>Application ID: ${values.applicationID}</b>`,
+              `Thank you for your interest in WorkBC Wage Subsidy services. Your application has been received and a WorkBC staff member will be in touch with you soon to confirm your business qualifies for WorkBC Wage Subsidy and to complete the application process. `,
+            ],
+            [
+            ],
+            getNeedEmployeeSubmitted(values)
+          ) // html body
+        };
+        let message2 = {
+          from: 'WorkBC Wage Subsidy <donotreply@gov.bc.ca>', // sender address
+          to: listEmail,// list of receivers
+          subject: "A Wage Subsidy application has been received - " + values.applicationID, // Subject line
+          html: notification.generateListNotification(values) // html body
+        };
+        let message3 = {
+          from: 'WorkBC Wage Subsidy <donotreply@gov.bc.ca>', // sender address
+          to: cNotifyEmail,// list of receivers
+          bcc: confirmationBCC,
+          subject: "A Wage Subsidy application has been received - " + values.applicationID, // Subject line
+          html: notification.generateNeedEmployeeNotification(values) // html body
+        };
+
+        let info = transporter.sendMail(message1, (error, info) => {
+          if (error) {
+            console.log("error:", error);
+            console.log("Error sending confirmation for " + values.applicationID)
+          } else {
+            console.log("Message sent: %s", info.messageId);
+          }
+        });
+        info = transporter.sendMail(message2, (error, info) => {
+          if (error) {
+            console.log("error:", error);
+            console.log("Error sending list notification for " + values.applicationID)
+          } else {
+            console.log("Message sent: %s", info.messageId);
+          }
+        });
+        info = transporter.sendMail(message3, (error, info) => {
+          if (error) {
+            console.log("error:", error);
+            console.log("Error sending notification for " + values.applicationID)
+          } else {
+            console.log("Message sent: %s", info.messageId);
+          }
+        });
+
+        return true
+      }).catch(function (e) {
+        console.log(e)
+        console.log("Error connecting to transporter")
+        return false
+      })
+  } catch (error) {
+    console.log(error)
+    return false
+  }
+}
+
+cron.schedule('*/1 * * * *', async function() {
     console.log('running a task every 3 minutes');
     //console.log('running a task every 10 seconds');
+    /*
     spr = spauth.getAuth(listWebURL, {
       username: listUser,
       password: listPass,
@@ -527,6 +883,85 @@ cron.schedule('*/3 * * * *', async function() {
                 console.log("error")
                 console.log(e)
               })     
+        }
+    })
+    */
+    await getHaveEmployeeNoEmail()
+    .then(async cursor => {
+        var results = await cursor.toArray()
+        console.log(results.length)
+        for (const data of results){
+          clean(data)
+          await sendEmailsHaveEmployee(data)
+              .then(function(sent){
+                console.log("email")
+                console.log(sent)
+                // save values to mongo db
+                if (sent) {
+                  try {
+                    updateEmailSent("HaveEmployee",data._id);
+                  }
+                  catch (error) {
+                    console.log(error);
+                  }
+                }
+              })
+              .catch(function(e){
+                console.log("error")
+                console.log(e)
+              }) 
+        }
+    })
+    await getNeedEmployeeNoEmail()
+    .then(async cursor => {
+        var results = await cursor.toArray()
+        console.log(results.length)
+        for (const data of results){
+          clean(data)
+          await sendEmailsNeedEmployee(data)
+              .then(function(sent){
+                console.log("email")
+                console.log(sent)
+                // save values to mongo db
+                if (sent) {
+                  try {
+                    updateEmailSent("NeedEmployee",data._id);
+                  }
+                  catch (error) {
+                    console.log(error);
+                  }
+                }
+              })
+              .catch(function(e){
+                console.log("error")
+                console.log(e)
+              }) 
+        }
+    })
+    await getClaimNoEmail()
+    .then(async cursor => {
+        var results = await cursor.toArray()
+        console.log(results.length)
+        for (const data of results){
+          clean(data)
+          await sendEmailsClaim(data)
+              .then(function(sent){
+                console.log("email")
+                console.log(sent)
+                // save values to mongo db
+                if (sent) {
+                  try {
+                    updateEmailSent("Claim",data._id);
+                  }
+                  catch (error) {
+                    console.log(error);
+                  }
+                }
+              })
+              .catch(function(e){
+                console.log("error")
+                console.log(e)
+              }) 
         }
     })
 });

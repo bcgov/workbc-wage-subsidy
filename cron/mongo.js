@@ -184,7 +184,84 @@ module.exports = {
         }).then(result =>{
             return result
         })   
-    }
+    },
+    getHaveEmployeeNoEmail: async function () {
+        return await connection
+        .then(mClient => {
+            // get a handle on the db
+            return mClient.db();
+            //return db
+        })
+        .then(async db => {
+        // add our values to db (they are always new)
+            return db.collection("HaveEmployee").find({emailSent: false})
+                //console.log(err)
+                //console.log(doc)
+        }).then(async doc =>{
+            return doc
+        })    
+    },
+    getNeedEmployeeNoEmail: async function () {
+        return await connection
+        .then(mClient => {
+            // get a handle on the db
+            return mClient.db();
+            //return db
+        })
+        .then(async db => {
+        // add our values to db (they are always new)
+            return db.collection("NeedEmployee").find({emailSent: false})
+                //console.log(err)
+                //console.log(doc)
+        }).then(doc =>{
+            return doc
+        })          
+    },
+    getClaimNoEmail: async function () {
+        return await connection
+        .then(mClient => {
+            // get a handle on the db
+            return mClient.db();
+            //return db
+        })
+        .then(async db => {
+        // add our values to db (they are always new)
+            return db.collection("Claim").find({emailSent: false})
+                //console.log(err)
+                //console.log(doc)
+        }).then(doc =>{
+            return doc
+        })    
+    },
+    updateEmailSent: async function(collection,_id){
+        return await connection
+        .then(mClient => {
+            // get a handle on the db
+            return mClient.db();
+            //return db
+        })
+        .then(async db => {
+        // add our values to db (they are always new)
+            return db.collection(collection).updateOne(
+                {
+                    _id: _id
+                },
+                { 
+                    $set : {
+                    emailSent: true
+                    }
+                },
+                {
+                    upsert: false
+                }
+
+            )
+                //console.log(err)
+                //console.log(doc)
+        }).then(result =>{
+            return result
+        })     
+    },
     /*
     printValues: function(collection) {
         const client = new MongoClient(uri, { useUnifiedTopology: true });
