@@ -95,7 +95,8 @@ async function sendEmails(values) {
           html: generateHTMLEmail("Thank you, your application has been received",
             [
               `<b>Application ID: ${values._id}</b>`,
-              `Thank you for your interest in WorkBC Wage Subsidy services. Your application has been received and a WorkBC staff member will be in touch with you soon to confirm your business qualifies for WorkBC Wage Subsidy and to complete the application process. `,
+              `Thank you for your interest in WorkBC Wage Subsidy services.`,
+              `A WorkBC staff member will be in touch with you to confirm your business qualifies for WorkBC Wage subsidy as soon as the potential employee you identified registers and completes their application in the <a href="https://apply.workbc.ca" target="_blank" rel="noopener noreferrer">WorkBC Self-Serve Online Employment Services portal</a>. Please encourage them to apply with the link they were provided in the email notification they received. `,
             ],
             [
             ],
