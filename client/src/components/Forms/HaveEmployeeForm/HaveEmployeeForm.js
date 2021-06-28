@@ -263,7 +263,8 @@ class HaveEmployeeForm extends Component {
                                     {
                                         this.state.currentStep === 1 && (
                                             <div className="alert alert-primary alert-dismissible fade show" role="alert">
-                                                    You will need to submit your identified job seeker email in step 2.
+                                                    You will need to submit your identified job seeker email in step 2.<br/>
+                                                    Job Seeker Eligibility: All residents of B.C. who are not employed at all
                                                 <button type="button" className="close" data-dismiss="alert" aria-label="Close">
                                                     <span aria-hidden="true">&times;</span>
                                                 </button>

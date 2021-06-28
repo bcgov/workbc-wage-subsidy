@@ -20,7 +20,8 @@ class thankyouHaveEmployee extends Component {
                         <h1>Thank you, your application has been received</h1>
                         <h3>Application ID: {this.props.location.state !== undefined && this.props.location.state._id}</h3>
                         <button className="btn btn-success d-print-none" onClick={() => window.print()}>Print Confirmation</button><br /><br />
-                        <p>Thank you for your interest in WorkBC Wage Subsidy services. Your application has been received and a WorkBC staff member will be in touch with you soon to confirm your business qualifies for WorkBC Wage Subsidy and to complete the application process. </p>
+                        <p>Thank you for your interest in WorkBC Wage Subsidy services. </p>
+                        <p>A WorkBC staff member will be in touch with you to confirm your business qualifies for WorkBC Wage subsidy as soon as the potential employee you identified registers and completes their application in the <a href="https://apply.workbc.ca" target="_blank" rel="noopener noreferrer">WorkBC Self-Serve Online Employment Services portal</a>. Please encourage them to apply with the link they were provided in the email notification they received. </p>
                         <p>
                             The following information was received:
                         </p>
