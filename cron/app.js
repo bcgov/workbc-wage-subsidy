@@ -10,6 +10,7 @@ var listPass = process.env.LISTPASS || process.env.OPENSHIFT_NODEJS_LISTPASS || 
 var listDomain = process.env.LISTDOMAIN || process.env.OPENSHIFT_NODEJS_LISTDOMAIN || ""
 var listParty = process.env.LISTPARTY || process.env.OPENSHIFT_NODEJS_LISTPARTY || ""
 var listADFS = process.env.LISTADFS || process.env.OPENSHIFT_NODEJS_LISTADFS || ""
+var testList = process.env.TESTLIST || process.env.OPENSHIFT_NODEJS_TESTLIST || ""
 
 app = express();
 
@@ -39,7 +40,13 @@ async function saveListClaim(values,ca) {
       //console.log(headers)
       headers['X-RequestDigest'] = response
       headers['Content-Type'] = "application/json;odata=verbose"
-      var l = listWebURL + `Apps/WageSubsidy/_api/web/lists/getByTitle('Catchment${ca}')/items`
+      if (testList === ""){
+        var l = listWebURL + `Apps/WageSubsidy/_api/web/lists/getByTitle('Catchment${ca}')/items`
+        var t = `SP.Data.Catchment${ca}ListItem`
+      } else {
+        var l = listWebURL + `Apps/WageSubsidy/_api/web/lists/getByTitle('CatchmentTEST')/items`
+        var t = `SP.Data.CatchmentTESTListItem`
+      }
       console.log(l)
       return request.post({
         url: l,
@@ -47,7 +54,7 @@ async function saveListClaim(values,ca) {
         json: true,
         body: {
           "__metadata": {
-            "type": `SP.Data.Catchment${ca}ListItem`
+            "type": t
           },
           "Title": `Claim - ${values.employerName} - ${values.applicationID}`,
           "CatchmentNo": values.ca,
@@ -152,7 +159,13 @@ async function saveListHaveEmployee(values,email,ca) {
       //console.log(headers)
       headers['X-RequestDigest'] = response
       headers['Content-Type'] = "application/json;odata=verbose"
-      var l = listWebURL + `Apps/WageSubsidy/_api/web/lists/getByTitle('Catchment${ca}')/items`
+      if (testList === ""){
+        var l = listWebURL + `Apps/WageSubsidy/_api/web/lists/getByTitle('Catchment${ca}')/items`
+        var t = `SP.Data.Catchment${ca}ListItem`
+      } else {
+        var l = listWebURL + `Apps/WageSubsidy/_api/web/lists/getByTitle('CatchmentTEST')/items`
+        var t = `SP.Data.CatchmentTESTListItem`
+      }
       console.log("webURL:")
       console.log(l)
       return request.post({
@@ -161,7 +174,7 @@ async function saveListHaveEmployee(values,email,ca) {
         json: true,
         body: {
           "__metadata": {
-            "type": `SP.Data.Catchment${ca}ListItem`
+            "type": t
           },
           "Title": `${values.operatingName} - ${values.applicationID}`,
           "CatchmentNo": values.ca,
@@ -269,7 +282,13 @@ async function saveListNeedEmployee(values,ca) {
       //console.log(headers)
       headers['X-RequestDigest'] = response
       headers['Content-Type'] = "application/json;odata=verbose"
-      var l = listWebURL + `Apps/WageSubsidy/_api/web/lists/getByTitle('Catchment${ca}')/items`
+      if (testList === ""){
+        var l = listWebURL + `Apps/WageSubsidy/_api/web/lists/getByTitle('Catchment${ca}')/items`
+        var t = `SP.Data.Catchment${ca}ListItem`
+      } else {
+        var l = listWebURL + `Apps/WageSubsidy/_api/web/lists/getByTitle('CatchmentTEST')/items`
+        var t = `SP.Data.CatchmentTESTListItem`
+      }
       console.log(l)
       return request.post({
         url: l,
@@ -277,7 +296,7 @@ async function saveListNeedEmployee(values,ca) {
         json: true,
         body: {
           "__metadata": {
-            "type": `SP.Data.Catchment${ca}ListItem`
+            "type": t
           },
           "Title": `${values.operatingName} - ${values.applicationID}`,
           "CatchmentNo": values.ca,
