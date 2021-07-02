@@ -329,11 +329,15 @@ var NeedEmployeeValidationSchema = yup.object().shape({
         'invalid decimal',
         value => (value + "").match(/^\d*.{1}\d*$/))
         .typeError("must be a decimal number"),
-    applicationMERCs1: yup.number().test(
-        'is-decimal',
-        'invalid decimal',
-        value => (value + "").match(/^\d*.{1}\d*$/))
-        .typeError("must be a decimal number"),
+    applicationMERCs1: yup.number()
+        .when("checkPositionInstances", {
+            is: "1",
+            then: yup.number().test(
+                'is-decimal',
+                'invalid decimal',
+                value => (value + "").match(/^\d*.{1}\d*$/))
+                .typeError("must be a decimal number"),
+        }),
     duties0: yup.string()
         .max(500, "this field is limited to 500 characters")
         .required('Please enter a description of the duties your employee will be tasked with.'),
