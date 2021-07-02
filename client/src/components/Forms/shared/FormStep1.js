@@ -610,8 +610,10 @@ class FormStep1 extends Component {
                         {feedBackInvalid(this.props.errors,this.props.touched,"cewsParticipation")}
                     </div>
                     {
-                            this.props.cewsParticipation === "yes" &&
-                            <small className="text-danger">An employee may only be subsidized by WorkBC if that employee is not subsidized under CEWS. Employees subsidized by CEWS are not eligible for WorkBC Wage Subsidy.</small>
+                            (this.props.values.cewsParticipation === "yes" || this.props.values.cewsParticipation === "notSure") &&
+                            <p className="text-danger">You cannot be receiving Canada Emergency Wage Subsidy (CEWS) and/or the Canada Recovery Hiring Program (CRHP) and WorkBC Wage
+                            Subsidy for the same employee, for the same time period
+                            </p>
                     }
                 </div>
                 <div className="form-group">
