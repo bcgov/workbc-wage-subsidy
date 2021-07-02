@@ -579,7 +579,7 @@ class FormStep1 extends Component {
                     </div>
                 </div>
                 <div className="form-group">
-                    <label className="col-form-label control-label" htmlFor="cewsParticipation">Are you actively participating in the Canada Emergency Wage Subsidy program? <span
+                    <label className="col-form-label control-label" htmlFor="cewsParticipation">Are you actively participating in the Canada Emergency Wage Subsidy program and/or the Canada Recovery Hiring Program (CRHP)? <span
                         style={{ color: "red" }}>*</span> </label>
                     <div className="form-check">
                         <Field
