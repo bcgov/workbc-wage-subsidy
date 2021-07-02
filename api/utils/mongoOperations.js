@@ -102,6 +102,8 @@ module.exports = {
                 signatory1          : strings.orEmpty(values.signatory1),
                 signatoryTitle      : strings.orEmpty(values.signatoryTitle),
                 organizationConsent : strings.orEmpty(values.organizationConsent),
+                applicationMERCs0   : strings.orEmpty(values.applicationMERCs0),
+                applicationMERCs1   : strings.orEmpty(values.applicationMERCs1),
             });
         });
     },
@@ -160,6 +162,8 @@ module.exports = {
                 signatory1          : strings.orEmpty(values.signatory1),
                 signatoryTitle      : strings.orEmpty(values.signatoryTitle),
                 organizationConsent : strings.orEmpty(values.organizationConsent),
+                applicationMERCs0   : strings.orEmpty(values.applicationMERCs0),
+                applicationMERCs1   : strings.orEmpty(values.applicationMERCs1),
             });
         });
     },

@@ -207,6 +207,8 @@ class HaveEmployeeForm extends Component {
                                     workExperience2:"",
                                     workExperience3:"",
                                     workExperience4:"",
+                                    applicationMERCs0:"",
+                                    applicationMERCs1:"",
                                     //step 3
                                     signatoryTitle:"",
                                     signatory1:"",

@@ -212,7 +212,9 @@ async function saveListHaveEmployee(values,email,ca) {
           "Wage1": values.wage1,
           "SignatoryTitle": values.signatoryTitle,
           "Signatory1": values.signatory1,
-          "OrganizationConsent": values.organizationConsent
+          "OrganizationConsent": values.organizationConsent,
+          "ApplicationMERCs": Number(values.applicationMERCs0),
+          "ApplicationMERCs2": Number(values.applicationMERCs1)
           //"": values.,
         }
       })
@@ -325,7 +327,9 @@ async function saveListNeedEmployee(values,ca) {
           "Wage1": values.wage1,
           "SignatoryTitle": values.signatoryTitle,
           "Signatory1": values.signatory1,
-          "OrganizationConsent": values.organizationConsent
+          "OrganizationConsent": values.organizationConsent,
+          "ApplicationMERCs": Number(values.applicationMERCs0),
+          "ApplicationMERCs2": Number(values.applicationMERCs1)
           //"": values.,
         }
       })

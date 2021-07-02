@@ -7,7 +7,7 @@ class NeedEmployeeStep2 extends Component {
     constructor(){
         super()
         this.state={
-            positions:[{operatingName:"", numberOfPositions:"", startDate:"",hours:"",wage:"",duties:"",skills:"",workExperience:""}],
+            positions:[{operatingName:"", numberOfPositions:"", startDate:"",hours:"",wage:"",duties:"",skills:"",workExperience:"", applicationMERCs:""}],
         };
     }
 
@@ -18,7 +18,7 @@ class NeedEmployeeStep2 extends Component {
     };
     handleChange = (e) => {
 
-        if (["operatingName", "numberOfPositions", "startDate", "hours", "wage", "duties", "skills", "workExperience"].includes(e.target.className.split(" ")[0])) {
+        if (["operatingName", "numberOfPositions", "startDate", "hours", "wage", "duties", "skills", "workExperience","applicationMERCs"].includes(e.target.className.split(" ")[0])) {
           let positions = [...this.state.positions]
           positions[e.target.dataset.id][e.target.className.split(" ")[0]] = e.target.value
           this.setState({ positions }, () => this.state.positions)
@@ -30,7 +30,7 @@ class NeedEmployeeStep2 extends Component {
     addPosition = (e) => {
         this.props.values.checkPositionInstances = "1";
         this.setState((prevState)=> ({
-            positions: [...prevState.positions, {operatingName:"", numberOfPositions:"", startDate:"",hours:"",wage:"",duties:"",skills:"",workExperience:""}]
+            positions: [...prevState.positions, {operatingName:"", numberOfPositions:"", startDate:"",hours:"",wage:"",duties:"",skills:"",workExperience:"",applicationMERCs:""}]
 
         }));
     }
@@ -70,7 +70,7 @@ class NeedEmployeeStep2 extends Component {
               
                 {
                     positions.map((val,Entry)=>{
-                        let operatingName=`operatingName${Entry}`, numberOfPositions=`numberOfPositions${Entry}`, startDate=`startDate${Entry}`, hours=`hours${Entry}`, wage=`wage${Entry}`, duties=`duties${Entry}`,skills=`skills${Entry}`,workExperience=`workExperience${Entry}`
+                        let operatingName=`operatingName${Entry}`, numberOfPositions=`numberOfPositions${Entry}`, startDate=`startDate${Entry}`, hours=`hours${Entry}`, wage=`wage${Entry}`, duties=`duties${Entry}`,skills=`skills${Entry}`,workExperience=`workExperience${Entry}`,applicationMERCs=`applicationMERCs${Entry}`
                     
                         return(
                           
@@ -106,7 +106,7 @@ class NeedEmployeeStep2 extends Component {
                                     </div>
                                 </div>
                                 <div className="form-row">
-                                    <div className="form-group col-md-4">
+                                    <div className="form-group col-md-6">
                                         <label className="col-form-label control-label" htmlFor={startDate}>Anticipated Start Date<span
                                                 style={{ color: "red" }}>*</span></label>
                                                  {feedBackInvalid(this.props.errors,this.props.touched, startDate)}
@@ -118,21 +118,27 @@ class NeedEmployeeStep2 extends Component {
                                                 maxDate={new Date("02-29-2030")}
                                                 className= {`startDate form-control ${feedBackClassName(this.props.errors, this.props.touched, startDate)}`}
                                             />
-                                       
                                     </div>
-                                    <div className="form-group col-md-4">
+                                    <div className="form-group col-md-6">
                                         <label className="col-form-label control-label" htmlFor={hours}>Hours of Work Per Week<span
                                                 style={{ color: "red" }}>*</span></label>
                                         <Field className= {`hours form-control ${feedBackClassName(this.props.errors, this.props.touched, hours)}`} id={hours} name={hours} data-id={Entry}  />
                                         {feedBackInvalid(this.props.errors,this.props.touched, hours)}
                                     </div>
-                                    <div className="form-group col-md-4">
-                                        <label className="col-form-label control-label" htmlFor={wage}>Hourly Wage<span
-                                                style={{ color: "red" }}>*</span></label>
-                                        <Field className= {`wage form-control ${feedBackClassName(this.props.errors, this.props.touched, wage)}`} id={wage} name={wage} data-id={Entry}  />
-                                        {feedBackInvalid(this.props.errors,this.props.touched, wage)}
-                                    </div>
-                            </div>
+                                </div>
+                                <div className="form-row">
+                                        <div className="form-group col-md-6">
+                                            <label className="col-form-label control-label" htmlFor={wage}>Hourly Wage<span
+                                                    style={{ color: "red" }}>*</span></label>
+                                            <Field className= {`wage form-control ${feedBackClassName(this.props.errors, this.props.touched, wage)}`} id={wage} name={wage} data-id={Entry}  />
+                                            {feedBackInvalid(this.props.errors,this.props.touched, wage)}
+                                        </div>
+                                        <div className="form-group col-md-6">
+                                            <label className="col-form-label control-label" htmlFor={applicationMERCs}>Mandatory Employment Related Costs (MERCs)</label>
+                                            <Field className= {`applicationMERCs form-control ${feedBackClassName(this.props.errors, this.props.touched, applicationMERCs)}`} id={applicationMERCs} name={applicationMERCs} data-id={Entry}  />
+                                            {feedBackInvalid(this.props.errors,this.props.touched, applicationMERCs)}
+                                        </div>
+                                </div>
                                 <div className="form-row">
                                     <div className="form-group col-md-12">
                                         <label className="col-form-label control-label" htmlFor={duties}>Description of duties:<span

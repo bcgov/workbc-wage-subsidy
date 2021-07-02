@@ -57,117 +57,117 @@ export const HaveEmployeeValidationSchema = yup.object().shape({
     operatingName: yup.string()
         .required('Please enter the Organization name'),
     businessNumber: yup.string()
-        .matches(/^[0-9]{9}[A-Z]{2}[0-9]{4}$/gi,"Number is Incorrect should be in the form: 123456789 BC0001 ")
+        .matches(/^[0-9]{9}[A-Z]{2}[0-9]{4}$/gi, "Number is Incorrect should be in the form: 123456789 BC0001 ")
         .max(15, "Business number must be exactly 15 characters")
         .min(15, "Business number must be exactly 15 characters.")
         .required('Please enter your business number.'),
     businessAddress: yup.string()
-        .max(255,"Address too long")
+        .max(255, "Address too long")
         .required("please enter your organizations address"),
-    businessCity:yup.string()
-        .max(100,"City name too long")
+    businessCity: yup.string()
+        .max(100, "City name too long")
         .required("please enter your organizations city"),
-    businessProvince:yup.string()
+    businessProvince: yup.string()
         .required("Please enter a valid province"),
-    businessPostal:yup.string()
-        .matches(/^[A-Za-z]\d[A-Za-z]\d[A-Za-z]\d$/,"Please enter a valid Postal Code")
+    businessPostal: yup.string()
+        .matches(/^[A-Za-z]\d[A-Za-z]\d[A-Za-z]\d$/, "Please enter a valid Postal Code")
         .required("Please enter a valid Postal Code"),
-    businessPhone:yup.string()
-        .test('Is-valid-phone','Invalid phone',
-        value => (value +"").match(/^\d{3}-\d{3}-\d{4}$/gi))
+    businessPhone: yup.string()
+        .test('Is-valid-phone', 'Invalid phone',
+            value => (value + "").match(/^\d{3}-\d{3}-\d{4}$/gi))
         .required("Please enter phone."),
-    businessFax:yup.string().test('Is-valid-fax','Invalid fax',
-        value => (value +"").match(/^\d{1}-\d{3}-\d{3}-\d{4}$/gi) || value === undefined,
-        ),
-    businessEmail:yup.string().email("Please enter a valid email.")
+    businessFax: yup.string().test('Is-valid-fax', 'Invalid fax',
+        value => (value + "").match(/^\d{1}-\d{3}-\d{3}-\d{4}$/gi) || value === undefined,
+    ),
+    businessEmail: yup.string().email("Please enter a valid email.")
         .required("Please enter email"),
     otherWorkAddress: yup.boolean(),
-    sectorType:yup.string()
+    sectorType: yup.string()
         .oneOf(["Private",
-                "Non-Profit",
-                "Public"],"Please select a valid field.")
+            "Non-Profit",
+            "Public"], "Please select a valid field.")
         .required('Please select your sector type.'),
-    typeOfIndustry:yup.string()
+    typeOfIndustry: yup.string()
         .required('Please select your industry type.'),
-    organizationSize:yup.string()
+    organizationSize: yup.string()
         .oneOf(["1-49",
-                "50-499",
-                "500+"],"Please select a valid field.")
+            "50-499",
+            "500+"], "Please select a valid field.")
         .required('Please select your organization size'),
-    cewsParticipation:yup.string()
+    cewsParticipation: yup.string()
         .oneOf(["yes",
-                "no",
-                "notSure"],"Please select a valid field.")
+            "no",
+            "notSure"], "Please select a valid field.")
         .required("Please select an answer on whether your organization is actively participating in the CEWS Program"),
-    employeeDisplacement:yup.string()
+    employeeDisplacement: yup.string()
         .oneOf(["yes",
-                "no"],"Please select a valid field.")
+            "no"], "Please select a valid field.")
         .required("Please select an answer on whether your employees have been displaced"),
-    labourDispute:yup.string()
+    labourDispute: yup.string()
         .oneOf(["yes",
-                "no"],"Please select a valid field.")
+            "no"], "Please select a valid field.")
         .required("Please select an answer on whether there is a labour dispute or stoppage"),
-    unionConcurrence:yup.string()
+    unionConcurrence: yup.string()
         .oneOf(["yes",
-                "no",
-                "N/A"],"Please select a valid field.")
+            "no",
+            "N/A"], "Please select a valid field.")
         .required("Please select an answer on whether there is a union occurrence"),
-    liabilityCoverage:yup.string()
+    liabilityCoverage: yup.string()
         .oneOf(["yes",
-                "no"],"Please select a valid field.")
+            "no"], "Please select a valid field.")
         .required("Please select an answer on whether your organization has 3rd party liability coverage"),
-    wageSubsidy:yup.string()
+    wageSubsidy: yup.string()
         .oneOf(["yes",
-                "no"],"Please select a valid field.")
+            "no"], "Please select a valid field.")
         .required("Please select an answer on whether your organization is receiving funding under a workBC wage subsidy agreement"),
-    WSBCCoverage:yup.string()
+    WSBCCoverage: yup.string()
         .oneOf(["yes",
-                "no"],"Please select a valid field.")
+            "no"], "Please select a valid field.")
         .required("Please select an answer on whether your organization has WorkSafe BC coverage"),
     eligibility: yup.boolean()
-        .oneOf([true],"Required"),
+        .oneOf([true], "Required"),
     lawCompliance: yup.boolean()
-        .oneOf([true],"Please confirm you are in full law compliance."),
+        .oneOf([true], "Please confirm you are in full law compliance."),
     //step 1:pop-up fields
-    employeesClaimed:yup.mixed()
-        .when("wageSubsidy",{ 
-            is:"yes",
-            then: yup.string().oneOf(["1","2","3","4","5","6","7","8","9","10"], "Please choose a valid option.").required("Please select number employees currently subsidized")
+    employeesClaimed: yup.mixed()
+        .when("wageSubsidy", {
+            is: "yes",
+            then: yup.string().oneOf(["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"], "Please choose a valid option.").required("Please select number employees currently subsidized")
         }),
     WSBCNumber: yup.string()
-        .when("WSBCCoverage",{
-            is:"yes",
-            then: yup.string().test('Is valid Number','Invalid WSBC number, format should be: BC0001',
-            value => (value +"").match(/^[A-Z]{2}[0-9]+$/gi),
+        .when("WSBCCoverage", {
+            is: "yes",
+            then: yup.string().test('Is valid Number', 'Invalid WSBC number, format should be: BC0001',
+                value => (value + "").match(/^[A-Z]{2}[0-9]+$/gi),
             ),
-    }),
-    addressAlt:yup.string()
-        .when("otherWorkAddress",{
-            is:true,
-            then: yup.string().max(255,"Address too long, please use address line 2.").required("please enter your other work address")
         }),
-       
+    addressAlt: yup.string()
+        .when("otherWorkAddress", {
+            is: true,
+            then: yup.string().max(255, "Address too long, please use address line 2.").required("please enter your other work address")
+        }),
+
     cityAlt: yup.string()
         .when("otherWorkAddress", {
             is: true,
-            then: yup.string().max(100,"City name too long").required("Please enter a city")
-        }),    
-    provinceAlt:yup.string()
+            then: yup.string().max(100, "City name too long").required("Please enter a city")
+        }),
+    provinceAlt: yup.string()
         .when("otherWorkAddress", {
             is: true,
             then: yup.string().required("Please enter a province")
-        }),   
-    postalAlt:yup.string()
+        }),
+    postalAlt: yup.string()
         .when("otherWorkAddress", {
             is: true,
-            then: yup.string().matches(/^[A-Za-z]\d[A-Za-z]\d[A-Za-z]\d$/,"Please enter a valid Postal Code").required("Please enter a postal code.")
-        }),   
-    
+            then: yup.string().matches(/^[A-Za-z]\d[A-Za-z]\d[A-Za-z]\d$/, "Please enter a valid Postal Code").required("Please enter a postal code.")
+        }),
+
     //step 2
     operatingName0: yup.string()
         .required('Please enter the Organization name'),
     operatingName1: yup.string()
-        .when("checkPositionInstances",{
+        .when("checkPositionInstances", {
             is: "1",
             then: yup.string().required('Please enter the Organization name'),
         }),
@@ -188,285 +188,285 @@ export const HaveEmployeeValidationSchema = yup.object().shape({
             then: yup.string().required('Please enter the Organization name'),
         }),
     */
-    numberOfPositions0:  yup.mixed()
-        .oneOf(["1","2","3","4","5"], "Please choose a valid option.")
+    numberOfPositions0: yup.mixed()
+        .oneOf(["1", "2", "3", "4", "5"], "Please choose a valid option.")
         .required("Please select number of applicants."),
-    numberOfPositions1:  yup.mixed()
-        .when("checkPositionInstances",{
+    numberOfPositions1: yup.mixed()
+        .when("checkPositionInstances", {
             is: "1",
-            then: yup.mixed().oneOf(["1","2","3","4","5"], "Please choose a valid option.").required("Please select number of applicants.")
+            then: yup.mixed().oneOf(["1", "2", "3", "4", "5"], "Please choose a valid option.").required("Please select number of applicants.")
         }),
-    numberOfPositions2:  yup.mixed()
-        .when("checkPositionInstances",{
+    numberOfPositions2: yup.mixed()
+        .when("checkPositionInstances", {
             is: "2",
-            then: yup.mixed().oneOf(["1","2","3","4","5"], "Please choose a valid option.")
+            then: yup.mixed().oneOf(["1", "2", "3", "4", "5"], "Please choose a valid option.")
         }),
-    numberOfPositions3:  yup.mixed()
-        .when("checkPositionInstances",{
+    numberOfPositions3: yup.mixed()
+        .when("checkPositionInstances", {
             is: "3",
-            then: yup.mixed().oneOf(["1","2","3","4","5"], "Please choose a valid option.")
+            then: yup.mixed().oneOf(["1", "2", "3", "4", "5"], "Please choose a valid option.")
         }),
-    numberOfPositions4:  yup.mixed()
-        .when("checkPositionInstances",{
+    numberOfPositions4: yup.mixed()
+        .when("checkPositionInstances", {
             is: "4",
-            then: yup.mixed().oneOf(["1","2","3","4","5"], "Please choose a valid option.")
+            then: yup.mixed().oneOf(["1", "2", "3", "4", "5"], "Please choose a valid option.")
         }),
-    
-    position0Email0:yup.string().email("Invalid email")
+
+    position0Email0: yup.string().email("Invalid email")
         .when("numberOfPositions0", {
-            is: (numberOfPositions0) =>{
+            is: (numberOfPositions0) => {
                 return (numberOfPositions0 > 0);
             },
             then: yup.string()
                 .email("Invalid Email")
-                .test('match','Each identified employee email must be unique.',function(position0Email0){
+                .test('match', 'Each identified employee email must be unique.', function (position0Email0) {
                     return (
-                        position0Email0 !== this.options.parent.position0Email1 && 
-                        position0Email0 !== this.options.parent.position0Email2 && 
-                        position0Email0 !== this.options.parent.position0Email3 && 
+                        position0Email0 !== this.options.parent.position0Email1 &&
+                        position0Email0 !== this.options.parent.position0Email2 &&
+                        position0Email0 !== this.options.parent.position0Email3 &&
                         position0Email0 !== this.options.parent.position0Email4 &&
-                        position0Email0 !== this.options.parent.position1Email0 && 
-                        position0Email0 !== this.options.parent.position1Email1 && 
-                        position0Email0 !== this.options.parent.position1Email2 && 
-                        position0Email0 !== this.options.parent.position1Email3 
-                        )
+                        position0Email0 !== this.options.parent.position1Email0 &&
+                        position0Email0 !== this.options.parent.position1Email1 &&
+                        position0Email0 !== this.options.parent.position1Email2 &&
+                        position0Email0 !== this.options.parent.position1Email3
+                    )
                 })
-                .test('match','Employee email address cannot be the same as business email address',function(position0Email0){
+                .test('match', 'Employee email address cannot be the same as business email address', function (position0Email0) {
                     return (position0Email0 !== this.options.parent.businessEmail)
                 })
                 .required("An employee email is required")
         }),
-    position0Email1:yup.string().email("Invalid email")
+    position0Email1: yup.string().email("Invalid email")
         .when("numberOfPositions0", {
-            is: (numberOfPositions0) =>{
+            is: (numberOfPositions0) => {
                 return (numberOfPositions0 > 1);
             },
             then: yup.string()
                 .email("Invalid Email")
-                .test('match','Each identified employee email must be unique.',function(position0Email1){
+                .test('match', 'Each identified employee email must be unique.', function (position0Email1) {
                     return (
-                        position0Email1 !== this.options.parent.position0Email0 && 
-                        position0Email1 !== this.options.parent.position0Email2 && 
-                        position0Email1 !== this.options.parent.position0Email3 && 
+                        position0Email1 !== this.options.parent.position0Email0 &&
+                        position0Email1 !== this.options.parent.position0Email2 &&
+                        position0Email1 !== this.options.parent.position0Email3 &&
                         position0Email1 !== this.options.parent.position0Email4 &&
-                        position0Email1 !== this.options.parent.position1Email0 && 
-                        position0Email1 !== this.options.parent.position1Email1 && 
-                        position0Email1 !== this.options.parent.position1Email2 && 
-                        position0Email1 !== this.options.parent.position1Email3 
-                        )
+                        position0Email1 !== this.options.parent.position1Email0 &&
+                        position0Email1 !== this.options.parent.position1Email1 &&
+                        position0Email1 !== this.options.parent.position1Email2 &&
+                        position0Email1 !== this.options.parent.position1Email3
+                    )
                 })
-                .test('match','Employee email address cannot be the same as business email address',function(position0Email1){
+                .test('match', 'Employee email address cannot be the same as business email address', function (position0Email1) {
                     return (position0Email1 !== this.options.parent.businessEmail)
                 })
                 .required("An employee email is required")
         }),
 
-    position0Email2:yup.string().email()
+    position0Email2: yup.string().email()
         .when("numberOfPositions0", {
-            is: (numberOfPositions0) =>{
+            is: (numberOfPositions0) => {
                 return (numberOfPositions0 > 2);
             },
             then: yup.string()
                 .email("Invalid Email")
-                .test('match','Each identified employee email must be unique.',function(position0Email2){
+                .test('match', 'Each identified employee email must be unique.', function (position0Email2) {
                     return (
-                        position0Email2 !== this.options.parent.position0Email0 && 
-                        position0Email2 !== this.options.parent.position0Email1 && 
-                        position0Email2 !== this.options.parent.position0Email3 && 
+                        position0Email2 !== this.options.parent.position0Email0 &&
+                        position0Email2 !== this.options.parent.position0Email1 &&
+                        position0Email2 !== this.options.parent.position0Email3 &&
                         position0Email2 !== this.options.parent.position0Email4 &&
-                        position0Email2 !== this.options.parent.position1Email0 && 
-                        position0Email2 !== this.options.parent.position1Email1 && 
-                        position0Email2 !== this.options.parent.position1Email2 && 
-                        position0Email2 !== this.options.parent.position1Email3 
-                        )
+                        position0Email2 !== this.options.parent.position1Email0 &&
+                        position0Email2 !== this.options.parent.position1Email1 &&
+                        position0Email2 !== this.options.parent.position1Email2 &&
+                        position0Email2 !== this.options.parent.position1Email3
+                    )
                 })
-                .test('match','Employee email address cannot be the same as business email address',function(position0Email2){
+                .test('match', 'Employee email address cannot be the same as business email address', function (position0Email2) {
                     return (position0Email2 !== this.options.parent.businessEmail)
                 })
                 .required("An employee email is required")
         }),
-    position0Email3:yup.string().email()
+    position0Email3: yup.string().email()
         .when("numberOfPositions0", {
-            is: (numberOfPositions0) =>{
+            is: (numberOfPositions0) => {
                 return (numberOfPositions0 > 3);
             },
             then: yup.string()
                 .email("Invalid Email")
-                .test('match','Each identified employee email must be unique.',function(position0Email3){
+                .test('match', 'Each identified employee email must be unique.', function (position0Email3) {
                     return (
-                        position0Email3 !== this.options.parent.position0Email0 && 
-                        position0Email3 !== this.options.parent.position0Email1 && 
-                        position0Email3 !== this.options.parent.position0Email2 && 
+                        position0Email3 !== this.options.parent.position0Email0 &&
+                        position0Email3 !== this.options.parent.position0Email1 &&
+                        position0Email3 !== this.options.parent.position0Email2 &&
                         position0Email3 !== this.options.parent.position0Email4 &&
-                        position0Email3 !== this.options.parent.position1Email0 && 
-                        position0Email3 !== this.options.parent.position1Email1 && 
-                        position0Email3 !== this.options.parent.position1Email2 && 
-                        position0Email3 !== this.options.parent.position1Email3 
-                        )
+                        position0Email3 !== this.options.parent.position1Email0 &&
+                        position0Email3 !== this.options.parent.position1Email1 &&
+                        position0Email3 !== this.options.parent.position1Email2 &&
+                        position0Email3 !== this.options.parent.position1Email3
+                    )
                 })
-                .test('match','Employee email address cannot be the same as business email address',function(position0Email3){
+                .test('match', 'Employee email address cannot be the same as business email address', function (position0Email3) {
                     return (position0Email3 !== this.options.parent.businessEmail)
                 })
                 .required("An employee email is required")
         }),
-    position0Email4:yup.string().email()
+    position0Email4: yup.string().email()
         .when("numberOfPositions0", {
-            is: (numberOfPositions0) =>{
+            is: (numberOfPositions0) => {
                 return (numberOfPositions0 > 4);
             },
             then: yup.string()
                 .email("Invalid Email")
-                .test('match','Each identified employee email must be unique.',function(position0Email4){
+                .test('match', 'Each identified employee email must be unique.', function (position0Email4) {
                     return (
-                        position0Email4 !== this.options.parent.position0Email0 && 
-                        position0Email4 !== this.options.parent.position0Email1 && 
-                        position0Email4 !== this.options.parent.position0Email2 && 
+                        position0Email4 !== this.options.parent.position0Email0 &&
+                        position0Email4 !== this.options.parent.position0Email1 &&
+                        position0Email4 !== this.options.parent.position0Email2 &&
                         position0Email4 !== this.options.parent.position0Email3 &&
-                        position0Email4 !== this.options.parent.position1Email0 && 
-                        position0Email4 !== this.options.parent.position1Email1 && 
-                        position0Email4 !== this.options.parent.position1Email2 && 
-                        position0Email4 !== this.options.parent.position1Email3 
-                        )
+                        position0Email4 !== this.options.parent.position1Email0 &&
+                        position0Email4 !== this.options.parent.position1Email1 &&
+                        position0Email4 !== this.options.parent.position1Email2 &&
+                        position0Email4 !== this.options.parent.position1Email3
+                    )
                 })
-                .test('match','Employee email address cannot be the same as business email address',function(position0Email4){
+                .test('match', 'Employee email address cannot be the same as business email address', function (position0Email4) {
                     return (position0Email4 !== this.options.parent.businessEmail)
                 })
                 .required("An employee email is required")
         }),
-    position1Email0:yup.string().email()
+    position1Email0: yup.string().email()
         .when("numberOfPositions1", {
-            is: (numberOfPositions1) =>{
+            is: (numberOfPositions1) => {
                 return (numberOfPositions1 > 0);
             },
             then: yup.string()
                 .email("Invalid Email")
-                .test('match','Each identified employee email must be unique.',function(position1Email0){
+                .test('match', 'Each identified employee email must be unique.', function (position1Email0) {
                     return (
-                        position1Email0 !== this.options.parent.position0Email0 && 
-                        position1Email0 !== this.options.parent.position0Email1 && 
-                        position1Email0 !== this.options.parent.position0Email2 && 
+                        position1Email0 !== this.options.parent.position0Email0 &&
+                        position1Email0 !== this.options.parent.position0Email1 &&
+                        position1Email0 !== this.options.parent.position0Email2 &&
                         position1Email0 !== this.options.parent.position0Email3 &&
                         position1Email0 !== this.options.parent.position0Email4 &&
-                        position1Email0 !== this.options.parent.position1Email1 && 
-                        position1Email0 !== this.options.parent.position1Email2 && 
+                        position1Email0 !== this.options.parent.position1Email1 &&
+                        position1Email0 !== this.options.parent.position1Email2 &&
                         position1Email0 !== this.options.parent.position1Email3
-                        )
+                    )
                 })
-                .test('match','Employee email address cannot be the same as business email address',function(position1Email0){
+                .test('match', 'Employee email address cannot be the same as business email address', function (position1Email0) {
                     return (position1Email0 !== this.options.parent.businessEmail)
                 })
                 .required("An employee email is required")
         }),
-    position1Email1:yup.string().email()
+    position1Email1: yup.string().email()
         .when("numberOfPositions1", {
-            is: (numberOfPositions1) =>{
+            is: (numberOfPositions1) => {
                 return (numberOfPositions1 > 1);
             },
             then: yup.string()
                 .email("Invalid Email")
-                .test('match','Each identified employee email must be unique.',function(position1Email1){
+                .test('match', 'Each identified employee email must be unique.', function (position1Email1) {
                     return (
-                        position1Email1 !== this.options.parent.position0Email0 && 
-                        position1Email1 !== this.options.parent.position0Email1 && 
-                        position1Email1 !== this.options.parent.position0Email2 && 
+                        position1Email1 !== this.options.parent.position0Email0 &&
+                        position1Email1 !== this.options.parent.position0Email1 &&
+                        position1Email1 !== this.options.parent.position0Email2 &&
                         position1Email1 !== this.options.parent.position0Email3 &&
                         position1Email1 !== this.options.parent.position0Email4 &&
-                        position1Email1 !== this.options.parent.position1Email0 && 
-                        position1Email1 !== this.options.parent.position1Email2 && 
+                        position1Email1 !== this.options.parent.position1Email0 &&
+                        position1Email1 !== this.options.parent.position1Email2 &&
                         position1Email1 !== this.options.parent.position1Email3
-                        )
+                    )
                 })
-                .test('match','Employee email address cannot be the same as business email address',function(position1Email1){
+                .test('match', 'Employee email address cannot be the same as business email address', function (position1Email1) {
                     return (position1Email1 !== this.options.parent.businessEmail)
                 })
                 .required("An employee email is required")
         }),
-    position1Email2:yup.string().email()
+    position1Email2: yup.string().email()
         .when("numberOfPositions1", {
-            is: (numberOfPositions1) =>{
+            is: (numberOfPositions1) => {
                 return (numberOfPositions1 > 2);
             },
             then: yup.string()
                 .email("Invalid Email")
-                .test('match','Each identified employee email must be unique.',function(position1Email2){
+                .test('match', 'Each identified employee email must be unique.', function (position1Email2) {
                     return (
-                        position1Email2 !== this.options.parent.position0Email0 && 
-                        position1Email2 !== this.options.parent.position0Email1 && 
-                        position1Email2 !== this.options.parent.position0Email2 && 
+                        position1Email2 !== this.options.parent.position0Email0 &&
+                        position1Email2 !== this.options.parent.position0Email1 &&
+                        position1Email2 !== this.options.parent.position0Email2 &&
                         position1Email2 !== this.options.parent.position0Email3 &&
                         position1Email2 !== this.options.parent.position0Email4 &&
-                        position1Email2 !== this.options.parent.position1Email0 && 
-                        position1Email2 !== this.options.parent.position1Email1 && 
+                        position1Email2 !== this.options.parent.position1Email0 &&
+                        position1Email2 !== this.options.parent.position1Email1 &&
                         position1Email2 !== this.options.parent.position1Email3
-                        )
+                    )
                 })
-                .test('match','Employee email address cannot be the same as business email address',function(position1Email2){
+                .test('match', 'Employee email address cannot be the same as business email address', function (position1Email2) {
                     return (position1Email2 !== this.options.parent.businessEmail)
                 })
                 .required("An employee email is required")
         }),
-    position1Email3:yup.string().email()
+    position1Email3: yup.string().email()
         .when("numberOfPositions1", {
-            is: (numberOfPositions1) =>{
+            is: (numberOfPositions1) => {
                 return (numberOfPositions1 > 3);
             },
             then: yup.string()
                 .email("Invalid Email")
-                .test('match','Each identified employee email must be unique.',function(position1Email3){
+                .test('match', 'Each identified employee email must be unique.', function (position1Email3) {
                     return (
-                        position1Email3 !== this.options.parent.position0Email0 && 
-                        position1Email3 !== this.options.parent.position0Email1 && 
-                        position1Email3 !== this.options.parent.position0Email2 && 
+                        position1Email3 !== this.options.parent.position0Email0 &&
+                        position1Email3 !== this.options.parent.position0Email1 &&
+                        position1Email3 !== this.options.parent.position0Email2 &&
                         position1Email3 !== this.options.parent.position0Email3 &&
                         position1Email3 !== this.options.parent.position0Email4 &&
-                        position1Email3 !== this.options.parent.position1Email0 && 
-                        position1Email3 !== this.options.parent.position1Email1 && 
+                        position1Email3 !== this.options.parent.position1Email0 &&
+                        position1Email3 !== this.options.parent.position1Email1 &&
                         position1Email3 !== this.options.parent.position1Email2
-                        )
+                    )
                 })
-                .test('match','Employee email address cannot be the same as business email address',function(position1Email3){
+                .test('match', 'Employee email address cannot be the same as business email address', function (position1Email3) {
                     return (position1Email3 !== this.options.parent.businessEmail)
                 })
                 .required("An employee email is required")
         }),
-    position2Email0:yup.string().email()
+    position2Email0: yup.string().email()
         .when("numberOfPositions2", {
-            is: (numberOfPositions2) =>{
+            is: (numberOfPositions2) => {
                 return (numberOfPositions2 > 0);
             },
             then: yup.string().email("Invalid Email").required("An employee email is required")
         }),
-    position2Email1:yup.string().email()
+    position2Email1: yup.string().email()
         .when("numberOfPositions2", {
-            is: (numberOfPositions2) =>{
+            is: (numberOfPositions2) => {
                 return (numberOfPositions2 > 1);
             },
             then: yup.string().email("Invalid Email").required("An employee email is required")
         }),
-    position2Email2:yup.string().email()
+    position2Email2: yup.string().email()
         .when("numberOfPositions2", {
-            is: (numberOfPositions2) =>{
+            is: (numberOfPositions2) => {
                 return (numberOfPositions2 > 2);
             },
             then: yup.string().email("Invalid Email").required("An employee email is required")
         }),
-    position3Email0:yup.string().email()
+    position3Email0: yup.string().email()
         .when("numberOfPositions3", {
-            is: (numberOfPositions3) =>{
+            is: (numberOfPositions3) => {
                 return (numberOfPositions3 > 0);
             },
             then: yup.string().email("Invalid Email").required("An employee email is required")
         }),
-    position3Email1:yup.string().email()
+    position3Email1: yup.string().email()
         .when("numberOfPositions3", {
-            is: (numberOfPositions3) =>{
+            is: (numberOfPositions3) => {
                 return (numberOfPositions3 > 1);
             },
             then: yup.string().email("Invalid Email").required("An employee email is required")
         }),
-    position4Email0:yup.string().email()
+    position4Email0: yup.string().email()
         .when("numberOfPositions4", {
-            is: (numberOfPositions4) =>{
+            is: (numberOfPositions4) => {
                 return (numberOfPositions4 > 0);
             },
             then: yup.string().email("Invalid Email").required("An employee email is required")
@@ -474,143 +474,153 @@ export const HaveEmployeeValidationSchema = yup.object().shape({
     startDate0: yup.date()
         .min(new Date(), "Date must be after today")
         .required("Please Enter your start date"),
-    startDate1:yup.date()
-        .when("checkPositionInstances",{
+    startDate1: yup.date()
+        .when("checkPositionInstances", {
             is: "1",
             then: yup.date().min(new Date(), 'Date must be after today').required("Please Enter your start date")
         }),
-    startDate2:yup.date()
-        .when("checkPositionInstances",{
+    startDate2: yup.date()
+        .when("checkPositionInstances", {
             is: "2",
             then: yup.date().min(new Date(), 'Date must be after today').required("Please Enter your start date")
-        }),      
-    startDate3:yup.date()
-        .when("checkPositionInstances",{
+        }),
+    startDate3: yup.date()
+        .when("checkPositionInstances", {
             is: "3",
             then: yup.date().min(new Date(), 'Date must be after today').required("Please Enter your start date")
         }),
-    startDate4:yup.date()
-        .when("checkPositionInstances",{
+    startDate4: yup.date()
+        .when("checkPositionInstances", {
             is: "4",
             then: yup.date().min(new Date(), 'Date must be after today').required("Please Enter your start date")
         }),
-    hours0:yup.number().test(
+    hours0: yup.number().test(
         'is-decimal',
         'invalid decimal',
-        value => (value +"").match(/^\d*.{1}\d*$/),)
+        value => (value + "").match(/^\d*.{1}\d*$/))
         .typeError("Must be a decimal number")
         .max(50, "Max hours per week is 50.")
         .required('Please enter your employees hours per week.'),
-    hours1:yup.number()
-        .when("checkPositionInstances",{
+    hours1: yup.number()
+        .when("checkPositionInstances", {
             is: "1",
             then: yup.number().test(
-        'is-decimal',
-        'invalid decimal',
-        value => (value +"").match(/^\d*.{1}\d*$/),)
-        .typeError("Must be a decimal number")
-        .max(50, "Max hours per week is 50.")
-        .required('Please enter your employees hours per week.'),
+                'is-decimal',
+                'invalid decimal',
+                value => (value + "").match(/^\d*.{1}\d*$/))
+                .typeError("Must be a decimal number")
+                .max(50, "Max hours per week is 50.")
+                .required('Please enter your employees hours per week.'),
         }),
-    hours2:yup.number()
-        .when("checkPositionInstances",{
+    hours2: yup.number()
+        .when("checkPositionInstances", {
             is: "2",
             then: yup.number().test(
-        'is-decimal',
-        'invalid decimal',
-        value => (value +"").match(/^\d*.{1}\d*$/),)
-        .typeError("Must be a decimal number")
-        .max(50, "Max hours per week is 50.")
-        .required('Please enter your employees hours per week.'),
+                'is-decimal',
+                'invalid decimal',
+                value => (value + "").match(/^\d*.{1}\d*$/))
+                .typeError("Must be a decimal number")
+                .max(50, "Max hours per week is 50.")
+                .required('Please enter your employees hours per week.'),
         }),
-    hours3:yup.number()
-        .when("checkPositionInstances",{
+    hours3: yup.number()
+        .when("checkPositionInstances", {
             is: "3",
             then: yup.number().test(
-        'is-decimal',
-        'invalid decimal',
-        value => (value +"").match(/^\d*.{1}\d*$/),)
-        .typeError("Must be a decimal number")
-        .max(50, "Max hours per week is 50.")
-        .required('Please enter your employees hours per week.'),
+                'is-decimal',
+                'invalid decimal',
+                value => (value + "").match(/^\d*.{1}\d*$/))
+                .typeError("Must be a decimal number")
+                .max(50, "Max hours per week is 50.")
+                .required('Please enter your employees hours per week.'),
         }),
-    hours4:yup.number()
-        .when("checkPositionInstances",{
+    hours4: yup.number()
+        .when("checkPositionInstances", {
             is: "4",
             then: yup.number().test(
-        'is-decimal',
-        'invalid decimal',
-        value => (value +"").match(/^\d*.{1}\d*$/),)
-        .typeError("Must be a decimal number")
-        .max(50, "Max hours per week is 50.")
-        .required('Please enter your employees hours per week.'),
+                'is-decimal',
+                'invalid decimal',
+                value => (value + "").match(/^\d*.{1}\d*$/))
+                .typeError("Must be a decimal number")
+                .max(50, "Max hours per week is 50.")
+                .required('Please enter your employees hours per week.'),
         }),
-    wage0:yup.number().test(
+    wage0: yup.number().test(
         'is-decimal',
         'invalid decimal',
-        value => (value +"").match(/^\d*.{1}\d*$/),)
+        value => (value + "").match(/^\d*.{1}\d*$/))
         .typeError("Must be a decimal number")
         .required("Please enter your employees wage"),
-    wage1:yup.number()
-        .when("checkPositionInstances",{
+    wage1: yup.number()
+        .when("checkPositionInstances", {
             is: "1",
             then: yup.number().test(
                 'is-decimal',
                 'invalid decimal',
-                value => (value +"").match(/^\d*.{1}\d*$/),)
+                value => (value + "").match(/^\d*.{1}\d*$/))
                 .typeError("must be a decimal number")
                 .required("Please enter your employees wage")
-        }),  
-    wage2:yup.number()
-        .when("checkPositionInstances",{
+        }),
+    wage2: yup.number()
+        .when("checkPositionInstances", {
             is: "2",
             then: yup.number().test(
                 'is-decimal',
                 'invalid decimal',
-                value => (value +"").match(/^\d*.{1}\d*$/),)
+                value => (value + "").match(/^\d*.{1}\d*$/))
                 .typeError("must be a decimal number")
                 .required("Please enter your employees wage")
-        }),  
-    wage3:yup.number()
-        .when("checkPositionInstances",{
+        }),
+    wage3: yup.number()
+        .when("checkPositionInstances", {
             is: "3",
             then: yup.number().test(
                 'is-decimal',
                 'invalid decimal',
-                value => (value +"").match(/^\d*.{1}\d*$/),)
+                value => (value + "").match(/^\d*.{1}\d*$/))
                 .typeError("must be a decimal number")
                 .required("Please enter your employees wage")
-        }),  
-    wage4:yup.number()
-        .when("checkPositionInstances",{
+        }),
+    wage4: yup.number()
+        .when("checkPositionInstances", {
             is: "4",
             then: yup.number().test(
                 'is-decimal',
                 'invalid decimal',
-                value => (value +"").match(/^\d*.{1}\d*$/),)
+                value => (value + "").match(/^\d*.{1}\d*$/))
                 .typeError("must be a decimal number")
                 .required("Please enter your employees wage")
-        }),  
-    duties0:yup.string()
+        }),
+    applicationMERCs0: yup.number().test(
+        'is-decimal',
+        'invalid decimal',
+        value => (value + "").match(/^\d*.{1}\d*$/))
+        .typeError("must be a decimal number"),
+    applicationMERCs1: yup.number().test(
+        'is-decimal',
+        'invalid decimal',
+        value => (value + "").match(/^\d*.{1}\d*$/))
+        .typeError("must be a decimal number"),
+    duties0: yup.string()
         .max(500, "this field is limited to 500 characters")
         .required('Please enter a description of the duties your employee will be tasked with.'),
-    duties1:yup.string()
-        .when("checkPositionInstances",{
+    duties1: yup.string()
+        .when("checkPositionInstances", {
             is: "1",
             then: yup.string().max(500, "this field is limited to 500 characters").required('Please enter a description of the duties your employee will be tasked with.')
-        }),  
-    duties2:yup.string()
-        .when("checkPositionInstances",{
+        }),
+    duties2: yup.string()
+        .when("checkPositionInstances", {
             is: "2",
             then: yup.string().max(500, "this field is limited to 500 characters").required('Please enter a description of the duties your employee will be tasked with.')
-        }),  
-    duties3:yup.string()
-        .when("checkPositionInstances",{
+        }),
+    duties3: yup.string()
+        .when("checkPositionInstances", {
             is: "3",
             then: yup.string().max(500, "this field is limited to 500 characters").required('Please enter a description of the duties your employee will be tasked with.')
-        }),  
-    duties4:yup.string()
-        .when("checkPositionInstances",{
+        }),
+    duties4: yup.string()
+        .when("checkPositionInstances", {
             is: "4",
             then: yup.string().max(500, "this field is limited to 500 characters").required('Please enter a description of the duties your employee will be tasked with.')
         }),
@@ -659,124 +669,124 @@ export const HaveEmployeeValidationSchema = yup.object().shape({
         .when("checkPositionInstances", {
             is: "4",
             then: yup.string().max(500, "this field is limited to 500 characters").required('Please enter a description of the workExperience your employee should have.')
-        }),  
+        }),
     signatoryTitle: yup.string()
         .required("Please enter the title of the organization signatory.")
-        .test('match','Signatories must be different',function (signatoryTitle){
+        .test('match', 'Signatories must be different', function (signatoryTitle) {
             return signatoryTitle !== this.options.parent.signatory1
-        }),   
+        }),
     signatory1: yup.string()
         .required("Please enter the full name of the organization signatory."),
     organizationConsent: yup.boolean()
-        .oneOf([true],"Required"),
+        .oneOf([true], "Required"),
     workbcCentre: yup.string()
-        .when("workingWithWorkBCCentre",{
+        .when("workingWithWorkBCCentre", {
             is: "yes",
             then: yup.string()
-        .oneOf([
-            "01-0",
-            "01-1",
-            "02-2",
-            "02-3",
-            "03-4",
-            "03-5",
-            "03-6",
-            "03-7",
-            "04-8",
-            "05-9",
-            "05-10",
-            "06-11",
-            "06-12",
-            "07-13",
-            "07-14",
-            "08-15",
-            "08-16",
-            "09-17",
-            "09-18",
-            "10-19",
-            "11-20",
-            "11-21",
-            "11-22",
-            "12-23",
-            "12-24",
-            "13-25",
-            "14-26",
-            "15-27",
-            "16-28",
-            "17-29",
-            "17-30",
-            "17-31",
-            "18-32",
-            "18-33",
-            "19-34",
-            "19-35",
-            "20-36",
-            "21-37",
-            "22-38",
-            "23-39",
-            "23-40",
-            "24-41",
-            "24-42",
-            "24-43",
-            "25-44",
-            "26-45",
-            "27-46",
-            "28-47",
-            "28-48",
-            "28-49",
-            "29-50",
-            "29-51",
-            "29-52",
-            "29-53",
-            "30-54",
-            "30-55",
-            "30-56",
-            "31-57",
-            "31-58",
-            "31-59",
-            "31-60",
-            "31-61",
-            "32-62",
-            "32-63",
-            "32-64",
-            "32-65",
-            "33-66",
-            "33-67",
-            "33-68",
-            "34-69",
-            "34-70",
-            "34-71",
-            "34-72",
-            "35-73",
-            "35-74",
-            "35-75",
-            "36-76",
-            "36-77",
-            "36-78",
-            "37-79",
-            "37-80",
-            "37-81",
-            "38-82",
-            "38-83",
-            "39-84",
-            "39-85",
-            "39-86",
-            "40-87",
-            "40-88",
-            "41-89",
-            "41-90",
-            "42-91",
-            "42-92",
-            "42-93",
-            "43-94",
-            "43-95",
-            "43-96",
-            "44-97",
-            "44-98",
-            "45-99",
-            "45-100",
-            "15-101",
-        ], "Please select the WorkBC Centre you are working with.")
-        .required("Please select the WorkBC Centre you are working with.")
-    })
+                .oneOf([
+                    "01-0",
+                    "01-1",
+                    "02-2",
+                    "02-3",
+                    "03-4",
+                    "03-5",
+                    "03-6",
+                    "03-7",
+                    "04-8",
+                    "05-9",
+                    "05-10",
+                    "06-11",
+                    "06-12",
+                    "07-13",
+                    "07-14",
+                    "08-15",
+                    "08-16",
+                    "09-17",
+                    "09-18",
+                    "10-19",
+                    "11-20",
+                    "11-21",
+                    "11-22",
+                    "12-23",
+                    "12-24",
+                    "13-25",
+                    "14-26",
+                    "15-27",
+                    "16-28",
+                    "17-29",
+                    "17-30",
+                    "17-31",
+                    "18-32",
+                    "18-33",
+                    "19-34",
+                    "19-35",
+                    "20-36",
+                    "21-37",
+                    "22-38",
+                    "23-39",
+                    "23-40",
+                    "24-41",
+                    "24-42",
+                    "24-43",
+                    "25-44",
+                    "26-45",
+                    "27-46",
+                    "28-47",
+                    "28-48",
+                    "28-49",
+                    "29-50",
+                    "29-51",
+                    "29-52",
+                    "29-53",
+                    "30-54",
+                    "30-55",
+                    "30-56",
+                    "31-57",
+                    "31-58",
+                    "31-59",
+                    "31-60",
+                    "31-61",
+                    "32-62",
+                    "32-63",
+                    "32-64",
+                    "32-65",
+                    "33-66",
+                    "33-67",
+                    "33-68",
+                    "34-69",
+                    "34-70",
+                    "34-71",
+                    "34-72",
+                    "35-73",
+                    "35-74",
+                    "35-75",
+                    "36-76",
+                    "36-77",
+                    "36-78",
+                    "37-79",
+                    "37-80",
+                    "37-81",
+                    "38-82",
+                    "38-83",
+                    "39-84",
+                    "39-85",
+                    "39-86",
+                    "40-87",
+                    "40-88",
+                    "41-89",
+                    "41-90",
+                    "42-91",
+                    "42-92",
+                    "42-93",
+                    "43-94",
+                    "43-95",
+                    "43-96",
+                    "44-97",
+                    "44-98",
+                    "45-99",
+                    "45-100",
+                    "15-101",
+                ], "Please select the WorkBC Centre you are working with.")
+                .required("Please select the WorkBC Centre you are working with.")
+        })
 })
