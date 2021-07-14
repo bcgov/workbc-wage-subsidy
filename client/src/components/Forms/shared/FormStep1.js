@@ -611,8 +611,7 @@ class FormStep1 extends Component {
                     </div>
                     {
                             (this.props.values.cewsParticipation === "yes" || this.props.values.cewsParticipation === "notSure") &&
-                            <p className="text-danger">You cannot be receiving Canada Emergency Wage Subsidy (CEWS) and/or the Canada Recovery Hiring Program (CRHP) and WorkBC Wage
-                            Subsidy for the same employee, for the same time period
+                            <p className="text-danger">You cannot receive WorkBC Wage Subsidy if you are already receiving Canada Emergency Wage Subsidy (CEWS) and/or the Canada Recovery Hiring Program (CRHP) for the same employee, for the same time period.
                             </p>
                     }
                 </div>
