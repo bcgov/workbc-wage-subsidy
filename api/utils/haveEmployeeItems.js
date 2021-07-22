@@ -60,7 +60,9 @@ function createHaveEmployeeItems(emails, values){
             workExperience1     : strings.orEmpty(values.workExperience1),
             signatory1          : strings.orEmpty(values.signatory1),
             signatoryTitle      : strings.orEmpty(values.signatoryTitle),
-            organizationConsent : strings.orEmpty(values.organizationConsent),            
+            organizationConsent : strings.orEmpty(values.organizationConsent),
+            applicationMERCs0   : strings.orEmpty(values.applicationMERCs0),
+            applicationMERCs1   : strings.orEmpty(values.applicationMERCs1),            
         })
     }
     return items
