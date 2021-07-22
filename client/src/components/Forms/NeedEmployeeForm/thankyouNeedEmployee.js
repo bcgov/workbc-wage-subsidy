@@ -82,6 +82,7 @@ class thankyouNeedEmployee extends Component {
                                 <p>Anticipated Start Date:  {this.props.location.state !== undefined && this.props.location.state.startDate0.toString()}</p>
                                 <p>Hours of Work Per Week: {this.props.location.state !== undefined && this.props.location.state.hours0.toString()}</p>
                                 <p>Hourly Wage: {this.props.location.state !== undefined && this.props.location.state.wage0.toString()}</p>
+                                <p>Mandatory Employment Related Costs (MERCs): {this.props.location.state !== undefined && this.props.location.state.applicationMERCs0.toString()}</p>                                
                                 <p>Description of Duties: {this.props.location.state !== undefined && this.props.location.state.duties0}</p>
                                 <p>Skills and experience normally required for this position: {this.props.location.state !== undefined && this.props.location.state.skills0}</p>
                                 <p>What work experience, training, supervision, etc., will the employee receive during the Wage Subsidy Placement? {this.props.location.state !== undefined && this.props.location.state.workExperience0}</p>
@@ -94,6 +95,7 @@ class thankyouNeedEmployee extends Component {
                                         <p>Anticipated Start Date:  {this.props.location.state !== undefined && this.props.location.state.startDate0.toString()}</p>
                                         <p>Hours of Work Per Week: {this.props.location.state !== undefined && this.props.location.state.hours1.toString()}</p>
                                         <p>Hourly Wage: {this.props.location.state !== undefined && this.props.location.state.wage1.toString()}</p>
+                                        <p>Mandatory Employment Related Costs (MERCs): {this.props.location.state !== undefined && this.props.location.state.applicationMERCs1.toString()}</p>
                                         <p>Description of Duties: {this.props.location.state !== undefined && this.props.location.state.duties1}</p>
                                         <p>Skills and experience normally required for this position: {this.props.location.state !== undefined && this.props.location.state.skills1}</p>
                                         <p>What work experience, training, supervision, etc., will the employee receive during the Wage Subsidy Placement? {this.props.location.state !== undefined && this.props.location.state.workExperience1}</p>
