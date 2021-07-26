@@ -392,9 +392,11 @@ cron.schedule('*/3 * * * *', async function() {
     await getHaveEmployeeNotSP()
     .then(async cursor => {
         var results = await cursor.toArray()
+        console.log("Have Employee not saved to reporting")
         console.log(results.length)
         for (const data of results){
           clean(data)
+          console.log(data)
           await saveListHaveEmployee(data,data.position0Email0,data.ca)
               .then(function(saved){
                 console.log("saved")
@@ -419,9 +421,11 @@ cron.schedule('*/3 * * * *', async function() {
     await getNeedEmployeeNotSP()
     .then(async cursor => {
         var results = await cursor.toArray()
+        console.log("Need employee not saved to reporting")
         console.log(results.length)
         for (const data of results){
           clean(data)
+          console.log(data)
           await saveListNeedEmployee(data,data.ca)
               .then(function(saved){
                 console.log("saved")
