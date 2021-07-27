@@ -226,8 +226,8 @@ async function saveListHaveEmployee(values,email,ca) {
           "SignatoryTitle": values.signatoryTitle,
           "Signatory1": values.signatory1,
           "OrganizationConsent": values.organizationConsent,
-          "ApplicationMERCs": Number(values.applicationMERCs0),
-          "ApplicationMERCs2": Number(values.applicationMERCs1)
+          "ApplicationMERCs": values.applicationMERCs0,
+          "ApplicationMERCs2": values.applicationMERCs1
           //"": values.,
         }
       })
@@ -347,8 +347,8 @@ async function saveListNeedEmployee(values,ca) {
           "SignatoryTitle": values.signatoryTitle,
           "Signatory1": values.signatory1,
           "OrganizationConsent": values.organizationConsent,
-          "ApplicationMERCs": Number(values.applicationMERCs0),
-          "ApplicationMERCs2": Number(values.applicationMERCs1)
+          "ApplicationMERCs": values.applicationMERCs0,
+          "ApplicationMERCs2": values.applicationMERCs1
           //"": values.,
         }
       })
@@ -453,6 +453,7 @@ cron.schedule('*/3 * * * *', async function() {
         console.log(results.length)
         for (const data of results){
           clean(data)
+          console.log(data)
           await saveListClaim(data,data.ca)
               .then(function(saved){
                 console.log("saved")
@@ -480,6 +481,7 @@ cron.schedule('*/3 * * * *', async function() {
         console.log(results.length)
         for (const data of results){
           clean(data)
+          console.log(data)
           await saveListClaim(data,"Reporting")
               .then(function(saved){
                 console.log("saved")
@@ -508,6 +510,7 @@ cron.schedule('*/3 * * * *', async function() {
         console.log(results.length)
         for (const data of results){
           clean(data)
+          console.log(data)
           await saveListHaveEmployee(data,data.position0Email0,"Reporting")
               .then(function(saved){
                 console.log("saved")
@@ -536,6 +539,7 @@ cron.schedule('*/3 * * * *', async function() {
         console.log(results.length)
         for (const data of results){
           clean(data)
+          console.log(data)
           await saveListNeedEmployee(data,"Reporting")
               .then(function(saved){
                 console.log("saved")
