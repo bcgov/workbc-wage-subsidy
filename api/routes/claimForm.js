@@ -93,7 +93,7 @@ async function sendEmails(values) {
         };
         let message3 = {
           from: 'WorkBC Wage Subsidy <donotreply@gov.bc.ca>', // sender address
-          to: cNotifyEmail,// list of receivers
+          //to: cNotifyEmail, list of receivers removed as of 2021-08-27 upon TCL and CAPA Request
           bcc: claimConfirmationBCC,
           subject: "A Wage Subsidy Claim application has been received", // Subject line
           html: notification.generateClaimNotification(values) // html body
