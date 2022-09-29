@@ -16,14 +16,14 @@
     "react-dom": "^16.14.0",
     "react-icons": "^3.11.0",
     "react-router-dom": "^5.2.0",
-    "react-scripts": "^5.0.1",
     "yup": "^0.29.3",
     "yup-phone": "^1.2.15"
   },
   "devDependencies": {
     "@bcgov/bootstrap-theme": "https://github.com/bcgov/bootstrap-theme/releases/download/v1.1.1/bcgov-bootstrap-theme-1.1.1.tgz",
     "bootstrap": "^4.5.3",
-    "progress-tracker": "^2.0.6"
+    "progress-tracker": "^2.0.6",
+    "react-scripts": "^5.0.1"
   },
   "scripts": {
     "start": "react-scripts start",
