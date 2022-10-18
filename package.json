@@ -1,8 +1,23 @@
 {
-  "dependencies": {
-    "@bcgov-elmsd/cli": "^0.0.2",
-    "node-sp-auth": "^3.0.1",
-    "react-scripts": "^5.0.1",
-    "request-promise": "^4.2.6"
+  "name": "workbc-wage-subsidy",
+  "private": true,
+  "description": "NodeJS Monorepo Starter Kit",
+  "license": "Apache-2.0",
+  "author": "Sid McLaughlin <sidmclaughlin@gmail.com>",
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "changeset": "changeset",
+    "prepare": "husky install",
+    "release": "changeset publish"
+  },
+  "devDependencies": {
+    "@bcgov-elmsd/eslint-config": "^1.0.1",
+    "@changesets/changelog-github": "^0.4.6",
+    "@changesets/cli": "^2.24.4",
+    "husky": "^8.0.1",
+    "lint-staged": "^13.0.3",
+    "typescript": "^4.8.3"
   }
 }
