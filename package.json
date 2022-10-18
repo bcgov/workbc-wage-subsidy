@@ -1,9 +1,9 @@
 {
   "name": "workbc-wage-subsidy",
   "private": true,
-  "description": "NodeJS Monorepo Starter Kit",
+  "description": "WorkBC Wage Subsidy Monorepo",
   "license": "Apache-2.0",
-  "author": "Sid McLaughlin <sidmclaughlin@gmail.com>",
+  "author": "Sid McLaughlin <sid.mclaughlin@gov.bc.ca>",
   "workspaces": [
     "packages/*"
   ],
