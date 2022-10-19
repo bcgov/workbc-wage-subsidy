@@ -52,7 +52,7 @@ exports.up = function up(knex) {
         );
     
     CREATE TABLE Wage_Subsidy_Claim_Form (
-        ID int NOT NULL PRIMARY KEY,
+        ID SERIAL NOT NULL PRIMARY KEY,
         Title varchar(255),
         CatchmentNo int, 
         FormType varchar(255),
@@ -106,7 +106,7 @@ exports.up = function up(knex) {
         ClaimApprovedBy1 varchar(255),
         SubsidyRateDateFrom2 date, 
         SubsidyRateDateTo2 date, 
-        TotalAmountReimbursement2 decimal(65, 0),
+        TotalAmountReimbursed2 decimal(65, 0),
         ClaimApprovedBy2 varchar(255),
         ClaimVerifiedDate date,
         TotalSubsidyClaimed decimal(65, 0),
@@ -117,12 +117,10 @@ exports.up = function up(knex) {
         MercsReimbursed1 decimal(65, 0),
         MercsReimbursed2 decimal(65, 0),
         claimEmployeeInfo jsonb,
-        CONSTRAINT WageSubsidyID FOREIGN KEY (ID) 
-        REFERENCES WAGE_SUBSIDY_APPLICATIONS(ID),
+        originalApplicationID varchar(10),
         Modified date,
         Created date
-    );
-    
+        );
     `)
 };
 
