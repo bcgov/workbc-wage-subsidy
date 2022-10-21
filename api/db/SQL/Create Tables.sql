@@ -44,6 +44,7 @@
         history jsonb,
         SF int,
         centreName varchar(255),
+        markedForDeletion boolean,
         Modified date,
         Created date
         );
@@ -118,6 +119,7 @@
         history jsonb,
         SF int,
         centreName varchar(255),
+        markedForDeletion boolean,
         CONSTRAINT fk_applicationID FOREIGN KEY (ApplicationID) REFERENCES WAGE_SUBSIDY_APPLICATIONS(ApplicationID),
         Modified date,
         Created date
