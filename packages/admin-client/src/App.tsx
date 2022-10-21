@@ -1,12 +1,10 @@
-import React from 'react';
-import './App.css';
-import { ApplicationList } from './admin/ApplicationList';
-import Footer from './admin/footer';
-import jsonServerProvider from 'ra-data-json-server';
-import { Admin, Resource } from 'react-admin';
-import Layout from './admin/Layout';
-
-const dataProvider = jsonServerProvider('https://jsonplaceholder.typicode.com');
+import React from 'react'
+import './App.css'
+import { Admin, Resource } from 'react-admin'
+import { ClaimsList } from './Claims/ClaimsList'
+import Footer from './admin/footer'
+import Layout from './admin/Layout'
+import { dataProvider } from './DataProvider/DataProvider'
 
 export const lightTheme = {
   components: {
@@ -16,21 +14,21 @@ export const lightTheme = {
           color: '#fff',
           backgroundColor: '#003366',
           borderBottom: '3px solid #FCBA19'
-        },
-      },
-    },
-  },
+        }
+      }
+    }
+  }
 }
 
 function App() {
   return (
     <div className="App">
       <Admin dataProvider={dataProvider} layout={Layout} theme={lightTheme}>
-        <Resource name="todos" list={ApplicationList} />
+        <Resource name="claims" list={ClaimsList} />
       </Admin>
-      <Footer/>
+      <Footer />
     </div>
-  );
+  )
 }
 
-export default App;
+export default App
