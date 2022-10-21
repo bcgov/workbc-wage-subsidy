@@ -50,6 +50,7 @@ exports.up = function up(knex) {
         history jsonb,
         SF int,
         centreName varchar(255),
+        markedForDeletion boolean,
         Modified date,
         Created date
         );
@@ -124,6 +125,7 @@ exports.up = function up(knex) {
         history jsonb,
         SF int,
         centreName varchar(255),
+        markedForDeletion boolean,
         Modified date,
         Created date
         );
