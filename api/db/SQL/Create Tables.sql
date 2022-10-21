@@ -41,6 +41,9 @@
         SignatoryTitle VARCHAR(255),
         Signatory1 VARCHAR(255),
         OrganizationConsent BOOLEAN,
+        history jsonb,
+        SF int,
+        centreName varchar(255),
         Modified date,
         Created date
         );
@@ -112,6 +115,9 @@
         MercsReimbursed2 int,
         claimEmployeeInfo jsonb,
         originalApplicationID varchar(10),
+        history jsonb,
+        SF int,
+        centreName varchar(255),
         CONSTRAINT fk_applicationID FOREIGN KEY (ApplicationID) REFERENCES WAGE_SUBSIDY_APPLICATIONS(ApplicationID),
         Modified date,
         Created date

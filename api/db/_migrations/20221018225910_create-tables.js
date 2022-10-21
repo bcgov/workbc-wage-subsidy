@@ -47,6 +47,9 @@ exports.up = function up(knex) {
         SignatoryTitle VARCHAR(255),
         Signatory1 VARCHAR(255),
         OrganizationConsent BOOLEAN,
+        history jsonb,
+        SF int,
+        centreName varchar(255),
         Modified date,
         Created date
         );
@@ -118,6 +121,9 @@ exports.up = function up(knex) {
         MercsReimbursed2 int,
         claimEmployeeInfo jsonb,
         originalApplicationID varchar(10),
+        history jsonb,
+        SF int,
+        centreName varchar(255),
         Modified date,
         Created date
         );
