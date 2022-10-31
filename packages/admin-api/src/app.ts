@@ -3,6 +3,7 @@ import helmet from "helmet"
 import cors from "cors"
 
 import claimRoute from "./routes/claim.route"
+import wageRoute from "./routes/wage.route"
 
 const corsOptions = {
     origin: process.env.ORIGIN_URL || process.env.OPENSHIFT_NODEJS_ORIGIN_URL || "http://localhost:3000",
@@ -18,6 +19,7 @@ app.use(cors(corsOptions))
 app.use(helmet())
 
 app.use("/", claimRoute)
+app.use("/", wageRoute)
 
 const port = process.env.PORT || "8000"
 app.listen(port, () => {
