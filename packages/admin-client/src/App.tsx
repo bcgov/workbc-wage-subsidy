@@ -1,4 +1,4 @@
-import { Admin, Resource } from "react-admin"
+import { Admin, ListGuesser, Resource } from "react-admin"
 import Footer from "./admin/footer"
 import Layout from "./admin/Layout"
 import "./App.css"
@@ -23,6 +23,7 @@ function App() {
     return (
         <div className="App">
             <Admin dataProvider={dataProvider} layout={Layout} theme={lightTheme}>
+                <Resource name="wage" list={ListGuesser} />
                 <Resource name="claims" list={ClaimsList} />
             </Admin>
             <Footer />
