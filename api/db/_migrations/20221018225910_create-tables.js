@@ -52,7 +52,7 @@ exports.up = function up(knex) {
         Duties0 text,
         Skills0 text,
         WorkExperience0 text, 
-        PositonTitle1 VARCHAR(255),
+        PositionTitle1 VARCHAR(255),
         NumberofPositions1 int,
         StartDate1 date,
         Hours1 int,
