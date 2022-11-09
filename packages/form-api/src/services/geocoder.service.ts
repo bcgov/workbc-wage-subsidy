@@ -12,6 +12,11 @@ export const geocodeAddress = async (address: string, city: string, province: st
     // get call to https://geocoder.api.gov.bc.ca/addresses.geojson?addressString={address},{city},{string}
     // return score from features[0].properties.score
     // and fullAddress from features[0].properties.fullAddress
-    await axios.get("")
-    return null
+    await axios
+        .get(`https://geocoder.api.gov.bc.ca/addresses.geojson?addressString=${address},${city},${province}`)
+        .then((response) => {
+            const { score } = response.data.features[0].properties
+            const { fullAddress } = response.data.features[0].properties
+            return { score, fullAddress }
+        })
 }
