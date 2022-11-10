@@ -3,6 +3,6 @@ import * as wageController from "../controllers/wage.controller"
 
 const router = express.Router()
 
-router.get("/insertClaim", wageController.insertWage)
+router.post("/insertClaim", wageController.insertWage)
 
 export default router
