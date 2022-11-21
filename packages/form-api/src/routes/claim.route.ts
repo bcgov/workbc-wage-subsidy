@@ -1,8 +1,8 @@
 import * as express from "express"
-import * as wageController from "../controllers/wage.controller"
+import * as claimController from "../controllers/claim.controller"
 
 const router = express.Router()
 
-router.post("/insertClaim", wageController.insertWage)
+router.post("/insertClaim", claimController.insertClaim)
 
 export default router

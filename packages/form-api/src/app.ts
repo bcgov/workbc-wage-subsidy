@@ -2,6 +2,7 @@ import cors from "cors"
 import express from "express"
 import helmet from "helmet"
 import morgan from "morgan"
+import addressRoute from "./routes/address.route"
 import claimRoute from "./routes/claim.route"
 import wageRoute from "./routes/wage.route"
 
@@ -31,6 +32,7 @@ app.use(
 
 app.use("/", wageRoute)
 app.use("/", claimRoute)
+app.use("/", addressRoute)
 
 const port = process.env.PORT || "8000"
 app.listen(port, () => {

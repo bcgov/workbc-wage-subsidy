@@ -1,5 +1,6 @@
 /* eslint-disable import/prefer-default-export */
 import { knex } from "../config/db-config"
+import pins from "../constants/centres.json"
 
 /** 
     @param data formio/chefs data
@@ -68,12 +69,21 @@ export const insertWage = async (data: any, user: any) => {
         signatory1: data.signatory1,
         organizationconsent: data.organizationConsent,
         // history:
-        // sf: data.storefrontId,
-        // centrename:
-        markedfordeletion: false
-        // modified:
-        // created:
+        sf: data.storefrontId,
+        centrename: "",
+        markedfordeletion: false,
+        modified: new Date(),
+        created: new Date()
     }
+
+    for (let i = 0; i < pins.length; i += 1) {
+        for (let j = 0; i < pins[i].Storefronts.length; j += 1) {
+            if (i === data.storefrontId && j === data.catchmentNo) {
+                insertData.centrename = pins[i].Storefronts[j].name
+            }
+        }
+    }
+
     if (data.numberOfPositions0 === 5) {
         insertData.participantemail1 = data.participantEmail1
         insertData.participantemail2 = data.participantEmail2
