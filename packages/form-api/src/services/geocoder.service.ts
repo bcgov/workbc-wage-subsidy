@@ -1,6 +1,7 @@
 /* eslint-disable import/prefer-default-export */
 
 import axios from "axios"
+import { getCatchment } from "../utils/addressToCatchment"
 
 /**
  * @param address Address line 1
@@ -12,11 +13,23 @@ export const geocodeAddress = async (address: string, city: string, province: st
     // get call to https://geocoder.api.gov.bc.ca/addresses.geojson?addressString={address},{city},{string}
     // return score from features[0].properties.score
     // and fullAddress from features[0].properties.fullAddress
+    let Score = null
+    let FullAddress = null
+    let Catchment = null
+    let Storefront = null
     await axios
-        .get(`https://geocoder.api.gov.bc.ca/addresses.geojson?addressString=${address},${city},${province}`)
+        .post(`http://geocoder.api.gov.bc.ca/addresses.geojson?addressString=${address},${city},${province}`)
         .then((response) => {
             const { score } = response.data.features[0].properties
             const { fullAddress } = response.data.features[0].properties
-            return { score, fullAddress }
+            const catchment = getCatchment(
+                response.data.features[0].geometry.coordinates[0],
+                response.data.features[0].geometry.coordinates[1]
+            )
+            Catchment = catchment.closestCatchment
+            Storefront = catchment.closestStorefrontId
+            Score = score
+            FullAddress = fullAddress
         })
+    return { Score, FullAddress, Catchment, Storefront }
 }

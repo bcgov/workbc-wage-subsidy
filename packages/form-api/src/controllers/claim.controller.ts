@@ -3,7 +3,7 @@ import * as express from "express"
 
 import * as claimService from "../services/claim.service"
 
-export const insertWage = async (req: any, res: express.Response) => {
+export const insertClaim = async (req: any, res: express.Response) => {
     try {
         const { data } = req.body[0]
         const { user } = req.body[1]

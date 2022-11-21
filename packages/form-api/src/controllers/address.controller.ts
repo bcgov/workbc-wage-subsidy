@@ -5,7 +5,8 @@ import * as geocoderService from "../services/geocoder.service"
 
 export const getAddressValidation = async (req: any, res: express.Response) => {
     try {
-        const { address, city, province } = req.query
+        const { address, city, province } = req.body
+        // console.log(address, city, province)
         const addressValidation = await geocoderService.geocodeAddress(address, city, province)
         return res.status(200).send(addressValidation)
     } catch (e: any) {
