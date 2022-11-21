@@ -68,6 +68,7 @@ exports.up = function up(knex) {
         SF int,
         centreName varchar(255),
         markedForDeletion boolean,
+        internalid varchar(255),
         Modified date,
         Created date
         );
@@ -144,6 +145,7 @@ exports.up = function up(knex) {
         SF int,
         centreName varchar(255),
         markedForDeletion boolean,
+        internalid varchar(255),
         Modified date,
         Created date
         );
