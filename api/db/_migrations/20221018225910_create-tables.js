@@ -84,6 +84,7 @@ exports.up = function up(knex) {
         IsFinalClaim boolean,
         OperatingName varchar(255),
         BusinessAddress1 varchar(255),
+        BusinessAddress2 varchar(255),
         BusinessCity varchar(255),
         BusinessPostal varchar(7),
         BusinessPhone varchar(12),
