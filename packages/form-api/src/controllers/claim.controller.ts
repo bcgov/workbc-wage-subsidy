@@ -5,8 +5,8 @@ import * as claimService from "../services/claim.service"
 
 export const insertClaim = async (req: any, res: express.Response) => {
     try {
-        const { data } = req.body[0]
-        const { user } = req.body[1]
+        const { data } = req.body
+        const user = req.body.data.userInfo
         // console.log(data)
         const claims = await claimService.insertClaim(data, user)
         // console.log(claims)
