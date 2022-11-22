@@ -72,8 +72,9 @@ export const insertWage = async (data: any, user: any) => {
         sf: data.storefrontId,
         centrename: "",
         markedfordeletion: false,
-        modified: new Date(),
-        created: new Date()
+        internalid: data.internalId
+        // modified: new Date(),
+        // created: new Date()
     }
 
     for (let i = 0; i < pins.length; i += 1) {
