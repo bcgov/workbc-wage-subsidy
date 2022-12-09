@@ -4,8 +4,10 @@
  */
 exports.up = function up(knex) {
     return knex.raw(`
+    CREATE SEQUENCE wage_subsidy_applications_id_seq;
+
     CREATE TABLE WAGE_SUBSIDY_APPLICATIONS (
-        id integer NOT NULL,
+        id integer NOT NULL DEFAULT nextval('wage_subsidy_applications_id_seq'::regclass),
         title character varying(255),
         catchmentno integer,
         formtype character varying(255) COLLATE pg_catalog."default",
@@ -171,5 +173,6 @@ exports.down = function down(knex) {
     return knex.raw(`
     DROP TABLE WAGE_SUBSIDY_CLAIM_FORM;
     DROP TABLE WAGE_SUBSIDY_APPLICATIONS;
+    DROP SEQUENCE wage_subsidy_applications_id_seq;
     `)
 };
