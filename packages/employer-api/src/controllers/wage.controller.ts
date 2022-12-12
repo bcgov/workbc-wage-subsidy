@@ -37,14 +37,28 @@ export const getAllWage = async (req: any, res: express.Response) => {
         }
         console.log(params)
         if (hasNeedEmployee && hasNonComplete) {
-            // TODO
-            /*
-            const hasNeedEmployee = await formService.getFormSubmissions(
-                "",
-                "",
+            const hasNeedEmployeeApplications = await formService.getFormSubmissions(
+                process.env.NEED_EMPLOYEE_ID || "",
+                process.env.NEED_EMPLOYEE_PASS || "",
                 params
             )
-            */
+            console.log(hasNeedEmployeeApplications)
+            hasNeedEmployeeApplications.forEach(async (h: any) => {
+                const app = applications.data.find((a: any) => a.internalid === h.internalId) || null
+                if (app) {
+                    // if form is complete
+                    if (h.formSubmissionStatusCode === "SUBMITTED" && app.status !== "submitted") {
+                        // update ALL fields of content
+                        wageService.updateWageData(h, app.id)
+                        // else form is in draft
+                    } else if (app.status === null) {
+                        // set status to draft
+                        await wageService.updateWage(app.id, h.confirmationId, h.submissionId, "draft")
+                    }
+                    console.log("found app")
+                    // update the DB
+                }
+            })
         }
         if (hasHaveEmployee && hasNonComplete) {
             const haveEmployeeApplications = await formService.getFormSubmissions(
