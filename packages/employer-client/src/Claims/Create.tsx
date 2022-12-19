@@ -1,7 +1,23 @@
-import { Create, SelectInput, SimpleForm, useGetIdentity, usePermissions } from "react-admin"
+import { Create, ReferenceInput, SelectInput, SimpleForm, useGetIdentity, usePermissions } from "react-admin"
+import { useWatch } from "react-hook-form"
 import { v4 as uuidv4 } from "uuid"
+import ClaimPreview from "./Preview"
 
-export const ApplicationCreate = (props: any) => {
+const FormReferenceInput = (props: any) => {
+    const wageId: any = useWatch({ name: "confirmationid" })
+    console.log(wageId)
+    return (
+        <>
+            <ReferenceInput {...props}>
+                <SelectInput label={"Form"} optionText="confirmationid" />
+            </ReferenceInput>
+            {console.log(wageId)}
+            {wageId && <ClaimPreview id={wageId} resource={"wage"} />}
+        </>
+    )
+}
+
+export const CreateClaim = (props: any) => {
     const { isLoading, permissions, error } = usePermissions()
     const { identity, isLoading: identityLoading } = useGetIdentity()
     //const [storeFronts, setStoreFronts] = useState<Array<any>>([])
@@ -9,6 +25,7 @@ export const ApplicationCreate = (props: any) => {
     //const {token} = ("token")
     console.log(error)
     console.log(permissions)
+
     /*
     const getCatchments = (ca) => {
         console.log(ca)
@@ -90,14 +107,11 @@ export const ApplicationCreate = (props: any) => {
         <Create {...props}>
             {console.log(identity)}
             <SimpleForm defaultValues={defaultValues}>
-                <SelectInput
-                    source="formtype"
-                    label="Application Type"
-                    emptyValue={"Please select application"}
-                    choices={[
-                        { id: "haveEmployee", name: "Have Employee" },
-                        { id: "needEmployee", name: "Need Employee" }
-                    ]}
+                <FormReferenceInput
+                    label="Application"
+                    source="confirmationid"
+                    reference="wage"
+                    filter={{ status: ["submitted", "inProgress"] }}
                 />
                 {/*
         <SelectInput source="catchment" choices={getCatchments(permissions.catchments)} />
