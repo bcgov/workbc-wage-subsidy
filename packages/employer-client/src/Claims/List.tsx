@@ -41,17 +41,11 @@ const FormBulkActionButtons = () => (
     </>
 )
 
-export const ApplicationList = (props: any) => {
+export const ClaimList = (props: any) => {
     return (
-        <List {...props} actions={<ListActions />} filters={formFilters}>
+        <List {...props} actions={<ListActions />} filters={formFilters} empty={false}>
             <Datagrid bulkActionButtons={<FormBulkActionButtons />}>
                 <TextField label="ID" source="id" />
-                <FunctionField
-                    label="Form Type"
-                    render={(record: any) =>
-                        record.formtype === "haveEmployee" ? <div>Have Employee</div> : <div>Need Employee</div>
-                    }
-                />
                 <FunctionField
                     label="Status"
                     render={(record: any) =>
@@ -82,14 +76,10 @@ export const ApplicationList = (props: any) => {
                 <FunctionField
                     label="Actions"
                     render={(record: any) =>
-                        record.status === null ? (
+                        record.applicationstatus === null ? (
                             <div>
                                 <Button
-                                    href={`${
-                                        record.formtype === "haveEmployee"
-                                            ? process.env.REACT_APP_HAVE_EMPLOYEE_URL
-                                            : process.env.REACT_APP_NEED_EMPLOYEE_URL
-                                    }&token=${record.internalid}`}
+                                    href={`${process.env.REACT_APP_CLAIM_URL}&token=${record.internalid}`}
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     variant="contained"
@@ -98,7 +88,7 @@ export const ApplicationList = (props: any) => {
                                     Fill Out Form
                                 </Button>
                             </div>
-                        ) : record.status === "draft" ? (
+                        ) : record.applicationstatus === "draft" ? (
                             <Button
                                 href={`${process.env.REACT_APP_DRAFT_URL}${record.applicationid}`}
                                 target="_blank"
@@ -108,7 +98,7 @@ export const ApplicationList = (props: any) => {
                             >
                                 Continue Application
                             </Button>
-                        ) : record.status === "submitted" ? (
+                        ) : record.applicationstatus === "submitted" ? (
                             <Button
                                 href={`${process.env.REACT_APP_VIEW_URL}${record.applicationid}`}
                                 target="_blank"

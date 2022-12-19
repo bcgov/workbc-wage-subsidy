@@ -22,3 +22,23 @@ export const getAllClaims = async (req: any, res: express.Response) => {
         return res.status(500).send("Server Error")
     }
 }
+
+export const createClaim = async (req: any, res: express.Response) => {
+    try {
+        const created = await claimService.insertClaim(
+            req.body.formKey,
+            req.body.userName,
+            req.body.formtype,
+            req.body.guid
+        )
+        console.log("created is")
+        console.log(created)
+        if (created) {
+            return res.status(200).send({ id: created })
+        }
+        return res.status(500).send("Internal Server Error")
+    } catch (e: any) {
+        console.log(e)
+        return res.status(500).send("Internal Server Error")
+    }
+}

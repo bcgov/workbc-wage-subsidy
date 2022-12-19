@@ -10,6 +10,9 @@ export const getAllWage = async (perPage: number, currPage: number, filters: any
             if (filters.catchmentno) {
                 queryBuilder.where("catchmentno", Number(filters.catchmentno))
             }
+            if (filters.status) {
+                queryBuilder.whereIn("status", filters.status)
+            }
             if (user) {
                 queryBuilder.where("createdbyguid", user)
             }
@@ -23,6 +26,11 @@ export const getAllWage = async (perPage: number, currPage: number, filters: any
 
 export const getWageByCatchment = async (ca: number[]) => {
     const claims = await knex("wage_subsidy_applications").where((builder: any) => builder.whereIn("catchmentno", ca))
+    return claims
+}
+
+export const getWageByID = async (id: number) => {
+    const claims = await knex("wage_subsidy_applications").where((builder: any) => builder.whereIn("id", id))
     return claims
 }
 

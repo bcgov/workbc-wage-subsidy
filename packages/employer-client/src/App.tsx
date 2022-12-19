@@ -1,10 +1,12 @@
 import { ReactKeycloakProvider } from "@react-keycloak/web"
 import Keycloak from "keycloak-js"
-import { Admin, EditGuesser, ListGuesser, Resource } from "react-admin"
+import { Admin, EditGuesser, Resource } from "react-admin"
 import "./App.css"
 import { ApplicationCreate } from "./Applications/Create"
 import { ApplicationList } from "./Applications/List"
 import useAuthProvider from "./Auth/authProvider"
+import { CreateClaim } from "./Claims/Create"
+import { ClaimList } from "./Claims/List"
 import { dataProvider } from "./DataProvider/DataProvider"
 import Footer from "./footer"
 import Layout from "./Layout"
@@ -84,7 +86,7 @@ const CustomAdminWithKeycloak = () => {
                 create={ApplicationCreate}
                 edit={EditGuesser}
             />
-            <Resource name="claims" list={ListGuesser} edit={EditGuesser} />
+            <Resource name="claims" list={ClaimList} edit={EditGuesser} create={CreateClaim} />
         </Admin>
     )
 }
