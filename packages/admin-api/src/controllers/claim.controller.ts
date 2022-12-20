@@ -22,3 +22,19 @@ export const getAllClaims = async (req: any, res: express.Response) => {
         return res.status(500).send("Server Error")
     }
 }
+
+export const getClaim = async (req: any, res: express.Response) => {
+    try {
+        // console.log(req.params.id)
+        // console.log(req.params)
+        const { id } = req.params
+        const claims = await claimService.getClaimByID(id)
+        // const claims = await claimService.getAllClaims(Number(perPage), Number(page), filters, sorted)
+        // console.log(claims[0].id)
+        // console.log({ data: { claims[0], id: claims[0].id } })
+        return res.status(200).send(claims[0])
+    } catch (e: any) {
+        console.log(e)
+        return res.status(500).send("Server Error")
+    }
+}
