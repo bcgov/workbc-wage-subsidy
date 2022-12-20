@@ -34,7 +34,7 @@ app.use("/", wageRoute)
 app.use("/", claimRoute)
 app.use("/", addressRoute)
 
-const port = process.env.PORT || "8000"
+const port = process.env.PORT || "8001"
 app.listen(port, () => {
     console.log(`server started at :${port}`)
 })
