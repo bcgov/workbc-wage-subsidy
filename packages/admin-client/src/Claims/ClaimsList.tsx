@@ -115,8 +115,17 @@ const PostShow = (...props: any) => (
         <FormattedFunctionField source="mercsreimbursed2" />
         <FormattedFunctionField source="claimemployeeinfo" />
         <FormattedFunctionField source="originalapplicationid" />
+        <FormattedFunctionField source="history" />
+        <FormattedFunctionField source="sf" />
+        <FormattedFunctionField source="centrename" />
+        <FormattedFunctionField source="markedfordeletion" />
+        <FormattedFunctionField source="internalid" />
         <FormattedFunctionField source="modified" />
         <FormattedFunctionField source="created" showDate showTime />
+        <FormattedFunctionField source="status" />
+        <FormattedFunctionField source="createdby" />
+        <FormattedFunctionField source="createdbyguid" />
+        <FormattedFunctionField source="confirmationid" />
     </CustomShow>
 )
 
