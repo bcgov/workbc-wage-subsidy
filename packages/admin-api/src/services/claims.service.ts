@@ -22,3 +22,9 @@ export const getClaimsByCatchment = async (ca: number[]) => {
     const claims = await knex("wage_subsidy_claim_form").where((builder: any) => builder.whereIn("catchmentno", ca))
     return claims
 }
+
+export const getClaimByID = async (id: number) => {
+    // console.log(id)
+    const claims = await knex("wage_subsidy_claim_form").where("id", id)
+    return claims
+}
