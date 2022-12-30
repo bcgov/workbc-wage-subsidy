@@ -8,6 +8,7 @@ import {
     CheckboxGroupInput,
     Datagrid,
     DateField,
+    EditButton,
     FilterButton,
     List,
     NumberField,
@@ -49,6 +50,7 @@ const FormattedFunctionField = ({ source }: any) => {
 
 const PostShow = (...props: any) => (
     <CustomShow>
+        <EditButton />
         <FormattedFunctionField source="id" />
         <FormattedFunctionField source="title" />
         <FormattedFunctionField source="catchmentno" />
