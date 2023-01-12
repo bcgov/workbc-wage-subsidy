@@ -1,31 +1,26 @@
 /* eslint-disable import/prefer-default-export */
 import { Grid } from "@mui/material"
 import {
-    Button,
     DateInput,
     Edit,
+    ListButton,
     NumberInput,
     SaveButton,
     SimpleForm,
     TextInput,
     Toolbar,
+    TopToolbar,
     useRecordContext
 } from "react-admin"
 
 const CustomToolbar = () => (
     <Toolbar>
-        <div>
-            <SaveButton label="Save" />
-        </div>
-        <div>
-            <Button label="Cancel" size="medium" sx={{}} />
-        </div>
+        <SaveButton label="Save" />
     </Toolbar>
 )
 
 const CalculatedInput = ({ source }: any, ...props: any) => {
     const record = useRecordContext()
-
     // const a = useInput(props)
     // console.log(a)
     if (source.includes("datefrom")) {
@@ -76,8 +71,14 @@ const CalculatedInput = ({ source }: any, ...props: any) => {
     return null
 }
 
+const EditActions = () => (
+    <TopToolbar>
+        <ListButton />
+    </TopToolbar>
+)
+
 export const ClaimsEdit = (props: any) => (
-    <Edit>
+    <Edit actions={<EditActions />}>
         <SimpleForm toolbar={<CustomToolbar />}>
             <Grid container spacing={1}>
                 <Grid

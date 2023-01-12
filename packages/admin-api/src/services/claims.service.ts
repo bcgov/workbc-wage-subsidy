@@ -14,7 +14,7 @@ export const getAllClaims = async (perPage: number, currPage: number, filters: a
                 queryBuilder.orderBy(sort[0], sort[1])
             }
         })
-        .paginate({ perPage, currentPage: currPage })
+        .paginate({ perPage, currentPage: currPage, isLengthAware: true })
     return claims
 }
 
@@ -27,4 +27,13 @@ export const getClaimByID = async (id: number) => {
     // console.log(id)
     const claims = await knex("wage_subsidy_claim_form").where("id", id)
     return claims
+}
+
+export const updateClaim = async (id: number, status: string) => {
+    console.log(status, id)
+    const result = await knex("wage_subsidy_claim_form").where("id", id).update({
+        applicationstatus: status
+    })
+    console.log(result)
+    return result
 }

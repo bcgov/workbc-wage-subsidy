@@ -38,3 +38,21 @@ export const getClaim = async (req: any, res: express.Response) => {
         return res.status(500).send("Server Error")
     }
 }
+
+export const updateClaim = async (req: any, res: express.Response) => {
+    try {
+        const { id } = req.params
+        const { applicationstatus } = req.body
+        console.log(applicationstatus, id)
+        const updated = await claimService.updateClaim(id, applicationstatus)
+
+        if (updated) {
+            // eslint-disable-next-line object-shorthand
+            return res.status(200).send({ id: id })
+        }
+        return res.sendStatus(500).send("Server Error")
+    } catch (e: any) {
+        console.log(e)
+        return res.sendStatus(500).send("Server Error")
+    }
+}
