@@ -2,9 +2,12 @@
 /* eslint-disable react/require-default-props */
 /* eslint-disable react/forbid-prop-types */
 /* eslint-disable import/prefer-default-export */
+import { Cancel, Check } from "@mui/icons-material"
 import { Typography } from "@mui/material"
 import {
     BooleanField,
+    BulkDeleteButton,
+    BulkUpdateButton,
     CheckboxGroupInput,
     Datagrid,
     DateField,
@@ -12,6 +15,7 @@ import {
     FilterButton,
     List,
     NumberField,
+    SearchInput,
     SelectInput,
     TextField,
     TopToolbar,
@@ -131,13 +135,15 @@ const PostShow = (...props: any) => (
     </CustomShow>
 )
 
-const choices = [
-    { id: 1, name: "1" },
-    { id: 2, name: "2" }
-]
+// eslint-disable-next-line prefer-const
+let choices: any[] | undefined = []
+// eslint-disable-next-line no-plusplus
+for (let i = 1; i <= 45; i++) {
+    choices.push({ id: i, name: `${i}` })
+}
 
 const formFilters = [
-    <SelectInput key="caFilter" source="catchmentno" label="Catchment" choices={choices} alwaysOn />,
+    <SelectInput key="caFilter" source="catchmentno" label="Catchment" choices={choices} emptyText="All" alwaysOn />,
     <CheckboxGroupInput
         key="statusFilter"
         source="applicationstatus"
@@ -149,7 +155,8 @@ const formFilters = [
             { id: "Cancelled", name: "Cancelled" }
         ]}
         alwaysOn
-    />
+    />,
+    <SearchInput key="searchID" source="id" label="Search IDs" />
 ]
 
 const ListActions = () => (
@@ -158,9 +165,38 @@ const ListActions = () => (
     </TopToolbar>
 )
 
+const MarkCompletedButton = () => (
+    <BulkUpdateButton
+        label="Mark as Completed"
+        data={{
+            applicationstatus: "Completed"
+        }}
+        icon={<Check />}
+    />
+)
+
+const MarkInProgressButton = () => (
+    <BulkUpdateButton
+        label="Mark as In Progress"
+        data={{
+            applicationstatus: "In Progress"
+        }}
+        icon={<Cancel />}
+    />
+)
+
+const ClaimsBulkActionButtons = () => (
+    <>
+        <MarkCompletedButton />
+        <MarkInProgressButton />
+        {/* default bulk delete action */}
+        <BulkDeleteButton />
+    </>
+)
+
 export const ClaimsList = (props: any) => (
     <List {...props} actions={<ListActions />} filters={formFilters}>
-        <Datagrid expand={<PostShow {...props} />}>
+        <Datagrid expand={<PostShow {...props} />} bulkActionButtons={<ClaimsBulkActionButtons />}>
             <TextField source="id" />
             <NumberField source="catchmentno" label="CA" />
             <DateField source="created" />

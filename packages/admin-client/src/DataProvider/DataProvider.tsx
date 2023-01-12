@@ -16,7 +16,7 @@ export const dataProvider = {
 
         const rangeStart = (page - 1) * perPage
         const rangeEnd = page * perPage - 1
-
+        console.log("rangeStart", rangeStart)
         const query = {
             sort: JSON.stringify([field, order]),
             page,
@@ -45,7 +45,6 @@ export const dataProvider = {
             }
             const range = headers.get(countHeader.toLowerCase()) || "0"
             const total = range.split("/").pop() || "0"
-            console.log(total)
             return {
                 data: json,
                 total: parseInt(total, 10)
@@ -117,7 +116,7 @@ export const dataProvider = {
                     `The ${countHeader} header is missing in the HTTP Response. The simple REST data provider expects responses for lists of resources to contain this header with the total number of results to build the pagination. If you are using CORS, did you declare ${countHeader} in the Access-Control-Expose-Headers header?`
                 )
             }
-            const range = headers.get(countHeader.toLowerCase()) || "0"
+            const range: string = headers.get(countHeader.toLowerCase()) || "0"
             const total = range.split("/").pop() || "0"
             return {
                 data: json,

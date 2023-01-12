@@ -11,6 +11,7 @@ import {
     FilterButton,
     List,
     NumberField,
+    Pagination,
     SelectInput,
     TextField,
     TopToolbar,
@@ -121,13 +122,15 @@ const PostShow = (...props: any) => (
     </CustomShow>
 )
 
-const choices = [
-    { id: 1, name: "1" },
-    { id: 2, name: "2" }
-]
+// eslint-disable-next-line prefer-const
+let choices: any[] | undefined = []
+// eslint-disable-next-line no-plusplus
+for (let i = 1; i <= 45; i++) {
+    choices.push({ id: i, name: `${i}` })
+}
 
 const formFilters = [
-    <SelectInput key="caFilter" source="catchmentno" label="Catchment" choices={choices} alwaysOn />,
+    <SelectInput key="caFilter" source="catchmentno" label="Catchment" choices={choices} emptyText="All" alwaysOn />,
     <CheckboxGroupInput
         key="statusFilter"
         source="applicationstatus"
@@ -148,8 +151,10 @@ const ListActions = () => (
     </TopToolbar>
 )
 
+const PostPagination = () => <Pagination rowsPerPageOptions={[10, 25, 50, 100]} />
+
 export const WageList = (props: any) => (
-    <List {...props} actions={<ListActions />} filters={formFilters}>
+    <List {...props} actions={<ListActions />} filters={formFilters} pagination={<PostPagination />}>
         <Datagrid expand={<PostShow {...props} />}>
             <TextField source="id" />
             <NumberField source="catchmentno" label="CA" />
