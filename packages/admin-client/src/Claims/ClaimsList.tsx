@@ -156,7 +156,7 @@ const formFilters = [
         ]}
         alwaysOn
     />,
-    <SearchInput key="searchID" source="id" label="Search IDs" />
+    <SearchInput key="searchID" source="id" />
 ]
 
 const ListActions = () => (

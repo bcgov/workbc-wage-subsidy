@@ -29,11 +29,9 @@ export const getClaimByID = async (id: number) => {
     return claims
 }
 
-export const updateClaim = async (id: number, status: string) => {
-    console.log(status, id)
-    const result = await knex("wage_subsidy_claim_form").where("id", id).update({
-        applicationstatus: status
-    })
+export const updateClaim = async (id: number, data: any) => {
+    console.log(data, id)
+    const result = await knex("wage_subsidy_claim_form").where("id", id).update(data)
     console.log(result)
     return result
 }

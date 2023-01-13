@@ -42,9 +42,8 @@ export const getClaim = async (req: any, res: express.Response) => {
 export const updateClaim = async (req: any, res: express.Response) => {
     try {
         const { id } = req.params
-        const { applicationstatus } = req.body
-        console.log(applicationstatus, id)
-        const updated = await claimService.updateClaim(id, applicationstatus)
+        console.log(req.body, id)
+        const updated = await claimService.updateClaim(id, req.body)
 
         if (updated) {
             // eslint-disable-next-line object-shorthand
