@@ -2,9 +2,13 @@
 /* eslint-disable react/require-default-props */
 /* eslint-disable react/forbid-prop-types */
 /* eslint-disable import/prefer-default-export */
+import { Cancel, Check } from "@mui/icons-material"
 import { Typography } from "@mui/material"
+import { useKeycloak } from "@react-keycloak/web"
 import {
     BooleanField,
+    BulkDeleteButton,
+    BulkUpdateButton,
     CheckboxGroupInput,
     Datagrid,
     DateField,
@@ -151,11 +155,43 @@ const ListActions = () => (
     </TopToolbar>
 )
 
+const MarkCompletedButton = () => (
+    <BulkUpdateButton
+        label="Mark as Completed"
+        data={{
+            applicationstatus: "Completed"
+        }}
+        icon={<Check />}
+    />
+)
+
+const MarkInProgressButton = () => (
+    <BulkUpdateButton
+        label="Mark as In Progress"
+        data={{
+            applicationstatus: "In Progress"
+        }}
+        icon={<Cancel />}
+    />
+)
+
+const WagesBulkActionButtons = () => {
+    const keycloak = useKeycloak()
+    return (
+        <>
+            <MarkCompletedButton />
+            <MarkInProgressButton />
+            {/* default bulk delete action */}
+            {keycloak.keycloak.tokenParsed?.identity_provider === "idir" && <BulkDeleteButton />}
+        </>
+    )
+}
+
 const PostPagination = () => <Pagination rowsPerPageOptions={[10, 25, 50, 100]} />
 
 export const WageList = (props: any) => (
     <List {...props} actions={<ListActions />} filters={formFilters} pagination={<PostPagination />}>
-        <Datagrid expand={<PostShow {...props} />}>
+        <Datagrid expand={<PostShow {...props} />} bulkActionButtons={<WagesBulkActionButtons />}>
             <TextField source="id" />
             <NumberField source="catchmentno" label="CA" />
             <DateField source="created" />

@@ -21,6 +21,7 @@ import {
     TopToolbar,
     useRecordContext
 } from "react-admin"
+import { useKeycloak } from "@react-keycloak/web"
 import { CustomShow } from "./CustomShow"
 
 const FormattedFunctionField = ({ source }: any) => {
@@ -185,14 +186,17 @@ const MarkInProgressButton = () => (
     />
 )
 
-const ClaimsBulkActionButtons = () => (
-    <>
-        <MarkCompletedButton />
-        <MarkInProgressButton />
-        {/* default bulk delete action */}
-        <BulkDeleteButton />
-    </>
-)
+const ClaimsBulkActionButtons = () => {
+    const keycloak = useKeycloak()
+    return (
+        <>
+            <MarkCompletedButton />
+            <MarkInProgressButton />
+            {/* default bulk delete action */}
+            {keycloak.keycloak.tokenParsed?.identity_provider === "idir" && <BulkDeleteButton />}
+        </>
+    )
+}
 
 export const ClaimsList = (props: any) => (
     <List {...props} actions={<ListActions />} filters={formFilters}>
