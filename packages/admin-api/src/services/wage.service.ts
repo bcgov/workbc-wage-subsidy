@@ -22,3 +22,9 @@ export const getWageByCatchment = async (ca: number[]) => {
     const claims = await knex("wage_subsidy_applications").where((builder: any) => builder.whereIn("catchmentno", ca))
     return claims
 }
+
+export const deleteWage = async (id: number) => {
+    const result = await knex("wage_subsidy_applications").where("id", id).del()
+    console.log(result)
+    return result
+}

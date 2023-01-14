@@ -20,6 +20,7 @@ import {
     useUpdate
 } from "react-admin"
 import { useWatch } from "react-hook-form"
+import { useNavigate } from "react-router"
 
 const CustomToolbar = () => (
     <Toolbar>
@@ -99,7 +100,11 @@ const CalculatedInput = ({ source, value }: any, ...props: any) => {
                 disabled
                 fullWidth
                 label="Eligible Wages"
-                format={() => Number(totalwage1) / 100}
+                format={() =>
+                    Number(totalwage1) / 100 > Number(totalweeks1) * 1000
+                        ? Number(totalwage1) / 100
+                        : Number(totalweeks1) * 1000
+                }
                 helperText={`Max Wage: ${String(Number(totalweeks1) * 1000)}`}
             />
         )
@@ -111,7 +116,11 @@ const CalculatedInput = ({ source, value }: any, ...props: any) => {
                 disabled
                 fullWidth
                 label="Eligible Wages"
-                format={() => Number(totalwage2) / 100}
+                format={() =>
+                    Number(totalwage2) / 100 > Number(totalweeks2) * 1000
+                        ? Number(totalwage2) / 100
+                        : Number(totalweeks2) * 1000
+                }
                 helperText={`Max Wage: ${String(Number(totalweeks2) * 1000)}`}
             />
         )
@@ -221,6 +230,8 @@ const EditActions = () => (
 )
 
 export const ClaimsEdit = (props: any) => {
+    const navigate = useNavigate()
+    const notify = useNotify()
     const recordId = useGetRecordId()
     const {
         data,
@@ -258,17 +269,18 @@ export const ClaimsEdit = (props: any) => {
         newdata.totalamountreimbursed1 = Math.round(newdata.wagesreimbursed1 + newdata.mercsreimbursed1)
         newdata.totalamountreimbursed2 = Math.round(newdata.wagesreimbursed2 + newdata.mercsreimbursed2)
         newdata.totalsubsidyclaimed = Math.round(newdata.totalamountreimbursed1 + newdata.totalamountreimbursed2)
-        console.log(newdata)
-        console.log(data)
         update("claims", { id: recordId, data: newdata, previousData: data })
         if (isLoading) {
-            const notify = useNotify()
             notify(`Updating`, { type: "info" })
+            return
         }
         if (error) {
-            const notify = useNotify()
             notify(`Error ${error}`, { type: "error" })
+            return
         }
+        notify(`Updated`, { type: "success" })
+        navigate("/claims")
+        window.location.reload()
     }
     return (
         <Edit actions={<EditActions />}>
