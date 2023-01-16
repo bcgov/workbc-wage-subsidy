@@ -22,7 +22,6 @@ const kcConfig: KeycloakConfig = {
 
 const app = express()
 
-console.log(kcConfig)
 const keycloak = new Keycloak({}, kcConfig)
 
 app.use(express.json())

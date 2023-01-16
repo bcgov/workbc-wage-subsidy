@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 /* eslint-disable react-hooks/rules-of-hooks */
 /* eslint-disable no-param-reassign */
 /* eslint-disable react-hooks/exhaustive-deps */
@@ -21,6 +22,7 @@ import {
 } from "react-admin"
 import { useWatch } from "react-hook-form"
 import { useNavigate } from "react-router"
+import jwt_decode from "jwt-decode"
 
 const CustomToolbar = () => (
     <Toolbar>
@@ -31,6 +33,7 @@ const CustomToolbar = () => (
 const CalculatedInput = ({ source, value }: any, ...props: any) => {
     // const a = useInput(props)
     // console.log(a)
+    const decoded: any = jwt_decode(localStorage.getItem("token")?.toString() || "")
     const datefrom1 = new Date(useWatch({ name: "subsidyratedatefrom1" })) || NaN
     const dateto1 = new Date(useWatch({ name: "subsidyratedateto1" })) || NaN
     const datefrom2 = new Date(useWatch({ name: "subsidyratedatefrom2" })) || NaN
@@ -43,6 +46,12 @@ const CalculatedInput = ({ source, value }: any, ...props: any) => {
     const totalmercs2 = useWatch({ name: "totalmercs2" })
     const totalwage1 = useWatch({ name: "totalwage1" })
     const totalwage2 = useWatch({ name: "totalwage2" })
+    const eligiblewages1 = Math.round(
+        Number(totalwage1) / 100 > Number(totalweeks1) * 1000 ? Number(totalweeks1) * 1000 : Number(totalwage1) / 100
+    )
+    const eligiblewages2 = Math.round(
+        Number(totalwage2) / 100 > Number(totalweeks2) * 1000 ? Number(totalweeks2) * 1000 : Number(totalwage2) / 100
+    )
     if (source.includes("datefrom")) {
         return <DateInput source={source} fullWidth label="Subsidy Rate Date From" />
     }
@@ -100,11 +109,7 @@ const CalculatedInput = ({ source, value }: any, ...props: any) => {
                 disabled
                 fullWidth
                 label="Eligible Wages"
-                format={() =>
-                    Number(totalwage1) / 100 > Number(totalweeks1) * 1000
-                        ? Number(totalwage1) / 100
-                        : Number(totalweeks1) * 1000
-                }
+                format={() => eligiblewages1}
                 helperText={`Max Wage: ${String(Number(totalweeks1) * 1000)}`}
             />
         )
@@ -116,11 +121,7 @@ const CalculatedInput = ({ source, value }: any, ...props: any) => {
                 disabled
                 fullWidth
                 label="Eligible Wages"
-                format={() =>
-                    Number(totalwage2) / 100 > Number(totalweeks2) * 1000
-                        ? Number(totalwage2) / 100
-                        : Number(totalweeks2) * 1000
-                }
+                format={() => eligiblewages2}
                 helperText={`Max Wage: ${String(Number(totalweeks2) * 1000)}`}
             />
         )
@@ -130,7 +131,7 @@ const CalculatedInput = ({ source, value }: any, ...props: any) => {
             <NumberInput
                 source={source}
                 fullWidth
-                format={() => (Number(ratepercent1) * Number(totalwage1)) / 10000}
+                format={() => (Number(ratepercent1) * eligiblewages1) / 100}
                 disabled
                 label="Wages Reimbursed"
             />
@@ -141,7 +142,7 @@ const CalculatedInput = ({ source, value }: any, ...props: any) => {
             <NumberInput
                 source={source}
                 fullWidth
-                format={() => (Number(ratepercent2) * Number(totalwage2)) / 10000}
+                format={() => (Number(ratepercent2) * eligiblewages2) / 100}
                 disabled
                 label="Wages Reimbursed"
             />
@@ -181,8 +182,7 @@ const CalculatedInput = ({ source, value }: any, ...props: any) => {
                 fullWidth
                 disabled
                 format={() =>
-                    (Number(ratepercent1) * Number(totalmercs1)) / 100 +
-                    (Number(ratepercent1) * Number(totalwage1)) / 10000
+                    (Number(ratepercent1) * Number(totalmercs1)) / 100 + (Number(ratepercent1) * eligiblewages1) / 100
                 }
                 label="Total Amount Reimbursed"
             />
@@ -195,8 +195,7 @@ const CalculatedInput = ({ source, value }: any, ...props: any) => {
                 fullWidth
                 disabled
                 format={() =>
-                    (Number(ratepercent2) * Number(totalmercs2)) / 100 +
-                    (Number(ratepercent2) * Number(totalwage2)) / 10000
+                    (Number(ratepercent2) * Number(totalmercs2)) / 100 + (Number(ratepercent2) * eligiblewages2) / 100
                 }
                 label="Total Amount Reimbursed"
             />
@@ -209,16 +208,28 @@ const CalculatedInput = ({ source, value }: any, ...props: any) => {
                 disabled
                 format={() =>
                     (Number(ratepercent1) * Number(totalmercs1)) / 100 +
-                    (Number(ratepercent1) * Number(totalwage1)) / 10000 +
+                    (Number(ratepercent1) * eligiblewages1) / 100 +
                     (Number(ratepercent2) * Number(totalmercs2)) / 100 +
-                    (Number(ratepercent2) * Number(totalwage2)) / 10000
+                    (Number(ratepercent2) * eligiblewages2) / 100
                 }
                 label="Subsidy Claimed"
             />
         )
     }
     if (source.includes("claimapprovedby")) {
-        return <TextInput source={source} label="Claim Approved By" />
+        return (
+            <TextInput
+                source={source}
+                label="Claim Approved By"
+                placeholder={decoded.display_name || ""}
+                format={(v) => {
+                    if (v === "NULL") {
+                        return decoded.display_name || ""
+                    }
+                    return v
+                }}
+            />
+        )
     }
     return null
 }
@@ -258,14 +269,21 @@ export const ClaimsEdit = (props: any) => {
     const claimSave = (newdata: any) => {
         // update totalweeks element of newdata with totalweeks1
         // eslint-disable-next-line no-param-reassign
+        console.log(newdata.totalwage1)
+        const eligiblewages1 = Math.round(
+            Number(newdata.totalwage1) / 100 > Number(newdata.totalweeks1) * 1000
+                ? Number(newdata.totalweeks1) * 1000
+                : Number(newdata.totalwage1) / 100
+        )
+        const eligiblewages2 = Math.round(
+            Number(newdata.totalwage2) / 100 > Number(newdata.totalweeks2) * 1000
+                ? Number(newdata.totalweeks2) * 1000
+                : Number(newdata.totalwage2) / 100
+        )
         newdata.mercsreimbursed1 = Math.round((Number(newdata.subsidyratepercent1) * Number(newdata.totalmercs1)) / 100)
         newdata.mercsreimbursed2 = Math.round((Number(newdata.subsidyratepercent2) * Number(newdata.totalmercs2)) / 100)
-        newdata.wagesreimbursed1 = Math.round(
-            (Number(newdata.subsidyratepercent1) * Number(newdata.totalwage1)) / 10000
-        )
-        newdata.wagesreimbursed2 = Math.round(
-            (Number(newdata.subsidyratepercent2) * Number(newdata.totalwage2)) / 10000
-        )
+        newdata.wagesreimbursed1 = Math.round((Number(newdata.subsidyratepercent1) * Number(eligiblewages1)) / 100)
+        newdata.wagesreimbursed2 = Math.round((Number(newdata.subsidyratepercent2) * Number(eligiblewages2)) / 100)
         newdata.totalamountreimbursed1 = Math.round(newdata.wagesreimbursed1 + newdata.mercsreimbursed1)
         newdata.totalamountreimbursed2 = Math.round(newdata.wagesreimbursed2 + newdata.mercsreimbursed2)
         newdata.totalsubsidyclaimed = Math.round(newdata.totalamountreimbursed1 + newdata.totalamountreimbursed2)
@@ -278,9 +296,9 @@ export const ClaimsEdit = (props: any) => {
             notify(`Error ${error}`, { type: "error" })
             return
         }
-        notify(`Updated`, { type: "success" })
         navigate("/claims")
         window.location.reload()
+        notify(`Updated`, { type: "success" })
     }
     return (
         <Edit actions={<EditActions />}>
