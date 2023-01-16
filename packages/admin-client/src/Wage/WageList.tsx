@@ -140,8 +140,8 @@ const formFilters = [
         source="applicationstatus"
         label=""
         choices={[
-            { id: "NULL", name: "New" },
-            { id: "In Progress", name: "In Progress" },
+            { id: "NULL", name: "New", defaultChecked: true },
+            { id: "In Progress", name: "In Progress", defaultChecked: true },
             { id: "Completed", name: "Completed" },
             { id: "Cancelled", name: "Cancelled" }
         ]}
