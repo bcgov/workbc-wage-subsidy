@@ -30,7 +30,7 @@ export const getAllWage = async (req: any, res: express.Response) => {
 export const deleteWage = async (req: any, res: express.Response) => {
     try {
         if (
-            req.kauth.grant.access_token.content.client_roles &&
+            !req.kauth.grant.access_token.content.client_roles ||
             req.kauth.grant.access_token.content.identity_provider !== "idir"
         ) {
             return res.status(403).send("Access denied")

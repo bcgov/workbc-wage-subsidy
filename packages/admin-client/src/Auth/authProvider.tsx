@@ -3,6 +3,7 @@
 /* eslint-disable prefer-promise-reject-errors */
 import { useKeycloak } from "@react-keycloak/web"
 import jwt_decode from "jwt-decode"
+import axios from "axios"
 
 const useAuthProvider = (clientID: string) => {
     const { keycloak } = useKeycloak()
@@ -29,23 +30,36 @@ const useAuthProvider = (clientID: string) => {
             }
             return Promise.reject("Failed to get identity")
         },
-        getPermissions: () => {
-            if (localStorage.getItem("token")) {
-                const decoded: any = jwt_decode(localStorage.getItem("token")?.toString() || "")
-                const roles = decoded.client_roles
-                if (!roles) {
-                    return Promise.resolve(new Error("Member does not have a role, you should not be seeing this"))
+        getPermissions: async () => {
+            const apiUrl = "http://localhost:8002"
+            const res = await axios.get(`${apiUrl}/permission`, {
+                headers: {
+                    Accept: "application/json",
+                    Authorization: `Bearer ${localStorage.getItem("token")}`
                 }
-                if (roles.includes("admin")) {
-                    localStorage.setItem("permissions", "admin")
-                    return Promise.resolve("admin")
-                }
-                if (roles.includes("member")) {
-                    localStorage.setItem("permissions", "member")
-                    return Promise.resolve("member")
-                }
-            }
-            return Promise.reject(new Error("Failed to get roles"))
+            })
+            localStorage.setItem("permissions", res.data)
+            console.log(res)
+            return res.data
+
+            // const request = new Request(`${apiUrl}/permission`, {
+            //     method: "GET",
+            //     headers: new Headers({
+            //         Accept: "application/json",
+            //         Authorization: `Bearer ${localStorage.getItem("token")}`
+            //     })
+            // })
+            // return fetch(request)
+            //     .then((response: any) => {
+            //         if (response.status < 200 || response.status >= 300) {
+            //             throw new Error(response.statusText)
+            //         }
+            //         console.log(response)
+            //         return response.data.permissions
+            //     })
+            //     .then((res) => {
+            //         localStorage.setItem("permissions", res)
+            //     })
 
             /*
             if (keycloak.token) {
