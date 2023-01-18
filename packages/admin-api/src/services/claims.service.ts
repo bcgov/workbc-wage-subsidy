@@ -1,7 +1,7 @@
 /* eslint-disable import/prefer-default-export */
 import { knex } from "../config/db-config"
 
-export const getAllClaims = async (perPage: number, currPage: number, filters: any, sort: any) => {
+export const getAllClaims = async (perPage: number, currPage: number, filters: any, sort: any, permission: any[]) => {
     const claims = await knex("wage_subsidy_claim_form")
         .modify((queryBuilder: any) => {
             if (filters.applicationstatus) {
@@ -9,6 +9,10 @@ export const getAllClaims = async (perPage: number, currPage: number, filters: a
             }
             if (filters.catchmentno) {
                 queryBuilder.where("catchmentno", Number(filters.catchmentno))
+            } else if (permission.length > 0) {
+                queryBuilder.whereIn("catchmentno", permission)
+            } else if (permission.length === 0) {
+                queryBuilder.whereIn("catchmentno", [0])
             }
             if (sort) {
                 queryBuilder.orderBy(sort[0], sort[1])

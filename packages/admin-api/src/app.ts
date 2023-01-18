@@ -4,6 +4,7 @@ import helmet from "helmet"
 import Keycloak, { KeycloakConfig } from "keycloak-connect"
 import claimRoute from "./routes/claim.route"
 import wageRoute from "./routes/wage.route"
+import permissionRoute from "./routes/permission.route"
 
 const corsOptions = {
     origin: process.env.ORIGIN_URL || process.env.OPENSHIFT_NODEJS_ORIGIN_URL || "http://localhost:3001",
@@ -32,6 +33,7 @@ app.use(keycloak.middleware())
 
 app.use("/", keycloak.protect(), claimRoute)
 app.use("/", keycloak.protect(), wageRoute)
+app.use("/", keycloak.protect(), permissionRoute)
 
 const port = process.env.PORT || "8002"
 app.listen(port, () => {

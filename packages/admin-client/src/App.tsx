@@ -4,7 +4,6 @@
 import { ReactKeycloakProvider } from "@react-keycloak/web"
 import Keycloak from "keycloak-js"
 import { Admin, Resource } from "react-admin"
-import jwt_decode from "jwt-decode"
 import useAuthProvider from "./Auth/authProvider"
 import Footer from "./admin/footer"
 import Layout from "./admin/Layout"
@@ -56,25 +55,31 @@ export const lightTheme = {
 }
 
 const CustomAdminWithKeycloak = () => {
-    const checkRole = (token: string) => {
-        if (token !== "") {
-            const decoded: any = jwt_decode(token)
-            console.log(decoded)
-            if (decoded.client_roles) {
-                return true
-            }
-        }
-
-        return false
-    }
+    // const checkRole = (token: string) => {
+    //     if (token !== "") {
+    //         const decoded: any = jwt_decode(token)
+    //         console.log(decoded)
+    //         const roles = httpClient(`${apiUrl}/permission`, {
+    //             headers: new Headers({
+    //                 Accept: "application/json",
+    //                 Authorization: `Bearer ${localStorage.getItem("token")}`
+    //             })
+    //         }).then(({ json }) => ({
+    //             data: json
+    //         }))
+    //         return roles.then((res) => res.data.permissions).then((res) => res.length > 0)
+    //     }
+    //     return Promise.resolve(false)
+    // }
     const customAuthProvider = useAuthProvider(process.env.REACT_APP_KEYCLOAK_CLIENT_ID || "")
-
+    const permission = customAuthProvider.getPermissions()
+    console.log(permission)
     return (
         <>
             <div />
-            {checkRole(keycloak.token?.toString() || "") ? (
+            {permission ? (
                 <>
-                    {console.log(checkRole(localStorage.getItem("token")?.toString() || ""))}
+                    {console.log(permission)}
                     <Admin
                         theme={lightTheme}
                         dataProvider={dataProvider}
@@ -93,6 +98,30 @@ const CustomAdminWithKeycloak = () => {
             )}
         </>
     )
+    // return permission.then((res: any) => (
+    //     <>
+    //         <div />
+    //         {res ? (
+    //             <>
+    //                 {console.log(checkRole(localStorage.getItem("token")?.toString() || ""))}
+    //                 <Admin
+    //                     theme={lightTheme}
+    //                     dataProvider={dataProvider}
+    //                     authProvider={customAuthProvider}
+    //                     loginPage={false}
+    //                     layout={Layout}
+    //                     disableTelemetry
+    //                     requireAuth
+    //                 >
+    //                     <Resource name="wage" list={WageList} />
+    //                     <Resource name="claims" list={ClaimsList} edit={ClaimsEdit} />
+    //                 </Admin>
+    //             </>
+    //         ) : (
+    //             <LoginPage />
+    //         )}
+    //     </>
+    // ))
 }
 
 function App() {

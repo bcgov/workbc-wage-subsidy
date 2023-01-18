@@ -2,18 +2,32 @@
 import * as express from "express"
 
 import * as claimService from "../services/claims.service"
+import * as permissionService from "../services/permission.service"
 
 export const getAllClaims = async (req: any, res: express.Response) => {
     try {
-        if (!req.kauth.grant.access_token.content.client_roles) {
+        let guid
+        if (req.kauth.grant.access_token.content.bceid_user_guid) {
+            guid = req.kauth.grant.access_token.content.bceid_user_guid
+        }
+        if (req.kauth.grant.access_token.content.idir_user_guid) {
+            guid = req.kauth.grant.access_token.content.idir_user_guid
+        }
+        if (!guid) {
             return res.status(403).send("Access denied")
         }
+        const permission = await permissionService.getPermission(guid)
+        // fo through the permission array and extract the catchment field to another array for returning
+        const catchment = permission
+            .map((item: any) => (item.Catchment !== "N/A" ? item.Catchment.slice(1) : null))
+            .filter((item: any) => item !== null)
+        console.log(catchment)
         const { sort, filter, page, perPage } = req.query
         const filters = filter ? JSON.parse(filter) : {}
         console.log(filters.applicationstatus)
         const sorted = sort ? sort.replace(/[^a-zA-Z0-9,]/g, "").split(",") : ["id", "ASC"]
         console.log(sorted)
-        const claims = await claimService.getAllClaims(Number(perPage), Number(page), filters, sorted)
+        const claims = await claimService.getAllClaims(Number(perPage), Number(page), filters, sorted, catchment)
         // console.log(claims)
         res.set({
             "Access-Control-Expose-Headers": "Content-Range",
@@ -68,7 +82,7 @@ export const updateClaim = async (req: any, res: express.Response) => {
 export const deleteClaim = async (req: any, res: express.Response) => {
     try {
         if (
-            req.kauth.grant.access_token.content.client_roles &&
+            !req.kauth.grant.access_token.content.client_roles ||
             req.kauth.grant.access_token.content.identity_provider !== "idir"
         ) {
             return res.status(403).send("Access denied")
