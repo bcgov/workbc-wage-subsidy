@@ -73,7 +73,7 @@ const CustomAdminWithKeycloak = () => {
     // }
     const customAuthProvider = useAuthProvider(process.env.REACT_APP_KEYCLOAK_CLIENT_ID || "")
     const permission = customAuthProvider.getPermissions()
-    console.log(permission)
+    console.log(keycloak.tokenParsed)
     return (
         <>
             <div />
