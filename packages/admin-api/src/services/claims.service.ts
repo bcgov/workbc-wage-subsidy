@@ -9,7 +9,7 @@ export const getAllClaims = async (perPage: number, currPage: number, filters: a
             }
             if (filters.catchmentno) {
                 queryBuilder.where("catchmentno", Number(filters.catchmentno))
-            } else if (permission.length > 0) {
+            } else if (permission.length > 0 && permission[0] !== "*") {
                 queryBuilder.whereIn("catchmentno", permission)
             } else if (permission.length === 0) {
                 queryBuilder.whereIn("catchmentno", [0])
@@ -22,22 +22,36 @@ export const getAllClaims = async (perPage: number, currPage: number, filters: a
     return claims
 }
 
-export const getClaimsByCatchment = async (ca: number[]) => {
-    const claims = await knex("wage_subsidy_claim_form").where((builder: any) => builder.whereIn("catchmentno", ca))
-    return claims
-}
+// export const getClaimsByCatchment = async (ca: number[]) => {
+//     const claims = await knex("wage_subsidy_claim_form").where((builder: any) => builder.whereIn("catchmentno", ca))
+//     return claims
+// }
 
-export const getClaimByID = async (id: number) => {
+export const getClaimByID = async (id: number, permission: any[]) => {
     // console.log(id)
+    if (permission[0] !== "*") {
+        permission.map((p: any) => Number(p))
+    }
     const claims = await knex("wage_subsidy_claim_form").where("id", id)
-    return claims
+    if (claims[0].catchmentno in permission || permission[0] === "*") {
+        // console.log("yes")
+        return claims
+    }
+    return []
 }
 
-export const updateClaim = async (id: number, data: any) => {
+export const updateClaim = async (id: number, data: any, permission: any[]) => {
     // console.log(data, id)
-    const result = await knex("wage_subsidy_claim_form").where("id", id).update(data)
+    if (permission[0] !== "*") {
+        permission.map((p: any) => Number(p))
+    }
+    const claims = await knex("wage_subsidy_claim_form").where("id", id)
+    if (claims[0].catchmentno in permission || permission[0] === "*") {
+        const result = await knex("wage_subsidy_claim_form").where("id", id).update(data)
+        return result
+    }
     // console.log(result)
-    return result
+    return 0
 }
 
 export const deleteClaim = async (id: number) => {
