@@ -138,10 +138,23 @@ const PostShow = (...props: any) => (
 
 // eslint-disable-next-line prefer-const
 let choices: any[] | undefined = []
-// eslint-disable-next-line no-plusplus
-for (let i = 1; i <= 45; i++) {
-    choices.push({ id: i, name: `${i}` })
+if (localStorage.getItem("provider") === "BCEID") {
+    localStorage
+        .getItem("permissions")
+        ?.split(",")
+        .map((x: string) => parseInt(x, 10))
+        .forEach((x: number) => {
+            // if not a number then do not push
+            if (x) {
+                choices?.push({ id: x, name: `${x}` })
+            }
+        })
+} else if (localStorage.getItem("provider") === "IDIR" && localStorage.getItem("access") === "true") {
+    for (let i = 1; i <= 45; i += 1) {
+        choices?.push({ id: i, name: `${i}` })
+    }
 }
+console.log(choices)
 
 const formFilters = [
     <SelectInput key="caFilter" source="catchmentno" label="Catchment" choices={choices} emptyText="All" alwaysOn />,

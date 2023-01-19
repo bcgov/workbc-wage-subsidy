@@ -3,10 +3,15 @@
 /* eslint-disable import/prefer-default-export */
 import axios from "axios"
 
-export const getPermission = async (guid: string) => {
+export const getPermission = async (guid: string, isIDIR: boolean) => {
     const url = `${process.env.SAM_API_URL}`
     const response = await axios
-        .get(`${url}${guid}`, {
+        .get(`${url}`, {
+            params: {
+                userGUID: guid,
+                // eslint-disable-next-line object-shorthand
+                isIDIR: isIDIR
+            },
             auth: {
                 username: `${process.env.SAM_API_USERNAME}`,
                 password: `${process.env.SAM_API_PASSWORD}`
