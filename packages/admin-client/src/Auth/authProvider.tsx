@@ -31,16 +31,15 @@ const useAuthProvider = (clientID: string) => {
             return Promise.reject("Failed to get identity")
         },
         getPermissions: async () => {
-            const apiUrl = "http://localhost:8002"
+            const apiUrl = process.env.ADMIN_API_URL || "http://localhost:8002"
             const res = await axios.get(`${apiUrl}/permission`, {
                 headers: {
                     Accept: "application/json",
                     Authorization: `Bearer ${localStorage.getItem("token")}`
                 }
             })
-            localStorage.setItem("permissions", res.data)
             console.log(res)
-            return res.data
+            return res.data.access
 
             // const request = new Request(`${apiUrl}/permission`, {
             //     method: "GET",

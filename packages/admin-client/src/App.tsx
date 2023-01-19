@@ -4,6 +4,8 @@
 import { ReactKeycloakProvider } from "@react-keycloak/web"
 import Keycloak from "keycloak-js"
 import { Admin, Resource } from "react-admin"
+import axios from "axios"
+import { useEffect, useState } from "react"
 import useAuthProvider from "./Auth/authProvider"
 import Footer from "./admin/footer"
 import Layout from "./admin/Layout"
@@ -12,7 +14,7 @@ import { ClaimsEdit } from "./Claims/ClaimsEdit"
 import { ClaimsList } from "./Claims/ClaimsList"
 import { dataProvider } from "./DataProvider/DataProvider"
 import { WageList } from "./Wage/WageList"
-import LoginPage from "./Auth/LoginPage"
+import Ready from "./admin/ready"
 
 const initOptions = {
     url: process.env.REACT_APP_KEYCLOAK_URL || "",
@@ -22,11 +24,24 @@ const initOptions = {
 
 const keycloak = new Keycloak(initOptions)
 
-const onToken = () => {
+const onToken = async () => {
     if (keycloak.token && keycloak.refreshToken) {
         localStorage.setItem("token", keycloak.token)
         localStorage.setItem("refresh-token", keycloak.refreshToken)
     }
+    const res = await axios.get(`${process.env.ADMIN_API_URL || "http://localhost:8002"}/permission`, {
+        headers: {
+            Accept: "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`
+        }
+    })
+    localStorage.setItem("provider", res.data.provider)
+    localStorage.setItem(
+        "permissions",
+        res.data.permissions.map((item: any) => Number(item.Catchment.slice(1))).filter((item: any) => item !== null)
+    )
+    localStorage.setItem("access", res.data.access)
+    window.dispatchEvent(new Event("storage"))
 }
 
 const onTokenExpired = () => {
@@ -55,6 +70,7 @@ export const lightTheme = {
 }
 
 const CustomAdminWithKeycloak = () => {
+    const [permissions, setPermissions] = useState(localStorage.getItem("access") === "true")
     // const checkRole = (token: string) => {
     //     if (token !== "") {
     //         const decoded: any = jwt_decode(token)
@@ -72,31 +88,35 @@ const CustomAdminWithKeycloak = () => {
     //     return Promise.resolve(false)
     // }
     const customAuthProvider = useAuthProvider(process.env.REACT_APP_KEYCLOAK_CLIENT_ID || "")
-    const permission = customAuthProvider.getPermissions()
-    console.log(keycloak.tokenParsed)
+    useEffect(() => {
+        // storing input name
+        window.addEventListener("storage", () => {
+            const localPermission = localStorage.getItem("access") === "true"
+            console.log(localPermission)
+            setPermissions(localPermission)
+        })
+    }, [])
     return (
-        <>
-            <div />
-            {permission ? (
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        <Admin
+            theme={lightTheme}
+            dataProvider={dataProvider}
+            authProvider={customAuthProvider}
+            loginPage={false}
+            layout={Layout}
+            disableTelemetry
+            requireAuth
+            ready={Ready}
+        >
+            {console.log(permissions)}
+            {permissions && (
                 <>
-                    {console.log(permission)}
-                    <Admin
-                        theme={lightTheme}
-                        dataProvider={dataProvider}
-                        authProvider={customAuthProvider}
-                        loginPage={false}
-                        layout={Layout}
-                        disableTelemetry
-                        requireAuth
-                    >
-                        <Resource name="wage" list={WageList} />
-                        <Resource name="claims" list={ClaimsList} edit={ClaimsEdit} />
-                    </Admin>
+                    <Resource name="wage" list={WageList} />
+                    <Resource name="claims" list={ClaimsList} edit={ClaimsEdit} />
                 </>
-            ) : (
-                <LoginPage />
             )}
-        </>
+        </Admin>
     )
     // return permission.then((res: any) => (
     //     <>
@@ -136,8 +156,10 @@ function App() {
                 onTokenExpired
             }}
         >
-            <CustomAdminWithKeycloak />
-            <Footer />
+            <>
+                <CustomAdminWithKeycloak />
+                <Footer />
+            </>
         </ReactKeycloakProvider>
     )
 }

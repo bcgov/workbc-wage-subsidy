@@ -11,15 +11,18 @@ export const getCatchment = async (access_token: any) => {
     let catchment
     if (access_token.content.bceid_user_guid) {
         guid = access_token.content.bceid_user_guid
-        const permission = await permissionService.getPermission(guid)
+        const permission = await permissionService.getPermission(guid, false)
         // fo through the permission array and extract the catchment field to another array for returning
         catchment = permission
             .map((item: any) => (item.Catchment !== "N/A" ? item.Catchment.slice(1) : null))
             .filter((item: any) => item !== null)
+        if (catchment.length === 0) {
+            throw new Error("Access denied")
+        }
     } else if (access_token.content.idir_user_guid) {
         // if user is using idir, and the catchment return list is not empty, then we can return all claims
         guid = access_token.content.idir_user_guid
-        catchment = await permissionService.getPermission(guid).then((response: any) => {
+        catchment = await permissionService.getPermission(guid, true).then((response: any) => {
             response
                 .map((item: any) => (item.Catchment !== "N/A" ? item.Catchment.slice(1) : null))
                 .filter((item: any) => item !== null)
