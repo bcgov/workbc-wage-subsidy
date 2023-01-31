@@ -17,7 +17,7 @@ export const getAllClaims = async (perPage: number, currPage: number, filters: a
                 queryBuilder.where("createdbyguid", user)
             }
         })
-        .paginate({ perPage, currentPage: currPage })
+        .paginate({ perPage, currentPage: currPage, isLengthAware: true })
     return claims
 }
 

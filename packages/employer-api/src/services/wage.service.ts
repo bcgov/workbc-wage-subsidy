@@ -20,7 +20,7 @@ export const getAllWage = async (perPage: number, currPage: number, filters: any
                 queryBuilder.orderBy(sort[0], sort[1])
             }
         })
-        .paginate({ perPage, currentPage: currPage })
+        .paginate({ perPage, currentPage: currPage, isLengthAware: true })
     return claims
 }
 

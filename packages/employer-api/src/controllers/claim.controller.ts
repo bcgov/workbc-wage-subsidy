@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 /* eslint-disable import/prefer-default-export */
 import * as express from "express"
 
@@ -9,6 +10,9 @@ export const getAllClaims = async (req: any, res: express.Response) => {
         const { sort, filter, page, perPage } = req.query
         // eslint-disable-next-line camelcase
         const { bceid_user_guid, bceid_username } = req.kauth.grant.access_token.content
+        if (bceid_username === undefined) {
+            return res.status(403).send("Not Authorized")
+        }
         const filters = filter ? JSON.parse(filter) : {}
         // console.log(filters.applicationstatus)
         const sorted = sort ? sort.replace(/[^a-zA-Z0-9,]/g, "").split(",") : ["id", "ASC"]
@@ -61,6 +65,10 @@ export const getAllClaims = async (req: any, res: express.Response) => {
 
 export const createClaim = async (req: any, res: express.Response) => {
     try {
+        const { bceid_username } = req.kauth.grant.access_token.content
+        if (bceid_username === undefined) {
+            return res.status(403).send("Not Authorized")
+        }
         const created = await claimService.insertClaim(
             req.body.formKey,
             req.body.userName,
@@ -81,6 +89,10 @@ export const createClaim = async (req: any, res: express.Response) => {
 
 export const getOneClaim = async (req: any, res: express.Response) => {
     try {
+        const { bceid_username } = req.kauth.grant.access_token.content
+        if (bceid_username === undefined) {
+            return res.status(403).send("Not Authorized")
+        }
         const { id } = req.params
         const claims = await claimService.getClaimByID(id)
         return res.status(200).send(claims)

@@ -1,5 +1,6 @@
 import { ReactKeycloakProvider } from "@react-keycloak/web"
 import Keycloak from "keycloak-js"
+import React, { useState } from "react"
 import { Admin, EditGuesser, Resource } from "react-admin"
 import "./App.css"
 import { ApplicationCreate } from "./Applications/Create"
@@ -8,6 +9,7 @@ import useAuthProvider from "./Auth/authProvider"
 import { CreateClaim } from "./Claims/Create"
 import { ClaimList } from "./Claims/List"
 import { dataProvider } from "./DataProvider/DataProvider"
+import Ready from "./Admin/ready"
 import Footer from "./footer"
 import Layout from "./Layout"
 
@@ -34,6 +36,8 @@ const onToken = () => {
     if (keycloak.token && keycloak.refreshToken) {
         localStorage.setItem("token", keycloak.token)
         localStorage.setItem("refresh-token", keycloak.refreshToken)
+        localStorage.setItem("provider", keycloak.idTokenParsed?.identity_provider)
+        window.dispatchEvent(new Event("storage"))
     }
 }
 
@@ -69,6 +73,13 @@ console.log(dataProvider)
 
 const CustomAdminWithKeycloak = () => {
     const customAuthProvider = useAuthProvider(process.env.REACT_APP_KEYCLOAK_CLIENT_ID || "")
+    const [permissions, setPermissions] = useState(keycloak.idTokenParsed?.identity_provider === "bceid")
+    React.useEffect(() => {
+        console.log(keycloak.idTokenParsed?.identity_provider)
+        if (keycloak && keycloak.idTokenParsed?.identity_provider === "bceidboth") {
+            setPermissions(true)
+        }
+    }, [])
     return (
         <Admin
             theme={lightTheme}
@@ -78,15 +89,20 @@ const CustomAdminWithKeycloak = () => {
             layout={Layout}
             disableTelemetry
             requireAuth
+            ready={Ready}
         >
-            <Resource
-                name="wage"
-                options={{ label: "Applications" }}
-                list={ApplicationList}
-                create={ApplicationCreate}
-                edit={EditGuesser}
-            />
-            <Resource name="claims" list={ClaimList} edit={EditGuesser} create={CreateClaim} />
+            {permissions && (
+                <>
+                    <Resource
+                        name="wage"
+                        options={{ label: "Applications" }}
+                        list={ApplicationList}
+                        create={ApplicationCreate}
+                        edit={EditGuesser}
+                    />
+                    <Resource name="claims" list={ClaimList} edit={EditGuesser} create={CreateClaim} />
+                </>
+            )}
         </Admin>
     )
 }
