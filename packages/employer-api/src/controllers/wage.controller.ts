@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 /* eslint-disable import/prefer-default-export */
 import * as express from "express"
 
@@ -6,15 +7,17 @@ import * as wageService from "../services/wage.service"
 
 export const getAllWage = async (req: any, res: express.Response) => {
     try {
-        // eslint-disable-next-line camelcase
         const { bceid_username, bceid_user_guid } = req.kauth.grant.access_token.content
+        if (bceid_username === undefined) {
+            return res.status(403).send("Not Authorized")
+        }
         const { sort, filter } = req.query
         const page = req.query.page || 1
         const perPage = req.query.perPage || 1
         const filters = filter ? JSON.parse(filter) : {}
-        console.log(filters.applicationstatus)
+        // console.log(filters.applicationstatus)
         const sorted = sort ? sort.replace(/[^a-zA-Z0-9,]/g, "").split(",") : ["id", "ASC"]
-        console.log(sorted)
+        // console.log(sorted)
         // get applications in the Database
         const applications = await wageService.getAllWage(
             Number(perPage),
@@ -124,6 +127,10 @@ export const createWage = async (req: any, res: express.Response) => {
 
 export const getOneWage = async (req: any, res: express.Response) => {
     try {
+        const { bceid_username } = req.kauth.grant.access_token.content
+        if (bceid_username === undefined) {
+            return res.status(403).send("Not Authorized")
+        }
         const { id } = req.params
         const applications = await wageService.getWageByID(id)
         return res.status(200).send(applications)

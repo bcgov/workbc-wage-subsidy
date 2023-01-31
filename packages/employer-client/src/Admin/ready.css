@@ -1,0 +1,123 @@
+header {
+  background-color: #036;
+  border-bottom: 2px solid #fcba19;
+  padding: 0 65px 0 65px;
+  color: #fff;
+  display: flex;
+  height: 65px;
+  top: 0px;
+  position: fixed;
+  width: 100%;
+}
+
+header h1 {
+  font-family:  Verdana, Arial, sans-serif;
+  font-weight: normal;  /* 400 */
+  margin: 5px 5px 0 18px;
+  visibility: hidden;
+  font-size: 16pt;
+}
+
+.content {
+  margin-top: 65px;
+  padding: 65px 65px 0 65px;
+  width: 100%;
+  min-height: 85vh;
+  background-color: #003366;
+  color: #f2f2f2;
+}
+
+.content .card {
+  background-color: #fff;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.5);
+  color: #313132;
+  display: flex;
+  width: 40vmin;
+  flex-direction: column;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 20px;
+}
+
+header .banner {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  margin: 0 10px 0 0;
+  /* border-style: dotted;
+  border-width: 1px;
+  border-color: lightgrey; */
+}
+
+header .other {
+  display: flex;
+  flex-grow: 1;
+  /* border-style: dotted;
+  border-width: 1px;
+  border-color: lightgrey; */
+}
+
+.BC-Gov-PrimaryButton-Dark {
+  margin-top: auto;
+  margin-bottom: auto;
+  margin-left: auto;
+  height: 80%;
+  background-color: #fff;
+  border: none;
+  border-radius: 4px;
+  color: #313132;
+  padding: 12px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: block;
+  font-size: 18px;
+  font-family: Verdana, Arial, sans-serif;
+  font-weight: 700;
+  letter-spacing: 1px;
+  cursor: pointer;
+}
+
+.BC-Gov-PrimaryButton-Dark:hover {
+text-decoration: underline;
+background-color: #f2f2f2
+}
+
+:focus {
+outline: 4px solid #3B99FC;
+outline-offset: 1px;
+}
+
+.BC-Gov-PrimaryButton-Dark:active {
+background-color: #fff;
+}
+
+.background-colour {
+background-color: #003366;
+height: 100px;
+width: 300px;
+display: flex;
+align-items: center;
+justify-content: center;
+}
+
+
+/*
+  These are sample media queries only. Media queries are quite subjective
+  but, in general, should be made for the three different classes of screen
+  size: phone, tablet, full.
+*/
+
+@media screen and (min-width: 600px) and (max-width: 899px) {
+  header h1 {
+    font-size: calc(7px + 2.2vw);
+    visibility: visible;
+  }
+}
+
+@media screen and (min-width: 900px) {
+  header h1 {
+    font-size: 2.0em;
+    visibility: visible;
+  }
+}
