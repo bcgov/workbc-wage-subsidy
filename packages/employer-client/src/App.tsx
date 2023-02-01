@@ -1,7 +1,7 @@
 import { ReactKeycloakProvider } from "@react-keycloak/web"
 import Keycloak from "keycloak-js"
 import React, { useState } from "react"
-import { Admin, EditGuesser, Resource } from "react-admin"
+import { Admin, Resource } from "react-admin"
 import "./App.css"
 import { ApplicationCreate } from "./Applications/Create"
 import { ApplicationList } from "./Applications/List"
@@ -13,6 +13,7 @@ import Ready from "./Admin/ready"
 import Footer from "./footer"
 import Layout from "./Layout"
 import { ApplicationEdit } from "./Applications/ApplicationsEdit"
+import { ClaimEdit } from "./Claims/ClaimEdit"
 
 /*
 const dataProvider = fakeDataProvider({
@@ -101,7 +102,7 @@ const CustomAdminWithKeycloak = () => {
                         create={ApplicationCreate}
                         edit={ApplicationEdit}
                     />
-                    <Resource name="claims" list={ClaimList} edit={EditGuesser} create={CreateClaim} />
+                    <Resource name="claims" list={ClaimList} edit={ClaimEdit} create={CreateClaim} />
                 </>
             )}
         </Admin>
