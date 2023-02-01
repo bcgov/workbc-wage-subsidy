@@ -1,18 +1,26 @@
 import { DoneAll } from "@mui/icons-material"
 import CircleIcon from "@mui/icons-material/Circle"
+import { Typography } from "@mui/material"
 import Button from "@mui/material/Button"
+import { useKeycloak } from "@react-keycloak/web"
 import {
+    BooleanField,
     BooleanInput,
     BulkDeleteButton,
     BulkUpdateButton,
     CreateButton,
     Datagrid,
+    DateField,
+    EditButton,
     FilterButton,
     FunctionField,
     List,
+    NumberField,
     TextField,
-    TopToolbar
+    TopToolbar,
+    useRecordContext
 } from "react-admin"
+import { CustomShow } from "../Admin/CustomShow"
 
 const formFilters = [
     <BooleanInput
@@ -32,19 +40,62 @@ const ListActions = () => (
     </TopToolbar>
 )
 
-const MarkOnICMButton = (props) => <BulkUpdateButton label={props.label} data={{ isInICM: true }} icon={<DoneAll />} />
-
 const FormBulkActionButtons = () => (
     <>
-        <MarkOnICMButton label="Mark on ICM" />
         <BulkDeleteButton />
     </>
 )
 
+const FormattedFunctionField = ({ source }: { source: string }) => {
+    const record = useRecordContext()
+    const re = /[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{3}Z/
+    if (record[source] === null || !record) {
+        return null
+    }
+    if (typeof record[source] === "number") {
+        if (source.includes("wage")) {
+            const value = (record[source] / 100).toFixed(2)
+            return <Typography variant="body2">${value}</Typography>
+        }
+        return <NumberField source={source} />
+    }
+    if (typeof record[source] === "string" && re.test(record[source])) {
+        return <DateField source={source} />
+    }
+    if (typeof record[source] === "string") {
+        if (record[source] === "NULL" && source === "applicationstatus") {
+            return <Typography variant="body2">New</Typography>
+        }
+        return <TextField source={source} />
+    }
+    if (typeof record[source] === "boolean") {
+        return <BooleanField source={source} />
+    }
+    return null
+}
+
+const EditIcon = () => <></>
+
+const PostShow = () => {
+    const record = useRecordContext()
+    console.log(record)
+    return (
+        <CustomShow sx={{ display: "grid" }}>
+            {Object.keys(record).map((key: string) => {
+                if (record[key] === null) {
+                    return null
+                }
+                return <FormattedFunctionField source={key} />
+            })}
+        </CustomShow>
+    )
+}
+
 export const ClaimList = (props: any) => {
+    const { keycloak } = useKeycloak()
     return (
         <List {...props} actions={<ListActions />} filters={formFilters} empty={false}>
-            <Datagrid bulkActionButtons={<FormBulkActionButtons />}>
+            <Datagrid expand={<PostShow {...props} />} bulkActionButtons={<FormBulkActionButtons />}>
                 <TextField label="ID" source="id" />
                 <FunctionField
                     label="Status"
@@ -73,10 +124,20 @@ export const ClaimList = (props: any) => {
                         record.confirmationid === null ? <div>N/A</div> : <div>{record.confirmationid}</div>
                     }
                 />
+                <FunctionField label="Owner" render={(record: any) => <div>{record.createdby}</div>} />
+                <FunctionField
+                    label="BCeIDs Shared With"
+                    render={(record: any) =>
+                        record.sharedwith === "" ? <div>N/A</div> : <div>{record.sharedwith}</div>
+                    }
+                />
                 <FunctionField
                     label="Actions"
-                    render={(record: any) =>
-                        record.applicationstatus === null ? (
+                    render={(record: any) => {
+                        if (keycloak.idTokenParsed?.bceid_username !== record.createdby) {
+                            return <>N/A</>
+                        }
+                        return record.status === null ? (
                             <div>
                                 <Button
                                     href={`${process.env.REACT_APP_CLAIM_URL}&token=${record.internalid}`}
@@ -88,7 +149,7 @@ export const ClaimList = (props: any) => {
                                     Fill Out Form
                                 </Button>
                             </div>
-                        ) : record.applicationstatus === "draft" ? (
+                        ) : record.status === "draft" ? (
                             <Button
                                 href={`${process.env.REACT_APP_DRAFT_URL}${record.applicationid}`}
                                 target="_blank"
@@ -98,21 +159,42 @@ export const ClaimList = (props: any) => {
                             >
                                 Continue Application
                             </Button>
-                        ) : record.applicationstatus === "submitted" ? (
-                            <Button
-                                href={`${process.env.REACT_APP_VIEW_URL}${record.applicationid}`}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                variant="contained"
-                                sx={{ textAlign: "center", backgroundColor: "#003366" }}
-                            >
-                                View Application
-                            </Button>
+                        ) : record.status === "submitted" ? (
+                            <>
+                                <Button
+                                    href={`${process.env.REACT_APP_VIEW_URL}${record.applicationid}`}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    variant="contained"
+                                    sx={{ textAlign: "center", backgroundColor: "#003366" }}
+                                >
+                                    View Application
+                                </Button>
+                                {keycloak.idTokenParsed?.bceid_username === record.createdby && (
+                                    <EditButton
+                                        icon={(<EditIcon />) as React.ReactElement<any>}
+                                        label="Share"
+                                        sx={{
+                                            textAlign: "center",
+                                            backgroundColor: "#003366",
+                                            color: "white",
+                                            padding: "6px 16px 6px",
+                                            width: "auto",
+                                            height: "36.5px",
+                                            fontSize: "14px",
+                                            minWidth: "64px",
+                                            margin: "5px",
+                                            ":hover": { background: "#1976d2" }
+                                        }}
+                                    />
+                                )}
+                            </>
                         ) : (
                             `N/A`
                         )
-                    }
+                    }}
                 />
+
                 {/*
                 <FunctionField
                     label="Enter Details"

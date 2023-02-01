@@ -9,7 +9,7 @@ export const getAllClaims = async (req: any, res: express.Response) => {
     try {
         const { sort, filter, page, perPage } = req.query
         // eslint-disable-next-line camelcase
-        const { bceid_user_guid, bceid_username } = req.kauth.grant.access_token.content
+        const { bceid_username } = req.kauth.grant.access_token.content
         if (bceid_username === undefined) {
             return res.status(403).send("Not Authorized")
         }
@@ -17,7 +17,7 @@ export const getAllClaims = async (req: any, res: express.Response) => {
         // console.log(filters.applicationstatus)
         const sorted = sort ? sort.replace(/[^a-zA-Z0-9,]/g, "").split(",") : ["id", "ASC"]
         // console.log(sorted)
-        const claims = await claimService.getAllClaims(Number(perPage), Number(page), filters, sorted, bceid_user_guid)
+        const claims = await claimService.getAllClaims(Number(perPage), Number(page), filters, sorted, bceid_username)
         // console.log(claims)
         const hasNonComplete = claims.data.some((a: any) => a.status !== "complete")
 
@@ -45,7 +45,7 @@ export const getAllClaims = async (req: any, res: express.Response) => {
                         // else form is in draft
                     } else if (app.status === null) {
                         // set status to draft
-                        await claimService.updateClaims(app.id, h.confirmationId, h.submissionId, "draft")
+                        await claimService.updateClaims(app.id, h.confirmationId, h.submissionId, "draft", null)
                     }
                     // console.log("found app")
                     // update the DB
@@ -78,7 +78,7 @@ export const createClaim = async (req: any, res: express.Response) => {
         console.log("created is")
         console.log(created)
         if (created) {
-            return res.status(200).send({ id: created })
+            return res.status(200).send({ data: created })
         }
         return res.status(500).send("Internal Server Error")
     } catch (e: any) {
@@ -96,6 +96,48 @@ export const getOneClaim = async (req: any, res: express.Response) => {
         const { id } = req.params
         const claims = await claimService.getClaimByID(id)
         return res.status(200).send(claims)
+    } catch (e: any) {
+        console.log(e)
+        return res.status(500).send("Internal Server Error")
+    }
+}
+
+export const updateClaim = async (req: any, res: express.Response) => {
+    try {
+        const { bceid_username } = req.kauth.grant.access_token.content
+        if (bceid_username === undefined) {
+            return res.status(403).send("Not Authorized")
+        }
+        const { id } = req.params
+        const updated = await claimService.updateClaims(id, "", "", "", req.body)
+        if (updated !== 0) {
+            // eslint-disable-next-line object-shorthand
+            return res.status(200).send({ id: id })
+        }
+        return res.status(401).send("Not Found or Not Authorized")
+    } catch (e: any) {
+        console.log(e)
+        return res.status(500).send("Internal Server Error")
+    }
+}
+
+export const deleteClaim = async (req: any, res: express.Response) => {
+    try {
+        const { bceid_username } = req.kauth.grant.access_token.content
+        if (bceid_username === undefined) {
+            return res.status(403).send("Not Authorized")
+        }
+        const { id } = req.params
+        const claim = await claimService.getClaimByID(id)
+        console.log(claim)
+        if (claim.createdby !== bceid_username) {
+            return res.status(401).send("Not Authorized")
+        }
+        const deleted = await claimService.deleteClaim(id)
+        if (deleted) {
+            return res.status(200).send({ id })
+        }
+        return res.status(401).send("Not Found or Not Authorized")
     } catch (e: any) {
         console.log(e)
         return res.status(500).send("Internal Server Error")

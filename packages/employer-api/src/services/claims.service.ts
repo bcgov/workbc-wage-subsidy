@@ -14,7 +14,7 @@ export const getAllClaims = async (perPage: number, currPage: number, filters: a
                 queryBuilder.orderBy(sort[0], sort[1])
             }
             if (user) {
-                queryBuilder.where("createdbyguid", user)
+                queryBuilder.whereLike("createdby", user).orWhereLike("sharedwith", `%${user}%`)
             }
         })
         .paginate({ perPage, currentPage: currPage, isLengthAware: true })
@@ -33,40 +33,61 @@ export const insertClaim = async (id: string, user: string, formType: string, us
         created: new Date(),
         formtype: formType,
         createdby: user,
-        createdbyguid: userGuid
+        createdbyguid: userGuid,
+        sharedwith: ""
     }
     const result = await knex("wage_subsidy_claim_form").insert(data)
     return result
 }
 
 export const getClaimByID = async (id: number) => {
-    const claims = await knex("wage_subsidy_claim_form").where((builder: any) => builder.whereIn("id", id))
-    return claims
+    const claims = await knex("wage_subsidy_claim_form").where((builder: any) => builder.where("id", id))
+    return claims[0]
 }
 
-export const updateClaims = async (id: number, confirmationId: string, submissionId: string, status: string) => {
+export const updateClaims = async (
+    id: number,
+    confirmationId: string,
+    submissionId: string,
+    status: string,
+    data: any
+) => {
+    const claims = await knex("wage_subsidy_claim_form").where("id", id)
+    if (claims.length === 0) {
+        return 0
+    }
+    if (data) {
+        const result = await knex("wage_subsidy_claim_form").where("id", id).update(data)
+        return result
+    }
     const result = await knex("wage_subsidy_claim_form").where("id", id).update({
         confirmationid: confirmationId,
         applicationid: submissionId,
         status
     })
     console.log(result)
+    return result
+}
+
+export const deleteClaim = async (id: number) => {
+    const result = await knex("wage_subsidy_claim_form").where("id", id).del()
+    return result
 }
 
 export const updateClaimsData = async (body: any, id: number) => {
     // Insert into wage table
-    const data = body
-    console.log(data)
+    const data = body.container
     Object.keys(data).forEach((e) => {
         console.log(data[e])
         if (data[e] === "") {
             data[e] = null
         }
     })
-    console.log(data)
+    console.log("inside update claim data", data)
     const claimsData = {
-        // title: data.title,
-        catchmentno: data.container.workbcCentre.split("-")[0],
+        title: `Claim - ${data.operatingName} - ${data.confirmationId}`,
+        catchmentno: data.workbcCentre.split("-")[0],
+        status: "submitted",
         formtype: "claim",
         // applicationid: data.applicationid,
         applicationstatus: null,

@@ -116,7 +116,7 @@ export const createWage = async (req: any, res: express.Response) => {
         console.log("created is")
         console.log(created)
         if (created) {
-            return res.status(200).send({ id: created })
+            return res.status(200).send({ data: created })
         }
         return res.status(500).send("Internal Server Error")
     } catch (e: any) {

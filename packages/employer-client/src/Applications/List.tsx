@@ -40,11 +40,8 @@ const ListActions = () => (
     </TopToolbar>
 )
 
-const MarkOnICMButton = (props) => <BulkUpdateButton label={props.label} data={{ isInICM: true }} icon={<DoneAll />} />
-
 const FormBulkActionButtons = () => (
     <>
-        <MarkOnICMButton label="Mark on ICM" />
         <BulkDeleteButton />
     </>
 )
@@ -84,18 +81,6 @@ const PostShow = () => {
     console.log(record)
     return (
         <CustomShow sx={{ display: "grid" }}>
-            {/* <FormattedFunctionField source="id" />
-        <FormattedFunctionField source="operatingname" />
-        <FormattedFunctionField source="businessnumber" />
-        <FormattedFunctionField source="businessaddress1" />
-        <FormattedFunctionField source="businesscity" />
-        <FormattedFunctionField source="businessprovince" />
-        <FormattedFunctionField source="businesspostal" />
-        <FormattedFunctionField source="businessphone" />
-        <FormattedFunctionField source="businessemail" />
-        <FormattedFunctionField source="sectortype" />
-        <FormattedFunctionField source="typeofindustry" /> */}
-            {/* create a similar field with the following source: cewandorcrhp,employeedisplacement, labourdispute, unionconcurrence, liabilitycoverage,wagesubsidy,wsbccoverage, lawcomplianceconsent */}
             {Object.keys(record).map((key: string) => {
                 if (record[key] === null) {
                     return null
