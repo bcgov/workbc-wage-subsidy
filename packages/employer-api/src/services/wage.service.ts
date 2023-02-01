@@ -14,7 +14,8 @@ export const getAllWage = async (perPage: number, currPage: number, filters: any
                 queryBuilder.whereIn("status", filters.status)
             }
             if (user) {
-                queryBuilder.where("createdbyguid", user)
+                console.log(user)
+                queryBuilder.whereLike("createdby", user).orWhereLike("sharedwith", `%${user}%`)
             }
             if (sort) {
                 queryBuilder.orderBy(sort[0], sort[1])
@@ -29,9 +30,9 @@ export const getWageByCatchment = async (ca: number[]) => {
     return claims
 }
 
-export const getWageByID = async (id: number) => {
-    const claims = await knex("wage_subsidy_applications").where((builder: any) => builder.whereIn("id", id))
-    return claims
+export const getWageByID = async (id: string) => {
+    const claims = await knex("wage_subsidy_applications").where((builder: any) => builder.where("id", id))
+    return claims[0]
 }
 
 export const insertWage = async (id: string, user: string, formType: string, userGuid: string) => {
@@ -41,22 +42,44 @@ export const insertWage = async (id: string, user: string, formType: string, use
         created: new Date(),
         formtype: formType,
         createdby: user,
-        createdbyguid: userGuid
+        createdbyguid: userGuid,
+        sharedwith: ""
     }
     const result = await knex("wage_subsidy_applications").insert(data)
     console.log(result)
     return result
 }
 
-export const updateWage = async (id: number, confirmationId: string, submissionId: string, status: string) => {
+export const updateWage = async (
+    id: number,
+    confirmationId: string,
+    submissionId: string,
+    status: string,
+    data: any
+) => {
+    const wages = await knex("wage_subsidy_applications").where("id", id)
+    if (wages.length === 0) {
+        return 0
+    }
+    if (data) {
+        const result = await knex("wage_subsidy_applications").where("id", id).update(data)
+        return result
+    }
     const result = await knex("wage_subsidy_applications").where("id", id).update({
         confirmationid: confirmationId,
         applicationid: submissionId,
         status
     })
     console.log(result)
+    return result
 }
 
+export const deleteWage = async (id: number) => {
+    const result = await knex("wage_subsidy_applications").where("id", id).del()
+    return result
+}
+
+// Only gets called on submitted status
 export const updateWageData = async (body: any, id: number) => {
     // Insert into wage table
     const data = body
@@ -75,7 +98,7 @@ export const updateWageData = async (body: any, id: number) => {
     })
     console.log(data)
     const insertData = {
-        // title: `${data.operatingName} - ${data.applicationId}`,
+        title: `${data.operatingName} - ${data.confirmationId}`,
         catchmentno: data.catchmentNo,
         // formtype: "wage",
         // applicationid: data.applicationId,

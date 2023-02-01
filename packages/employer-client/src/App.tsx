@@ -12,6 +12,7 @@ import { dataProvider } from "./DataProvider/DataProvider"
 import Ready from "./Admin/ready"
 import Footer from "./footer"
 import Layout from "./Layout"
+import { ApplicationEdit } from "./Applications/ApplicationsEdit"
 
 /*
 const dataProvider = fakeDataProvider({
@@ -98,7 +99,7 @@ const CustomAdminWithKeycloak = () => {
                         options={{ label: "Applications" }}
                         list={ApplicationList}
                         create={ApplicationCreate}
-                        edit={EditGuesser}
+                        edit={ApplicationEdit}
                     />
                     <Resource name="claims" list={ClaimList} edit={EditGuesser} create={CreateClaim} />
                 </>

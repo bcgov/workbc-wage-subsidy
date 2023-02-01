@@ -5,5 +5,6 @@ const router = express.Router()
 
 router.get("/claims", claimController.getAllClaims)
 router.post("/claims", claimController.createClaim)
+router.get("/claims/:id", claimController.getOneClaim)
 
 export default router
