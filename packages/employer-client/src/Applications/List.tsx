@@ -7,12 +7,20 @@ import {
     BulkUpdateButton,
     CreateButton,
     Datagrid,
+    EditButton,
     FilterButton,
     FunctionField,
     List,
     TextField,
-    TopToolbar
+    TopToolbar,
+    BooleanField,
+    DateField,
+    NumberField,
+    useRecordContext
 } from "react-admin"
+import { useKeycloak } from "@react-keycloak/web"
+import { CustomShow } from "../Admin/CustomShow"
+import { Typography } from "@mui/material"
 
 const formFilters = [
     <BooleanInput
@@ -41,10 +49,67 @@ const FormBulkActionButtons = () => (
     </>
 )
 
+const EditIcon = () => <></>
+
+const FormattedFunctionField = ({ source }: { source: string }) => {
+    const record = useRecordContext()
+    const re = /[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{3}Z/
+    if (record[source] === null || !record) {
+        return null
+    }
+    if (typeof record[source] === "number") {
+        if (source.includes("wage")) {
+            const value = (record[source] / 100).toFixed(2)
+            return <Typography variant="body2">${value}</Typography>
+        }
+        return <NumberField source={source} />
+    }
+    if (typeof record[source] === "string" && re.test(record[source])) {
+        return <DateField source={source} />
+    }
+    if (typeof record[source] === "string") {
+        if (record[source] === "NULL" && source === "applicationstatus") {
+            return <Typography variant="body2">New</Typography>
+        }
+        return <TextField source={source} />
+    }
+    if (typeof record[source] === "boolean") {
+        return <BooleanField source={source} />
+    }
+    return null
+}
+
+const PostShow = () => {
+    const record = useRecordContext()
+    console.log(record)
+    return (
+        <CustomShow sx={{ display: "grid" }}>
+            {/* <FormattedFunctionField source="id" />
+        <FormattedFunctionField source="operatingname" />
+        <FormattedFunctionField source="businessnumber" />
+        <FormattedFunctionField source="businessaddress1" />
+        <FormattedFunctionField source="businesscity" />
+        <FormattedFunctionField source="businessprovince" />
+        <FormattedFunctionField source="businesspostal" />
+        <FormattedFunctionField source="businessphone" />
+        <FormattedFunctionField source="businessemail" />
+        <FormattedFunctionField source="sectortype" />
+        <FormattedFunctionField source="typeofindustry" /> */}
+            {/* create a similar field with the following source: cewandorcrhp,employeedisplacement, labourdispute, unionconcurrence, liabilitycoverage,wagesubsidy,wsbccoverage, lawcomplianceconsent */}
+            {Object.keys(record).map((key: string) => {
+                if (record[key] === null) {
+                    return null
+                }
+                return <FormattedFunctionField source={key} />
+            })}
+        </CustomShow>
+    )
+}
 export const ApplicationList = (props: any) => {
+    const { keycloak } = useKeycloak()
     return (
         <List {...props} actions={<ListActions />} filters={formFilters}>
-            <Datagrid bulkActionButtons={<FormBulkActionButtons />}>
+            <Datagrid expand={<PostShow {...props} />} bulkActionButtons={<FormBulkActionButtons />}>
                 <TextField label="ID" source="id" />
                 <FunctionField
                     label="Form Type"
@@ -79,10 +144,20 @@ export const ApplicationList = (props: any) => {
                         record.confirmationid === null ? <div>N/A</div> : <div>{record.confirmationid}</div>
                     }
                 />
+                <FunctionField label="Owner" render={(record: any) => <div>{record.createdby}</div>} />
+                <FunctionField
+                    label="BCeIDs Shared With"
+                    render={(record: any) =>
+                        record.sharedwith === "" ? <div>N/A</div> : <div>{record.sharedwith}</div>
+                    }
+                />
                 <FunctionField
                     label="Actions"
-                    render={(record: any) =>
-                        record.status === null ? (
+                    render={(record: any) => {
+                        if (keycloak.idTokenParsed?.bceid_username !== record.createdby) {
+                            return <>N/A</>
+                        }
+                        return record.status === null ? (
                             <div>
                                 <Button
                                     href={`${
@@ -99,29 +174,51 @@ export const ApplicationList = (props: any) => {
                                 </Button>
                             </div>
                         ) : record.status === "draft" ? (
-                            <Button
-                                href={`${process.env.REACT_APP_DRAFT_URL}${record.applicationid}`}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                variant="contained"
-                                sx={{ textAlign: "center", backgroundColor: "#003366" }}
-                            >
-                                Continue Application
-                            </Button>
+                            <>
+                                <Button
+                                    href={`${process.env.REACT_APP_DRAFT_URL}${record.applicationid}`}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    variant="contained"
+                                    sx={{ textAlign: "center", backgroundColor: "#003366" }}
+                                >
+                                    Continue Application
+                                </Button>
+                            </>
                         ) : record.status === "submitted" ? (
-                            <Button
-                                href={`${process.env.REACT_APP_VIEW_URL}${record.applicationid}`}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                variant="contained"
-                                sx={{ textAlign: "center", backgroundColor: "#003366" }}
-                            >
-                                View Application
-                            </Button>
+                            <>
+                                <Button
+                                    href={`${process.env.REACT_APP_VIEW_URL}${record.applicationid}`}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    variant="contained"
+                                    sx={{ textAlign: "center", backgroundColor: "#003366" }}
+                                >
+                                    View Application
+                                </Button>
+                                {keycloak.idTokenParsed?.bceid_username === record.createdby && (
+                                    <EditButton
+                                        icon={(<EditIcon />) as React.ReactElement<any>}
+                                        label="Share"
+                                        sx={{
+                                            textAlign: "center",
+                                            backgroundColor: "#003366",
+                                            color: "white",
+                                            padding: "6px 16px 6px",
+                                            width: "auto",
+                                            height: "36.5px",
+                                            fontSize: "14px",
+                                            minWidth: "64px",
+                                            margin: "5px",
+                                            ":hover": { background: "#1976d2" }
+                                        }}
+                                    />
+                                )}
+                            </>
                         ) : (
                             `N/A`
                         )
-                    }
+                    }}
                 />
                 {/*
                 <FunctionField

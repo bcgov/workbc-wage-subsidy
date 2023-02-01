@@ -61,7 +61,7 @@ export const deleteWage = async (req: any, res: express.Response) => {
             await getCatchment(req.kauth.grant.access_token)
         } catch (e: any) {
             // console.log(e)
-            return res.status(403).send("Not Authorized")
+            return res.status(401).send("Not Authorized")
         }
         const { id } = req.params
         const deleted = await wageService.deleteWage(id)

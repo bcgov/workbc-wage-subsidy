@@ -7,7 +7,7 @@ import * as wageService from "../services/wage.service"
 
 export const getAllWage = async (req: any, res: express.Response) => {
     try {
-        const { bceid_username, bceid_user_guid } = req.kauth.grant.access_token.content
+        const { bceid_username } = req.kauth.grant.access_token.content
         if (bceid_username === undefined) {
             return res.status(403).send("Not Authorized")
         }
@@ -24,7 +24,7 @@ export const getAllWage = async (req: any, res: express.Response) => {
             Number(page),
             filters,
             sorted,
-            bceid_user_guid
+            bceid_username
         )
         // console.log(applications)
         const hasNeedEmployee = applications.data.some((a: any) => a.formtype === "needEmployee")
@@ -58,7 +58,7 @@ export const getAllWage = async (req: any, res: express.Response) => {
                         // else form is in draft
                     } else if (app.status === null) {
                         // set status to draft
-                        await wageService.updateWage(app.id, h.confirmationId, h.submissionId, "draft")
+                        await wageService.updateWage(app.id, h.confirmationId, h.submissionId, "draft", null)
                     }
                     // console.log("found app")
                     // update the DB
@@ -82,7 +82,7 @@ export const getAllWage = async (req: any, res: express.Response) => {
                         // else form is in draft
                     } else if (app.status === null) {
                         // set status to draft
-                        await wageService.updateWage(app.id, h.confirmationId, h.submissionId, "draft")
+                        await wageService.updateWage(app.id, h.confirmationId, h.submissionId, "draft", null)
                     }
                     // console.log("found app")
                     // update the DB
@@ -132,8 +132,51 @@ export const getOneWage = async (req: any, res: express.Response) => {
             return res.status(403).send("Not Authorized")
         }
         const { id } = req.params
+        console.log(id)
         const applications = await wageService.getWageByID(id)
         return res.status(200).send(applications)
+    } catch (e: any) {
+        console.log(e)
+        return res.status(500).send("Internal Server Error")
+    }
+}
+
+export const updateWage = async (req: any, res: express.Response) => {
+    try {
+        const { bceid_username } = req.kauth.grant.access_token.content
+        if (bceid_username === undefined) {
+            return res.status(403).send("Not Authorized")
+        }
+        const { id } = req.params
+        const updated = await wageService.updateWage(id, "", "", "", req.body)
+        if (updated !== 0) {
+            // eslint-disable-next-line object-shorthand
+            return res.status(200).send({ id: id })
+        }
+        return res.status(401).send("Not Found or Not Authorized")
+    } catch (e: any) {
+        console.log(e)
+        return res.status(500).send("Internal Server Error")
+    }
+}
+
+export const deleteWage = async (req: any, res: express.Response) => {
+    try {
+        const { bceid_username } = req.kauth.grant.access_token.content
+        if (bceid_username === undefined) {
+            return res.status(403).send("Not Authorized")
+        }
+        const { id } = req.params
+        const wage = await wageService.getWageByID(id)
+        console.log(wage)
+        if (wage.createdby !== bceid_username) {
+            return res.status(401).send("Not Authorized")
+        }
+        const deleted = await wageService.deleteWage(id)
+        if (deleted) {
+            return res.status(200).send({ id })
+        }
+        return res.status(401).send("Not Found or Not Authorized")
     } catch (e: any) {
         console.log(e)
         return res.status(500).send("Internal Server Error")
