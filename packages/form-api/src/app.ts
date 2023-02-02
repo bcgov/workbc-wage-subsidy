@@ -4,6 +4,7 @@ import helmet from "helmet"
 import morgan from "morgan"
 import addressRoute from "./routes/address.route"
 import claimRoute from "./routes/claim.route"
+import emailRoute from "./routes/email.route"
 import wageRoute from "./routes/wage.route"
 
 const corsOptions = {
@@ -33,6 +34,7 @@ app.use(
 app.use("/", wageRoute)
 app.use("/", claimRoute)
 app.use("/", addressRoute)
+app.use("/", emailRoute)
 
 const port = process.env.PORT || "8001"
 app.listen(port, () => {
