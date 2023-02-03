@@ -30,6 +30,9 @@ const FormattedFunctionField = ({ source }: any) => {
     if (record[source] === null || !record) {
         return null
     }
+    if (source === "applicationid") {
+        return <Typography variant="body2">{record[source].toString().substring(0, 8)}</Typography>
+    }
     if (typeof record[source] === "number") {
         if (source.includes("wage")) {
             const value = (record[source] / 100).toFixed(2)
@@ -208,9 +211,9 @@ export const WageList = (props: any) => (
             <TextField source="id" />
             <NumberField source="catchmentno" label="CA" />
             <DateField source="created" />
-            <TextField source="applicationid" />
+            <FormattedFunctionField source="applicationid" />
             <TextField source="title" />
-            <TextField source="applicationstatus" />
+            <FormattedFunctionField source="applicationstatus" />
         </Datagrid>
     </List>
 )

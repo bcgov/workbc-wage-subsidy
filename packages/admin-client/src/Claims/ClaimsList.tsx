@@ -28,6 +28,9 @@ const FormattedFunctionField = ({ source }: any) => {
     const record = useRecordContext()
     const re = /[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{3}Z/
     console.log(record[source])
+    if (source === "applicationid") {
+        return <Typography variant="body2">{record[source].toString().substring(0, 8)}</Typography>
+    }
     if (record[source] === null || !record) {
         return null
     }
@@ -217,9 +220,9 @@ export const ClaimsList = (props: any) => (
             <TextField source="id" />
             <NumberField source="catchmentno" label="CA" />
             <DateField source="created" />
-            <TextField source="applicationid" />
+            <FormattedFunctionField source="applicationid" />
             <TextField source="title" />
-            <TextField source="applicationstatus" />
+            <FormattedFunctionField source="applicationstatus" />
         </Datagrid>
     </List>
 )

@@ -47,7 +47,7 @@ export const getAllWage = async (req: any, res: express.Response) => {
                 process.env.NEED_EMPLOYEE_PASS || "",
                 params
             )
-            // console.log(hasNeedEmployeeApplications)
+            console.log(hasNeedEmployeeApplications)
             hasNeedEmployeeApplications.forEach(async (h: any) => {
                 const app = applications.data.find((a: any) => a.internalid === h.internalId) || null
                 if (app) {
@@ -71,7 +71,7 @@ export const getAllWage = async (req: any, res: express.Response) => {
                 process.env.HAVE_EMPLOYEE_PASS || "",
                 params
             )
-            // console.log(haveEmployeeApplications)
+            console.log(haveEmployeeApplications)
             haveEmployeeApplications.forEach(async (h: any) => {
                 const app = applications.data.find((a: any) => a.internalid === h.internalId) || null
                 if (app) {

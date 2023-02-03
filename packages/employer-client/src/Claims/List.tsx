@@ -106,10 +106,24 @@ export const ClaimList = (props: any) => {
                                 <div style={{ display: "inline-block", paddingLeft: "0.5vw" }}>Awaiting Submission</div>
                             </div>
                         ) : record.status === "submitted" ? (
-                            <div>
-                                <CircleIcon sx={{ fontSize: 10 }} htmlColor="#47b881" />
-                                <div style={{ display: "inline-block", paddingLeft: "0.5vw" }}>Submitted</div>
-                            </div>
+                            <>
+                                {record.applicationstatus === "New" ? (
+                                    <div>
+                                        <CircleIcon sx={{ fontSize: 10 }} htmlColor="#47b881" />
+                                        <div style={{ display: "inline-block", paddingLeft: "0.5vw" }}>Submitted</div>
+                                    </div>
+                                ) : record.applicationstatus === "In Progress" ? (
+                                    <div>
+                                        <CircleIcon sx={{ fontSize: 10 }} htmlColor="yellow" />
+                                        <div style={{ display: "inline-block", paddingLeft: "0.5vw" }}>In Progress</div>
+                                    </div>
+                                ) : (
+                                    <div>
+                                        <CircleIcon sx={{ fontSize: 10 }} htmlColor="green" />
+                                        <div style={{ display: "inline-block", paddingLeft: "0.5vw" }}>Completed</div>
+                                    </div>
+                                )}
+                            </>
                         ) : (
                             <div>
                                 <CircleIcon sx={{ fontSize: 10 }} htmlColor="#f7d154" />
