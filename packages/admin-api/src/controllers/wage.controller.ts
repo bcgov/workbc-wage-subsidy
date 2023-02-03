@@ -2,8 +2,12 @@
 /* eslint-disable import/prefer-default-export */
 import * as express from "express"
 
-import * as wageService from "../services/wage.service"
 import { getCatchment } from "../lib/catchment"
+import { generateDocumentTemplate } from "../services/cdogs.service"
+import * as wageService from "../services/wage.service"
+
+const needEmployeeHash = process.env.NEED_EMPLOYEE_HASH || ""
+const haveEmployeeHash = process.env.HAVE_EMPLOYEE_HASH || ""
 
 export const getAllWage = async (req: any, res: express.Response) => {
     try {
@@ -74,5 +78,33 @@ export const deleteWage = async (req: any, res: express.Response) => {
     } catch (e: any) {
         // console.log(e)
         return res.status(500).send("Server Error")
+    }
+}
+
+export const generatePDF = async (req: any, res: express.Response) => {
+    try {
+        const { id } = req.params
+        const wage = await wageService.getWageById(id)
+        // console.log(wage)
+        const templateConfig = {
+            data: wage,
+            // eslint-disable-next-line max-len
+            formatters:
+                '{"myFormatter":"_function_myFormatter|function(data) { return data.slice(1); }","myOtherFormatter":"_function_myOtherFormatter|function(data) {return data.slice(2);}"}',
+            options: {
+                cacheReport: false,
+                convertTo: "pdf",
+                overwrite: true,
+                reportName: `pdf.pdf`
+            }
+        }
+        const templateHash = wage.participantEmail0 === null ? needEmployeeHash : haveEmployeeHash
+        const pdf = await generateDocumentTemplate(templateHash, templateConfig)
+        console.log(pdf)
+        res.setHeader("Content-Disposition", `attachment; filename=pdf.pdf`)
+        return res.status(200).send(pdf)
+    } catch (e: any) {
+        console.log(e)
+        return res.status(500).send("Internal Server Error")
     }
 }
