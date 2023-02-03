@@ -5,7 +5,12 @@ export const getAllClaims = async (perPage: number, currPage: number, filters: a
     const claims = await knex("wage_subsidy_claim_form")
         .modify((queryBuilder: any) => {
             if (filters.applicationstatus) {
+                if (filters.applicationstatus.includes("NULL")) {
+                    filters.applicationstatus.push("New")
+                }
                 queryBuilder.whereIn("applicationstatus", filters.applicationstatus)
+            } else {
+                queryBuilder.whereNotNull("applicationstatus").orWhere("status", "submitted")
             }
             if (filters.catchmentno) {
                 queryBuilder.where("catchmentno", Number(filters.catchmentno))

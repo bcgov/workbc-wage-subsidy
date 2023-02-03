@@ -83,14 +83,16 @@ export const updateClaimsData = async (body: any, id: number) => {
             data[e] = null
         }
     })
+    console.log("inside body", body)
     console.log("inside update claim data", data)
     const claimsData = {
-        title: `Claim - ${data.operatingName} - ${data.confirmationId}`,
+        title: `Claim - ${data.employerName} - ${body.confirmationId}`,
         catchmentno: data.workbcCentre.split("-")[0],
+        confirmationid: body.confirmationId,
         status: "submitted",
         formtype: "claim",
-        // applicationid: data.applicationid,
-        applicationstatus: null,
+        applicationid: body.submissionId,
+        applicationstatus: "New",
         periodstart1: data.periodStart1,
         periodstart2: data.periodStart2,
         isfinalclaim: data.isFinalClaim,
@@ -112,22 +114,22 @@ export const updateClaimsData = async (body: any, id: number) => {
         dateto3: data.dateTo3,
         dateto4: data.dateTo4,
         dateto5: data.dateTo5,
-        hoursworked1: data.hoursWorked1,
-        hoursworked2: data.hoursWorked2,
-        hoursworked3: data.hoursWorked3,
-        hoursworked4: data.hoursWorked4,
-        hoursworked5: data.hoursWorked5,
-        hourlywage1: data.hourlyWage1,
-        hourlywage2: data.hourlyWage2,
-        hourlywage3: data.hourlyWage3,
-        hourlywage4: data.hourlyWage4,
-        hourlywage5: data.hourlyWage5,
+        hoursworked1: Number(data.hoursWorked1) * 100,
+        hoursworked2: Number(data.hoursWorked2) * 100,
+        hoursworked3: Number(data.hoursWorked3) * 100,
+        hoursworked4: Number(data.hoursWorked4) * 100,
+        hoursworked5: Number(data.hoursWorked5) * 100,
+        hourlywage1: Number(data.hourlyWage1) * 100,
+        hourlywage2: Number(data.hourlyWage2) * 100,
+        hourlywage3: Number(data.hourlyWage3) * 100,
+        hourlywage4: Number(data.hourlyWage4) * 100,
+        hourlywage5: Number(data.hourlyWage5) * 100,
         workactivitiesandissues: data.clientIssues1,
-        totalwage1: data.total1,
-        totalwage2: data.total2,
-        totalwage3: data.total3,
-        totalwage4: data.total4,
-        totalwage5: data.total5,
+        totalwage1: Number(data.hourlyWage1 || "0") * Number(data.hoursWorked1 || "0") * 100,
+        totalwage2: Number(data.hourlyWage2 || "0") * Number(data.hoursWorked2 || "0") * 100,
+        totalwage3: Number(data.hourlyWage3 || "0") * Number(data.hoursWorked3 || "0") * 100,
+        totalwage4: Number(data.hourlyWage4 || "0") * Number(data.hoursWorked4 || "0") * 100,
+        totalwage5: Number(data.hourlyWage5 || "0") * Number(data.hoursWorked5 || "0") * 100,
         // eligiblewages: data.eligiblewages,
         // eligiblewages2: data.eligiblewages2,
         totalmercs1: data.totalMERCs,
@@ -185,40 +187,40 @@ export const updateClaimsData = async (body: any, id: number) => {
         claimsData.dateto5 = null
     }
     if (data.hourlyWage2 === "") {
-        claimsData.hourlywage2 = null
+        claimsData.hourlywage2 = 0
     }
     if (data.hourlyWage3 === "") {
-        claimsData.hourlywage3 = null
+        claimsData.hourlywage3 = 0
     }
     if (data.hourlyWage4 === "") {
-        claimsData.hourlywage4 = null
+        claimsData.hourlywage4 = 0
     }
     if (data.hourlyWage5 === "") {
-        claimsData.hourlywage5 = null
+        claimsData.hourlywage5 = 0
     }
     if (data.hoursWorked2 === "") {
-        claimsData.hoursworked2 = null
+        claimsData.hoursworked2 = 0
     }
     if (data.hoursWorked3 === "") {
-        claimsData.hoursworked3 = null
+        claimsData.hoursworked3 = 0
     }
     if (data.hoursWorked4 === "") {
-        claimsData.hoursworked4 = null
+        claimsData.hoursworked4 = 0
     }
     if (data.hoursWorked5 === "") {
-        claimsData.hoursworked5 = null
+        claimsData.hoursworked5 = 0
     }
     if (data.totalWage2 === 0) {
-        claimsData.totalwage2 = null
+        claimsData.totalwage2 = 0
     }
     if (data.totalWage3 === 0) {
-        claimsData.totalwage3 = null
+        claimsData.totalwage3 = 0
     }
     if (data.totalWage4 === 0) {
-        claimsData.totalwage4 = null
+        claimsData.totalwage4 = 0
     }
     if (data.totalWage5 === 0) {
-        claimsData.totalwage5 = null
+        claimsData.totalwage5 = 0
     }
     console.log(claimsData)
     const insert = await knex("wage_subsidy_claim_form").where("id", id).update(claimsData)

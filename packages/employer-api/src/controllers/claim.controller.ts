@@ -34,7 +34,6 @@ export const getAllClaims = async (req: any, res: express.Response) => {
                 process.env.CLAIM_FORM_PASS || "",
                 params
             )
-            // console.log(hasNeedEmployeeApplications)
             hasClaimApplications.forEach(async (h: any) => {
                 const app = claims.data.find((a: any) => a.internalid === h.internalId) || null
                 if (app) {
