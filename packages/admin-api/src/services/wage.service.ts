@@ -54,3 +54,8 @@ export const deleteWage = async (id: number) => {
     console.log(result)
     return result
 }
+
+export const getWageById = async (id: number) => {
+    const wage = await knex("wage_subsidy_applications").where("id", id)
+    return wage
+}

@@ -3,8 +3,9 @@
 /* eslint-disable react/forbid-prop-types */
 /* eslint-disable import/prefer-default-export */
 import { Cancel, Check } from "@mui/icons-material"
-import { Typography } from "@mui/material"
+import { Button, Typography } from "@mui/material"
 import { useKeycloak } from "@react-keycloak/web"
+import { saveAs } from "file-saver"
 import {
     BooleanField,
     BulkDeleteButton,
@@ -13,6 +14,7 @@ import {
     Datagrid,
     DateField,
     FilterButton,
+    FunctionField,
     List,
     NumberField,
     Pagination,
@@ -214,6 +216,51 @@ export const WageList = (props: any) => (
             <FormattedFunctionField source="applicationid" />
             <TextField source="title" />
             <FormattedFunctionField source="applicationstatus" />
+            <TextField source="applicationstatus" />
+            <FunctionField
+                label="Generate PDF"
+                render={(record: any) => (
+                    <div>
+                        <Button
+                            href="#"
+                            variant="contained"
+                            sx={{ backgroundColor: "#003366" }}
+                            onClick={async () => {
+                                const pdfRequest = new Request(`http://localhost:8002/wage/pdf/${record.id}`, {
+                                    method: "GET",
+                                    headers: new Headers({
+                                        Authorization: `Bearer ${localStorage.getItem("token")}`
+                                    })
+                                })
+                                try {
+                                    const pdf = await fetch(pdfRequest).then((response) => response.blob())
+                                    console.log(record)
+                                    saveAs(pdf, `${record.confirmationid}.pdf`)
+                                    /*
+                                        console.log(pdf)
+                                        const url = window.URL.createObjectURL(pdf);
+                                        const a = document.createElement('a');
+                                        a.style.display = 'none';
+                                        a.href = url;
+                                        // the filename you want
+                                        a.download = `pdf`;
+                                        document.body.appendChild(a);
+                                        a.click();
+                                        document.body.removeChild(a);
+                                        window.URL.revokeObjectURL(url);
+                                        */
+                                    // return pdf
+                                } catch (error: any) {
+                                    console.log(error)
+                                    alert("Something happened while generating the PDF")
+                                }
+                            }}
+                        >
+                            Download
+                        </Button>
+                    </div>
+                )}
+            />
         </Datagrid>
     </List>
 )
