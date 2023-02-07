@@ -1,6 +1,3 @@
-/* eslint-disable camelcase */
-/* eslint-disable react-hooks/exhaustive-deps */
-/* eslint-disable react-hooks/rules-of-hooks */
 import { ReactKeycloakProvider } from "@react-keycloak/web"
 import Keycloak from "keycloak-js"
 import { Admin, Resource } from "react-admin"
@@ -97,8 +94,6 @@ const CustomAdminWithKeycloak = () => {
         })
     }, [])
     return (
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
         <Admin
             theme={lightTheme}
             dataProvider={dataProvider}
@@ -109,7 +104,6 @@ const CustomAdminWithKeycloak = () => {
             requireAuth
             ready={Ready}
         >
-            {console.log(permissions)}
             {permissions && (
                 <>
                     <Resource name="wage" list={WageList} />
