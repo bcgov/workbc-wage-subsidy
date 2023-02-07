@@ -24,12 +24,10 @@ export const sendEmail = async (req: any, res: express.Response) => {
             .filter((v: string, i: number, a: string[]) => a.indexOf(v) === i)
         // console.log(data.internalId.toString().substring(0, 8).toUpperCase())
         const emailHTML = generateHTMLEmail(
-            `Wage Subsidy Application ${data.internalId.toString().substring(0, 8).toUpperCase()}`,
+            `Wage Subsidy Application Submitted`,
             [
-                `<p>Thank you for submitting your Wage Subsidy Application. Your application confirmation number is ${data.internalId
-                    .toString()
-                    .substring(0, 8)
-                    .toUpperCase()}. You will receive an email when your application has been processed.</p>`
+                `<p>Hello ${data.userInfo.fullName}</p>
+                <p>Thank you for submitting your Wage Subsidy Application for ${data.operatingName} for ${data.positionTitle0} position. You will receive an email when your application has been processed.</p>`
             ],
             ["https://www.workbc.ca"],
             ["WorkBC"]
@@ -37,7 +35,7 @@ export const sendEmail = async (req: any, res: express.Response) => {
         const email = await emailService.sendEmail(
             await getToken(),
             emailHTML,
-            `Wage Subsidy Application ${data.internalId.toString().substring(0, 8).toUpperCase()}`,
+            `Wage Subsidy Application Submitted`,
             recipients
         )
         console.log(email)
