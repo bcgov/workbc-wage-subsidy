@@ -1,6 +1,5 @@
 import React from "react"
 import { useLogout } from "react-admin"
-// eslint-disable-next-line import/no-unresolved
 import BCEID_LOGO from "../assets/logo-banner.png"
 import "./ready.css"
 
@@ -17,7 +16,6 @@ const Ready = () => {
             setAccess(storageAccess)
             setLoading(false)
         })
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
     return (
         <div>
