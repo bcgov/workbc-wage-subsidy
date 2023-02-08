@@ -106,7 +106,7 @@ const CustomAdminWithKeycloak = () => {
         >
             {permissions && (
                 <>
-                    <Resource name="wage" list={WageList} />
+                    <Resource name="wage" options={{ label: "Applications" }} list={WageList} />
                     <Resource name="claims" list={ClaimsList} edit={ClaimsEdit} />
                 </>
             )}

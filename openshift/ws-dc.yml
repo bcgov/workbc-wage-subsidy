@@ -1,0 +1,683 @@
+apiVersion: template.openshift.io/v1
+kind: Template
+metadata:
+  creationTimestamp: null
+  name: workbc-wage-subsidy
+labels:
+  template: workbc-wage-subsidy
+objects:
+- apiVersion: v1
+  kind: DeploymentConfig
+  metadata:
+    creationTimestamp: null
+    name: ${NAME}-form-api
+  spec:
+    replicas: 1
+    selector:
+      deploymentconfig: ${NAME}-form-api
+    strategy:
+      resources:
+        requests:
+          cpu: '5m'
+          memory: 60Mi
+        limits:
+          cpu: '10m'
+          memory: 75Mi
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          deploymentconfig: ${NAME}-form-api
+      spec:
+        containers:
+        - image: ${NAME}-form-api:${TAG}
+          name: ${NAME}-form-api
+          ports:
+          - containerPort: 8001
+            protocol: TCP
+          resources:
+            requests:
+              cpu: '5m'
+              memory: 60Mi
+            limits:
+              cpu: '10m'
+              memory: 75Mi
+          readinessProbe:
+            tcpSocket:  
+              port: 8005
+            initialDelaySeconds: 20
+            timeoutSeconds: 1
+            periodSeconds: 120
+            successThreshold: 1
+            failureThreshold: 3
+          livenessProbe:
+            tcpSocket:  
+              port: 8004
+            initialDelaySeconds: 30
+            timeoutSeconds: 1
+            periodSeconds: 10
+            successThreshold: 1
+            failureThreshold: 3
+          env:
+          - name: AUTH_KEYCLOAK_SERVER_URL
+            value: ${AUTH_KEYCLOAK_SERVER_URL}
+          - name: COMMON_SERVICES_CLIENT
+            value: ${COMMON_SERVICES_CLIENT}
+          - name: COMMON_SERVICES_CLIENT_SECRET
+            value: ${COMMON_SERVICES_CLIENT_SECRET}
+          - name: COMMON_SERVICES_AUTH_REALM
+            value: ${COMMON_SERVICES_AUTH_REALM}
+          - name: CHES_HOST
+            value: ${CHES_HOST}
+          - name: CHEF_DEV_URL
+            value: ${CHEF_DEV_URL}
+          - name: CHEF_TEST_URL
+            value: ${CHEF_TEST_URL}
+          - name: STATIC_URL
+            value: ${STATIC_URL}
+    test: false
+    triggers:
+    - type: ConfigChange
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+        - ${NAME}-form-api
+        from:
+          kind: ImageStreamTag
+          name: ${NAME}-form-api:${TAG}
+          namespace: ${IMAGE_NAMESPACE}
+- apiVersion: v1
+  kind: DeploymentConfig
+  metadata:
+    creationTimestamp: null
+    name: ${NAME}-admin-api
+  spec:
+    replicas: 1
+    selector:
+      deploymentconfig: ${NAME}-admin-api
+    strategy:
+      resources:
+        requests:
+          cpu: '5m'
+          memory: 60Mi
+        limits:
+          cpu: '10m'
+          memory: 75Mi
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          deploymentconfig: ${NAME}-admin-api
+      spec:
+        containers:
+        - image: ${NAME}-admin-api:${TAG}
+          name: ${NAME}-admin-api
+          ports:
+          - containerPort: 8002
+            protocol: TCP
+          resources:
+            requests:
+              cpu: '5m'
+              memory: 60Mi
+            limits:
+              cpu: '10m'
+              memory: 75Mi
+          readinessProbe:
+            tcpSocket:  
+              port: 8005
+            initialDelaySeconds: 20
+            timeoutSeconds: 1
+            periodSeconds: 120
+            successThreshold: 1
+            failureThreshold: 3
+          livenessProbe:
+            tcpSocket:  
+              port: 8004
+            initialDelaySeconds: 30
+            timeoutSeconds: 1
+            periodSeconds: 10
+            successThreshold: 1
+            failureThreshold: 3
+          env:
+          - name: PG_HOST
+            value: ${PG_HOST}
+          - name: PG_PORT
+            value: ${PG_PORT}
+          - name: PG_USER
+            value: ${PG_USER}
+          - name: PG_PASSWORD
+            value: ${PG_PASSWORD}
+          - name: PG_DB_NAME
+            value: ${PG_DB_NAME}
+          - name: AUTH_KEYCLOAK_CLIENT
+            value: ${AUTH_KEYCLOAK_CLIENT}
+          - name: AUTH_KEYCLOAK_SERVER_URL
+            value: ${AUTH_KEYCLOAK_SERVER_URL}
+          - name: AUTH_KEYCLOAK_BEARER_ONLY
+            value: ${AUTH_KEYCLOAK_BEARER_ONLY}
+          - name: AUTH_KEYCLOAK_REALM
+            value: ${AUTH_KEYCLOAK_REALM}
+          - name: AUTH_KEYCLOAK_SSL_REQUIRED
+            value: ${AUTH_KEYCLOAK_SSL_REQUIRED}
+          - name: SAM_API_URL
+            value: ${SAM_API_URL}
+          - name: SAM_API_USERNAME
+            value: ${SAM_API_USERNAME}
+          - name: SAM_API_PASSWORD
+            value: ${SAM_API_PASSWORD}
+          - name: HAVE_EMPLOYEE_HASH
+            value: ${HAVE_EMPLOYEE_HASH}
+          - name: NEED_EMPLOYEE_HASH
+            value: ${NEED_EMPLOYEE_HASH}
+          - name: COMMON_SERVICES_KEYCLOAK_AUTH
+            value: ${COMMON_SERVICES_KEYCLOAK_AUTH}
+          - name: COMMON_SERVICES_AUTH_REALM
+            value: ${COMMON_SERVICES_AUTH_REALM}
+          - name: CDOGS_CLIENT
+            value: ${CDOGS_CLIENT}
+          - name: CDOGS_CLIENT_SECRET
+            value: ${CDOGS_CLIENT_SECRET}
+          - name: CDOGS_URL
+            value: ${CDOGS_URL}
+    test: false
+    triggers:
+    - type: ConfigChange
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+        - ${NAME}-admin-api
+        from:
+          kind: ImageStreamTag
+          name: ${NAME}-admin-api:${TAG}
+          namespace: ${IMAGE_NAMESPACE}
+- apiVersion: v1
+  kind: DeploymentConfig
+  metadata:
+    creationTimestamp: null
+    name: ${NAME}-employer-api
+  spec:
+    replicas: 1
+    selector:
+      deploymentconfig: ${NAME}-employer-api
+    strategy:
+      resources:
+        requests:
+          cpu: '5m'
+          memory: 60Mi
+        limits:
+          cpu: '10m'
+          memory: 75Mi
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          deploymentconfig: ${NAME}-employer-api
+      spec:
+        containers:
+        - image: ${NAME}-employer-api:${TAG}
+          name: ${NAME}-employer-api
+          ports:
+          - containerPort: 8002
+            protocol: TCP
+          resources:
+            requests:
+              cpu: '5m'
+              memory: 60Mi
+            limits:
+              cpu: '10m'
+              memory: 75Mi
+          readinessProbe:
+            tcpSocket:  
+              port: 8005
+            initialDelaySeconds: 20
+            timeoutSeconds: 1
+            periodSeconds: 120
+            successThreshold: 1
+            failureThreshold: 3
+          livenessProbe:
+            tcpSocket:  
+              port: 8004
+            initialDelaySeconds: 30
+            timeoutSeconds: 1
+            periodSeconds: 10
+            successThreshold: 1
+            failureThreshold: 3
+          env:
+          - name: PG_HOST
+            value: ${PG_HOST}
+          - name: PG_PORT
+            value: ${PG_PORT}
+          - name: PG_USER
+            value: ${PG_USER}
+          - name: PG_PASSWORD
+            value: ${PG_PASSWORD}
+          - name: PG_DB_NAME
+            value: ${PG_DB_NAME}
+          - name: AUTH_KEYCLOAK_CLIENT
+            value: ${AUTH_KEYCLOAK_CLIENT}
+          - name: AUTH_KEYCLOAK_SERVER_URL
+            value: ${AUTH_KEYCLOAK_SERVER_URL}
+          - name: AUTH_KEYCLOAK_BEARER_ONLY
+            value: ${AUTH_KEYCLOAK_BEARER_ONLY}
+          - name: AUTH_KEYCLOAK_REALM
+            value: ${AUTH_KEYCLOAK_REALM}
+          - name: AUTH_KEYCLOAK_SSL_REQUIRED
+            value: ${AUTH_KEYCLOAK_SSL_REQUIRED}
+          - name: CHEFS_URL
+            value: ${CHEFS_URL}
+          - name: HAVE_EMPLOYEE_ID
+            value: ${HAVE_EMPLOYEE_ID}
+          - name: NEED_EMPLOYEE_ID
+            value: ${NEED_EMPLOYEE_ID}
+          - name: HAVE_EMPLOYEE_PASS
+            value: ${HAVE_EMPLOYEE_PASS}
+          - name: NEED_EMPLOYEE_PASS
+            value: ${NEED_EMPLOYEE_PASS}
+          - name: CLAIM_FORM_ID
+            value: ${CLAIM_FORM_ID}
+          - name: CLAIM_FORM_PASS
+            value: ${CLAIM_FORM_PASS}
+    test: false
+    triggers:
+    - type: ConfigChange
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+        - ${NAME}-employer-api
+        from:
+          kind: ImageStreamTag
+          name: ${NAME}-employer-api:${TAG}
+          namespace: ${IMAGE_NAMESPACE}
+- apiVersion: v1
+  kind: DeploymentConfig
+  metadata:
+    creationTimestamp: null
+    name: ${NAME}-admin-client
+  spec:
+    replicas: 1
+    selector:
+      deploymentconfig: ${NAME}-admin-client
+    strategy:
+      resources:
+        requests:
+          cpu: '5m'
+          memory: 60Mi
+        limits:
+          cpu: '10m'
+          memory: 75Mi
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          deploymentconfig: ${NAME}-admin-client
+      spec:
+        containers:
+        - image: ${NAME}-admin-client:${TAG}
+          name: ${NAME}-admin-client
+          ports:
+          - containerPort: 85
+            protocol: TCP
+          resources:
+            requests:
+              cpu: '5m'
+              memory: 60Mi
+            limits:
+              cpu: '10m'
+              memory: 75Mi
+          readinessProbe:
+            tcpSocket:  
+              port: 8005
+            initialDelaySeconds: 20
+            timeoutSeconds: 1
+            periodSeconds: 120
+            successThreshold: 1
+            failureThreshold: 3
+          livenessProbe:
+            tcpSocket:  
+              port: 8004
+            initialDelaySeconds: 30
+            timeoutSeconds: 1
+            periodSeconds: 10
+            successThreshold: 1
+            failureThreshold: 3
+          env:
+          - name: REACT_APP_KEYCLOAK_CLIENT_ID
+            value: ${REACT_APP_KEYCLOAK_CLIENT_ID}
+          - name: REACT_APP_KEYCLOAK_URL
+            value: ${REACT_APP_KEYCLOAK_URL}
+          - name: REACT_APP_KEYCLOAK_REALM
+            value: ${REACT_APP_KEYCLOAK_REALM}
+          - name: ADMIN_API_URL
+            value: ${ADMIN_API_URL}
+    test: false
+    triggers:
+    - type: ConfigChange
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+        - ${NAME}-admin-client
+        from:
+          kind: ImageStreamTag
+          name: ${NAME}-admin-client:${TAG}
+          namespace: ${IMAGE_NAMESPACE}
+- apiVersion: v1
+  kind: DeploymentConfig
+  metadata:
+    creationTimestamp: null
+    name: ${NAME}-employer-client
+  spec:
+    replicas: 1
+    selector:
+      deploymentconfig: ${NAME}-employer-client
+    strategy:
+      resources:
+        requests:
+          cpu: '5m'
+          memory: 60Mi
+        limits:
+          cpu: '10m'
+          memory: 75Mi
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          deploymentconfig: ${NAME}-employer-client
+      spec:
+        containers:
+        - image: ${NAME}-employer-client:${TAG}
+          name: ${NAME}-employer-client
+          ports:
+          - containerPort: 80
+            protocol: TCP
+          resources:
+            requests:
+              cpu: '5m'
+              memory: 60Mi
+            limits:
+              cpu: '10m'
+              memory: 75Mi
+          readinessProbe:
+            tcpSocket:  
+              port: 8005
+            initialDelaySeconds: 20
+            timeoutSeconds: 1
+            periodSeconds: 120
+            successThreshold: 1
+            failureThreshold: 3
+          livenessProbe:
+            tcpSocket:  
+              port: 8004
+            initialDelaySeconds: 30
+            timeoutSeconds: 1
+            periodSeconds: 10
+            successThreshold: 1
+            failureThreshold: 3
+          env:
+          - name: DATA_PROVIDER_URL
+            value: ${DATA_PROVIDER_URL}
+          - name: REACT_APP_KEYCLOAK_CLIENT_ID
+            value: ${REACT_APP_KEYCLOAK_CLIENT_ID}
+          - name: REACT_APP_KEYCLOAK_URL
+            value: ${REACT_APP_KEYCLOAK_URL}
+          - name: REACT_APP_KEYCLOAK_REALM
+            value: ${REACT_APP_KEYCLOAK_REALM}
+          - name: REACT_APP_HAVE_EMPLOYEE_URL
+            value: ${REACT_APP_HAVE_EMPLOYEE_URL}
+          - name: REACT_APP_NEED_EMPLOYEE_URL
+            value: ${REACT_APP_NEED_EMPLOYEE_URL}
+          - name: REACT_APP_CLAIM_URL
+            value: ${REACT_APP_CLAIM_URL}
+          - name: REACT_APP_VIEW_URL
+            value: ${REACT_APP_VIEW_URL}
+    test: false
+    triggers:
+    - type: ConfigChange
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+        - ${NAME}-employer-client
+        from:
+          kind: ImageStreamTag
+          name: ${NAME}-employer-client:${TAG}
+          namespace: ${IMAGE_NAMESPACE}
+parameters:
+- description: A name used for all objects
+  displayName: Name
+  name: NAME
+  required: true
+  value: workbc-wage-subsidy
+- description: Tag used for the image tags
+  displayName: tag
+  name: TAG
+  required: true
+  value: latest
+- description: Keycloak Server URL
+  displayName: Keycloak Server URL
+  name: AUTH_KEYCLOAK_SERVER_URL
+  required: true
+  value: ''
+- description: Common Services Client
+  displayName: Common Services Client
+  name: COMMON_SERVICES_CLIENT
+  required: true
+  value: ''
+- description: Common Services Client Secret
+  displayName: Common Services Client Secret
+  name: COMMON_SERVICES_CLIENT_SECRET
+  required: true
+  value: ''
+- description: Keycloak Auth Realm
+  displayName: Keycloak Auth Realm
+  name: COMMON_SERVICES_AUTH_REALM
+  required: true
+  value: ''
+- description: Common Hosted Email Service Host
+  displayName: Common Hosted Email Service Host
+  name: CHES_HOST
+  required: true
+  value: ''
+- description: Chef Dev URL
+  displayName: Chef Dev URL
+  name: CHEF_DEV_URL
+  required: true
+  value: ''
+- description: Chef Test URL
+  displayName: Chef Test URL
+  name: CHEF_TEST_URL
+  required: true
+  value: ''
+- description: Static URL
+  displayName: Static URL
+  name: STATIC_URL
+  required: true
+  value: ''
+- description: Image namespace
+  displayName: Image namespace
+  name: IMAGE_NAMESPACE
+  required: true
+  value: 1c4f9c-tools
+- description: Image stream name
+  displayName: Image stream name
+  name: IMAGE_STREAM_NAME
+  required: true
+  value: workbc-wage-subsidy
+- description: Keycloak Client
+  displayName: Keycloak Client
+  name: AUTH_KEYCLOAK_CLIENT
+  required: true
+  value: ''
+- description: Keycloak Realm
+  displayName: Keycloak Realm
+  name: AUTH_KEYCLOAK_REALM
+  required: true
+  value: ''
+- description: Keycloak SSL Required
+  displayName: Keycloak SSL Required
+  name: AUTH_KEYCLOAK_SSL_REQUIRED
+  required: true
+  value: ''
+- description: Keycloak Bearer Only
+  displayName: Keycloak Bearer Only
+  name: AUTH_KEYCLOAK_BEARER_ONLY
+  required: true
+  value: ''
+- description: Postgres Host
+  displayName: Postgres Host
+  name: PG_HOST
+  required: true
+  value: ''
+- description: Postgres Port
+  displayName: Postgres Port
+  name: PG_PORT
+  required: true
+  value: ''
+- description: Postgres User
+  displayName: Postgres User
+  name: PG_USER
+  required: true
+  value: ''
+- description: Postgres Password
+  displayName: Postgres Password
+  name: PG_PASSWORD
+  required: true
+  value: ''
+- description: Postgres DB Name
+  displayName: Postgres DB Name
+  name: PG_DB_NAME
+  required: true
+  value: ''
+- description: Sam API URL
+  displayName: Sam API URL
+  name: SAM_API_URL
+  required: true
+  value: ''
+- description: Sam API Username
+  displayName: Sam API Username
+  name: SAM_API_USERNAME
+  required: true
+  value: ''
+- description: Sam API Password
+  displayName: Sam API Password
+  name: SAM_API_PASSWORD
+  required: true
+  value: ''
+- description: Have Employee Hash
+  displayName: Have Employee Hash
+  name: HAVE_EMPLOYEE_HASH
+  required: true
+  value: ''
+- description: Need Employee Hash
+  displayName: Need Employee Hash
+  name: NEED_EMPLOYEE_HASH
+  required: true
+  value: ''
+- description: Common Services Keycloak Auth
+  displayName: Common Services Keycloak Auth
+  name: COMMON_SERVICES_KEYCLOAK_AUTH
+  required: true
+  value: ''
+- description: Common Services Auth Realm
+  displayName: Common Services Auth Realm
+  name: COMMON_SERVICES_AUTH_REALM
+  required: true
+  value: ''
+- description: CDOGS Client
+  displayName: CDOGS Client
+  name: CDOGS_CLIENT
+  required: true
+  value: ''
+- description: CDOGS Client Secret
+  displayName: CDOGS Client Secret
+  name: CDOGS_CLIENT_SECRET
+  required: true
+  value: ''
+- description: CDOGS URL
+  displayName: CDOGS URL
+  name: CDOGS_URL
+  required: true
+  value: ''
+- description: CHEFS URL
+  displayName: CHEFS URL
+  name: CHEFS_URL
+  required: true
+  value: ''
+- description: Have Employee ID
+  displayName: Have Employee ID
+  name: HAVE_EMPLOYEE_ID
+  required: true
+  value: ''
+- description: Need Employee ID
+  displayName: Need Employee ID
+  name: NEED_EMPLOYEE_ID
+  required: true
+  value: ''
+- description: Have Employee Pass
+  displayName: Have Employee Pass
+  name: HAVE_EMPLOYEE_PASS
+  required: true
+  value: ''
+- description: Need Employee Pass
+  displayName: Need Employee Pass
+  name: NEED_EMPLOYEE_PASS
+  required: true
+  value: ''
+- description: Claim Form ID
+  displayName: Claim Form ID
+  name: CLAIM_FORM_ID
+  required: true
+  value: ''
+- description: Claim Form Pass
+  displayName: Claim Form Pass
+  name: CLAIM_FORM_PASS
+  required: true
+  value: ''
+- description: React App Keycloak Client ID
+  displayName: React App Keycloak Client ID
+  name: REACT_APP_KEYCLOAK_CLIENT_ID
+  required: true
+  value: ''
+- description: React App Keycloak Realm
+  displayName: React App Keycloak Realm
+  name: REACT_APP_KEYCLOAK_REALM
+  required: true
+  value: ''
+- description: React App Keycloak URL
+  displayName: React App Keycloak URL
+  name: REACT_APP_KEYCLOAK_URL
+  required: true
+  value: ''
+- description: Admin API URL
+  displayName: Admin API URL
+  name: ADMIN_API_URL
+  required: true
+  value: ''
+- description: Data Provider URL
+  displayName: Data Provider URL
+  name: DATA_PROVIDER_URL
+  required: true
+  value: ''
+- description: React App Have Employee URL
+  displayName: React App Have Employee URL
+  name: REACT_APP_HAVE_EMPLOYEE_URL
+  required: true
+  value: ''
+- description: React App Need Employee URL
+  displayName: React App Need Employee URL
+  name: REACT_APP_NEED_EMPLOYEE_URL
+  required: true
+  value: ''
+- description: React App Claim URL
+  displayName: React App Claim URL
+  name: REACT_APP_CLAIM_URL
+  required: true
+  value: ''
+- description: React App Draft URL
+  displayName: React App Draft URL
+  name: REACT_APP_DRAFT_URL
+  required: true
+  value: ''
+- description: React App View URL
+  displayName: React App View URL
+  name: REACT_APP_VIEW_URL
+  required: true
+  value: ''

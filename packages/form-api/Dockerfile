@@ -1,6 +1,6 @@
 # dockerfile for an image with the form api, express deployment
-FROM node:16
-
+FROM node:lts-alpine3.16
+ENV NODE_ENV production
 RUN mkdir -p /usr/src/app
 
 # Create app directory
@@ -14,7 +14,8 @@ COPY tsconfig.json ./
 COPY . .
 
 # Install dependencies
-RUN npm install
+# RUN npm install
+RUN npm i --omit=dev
 RUN npm run build
 
 # Expose port 8001
