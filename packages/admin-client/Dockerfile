@@ -1,4 +1,5 @@
-FROM node:16-alpine as builder
+FROM node:18-alpine as builder
+ENV NODE_ENV production
 # Set the working directory to /app inside the container
 WORKDIR /app
 # Copy app files
@@ -9,8 +10,7 @@ RUN npm install
 RUN npm run build
 
 # Bundle static assets with nginx
-FROM nginx:1.21.0-alpine as production
-ENV NODE_ENV production
+FROM nginxinc/nginx-unprivileged:1.22-alpine as production
 # Copy built assets from `builder` image
 COPY --from=builder /app/build /usr/share/nginx/html
 # Add your nginx.conf
