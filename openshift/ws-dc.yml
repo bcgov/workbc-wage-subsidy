@@ -16,6 +16,19 @@ objects:
     haveEmployeePass: ${HAVE_EMPLOYEE_FORM_PASS}
     needEmployeeForm: ${NEED_EMPLOYEE_FORM_ID}
     needEmployeePass: ${NEED_EMPLOYEE_FORM_PASS}
+    claimForm: ${CLAIM_FORM_ID}
+    claimFormPass: ${CLAIM_FORM_PASS}
+- apiVersion: v1
+  kind: Secret
+  type: Opaque
+  metadata:
+    name: ${NAME}-db-secrets
+  stringData:
+    pgHost: ${PG_HOST}
+    pgPort: ${PG_PORT}
+    pgUser: ${PG_USER}
+    pgPassword: ${PG_PASSWORD}
+    pgDbName: ${PG_DB_NAME}
 - apiVersion: v1
   kind: DeploymentConfig
   metadata:
@@ -154,15 +167,30 @@ objects:
             failureThreshold: 3
           env:
           - name: PG_HOST
-            value: ${PG_HOST}
+            valueFrom:
+              secretKeyRef:
+                name: ${NAME}-db-secrets
+                key: pgHost
           - name: PG_PORT
-            value: ${PG_PORT}
+            valueFrom:
+              secretKeyRef:
+                name: ${NAME}-db-secrets
+                key: pgPort
           - name: PG_USER
-            value: ${PG_USER}
+            valueFrom:
+              secretKeyRef:
+                name: ${NAME}-db-secrets
+                key: pgUser
           - name: PG_PASSWORD
-            value: ${PG_PASSWORD}
+            valueFrom:
+              secretKeyRef:
+                name: ${NAME}-db-secrets
+                key: pgPassword
           - name: PG_DB_NAME
-            value: ${PG_DB_NAME}
+            valueFrom:
+              secretKeyRef:
+                name: ${NAME}-db-secrets
+                key: pgDbName
           - name: AUTH_KEYCLOAK_CLIENT
             value: ${AUTH_KEYCLOAK_CLIENT}
           - name: AUTH_KEYCLOAK_SERVER_URL
@@ -176,9 +204,15 @@ objects:
           - name: SAM_API_URL
             value: ${SAM_API_URL}
           - name: SAM_API_USERNAME
-            value: ${SAM_API_USERNAME}
+            valueFrom:
+              secretKeyRef:
+                key: username
+                name: ${SAM_AUTH_SECRET_NAME}
           - name: SAM_API_PASSWORD
-            value: ${SAM_API_PASSWORD}
+              valueFrom:
+                secretKeyRef:
+                  key: password
+                  name: ${SAM_AUTH_SECRET_NAME}
           - name: HAVE_EMPLOYEE_HASH
             value: ${HAVE_EMPLOYEE_HASH}
           - name: NEED_EMPLOYEE_HASH
@@ -260,15 +294,30 @@ objects:
             failureThreshold: 3
           env:
           - name: PG_HOST
-            value: ${PG_HOST}
+            valueFrom:
+              secretKeyRef:
+                name: ${NAME}-db-secrets
+                key: PG_HOST
           - name: PG_PORT
-            value: ${PG_PORT}
+            valueFrom:
+              secretKeyRef:
+                name: ${NAME}-db-secrets
+                key: PG_PORT
           - name: PG_USER
-            value: ${PG_USER}
+            valueFrom:
+              secretKeyRef:
+                name: ${NAME}-db-secrets
+                key: PG_USER
           - name: PG_PASSWORD
-            value: ${PG_PASSWORD}
+            valueFrom:
+              secretKeyRef:
+                name: ${NAME}-db-secrets
+                key: PG_PASSWORD
           - name: PG_DB_NAME
-            value: ${PG_DB_NAME}
+            valueFrom:
+              secretKeyRef:
+                name: ${NAME}-db-secrets
+                key: PG_DB_NAME
           - name: AUTH_KEYCLOAK_CLIENT
             value: ${AUTH_KEYCLOAK_CLIENT}
           - name: AUTH_KEYCLOAK_SERVER_URL
@@ -281,18 +330,36 @@ objects:
             value: ${AUTH_KEYCLOAK_SSL_REQUIRED}
           - name: CHEFS_URL
             value: ${CHEFS_URL}
-          - name: HAVE_EMPLOYEE_ID
-            value: ${HAVE_EMPLOYEE_ID}
-          - name: NEED_EMPLOYEE_ID
-            value: ${NEED_EMPLOYEE_ID}
-          - name: HAVE_EMPLOYEE_PASS
-            value: ${HAVE_EMPLOYEE_PASS}
-          - name: NEED_EMPLOYEE_PASS
-            value: ${NEED_EMPLOYEE_PASS}
+          - name: HAVE_EMPLOYEE_FORM_ID
+            valueFrom:
+              secretKeyRef:
+                name: ${NAME}-employer-api-secrets
+                key: haveEmployeeForm
+          - name: HAVE_EMPLOYEE_FORM_PASS
+            valueFrom:
+              secretKeyRef:
+                name: ${NAME}-employer-api-secrets
+                key: haveEmployeeFormPass
+          - name: NEED_EMPLOYEE_FORM_ID
+            valueFrom:
+              secretKeyRef:
+                name: ${NAME}-employer-api-secrets
+                key: needEmployeeForm
+          - name: NEED_EMPLOYEE_FORM_PASS
+            valueFrom:
+              secretKeyRef:
+                name: ${NAME}-employer-api-secrets
+                key: needEmployeeFormPass
           - name: CLAIM_FORM_ID
-            value: ${CLAIM_FORM_ID}
+            valueFrom:
+              secretKeyRef:
+                name: ${NAME}-employer-api-secrets
+                key: claimForm
           - name: CLAIM_FORM_PASS
-            value: ${CLAIM_FORM_PASS}
+            valueFrom:
+              secretKeyRef:
+                name: ${NAME}-employer-api-secrets
+                key: claimFormPass
     test: false
     triggers:
     - type: ConfigChange
@@ -576,17 +643,6 @@ parameters:
   name: SAM_AUTH_SECRET_NAME
   required: true
   value: ''
-- name: SAM_API_USERNAME
-  valueFrom:
-    secretKeyRef:
-      key: username
-      name: ${SAM_AUTH_SECRET_NAME}
-- name: SAM_API_PASSWORD
-  required: true
-  valueFrom:
-    secretKeyRef:
-      key: username
-      name: ${SAM_AUTH_SECRET_NAME}
 - description: Have Employee Hash
   displayName: Have Employee Hash
   name: HAVE_EMPLOYEE_HASH

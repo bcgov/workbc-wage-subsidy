@@ -2,9 +2,9 @@ apiVersion: template.openshift.io/v1
 kind: Template
 metadata:
   creationTimestamp: null
-  name: workbc-wage-subsidy-template
+  name: workbc-wage-subsidy-v2-template
 labels:
-  template: workbc-wage-subsidy
+  template: workbc-wage-subsidy-v2
 objects:
 - apiVersion: v1
   kind: ImageStream
@@ -45,7 +45,7 @@ objects:
     output:
       to:
         kind: ImageStreamTag
-        name: ${NAME}:${TAG}
+        name: ${NAME}${SUFFIX}:${TAG}
     resources: {}
     successfulBuildsHistoryLimit: 5
     failedBuildsHistoryLimit: 5
