@@ -10,9 +10,9 @@ objects:
   kind: ImageStream
   metadata:
     annotations:
+      name: ${NAME}
       app.openshift.io/vcs-ref: ${SOURCE_REPOSITORY_REF}
       app.openshift.io/vcs-uri: ${SOURCE_REPOSITORY_URL}
-      openshift.io/generated-by: OpenShiftWebConsole
     name: ${NAME}
     creationTimestamp: null
     namespace: ${NAMESPACE}
@@ -31,9 +31,9 @@ objects:
   kind: BuildConfig
   metadata:
     annotations:
+      name: ${NAME}
       app.openshift.io/vcs-ref: ${SOURCE_REPOSITORY_REF}
       app.openshift.io/vcs-uri: ${SOURCE_REPOSITORY_URL}
-      openshift.io/generated-by: OpenShiftWebConsole
     name: ${NAME}${SUFFIX}
     creationTimestamp: null
     namespace: ${NAMESPACE}
@@ -72,8 +72,6 @@ objects:
     - imageChange: {}
       type: ImageChange
     runPolicy: Serial
-  status:
-    lastVersion: 3
 parameters:
 - description: A name used for all objects
   displayName: Name

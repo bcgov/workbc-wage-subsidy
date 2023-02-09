@@ -18,7 +18,7 @@ export const getPermission = async (guid: string, isIDIR: boolean) => {
             }
         })
         .then((response) => {
-            console.log(response.data.filter((item: any) => item.Application === "WGS"))
+            // console.log(response.data.filter((item: any) => item.Application === "WGS"))
             return response.data.filter((item: any) => item.Application === "WGS")
         })
         .catch((error) => {

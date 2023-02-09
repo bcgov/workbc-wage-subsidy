@@ -15,7 +15,7 @@ export const getAllWage = async (req: any, res: express.Response) => {
         try {
             catchment = await getCatchment(req.kauth.grant.access_token)
         } catch (e: any) {
-            return res.status(403).send("Not Authorized")
+            return res.status(401).send("Not Authorized")
         }
         const { sort, filter, page, perPage } = req.query
         const filters = filter ? JSON.parse(filter) : {}
@@ -39,7 +39,7 @@ export const updateWage = async (req: any, res: express.Response) => {
         try {
             catchment = await getCatchment(req.kauth.grant.access_token)
         } catch (e: any) {
-            return res.status(403).send("Not Authorized")
+            return res.status(401).send("Not Authorized")
         }
         console.log(catchment)
         const { id } = req.params
@@ -59,7 +59,7 @@ export const updateWage = async (req: any, res: express.Response) => {
 export const deleteWage = async (req: any, res: express.Response) => {
     try {
         if (req.kauth.grant.access_token.content.identity_provider !== "idir") {
-            return res.status(403).send("Access denied")
+            return res.status(401).send("Access denied")
         }
         try {
             await getCatchment(req.kauth.grant.access_token)
@@ -85,9 +85,10 @@ export const generatePDF = async (req: any, res: express.Response) => {
     try {
         const { id } = req.params
         const wage = await wageService.getWageById(id)
-        // console.log(wage)
+        console.log(wage[0])
+        const data = wage[0].data ? wage[0].data : wage[0]
         const templateConfig = {
-            data: wage,
+            data: data,
             // eslint-disable-next-line max-len
             formatters:
                 '{"myFormatter":"_function_myFormatter|function(data) { return data.slice(1); }","myOtherFormatter":"_function_myOtherFormatter|function(data) {return data.slice(2);}"}',
@@ -98,7 +99,8 @@ export const generatePDF = async (req: any, res: express.Response) => {
                 reportName: `pdf.pdf`
             }
         }
-        const templateHash = wage.participantEmail0 === null ? needEmployeeHash : haveEmployeeHash
+        const templateHash = wage[0].participantEmail0 === null ? needEmployeeHash : haveEmployeeHash
+        console.log(templateHash)
         const pdf = await generateDocumentTemplate(templateHash, templateConfig)
         console.log(pdf)
         res.setHeader("Content-Disposition", `attachment; filename=pdf.pdf`)
