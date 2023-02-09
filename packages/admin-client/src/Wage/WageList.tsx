@@ -215,8 +215,8 @@ export const WageList = (props: any) => (
             <DateField source="created" />
             <FormattedFunctionField source="applicationid" />
             <TextField source="title" />
-            <FormattedFunctionField source="applicationstatus" />
-            <TextField source="applicationstatus" />
+            <FormattedFunctionField source="applicationstatus" label="SP Application Status"/>
+            <TextField source="status" label="Employer Appplication Status"/>
             <FunctionField
                 label="Generate PDF"
                 render={(record: any) => (
@@ -226,7 +226,7 @@ export const WageList = (props: any) => (
                             variant="contained"
                             sx={{ backgroundColor: "#003366" }}
                             onClick={async () => {
-                                const pdfRequest = new Request(`http://localhost:8002/wage/pdf/${record.id}`, {
+                                const pdfRequest = new Request(`${process.env.ADMIN_API_URL || "http://localhost:8002"}/wage/pdf/${record.id}`, {
                                     method: "GET",
                                     headers: new Headers({
                                         Authorization: `Bearer ${localStorage.getItem("token")}`

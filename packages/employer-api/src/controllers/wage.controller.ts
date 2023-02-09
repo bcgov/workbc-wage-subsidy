@@ -107,6 +107,10 @@ export const getAllWage = async (req: any, res: express.Response) => {
 
 export const createWage = async (req: any, res: express.Response) => {
     try {
+        const { bceid_username } = req.kauth.grant.access_token.content
+        if (bceid_username === undefined) {
+            return res.status(403).send("Not Authorized")
+        }
         const created = await wageService.insertWage(
             req.body.formKey,
             req.body.userName,

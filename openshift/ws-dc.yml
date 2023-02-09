@@ -7,12 +7,22 @@ labels:
   template: workbc-wage-subsidy
 objects:
 - apiVersion: v1
+  kind: Secret
+  type: Opaque
+  metadata:
+    name: ${NAME}-employer-api-secrets
+  stringData:
+    haveEmployeeForm: ${HAVE_EMPLOYE_FORM_ID}
+    haveEmployeePass: ${HAVE_EMPLOYEE_FORM_PASS}
+    needEmployeeForm: ${NEED_EMPLOYEE_FORM_ID}
+    needEmployeePass: ${NEED_EMPLOYEE_FORM_PASS}
+- apiVersion: v1
   kind: DeploymentConfig
   metadata:
     creationTimestamp: null
     name: ${NAME}-form-api
   spec:
-    replicas: 1
+    replicas: ${{REPLICAS}}
     selector:
       deploymentconfig: ${NAME}-form-api
     strategy:
@@ -28,6 +38,8 @@ objects:
         creationTimestamp: null
         labels:
           deploymentconfig: ${NAME}-form-api
+          app.kubernetes.io/part-of: wage-sub-v2
+          app.openshift.io/runtime: nodejs
       spec:
         containers:
         - image: ${NAME}-form-api:${TAG}
@@ -70,9 +82,9 @@ objects:
           - name: CHES_HOST
             value: ${CHES_HOST}
           - name: CHEF_DEV_URL
-            value: ${CHEF_DEV_URL}
+            value: ${CHEF_ENV_URL}
           - name: CHEF_TEST_URL
-            value: ${CHEF_TEST_URL}
+            value: ${CHEF_ENV_URL}
           - name: STATIC_URL
             value: ${STATIC_URL}
     test: false
@@ -92,7 +104,7 @@ objects:
     creationTimestamp: null
     name: ${NAME}-admin-api
   spec:
-    replicas: 1
+     replicas: ${{REPLICAS}}
     selector:
       deploymentconfig: ${NAME}-admin-api
     strategy:
@@ -108,6 +120,8 @@ objects:
         creationTimestamp: null
         labels:
           deploymentconfig: ${NAME}-admin-api
+          app.kubernetes.io/part-of: wage-sub-v2
+          app.openshift.io/runtime: nodejs
       spec:
         containers:
         - image: ${NAME}-admin-api:${TAG}
@@ -196,7 +210,7 @@ objects:
     creationTimestamp: null
     name: ${NAME}-employer-api
   spec:
-    replicas: 1
+     replicas: ${{REPLICAS}}
     selector:
       deploymentconfig: ${NAME}-employer-api
     strategy:
@@ -212,6 +226,8 @@ objects:
         creationTimestamp: null
         labels:
           deploymentconfig: ${NAME}-employer-api
+          app.kubernetes.io/part-of: wage-sub-v2
+          app.openshift.io/runtime: nodejs
       spec:
         containers:
         - image: ${NAME}-employer-api:${TAG}
@@ -294,7 +310,7 @@ objects:
     creationTimestamp: null
     name: ${NAME}-admin-client
   spec:
-    replicas: 1
+     replicas: ${{REPLICAS}}
     selector:
       deploymentconfig: ${NAME}-admin-client
     strategy:
@@ -310,6 +326,8 @@ objects:
         creationTimestamp: null
         labels:
           deploymentconfig: ${NAME}-admin-client
+          app.kubernetes.io/part-of: wage-sub-v2
+          app.openshift.io/runtime: nginx
       spec:
         containers:
         - image: ${NAME}-admin-client:${TAG}
@@ -366,7 +384,7 @@ objects:
     creationTimestamp: null
     name: ${NAME}-employer-client
   spec:
-    replicas: 1
+     replicas: ${{REPLICAS}}
     selector:
       deploymentconfig: ${NAME}-employer-client
     strategy:
@@ -382,6 +400,8 @@ objects:
         creationTimestamp: null
         labels:
           deploymentconfig: ${NAME}-employer-client
+          app.kubernetes.io/part-of: wage-sub-v2
+          app.openshift.io/runtime: nginx
       spec:
         containers:
         - image: ${NAME}-employer-client:${TAG}
@@ -446,6 +466,11 @@ parameters:
   name: NAME
   required: true
   value: workbc-wage-subsidy
+- description: The number of replicas to create
+  displayName: Replicas
+  name: REPLICAS
+  required: true
+  value: 1
 - description: Tag used for the image tags
   displayName: tag
   name: TAG
@@ -476,14 +501,9 @@ parameters:
   name: CHES_HOST
   required: true
   value: ''
-- description: Chef Dev URL
-  displayName: Chef Dev URL
-  name: CHEF_DEV_URL
-  required: true
-  value: ''
-- description: Chef Test URL
-  displayName: Chef Test URL
-  name: CHEF_TEST_URL
+- description: Chef ENV URL
+  displayName: Chef ENV URL
+  name: CHEF_ENV_URL
   required: true
   value: ''
 - description: Static URL
@@ -551,16 +571,22 @@ parameters:
   name: SAM_API_URL
   required: true
   value: ''
-- description: Sam API Username
-  displayName: Sam API Username
-  name: SAM_API_USERNAME
+- description: Sam Auth Secret Name
+  displayName: Sam Auth Secret Name
+  name: SAM_AUTH_SECRET_NAME
   required: true
   value: ''
-- description: Sam API Password
-  displayName: Sam API Password
-  name: SAM_API_PASSWORD
+- name: SAM_API_USERNAME
+  valueFrom:
+    secretKeyRef:
+      key: username
+      name: ${SAM_AUTH_SECRET_NAME}
+- name: SAM_API_PASSWORD
   required: true
-  value: ''
+  valueFrom:
+    secretKeyRef:
+      key: username
+      name: ${SAM_AUTH_SECRET_NAME}
 - description: Have Employee Hash
   displayName: Have Employee Hash
   name: HAVE_EMPLOYEE_HASH
