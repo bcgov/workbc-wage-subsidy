@@ -10,10 +10,10 @@ objects:
   kind: ImageStream
   metadata:
     annotations:
-      name: ${NAME}
+      name: ${NAME}${SUFFIX}
       app.openshift.io/vcs-ref: ${SOURCE_REPOSITORY_REF}
       app.openshift.io/vcs-uri: ${SOURCE_REPOSITORY_URL}
-    name: ${NAME}
+    name: ${NAME}${SUFFIX}
     creationTimestamp: null
     namespace: ${NAMESPACE}
     labels:
@@ -31,7 +31,7 @@ objects:
   kind: BuildConfig
   metadata:
     annotations:
-      name: ${NAME}
+      name: ${NAME}${SUFFIX}
       app.openshift.io/vcs-ref: ${SOURCE_REPOSITORY_REF}
       app.openshift.io/vcs-uri: ${SOURCE_REPOSITORY_URL}
     name: ${NAME}${SUFFIX}
@@ -46,7 +46,6 @@ objects:
       to:
         kind: ImageStreamTag
         name: ${NAME}${SUFFIX}:${TAG}
-    resources: {}
     successfulBuildsHistoryLimit: 5
     failedBuildsHistoryLimit: 5
     strategy:
@@ -77,7 +76,7 @@ parameters:
   displayName: Name
   name: NAME
   required: true
-  value: workbc-wage-subsidy
+  value: workbc-wage-subsidy-v2
 - description: The namespace of the project namespace
   displayName: Namespace
   name: NAMESPACE

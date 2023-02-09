@@ -2,9 +2,9 @@ apiVersion: template.openshift.io/v1
 kind: Template
 metadata:
   creationTimestamp: null
-  name: workbc-wage-subsidy
+  name: workbc-wage-subsidy-v2
 labels:
-  template: workbc-wage-subsidy
+  template: workbc-wage-subsidy-v2
 objects:
 - apiVersion: v1
   kind: Secret
@@ -532,7 +532,7 @@ parameters:
   displayName: Name
   name: NAME
   required: true
-  value: workbc-wage-subsidy
+  value: workbc-wage-subsidy-v2
 - description: The number of replicas to create
   displayName: Replicas
   name: REPLICAS
@@ -587,7 +587,7 @@ parameters:
   displayName: Image stream name
   name: IMAGE_STREAM_NAME
   required: true
-  value: workbc-wage-subsidy
+  value: workbc-wage-subsidy-v2
 - description: Keycloak Client
   displayName: Keycloak Client
   name: AUTH_KEYCLOAK_CLIENT
