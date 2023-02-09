@@ -1,2 +1,5 @@
 node_modules
-yarn*.log
+build
+jest.config.js
+./src/**/*.test.ts
+*.test.ts
