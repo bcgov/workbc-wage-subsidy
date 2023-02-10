@@ -29,6 +29,7 @@ ENV NODE_ENV production
 COPY --from=builder /app/build /usr/share/nginx/html
 # Add your nginx.conf
 COPY nginx.conf /etc/nginx/conf.d/default.conf
+RUN envsubst '$REACT_APP_ADMIN_API_URL;$REACT_APP_KEYCLOAK_REALM;$REACT_APP_KEYCLOAK_URL;$REACT_APP_KEYCLOAK_CLIENT_ID' < /etc/nginx/conf.d/default.conf > /etc/nginx/conf.d/default.conf
 # Expose port
 EXPOSE 8080
 # Start nginx
