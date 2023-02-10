@@ -70,7 +70,7 @@ export const lightTheme = {
 
 //const dataProvider = simpleRestProvider("http://localhost:8000", httpClient)
 
-console.log(process.env.DATA_PROVIDER_URL)
+console.log(process.env.REACT_APP_DATA_PROVIDER_URL)
 console.log(dataProvider)
 
 const CustomAdminWithKeycloak = () => {
