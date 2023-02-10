@@ -1,0 +1,185 @@
+apiVersion: template.openshift.io/v1
+kind: Template
+metadata:
+  creationTimestamp: null
+  name: workbc-wage-subsidy-v2-template
+labels:
+  template: workbc-wage-subsidy-v2
+objects:
+- apiVersion: v1
+  kind: ImageStream
+  metadata:
+    annotations:
+      name: ${NAME}${SUFFIX}
+      app.openshift.io/vcs-ref: ${SOURCE_REPOSITORY_REF}
+      app.openshift.io/vcs-uri: ${SOURCE_REPOSITORY_URL}
+    name: ${NAME}${SUFFIX}
+    creationTimestamp: null
+    namespace: ${NAMESPACE}
+    labels:
+      shared: true
+      app: ${NAME}
+      app.kubernetes.io/component: ${NAME}
+      app.kubernetes.io/instance: ${NAME}
+      app.kubernetes.io/name: ${NAME}
+      app.openshift.io/runtime: nodejs
+      app.openshift.io/runtime-version: ${NODE_JS_VERSION}
+  spec:
+    lookupPolicy:
+      local: false
+- apiVersion: v1
+  kind: BuildConfig
+  metadata:
+    annotations:
+      name: ${NAME}${SUFFIX}
+      app.openshift.io/vcs-ref: ${SOURCE_REPOSITORY_REF}
+      app.openshift.io/vcs-uri: ${SOURCE_REPOSITORY_URL}
+    name: ${NAME}${SUFFIX}
+    creationTimestamp: null
+    namespace: ${NAMESPACE}
+    labels:
+      app: ${NAME}
+      app.openshift.io/runtime: nodejs
+  spec:
+    nodeSelector: null
+    output:
+      to:
+        kind: ImageStreamTag
+        name: ${NAME}${SUFFIX}:${TAG}
+    successfulBuildsHistoryLimit: 5
+    failedBuildsHistoryLimit: 5
+    strategy:
+      type: Docker
+      dockerStrategy:
+        env:
+          - name: REACT_APP_DATA_PROVIDER_URL
+            value: ${REACT_APP_DATA_PROVIDER_URL}
+          - name: REACT_APP_ADMIN_API_URL
+            value: ${REACT_APP_ADMIN_API_URL}
+          - name: REACT_APP_KEYCLOAK_REALM
+            value: ${REACT_APP_KEYCLOAK_REALM}
+          - name: REACT_APP_KEYCLOAK_URL
+            value: ${REACT_APP_KEYCLOAK_URL}
+          - name: REACT_APP_KEYCLOAK_CLIENT_ID
+            value: ${REACT_APP_KEYCLOAK_CLIENT_ID}
+          - name: REACT_APP_HAVE_EMPLOYEE_URL
+            value: ${REACT_APP_HAVE_EMPLOYEE_URL}
+          - name: REACT_APP_NEED_EMPLOYEE_URL
+            value: ${REACT_APP_NEED_EMPLOYEE_URL}
+          - name: REACT_APP_CLAIM_URL
+            value: ${REACT_APP_CLAIM_URL}
+          - name: REACT_APP_DRAFT_URL
+            value: ${REACT_APP_DRAFT_URL}
+          - name: REACT_APP_VIEW_URL
+            value: ${REACT_APP_VIEW_URL}
+        dockerfilePath: Dockerfile
+    postCommit: {}
+    resources:
+      requests:
+        cpu: 1
+        memory: 2Gi
+      limits:
+        cpu: 2
+        memory: 4Gi
+    source:
+      type: Git
+      git:
+        uri: ${SOURCE_REPOSITORY_URL}
+        ref: ${SOURCE_REPOSITORY_REF}
+      contextDir: ${SOURCE_CONTEXT_DIR}
+    triggers:
+    - type: ConfigChange
+    - imageChange: {}
+      type: ImageChange
+    runPolicy: Serial
+parameters:
+- description: A name used for all objects
+  displayName: Name
+  name: NAME
+  required: true
+  value: workbc-wage-subsidy-v2
+- description: The namespace of the project namespace
+  displayName: Namespace
+  name: NAMESPACE
+  required: true
+  value: 1c4f9c-tools
+- description: A name suffix used for all objects
+  displayName: Suffix
+  name: SUFFIX
+  required: false
+  value: ''
+- description: Tag used for the image tags
+  displayName: tag
+  name: TAG
+  required: true
+  value: latest
+- description: SOURCE_REPOSITORY_URL
+  displayName: SOURCE_REPOSITORY_URL
+  name: SOURCE_REPOSITORY_URL
+  required: true
+  value: 'https://github.com/bcgov/workbc-wage-subsidy'
+- description: SOURCE_REPOSITORY_REF
+  displayName: SOURCE_REPOSITORY_REF
+  name: SOURCE_REPOSITORY_REF
+  required: true
+  value: next-claims
+- description: SOURCE_CONTEXT_DIR
+  displayName: SOURCE_CONTEXT_DIR
+  name: SOURCE_CONTEXT_DIR
+  required: true
+  value: /packages/form-api
+- description: NODE_JS_VERSION
+  displayName: NODE_JS_VERSION
+  name: NODE_JS_VERSION
+  required: true
+  value: '18'
+- description: REACT_APP_KEYCLOAK_REALM
+  displayName: REACT_APP_KEYCLOAK_REALM
+  name: REACT_APP_KEYCLOAK_REALM
+  required: true
+  value: ""
+- description: REACT_APP_KEYCLOAK_URL
+  displayName: REACT_APP_KEYCLOAK_URL
+  name: REACT_APP_KEYCLOAK_URL
+  required: true
+  value: ""
+- description: REACT_APP_KEYCLOAK_CLIENT_ID
+  displayName: REACT_APP_KEYCLOAK_CLIENT_ID
+  name: REACT_APP_KEYCLOAK_CLIENT_ID
+  required: true
+  value: ""
+- description: REACT_APP_HAVE_EMPLOYEE_URL
+  displayName: REACT_APP_HAVE_EMPLOYEE_URL
+  name: REACT_APP_HAVE_EMPLOYEE_URL
+  required: true
+  value: ""
+- description: REACT_APP_NEED_EMPLOYEE_URL
+  displayName: REACT_APP_NEED_EMPLOYEE_URL
+  name: REACT_APP_NEED_EMPLOYEE_URL
+  required: true
+  value: ""
+- description: REACT_APP_CLAIM_URL
+  displayName: REACT_APP_CLAIM_URL
+  name: REACT_APP_CLAIM_URL
+  required: true
+  value: ""
+- description: REACT_APP_DRAFT_URL
+  displayName: REACT_APP_DRAFT_URL
+  name: REACT_APP_DRAFT_URL
+  required: true
+  value: ""
+- description: REACT_APP_VIEW_URL
+  displayName: REACT_APP_VIEW_URL
+  name: REACT_APP_VIEW_URL
+  required: true
+  value: ""
+- description: REACT_APP_DATA_PROVIDER_URL
+  displayName: REACT_APP_DATA_PROVIDER_URL
+  name: REACT_APP_DATA_PROVIDER_URL
+  required: true
+  value: ""
+- description: REACT_APP_ADMIN_API_URL
+  displayName: REACT_APP_ADMIN_API_URL
+  name: REACT_APP_ADMIN_API_URL
+  required: true
+  value: ""
