@@ -1,5 +1,18 @@
 FROM node:18-alpine as builder
 ENV NODE_ENV production
+
+ARG REACT_APP_ADMIN_API_URL
+ENV REACT_APP_ADMIN_API_URL $REACT_APP_ADMIN_API_URL
+
+ARG REACT_APP_KEYCLOAK_REALM
+ENV REACT_APP_KEYCLOAK_REALM $REACT_APP_KEYCLOAK_REALM
+
+ARG REACT_APP_KEYCLOAK_URL
+ENV REACT_APP_KEYCLOAK_URL $REACT_APP_KEYCLOAK_URL
+
+ARG REACT_APP_KEYCLOAK_CLIENT_ID
+ENV REACT_APP_KEYCLOAK_CLIENT_ID $REACT_APP_KEYCLOAK_CLIENT_ID
+
 # Set the working directory to /app inside the container
 WORKDIR /app
 # Copy app files
@@ -11,6 +24,7 @@ RUN npm run build
 
 # Bundle static assets with nginx
 FROM nginxinc/nginx-unprivileged:1.22-alpine as production
+ENV NODE_ENV production
 # Copy built assets from `builder` image
 COPY --from=builder /app/build /usr/share/nginx/html
 # Add your nginx.conf
