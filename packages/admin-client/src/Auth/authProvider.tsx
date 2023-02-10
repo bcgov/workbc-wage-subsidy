@@ -31,7 +31,7 @@ const useAuthProvider = () => {
             return Promise.reject("Failed to get identity")
         },
         getPermissions: async () => {
-            const apiUrl = process.env.ADMIN_API_URL || "http://localhost:8002"
+            const apiUrl = process.env.REACT_APP_ADMIN_API_URL || "http://localhost:8002"
             const res = await axios.get(`${apiUrl}/permission`, {
                 headers: {
                     Accept: "application/json",

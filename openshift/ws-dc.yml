@@ -420,7 +420,7 @@ objects:
           - name: REACT_APP_KEYCLOAK_REALM
             value: ${REACT_APP_KEYCLOAK_REALM}
           - name: REACT_APP_ADMIN_API_URL
-            value: ${ADMIN_API_URL}
+            value: ${REACT_APP_ADMIN_API_URL}
           image: ${NAME}-admin-client:${TAG}
           livenessProbe:
             failureThreshold: 3
@@ -491,7 +491,7 @@ objects:
         containers:
         - env:
           - name: REACT_APP_DATA_PROVIDER_URL
-            value: ${DATA_PROVIDER_URL}
+            value: ${REACT_APP_DATA_PROVIDER_URL}
           - name: REACT_APP_KEYCLOAK_CLIENT_ID
             value: ${REACT_APP_KEYCLOAK_CLIENT_ID}
           - name: REACT_APP_KEYCLOAK_URL
@@ -777,11 +777,11 @@ parameters:
   value: ""
 - description: Admin API URL
   displayName: Admin API URL
-  name: ADMIN_API_URL
+  name: REACT_APP_ADMIN_API_URL
   value: ""
 - description: Data Provider URL
   displayName: Data Provider URL
-  name: DATA_PROVIDER_URL
+  name: REACT_APP_DATA_PROVIDER_URL
   value: ""
 - description: React App Have Employee URL
   displayName: React App Have Employee URL
