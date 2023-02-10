@@ -5,7 +5,7 @@ import { useKeycloak } from "@react-keycloak/web"
 import jwt_decode from "jwt-decode"
 import axios from "axios"
 
-const useAuthProvider = (clientID: string) => {
+const useAuthProvider = () => {
     const { keycloak } = useKeycloak()
     return {
         login: () => keycloak.login(),
