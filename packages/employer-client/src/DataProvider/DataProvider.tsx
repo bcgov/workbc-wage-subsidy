@@ -2,7 +2,7 @@
 import { stringify } from "querystring"
 import { fetchUtils } from "react-admin"
 
-const apiUrl = process.env.DATA_PROVIDER_URL || "http://localhost:8000"
+const apiUrl = process.env.REACT_APP_DATA_PROVIDER_URL || "http://localhost:8000"
 const countHeader = "Content-Range"
 const httpClient = fetchUtils.fetchJson
 
