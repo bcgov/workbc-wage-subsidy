@@ -31,7 +31,7 @@ const onToken = async () => {
         localStorage.setItem("token", keycloak.token)
         localStorage.setItem("refresh-token", keycloak.refreshToken)
     }
-    const res = await axios.get(`${process.env.ADMIN_API_URL || "http://localhost:8002"}/permission`, {
+    const res = await axios.get(`${process.env.REACT_APP_ADMIN_API_URL || "http://localhost:8002"}/permission`, {
         headers: {
             Accept: "application/json",
             Authorization: `Bearer ${localStorage.getItem("token")}`
