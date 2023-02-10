@@ -81,7 +81,7 @@ objects:
           image: ${NAME}-form-api:${TAG}
           livenessProbe:
             failureThreshold: 3
-            initialDelaySeconds: 30
+            initialDelaySeconds: 300
             periodSeconds: 10
             successThreshold: 1
             tcpSocket:
@@ -93,7 +93,7 @@ objects:
             protocol: TCP
           readinessProbe:
             failureThreshold: 3
-            initialDelaySeconds: 20
+            initialDelaySeconds: 300
             periodSeconds: 120
             successThreshold: 1
             tcpSocket:
@@ -215,7 +215,7 @@ objects:
             value: ${CDOGS_URL}
           livenessProbe:
             failureThreshold: 3
-            initialDelaySeconds: 30
+            initialDelaySeconds: 300
             periodSeconds: 10
             successThreshold: 1
             tcpSocket:
@@ -223,7 +223,7 @@ objects:
             timeoutSeconds: 1
           readinessProbe:
             failureThreshold: 3
-            initialDelaySeconds: 20
+            initialDelaySeconds: 300
             periodSeconds: 120
             successThreshold: 1
             tcpSocket:
@@ -280,27 +280,27 @@ objects:
           - name: PG_HOST
             valueFrom:
               secretKeyRef:
-                key: PG_HOST
+                key: pgHost
                 name: ${NAME}-db-secrets
           - name: PG_PORT
             valueFrom:
               secretKeyRef:
-                key: PG_PORT
+                key: pgPort
                 name: ${NAME}-db-secrets
           - name: PG_USER
             valueFrom:
               secretKeyRef:
-                key: PG_USER
+                key: pgUser
                 name: ${NAME}-db-secrets
           - name: PG_PASSWORD
             valueFrom:
               secretKeyRef:
-                key: PG_PASSWORD
+                key: pgPassword
                 name: ${NAME}-db-secrets
           - name: PG_DB_NAME
             valueFrom:
               secretKeyRef:
-                key: PG_DB_NAME
+                key: pgDbName
                 name: ${NAME}-db-secrets
           - name: AUTH_KEYCLOAK_CLIENT
             value: ${AUTH_KEYCLOAK_CLIENT}
@@ -322,7 +322,7 @@ objects:
           - name: HAVE_EMPLOYEE_FORM_PASS
             valueFrom:
               secretKeyRef:
-                key: haveEmployeeFormPass
+                key: haveEmployeePass
                 name: ${NAME}-employer-api-secrets
           - name: NEED_EMPLOYEE_FORM_ID
             valueFrom:
@@ -332,7 +332,7 @@ objects:
           - name: NEED_EMPLOYEE_FORM_PASS
             valueFrom:
               secretKeyRef:
-                key: needEmployeeFormPass
+                key: needEmployeePass
                 name: ${NAME}-employer-api-secrets
           - name: CLAIM_FORM_ID
             valueFrom:
@@ -347,7 +347,7 @@ objects:
           image: ${NAME}-employer-api:${TAG}
           livenessProbe:
             failureThreshold: 3
-            initialDelaySeconds: 30
+            initialDelaySeconds: 300
             periodSeconds: 10
             successThreshold: 1
             tcpSocket:
@@ -359,7 +359,7 @@ objects:
             protocol: TCP
           readinessProbe:
             failureThreshold: 3
-            initialDelaySeconds: 20
+            initialDelaySeconds: 300
             periodSeconds: 120
             successThreshold: 1
             tcpSocket:
@@ -419,12 +419,12 @@ objects:
             value: ${REACT_APP_KEYCLOAK_URL}
           - name: REACT_APP_KEYCLOAK_REALM
             value: ${REACT_APP_KEYCLOAK_REALM}
-          - name: ADMIN_API_URL
+          - name: REACT_APP_ADMIN_API_URL
             value: ${ADMIN_API_URL}
           image: ${NAME}-admin-client:${TAG}
           livenessProbe:
             failureThreshold: 3
-            initialDelaySeconds: 30
+            initialDelaySeconds: 300
             periodSeconds: 10
             successThreshold: 1
             tcpSocket:
@@ -436,7 +436,7 @@ objects:
             protocol: TCP
           readinessProbe:
             failureThreshold: 3
-            initialDelaySeconds: 20
+            initialDelaySeconds: 300
             periodSeconds: 120
             successThreshold: 1
             tcpSocket:
@@ -490,7 +490,7 @@ objects:
       spec:
         containers:
         - env:
-          - name: DATA_PROVIDER_URL
+          - name: REACT_APP_DATA_PROVIDER_URL
             value: ${DATA_PROVIDER_URL}
           - name: REACT_APP_KEYCLOAK_CLIENT_ID
             value: ${REACT_APP_KEYCLOAK_CLIENT_ID}
@@ -509,7 +509,7 @@ objects:
           image: ${NAME}-employer-client:${TAG}
           livenessProbe:
             failureThreshold: 3
-            initialDelaySeconds: 30
+            initialDelaySeconds: 300
             periodSeconds: 10
             successThreshold: 1
             tcpSocket:
@@ -521,7 +521,7 @@ objects:
             protocol: TCP
           readinessProbe:
             failureThreshold: 3
-            initialDelaySeconds: 20
+            initialDelaySeconds: 300
             periodSeconds: 120
             successThreshold: 1
             tcpSocket:
@@ -546,6 +546,71 @@ objects:
           name: ${NAME}-employer-client:${TAG}
           namespace: ${IMAGE_NAMESPACE}
       type: ImageChange
+- apiVersion: v1
+  kind: Service
+  metadata:
+    creationTimestamp: null
+    name: ${NAME}-form-api
+  spec:
+    ports:
+    - name: ${NAME}-form-api
+      port: 8001
+      protocol: TCP
+      targetPort: 8001
+    selector:
+      deploymentconfig: ${NAME}-form-api
+- apiVersion: v1
+  kind: Service
+  metadata:
+    creationTimestamp: null
+    name: ${NAME}-employer-api
+  spec:
+    ports:
+    - name: ${NAME}-employer-api
+      port: 8000
+      protocol: TCP
+      targetPort: 8000
+    selector:
+      deploymentconfig: ${NAME}-employer-api
+- apiVersion: v1
+  kind: Service
+  metadata:
+    creationTimestamp: null
+    name: ${NAME}-admin-api
+  spec:
+    ports:
+    - name: ${NAME}-admin-api
+      port: 8002
+      protocol: TCP
+      targetPort: 8002
+    selector:
+      deploymentconfig: ${NAME}-admin-api
+- apiVersion: v1
+  kind: Service
+  metadata:
+    creationTimestamp: null
+    name: ${NAME}-admin-client
+  spec:
+    ports:
+    - name: ${NAME}-admin-client
+      port: 8080
+      protocol: TCP
+      targetPort: 8080
+    selector:
+      deploymentconfig: ${NAME}-admin-client
+- apiVersion: v1
+  kind: Service
+  metadata:
+    creationTimestamp: null
+    name: ${NAME}-employer-client
+  spec:
+    ports:
+    - name: ${NAME}-employer-client
+      port: 8081
+      protocol: TCP
+      targetPort: 8081
+    selector:
+      deploymentconfig: ${NAME}-employer-client
 parameters:
 - description: A name used for all objects
   displayName: Name
