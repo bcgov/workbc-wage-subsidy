@@ -49,11 +49,11 @@ objects:
     strategy:
       resources:
         limits:
-          cpu: 10m
-          memory: 75Mi
+          cpu: 20m
+          memory: 80Mi
         requests:
-          cpu: 5m
-          memory: 60Mi
+          cpu: 10m
+          memory: 65Mi
     template:
       metadata:
         creationTimestamp: null
@@ -101,11 +101,11 @@ objects:
             timeoutSeconds: 1
           resources:
             limits:
-              cpu: 10m
-              memory: 75Mi
+              cpu: 20m
+              memory: 80Mi
             requests:
-              cpu: 5m
-              memory: 60Mi
+              cpu: 10m
+              memory: 65Mi
     test: false
     triggers:
     - type: ConfigChange
@@ -134,11 +134,11 @@ objects:
     strategy:
       resources:
         limits:
-          cpu: 10m
-          memory: 75Mi
+          cpu: 20m
+          memory: 80Mi
         requests:
-          cpu: 5m
-          memory: 60Mi
+          cpu: 10m
+          memory: 65Mi
     template:
       metadata:
         creationTimestamp: null
@@ -231,11 +231,11 @@ objects:
             timeoutSeconds: 1
           resources:
             limits:
-              cpu: 10m
-              memory: 75Mi
+              cpu: 20m
+              memory: 80Mi
             requests:
-              cpu: 5m
-              memory: 60Mi
+              cpu: 10m
+              memory: 65Mi
     test: false
     triggers:
     - type: ConfigChange
@@ -264,11 +264,11 @@ objects:
     strategy:
       resources:
         limits:
-          cpu: 10m
-          memory: 75Mi
+          cpu: 20m
+          memory: 80Mi
         requests:
-          cpu: 5m
-          memory: 60Mi
+          cpu: 10m
+          memory: 65Mi
     template:
       metadata:
         creationTimestamp: null
@@ -367,11 +367,11 @@ objects:
             timeoutSeconds: 1
           resources:
             limits:
-              cpu: 10m
-              memory: 75Mi
+              cpu: 20m
+              memory: 80Mi
             requests:
-              cpu: 5m
-              memory: 60Mi
+              cpu: 10m
+              memory: 65Mi
     test: false
     triggers:
     - type: ConfigChange
