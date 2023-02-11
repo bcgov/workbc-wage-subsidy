@@ -2,6 +2,7 @@ import cors from "cors"
 import express from "express"
 import helmet from "helmet"
 import Keycloak, { KeycloakConfig } from "keycloak-connect"
+import morgan from "morgan"
 import claimRoute from "../routes/claim.route"
 import wageRoute from "../routes/wage.route"
 import permissionRoute from "../routes/permission.route"
@@ -28,6 +29,8 @@ const createServer = () => {
 
     app.use(express.json())
     app.use(express.urlencoded({ extended: false }))
+    app.use(morgan("[:date] :method :url :status :res[content-length] - :remote-addr - :response-time ms"))
+    app.set("trust proxy", "loopback, linklocal, uniquelocal")
     app.use(cors(corsOptions))
     app.use(helmet())
     app.use(keycloak.middleware())
