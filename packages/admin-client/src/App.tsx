@@ -49,8 +49,30 @@ const onToken = async () => {
 const onTokenExpired = () => {
     keycloak
         .updateToken(30)
-        .then(() => {
+        .then(async () => {
             console.log("successfully get a new token", keycloak.token)
+            if (keycloak.token && keycloak.refreshToken) {
+                localStorage.setItem("token", keycloak.token)
+                localStorage.setItem("refresh-token", keycloak.refreshToken)
+            }
+            const res = await axios.get(
+                `${process.env.REACT_APP_ADMIN_API_URL || "http://localhost:8002"}/permission`,
+                {
+                    headers: {
+                        Accept: "application/json",
+                        Authorization: `Bearer ${localStorage.getItem("token")}`
+                    }
+                }
+            )
+            localStorage.setItem("provider", res.data.provider)
+            localStorage.setItem(
+                "permissions",
+                res.data.permissions
+                    .map((item: any) => Number(item.Catchment.slice(1)))
+                    .filter((item: any) => item !== null)
+            )
+            localStorage.setItem("access", res.data.access)
+            window.dispatchEvent(new Event("storage"))
         })
         .catch(() => {
             console.error("failed to refresh token")
