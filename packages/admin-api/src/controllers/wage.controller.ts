@@ -49,7 +49,7 @@ export const updateWage = async (req: any, res: express.Response) => {
             // eslint-disable-next-line object-shorthand
             return res.status(200).send({ id: id })
         }
-        return res.status(401).send("Not Found or Not Authorized")
+        return res.status(404).send("Not Found or Not Authorized")
     } catch (e: any) {
         // console.log(e)
         return res.status(500).send("Server Error")
@@ -74,7 +74,7 @@ export const deleteWage = async (req: any, res: express.Response) => {
             // eslint-disable-next-line object-shorthand
             return res.status(200).send({ id: id })
         }
-        return res.status(500).send("Server Error")
+        return res.status(404).send("Not Found or Deletion Error")
     } catch (e: any) {
         // console.log(e)
         return res.status(500).send("Server Error")
@@ -88,6 +88,7 @@ export const generatePDF = async (req: any, res: express.Response) => {
         console.log(wage[0])
         const data = wage[0].data ? wage[0].data : wage[0]
         const templateConfig = {
+            // eslint-disable-next-line object-shorthand
             data: data,
             // eslint-disable-next-line max-len
             formatters:
