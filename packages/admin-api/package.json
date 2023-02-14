@@ -6,7 +6,7 @@
     "scripts": {
         "build": "tsc",
         "start": "node -r dotenv/config .",
-        "test": "jest"
+        "test": "jest --detectOpenHandles"
     },
     "dependencies": {
         "@types/cors": "^2.8.12",
