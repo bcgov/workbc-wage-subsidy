@@ -658,7 +658,7 @@ parameters:
 - description: Image namespace
   displayName: Image namespace
   name: IMAGE_NAMESPACE
-  value: 1c4f9c-tools
+  value: ""
 - description: Image stream name
   displayName: Image stream name
   name: IMAGE_STREAM_NAME
