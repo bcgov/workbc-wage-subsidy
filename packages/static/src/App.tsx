@@ -12,7 +12,10 @@ function App() {
                 transition={{ duration: 0.5 }}
                 className="leading-banner"
             >
-                <h1>WorkBC Wage Subsidy</h1>
+                <a href="https://www.workbc.ca/">
+                    <img width="100px" src="/workbc-logo.png" alt="WorkBC logo" />
+                </a>
+                <h1>Wage Subsidy</h1>
                 <p>
                     {" "}
                     The WorkBC Wage Subsidy program provides funding to eligible employers to hire, provide work
@@ -54,8 +57,8 @@ function App() {
 
             <div className="card-container">
                 <motion.div
-                    initial={{ opacity: 0 }}
-                    whileInView={{ opacity: 1 }}
+                    initial={{ opacity: 0, y: 200 }}
+                    whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     transition={{ delay: 0.2, duration: 0.5 }}
                     className="card"
@@ -74,8 +77,8 @@ function App() {
                     </button>
                 </motion.div>
                 <motion.div
-                    initial={{ opacity: 0 }}
-                    whileInView={{ opacity: 1 }}
+                    initial={{ opacity: 0, y: 200 }}
+                    whileInView={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.25, duration: 0.5 }}
                     viewport={{ once: true }}
                     className="card"
