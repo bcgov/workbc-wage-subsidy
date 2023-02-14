@@ -1,0 +1,27 @@
+:root {
+  line-height: 1.5;
+  font-weight: 400;
+
+  margin-left: 0 auto;
+  font-family: 'BCSans', 'Noto Sans', Verdana, Arial, sans-serif;
+  background-color: #fff;
+  color-scheme: light dark;
+  color: #313132;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+}
+
+p {
+  font-size: 16px;
+  line-height: 1.6;
+  color: #313132;
+}
+
