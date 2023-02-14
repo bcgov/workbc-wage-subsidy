@@ -63,7 +63,7 @@ objects:
         containers:
         - env:
           - name: AUTH_KEYCLOAK_SERVER_URL
-            value: ${AUTH_KEYCLOAK_SERVER_URL}
+            value: ${AUTH_KEYCLOAK_SERVER_URL_DEV}
           - name: COMMON_SERVICES_CLIENT
             value: ${COMMON_SERVICES_CLIENT}
           - name: COMMON_SERVICES_CLIENT_SECRET
@@ -314,22 +314,22 @@ objects:
             value: ${AUTH_KEYCLOAK_SSL_REQUIRED}
           - name: CHEFS_URL
             value: ${CHEFS_URL}
-          - name: HAVE_EMPLOYEE_FORM_ID
+          - name: HAVE_EMPLOYEE_ID
             valueFrom:
               secretKeyRef:
                 key: haveEmployeeForm
                 name: ${NAME}-employer-api-secrets
-          - name: HAVE_EMPLOYEE_FORM_PASS
+          - name: HAVE_EMPLOYEE_PASS
             valueFrom:
               secretKeyRef:
                 key: haveEmployeePass
                 name: ${NAME}-employer-api-secrets
-          - name: NEED_EMPLOYEE_FORM_ID
+          - name: NEED_EMPLOYEE_ID
             valueFrom:
               secretKeyRef:
                 key: needEmployeeForm
                 name: ${NAME}-employer-api-secrets
-          - name: NEED_EMPLOYEE_FORM_PASS
+          - name: NEED_EMPLOYEE_PASS
             valueFrom:
               secretKeyRef:
                 key: needEmployeePass
@@ -630,6 +630,10 @@ parameters:
 - description: Keycloak Server URL
   displayName: Keycloak Server URL
   name: AUTH_KEYCLOAK_SERVER_URL
+  value: ""
+- description: Keycloak Server URL Dev
+  displayName: Keycloak Server URL
+  name: AUTH_KEYCLOAK_SERVER_URL_DEV
   value: ""
 - description: Common Services Client
   displayName: Common Services Client

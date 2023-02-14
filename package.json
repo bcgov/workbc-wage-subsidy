@@ -13,7 +13,9 @@
         "release": "changeset publish"
     },
     "dependencies": {
-        "@react-keycloak/web": "^3.4.0"
+        "@react-keycloak/web": "^3.4.0",
+        "dotenv": "^16.0.3",
+        "knex": "^2.4.2"
     },
     "devDependencies": {
         "@bcgov-elmsd/eslint-config": "^1.0.1",

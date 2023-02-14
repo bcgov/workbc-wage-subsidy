@@ -287,7 +287,19 @@ export const ClaimsEdit = (props: any) => {
         newdata.totalamountreimbursed1 = Math.round(newdata.wagesreimbursed1 + newdata.mercsreimbursed1)
         newdata.totalamountreimbursed2 = Math.round(newdata.wagesreimbursed2 + newdata.mercsreimbursed2)
         newdata.totalsubsidyclaimed = Math.round(newdata.totalamountreimbursed1 + newdata.totalamountreimbursed2)
-        update("claims", { id: recordId, data: newdata, previousData: data })
+        update(
+            "claims",
+            { id: recordId, data: newdata, previousData: data },
+            {
+                onSuccess: () => {
+                    notify(`Updated`, { type: "success" })
+                    navigate("/claims")
+                },
+                onError: (error) => {
+                    notify(`Error ${error}`, { type: "error" })
+                }
+            }
+        )
         if (isLoading) {
             notify(`Updating`, { type: "info" })
             return
@@ -296,9 +308,6 @@ export const ClaimsEdit = (props: any) => {
             notify(`Error ${error}`, { type: "error" })
             return
         }
-        navigate("/claims")
-        window.location.reload()
-        notify(`Updated`, { type: "success" })
     }
     return (
         <Edit actions={<EditActions />}>
