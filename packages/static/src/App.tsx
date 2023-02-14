@@ -1,40 +1,31 @@
 import "./App.css"
+import { motion } from "framer-motion"
+import Header from "./components/Header"
 
 function App() {
     return (
         <div className="App">
-            <header>
-                <div className="banner">
-                    <a href="https://gov.bc.ca">
-                        <img
-                            width="175px"
-                            src="/BCID_H_rgb_rev.svg"
-                            alt="Go to the Government of British Columbia website"
-                        />
-                    </a>
-                    <h1>WorkBC Wage Subsidy</h1>
-                    <div aria-label="This application is currently in Beta phase" className="Beta-PhaseBanner">
-                        Beta
-                    </div>
-                </div>
-                <div className="other">
-                    {/* <!--
-                        This place is for anything that needs to be right aligned
-                        beside the logo.
-                    --> */}
-                    &nbsp;
-                </div>
-            </header>
-            <div className="leading-banner">
+            <Header />
+            <motion.div
+                animate={{ opacity: 1 }}
+                initial={{ opacity: 0 }}
+                transition={{ duration: 0.5 }}
+                className="leading-banner"
+            >
                 <h1>WorkBC Wage Subsidy</h1>
                 <p>
                     {" "}
                     The WorkBC Wage Subsidy program provides funding to eligible employers to hire, provide work
                     experience and on-the-job training to unemployed British Columbians.
                 </p>
-            </div>
+            </motion.div>
 
-            <div className="main-content">
+            <motion.div
+                animate={{ opacity: 1 }}
+                initial={{ opacity: 0 }}
+                transition={{ delay: 0.1, duration: 0.5 }}
+                className="main-content"
+            >
                 <div>
                     <p>Wage subsidy offers employers:</p>
                     <ul>
@@ -59,10 +50,16 @@ function App() {
                         <li>Your employee’s e-mail address (if you have an employee)</li>
                     </ul>
                 </div>
-            </div>
+            </motion.div>
 
             <div className="card-container">
-                <div className="card">
+                <motion.div
+                    initial={{ opacity: 0 }}
+                    whileInView={{ opacity: 1 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: 0.2, duration: 0.5 }}
+                    className="card"
+                >
                     <h2>Are you an employer?</h2>
                     <p>
                         If you are an employer, you can apply for the WorkBC Wage Subsidy program. You will need to
@@ -75,8 +72,14 @@ function App() {
                     >
                         Go to Application
                     </button>
-                </div>
-                <div className="card">
+                </motion.div>
+                <motion.div
+                    initial={{ opacity: 0 }}
+                    whileInView={{ opacity: 1 }}
+                    transition={{ delay: 0.25, duration: 0.5 }}
+                    viewport={{ once: true }}
+                    className="card"
+                >
                     <h2>Are you a Service Provider?</h2>
                     <p>If you are a Service Provider, you can use the following button to access the application.</p>
                     <button
@@ -86,7 +89,7 @@ function App() {
                     >
                         Go to Application
                     </button>
-                </div>
+                </motion.div>
             </div>
 
             <footer className="footer">
