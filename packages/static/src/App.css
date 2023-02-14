@@ -18,6 +18,24 @@
 
 }
 
+.leading-banner h1 {
+  margin:0;
+}
+
+.leading-banner img {
+  margin-top: 15px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  background-color: #fff;
+  border-radius: 21px;
+  box-shadow: 0 0 15px 0 rgb(0 0 0 / 15%);
+}
+
+.leading-banner img:hover {
+  box-shadow: 0 0 30px 0 rgb(0 0 0 / 15%);
+  cursor: pointer;
+}
+
 .main-content {
   padding: 0px 65px;
   width: 100%-130px;
