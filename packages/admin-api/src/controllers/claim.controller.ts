@@ -19,13 +19,11 @@ export const getAllClaims = async (req: any, res: express.Response) => {
         // console.log(sorted)
         const claims = await claimService.getAllClaims(Number(perPage), Number(page), filters, sorted, catchment)
         // console.log(claims)
-        return res
-            .status(200)
-            .set({
-                "Access-Control-Expose-Headers": "Content-Range",
-                "Content-Range": `0 - ${claims.pagination.to} / ${claims.pagination.total}`
-            })
-            .send(claims.data)
+        res.set({
+            "Access-Control-Expose-Headers": "Content-Range",
+            "Content-Range": `0 - ${claims.pagination.to} / ${claims.pagination.total}`
+        })
+        return res.status(200).send(claims.data)
     } catch (e: any) {
         console.log(e)
         return res.status(500).send("Server Error")
@@ -39,7 +37,7 @@ export const getClaim = async (req: any, res: express.Response) => {
             catchment = await getCatchment(req.kauth.grant.access_token)
         } catch (e: any) {
             console.log(e)
-            return res.status(403).send("Not AUthorized")
+            return res.status(403).send("Not Authorized")
         }
         console.log(catchment)
         // console.log(req.params.id)
@@ -47,7 +45,7 @@ export const getClaim = async (req: any, res: express.Response) => {
         const { id } = req.params
         const claims = await claimService.getClaimByID(id, catchment)
         if (claims.length === 0) {
-            return res.status(403).send("Not Authorized")
+            return res.status(404).send("Not found or Not Authorized")
         }
         return res.status(200).send(claims[0])
     } catch (e: any) {
