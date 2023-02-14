@@ -50,10 +50,8 @@ function App() {
                         </li>
                     </ul>
                     <p>
-                        If you are currently receiving case management services from a{" "}
-                        <a href="/discover-employment-services/workbc-centres/workbc-centre-locations">WorkBC Centre</a>
-                        , you may be eligible for other supports to prepare for employment and a new job. Contact your{" "}
-                        <a href="/discover-employment-services/workbc-centres/workbc-centre-locations">WorkBC Centre</a>{" "}
+                        If you are currently receiving case management services from a WorkBC Centre , you may be
+                        eligible for other supports to prepare for employment and a new job. Contact your WorkBC Centre{" "}
                         to learn more.
                     </p>
                 </div>
@@ -92,7 +90,7 @@ function App() {
             <div className="card-container">
                 <motion.div
                     initial={{ opacity: 0, y: 200 }}
-                    whileInView={{ opacity: 1, y: 0 }}
+                    animate={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     transition={{ delay: 0.2, duration: 0.5 }}
                     className="card"
@@ -112,7 +110,7 @@ function App() {
                 </motion.div>
                 <motion.div
                     initial={{ opacity: 0, y: 200 }}
-                    whileInView={{ opacity: 1, y: 0 }}
+                    animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.25, duration: 0.5 }}
                     viewport={{ once: true }}
                     className="card"
