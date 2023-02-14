@@ -82,7 +82,7 @@ function App() {
                     <button
                         className="BC-Gov-PrimaryButton"
                         type="button"
-                        onClick={() => window.open("https://wage-sub-dev.es.workbc.ca/sp")}
+                        onClick={() => window.open("https://wage-sub-dev-sp.es.workbc.ca")}
                     >
                         Go to Application
                     </button>

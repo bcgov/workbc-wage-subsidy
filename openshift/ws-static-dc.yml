@@ -1,0 +1,113 @@
+apiVersion: template.openshift.io/v1
+kind: Template
+metadata:
+  creationTimestamp: null
+  name: workbc-wage-subsidy-v2-static
+labels:
+  template: workbc-wage-subsidy-v2-static
+objects:
+- apiVersion: v1
+  kind: DeploymentConfig
+  metadata:
+    creationTimestamp: null
+    name: ${NAME}-static
+    labels:
+      app.kubernetes.io/part-of: wage-sub-v2
+      app.openshift.io/runtime: nginx
+      deploymentconfig: ${NAME}-static
+  spec:
+    replicas: ${{REPLICAS}}
+    selector:
+      deploymentconfig: ${NAME}-static
+    strategy:
+      resources:
+        limits:
+          cpu: 10m
+          memory: 75Mi
+        requests:
+          cpu: 5m
+          memory: 60Mi
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          deploymentconfig: ${NAME}-static
+      spec:
+        containers:
+        - env:
+          - name: NODE_ENV
+            value: "PRODUCTION"
+          image: ${NAME}-static:${TAG}
+          livenessProbe:
+            failureThreshold: 3
+            initialDelaySeconds: 300
+            periodSeconds: 10
+            successThreshold: 1
+            tcpSocket:
+              port: 8082
+            timeoutSeconds: 1
+          name: ${NAME}-static
+          ports:
+          - containerPort: 8082
+            protocol: TCP
+          readinessProbe:
+            failureThreshold: 3
+            initialDelaySeconds: 120
+            periodSeconds: 120
+            successThreshold: 1
+            tcpSocket:
+              port: 8082
+            timeoutSeconds: 1
+          resources:
+            limits:
+              cpu: 10m
+              memory: 75Mi
+            requests:
+              cpu: 5m
+              memory: 60Mi
+    test: false
+    triggers:
+    - type: ConfigChange
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+        - ${NAME}-static
+        from:
+          kind: ImageStreamTag
+          name: ${NAME}-static:${TAG}
+          namespace: ${IMAGE_NAMESPACE}
+      type: ImageChange
+- apiVersion: v1
+  kind: Service
+  metadata:
+    creationTimestamp: null
+    name: ${NAME}-static
+  spec:
+    ports:
+    - name: ${NAME}-static
+      port: 8082
+      protocol: TCP
+      targetPort: 8082
+    selector:
+      deploymentconfig: ${NAME}-static
+parameters:
+- description: The name assigned to all of the frontend objects defined in this template.
+  displayName: Name
+  name: NAME
+  required: true
+  value: workbc-wage-subsidy-v2
+- description: The image tag to be used for the frontend image.
+  displayName: Image Tag
+  name: TAG
+  required: true
+  value: latest
+- description: The number of frontend pods to run.
+  displayName: Replicas
+  name: REPLICAS
+  required: true
+  value: "1"
+- description: The namespace where the frontend image is located.
+  displayName: Image Namespace
+  name: IMAGE_NAMESPACE
+  required: true
+  value: ""

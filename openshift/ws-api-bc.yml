@@ -81,7 +81,7 @@ parameters:
   displayName: Namespace
   name: NAMESPACE
   required: true
-  value: 1c4f9c-tools
+  value: ""
 - description: A name suffix used for all objects
   displayName: Suffix
   name: SUFFIX
