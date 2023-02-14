@@ -30,7 +30,50 @@ function App() {
                 className="main-content"
             >
                 <div>
-                    <p>Wage subsidy offers employers:</p>
+                    <h2>Job Seekers</h2>
+                    <h4>I am a job seeker. How can the wage subsidy help me?</h4>
+                    <p>If an employer applies for a wage subsidy, a job seeker can get:</p>
+                    <ul>
+                        <li>Paid work experience opportunities</li>
+                        <li>On-the-job training</li>
+                        <li>Opportunities to gain skills and long-term employment</li>
+                    </ul>
+                    <p>
+                        <strong>I am a job seeker. How do I apply for WorkBC Wage Subsidy?</strong>You do not apply for
+                        the wage subsidy. The employer applies, however you can:
+                    </p>
+                    <ul>
+                        <li>Talk to a potential employer about wage subsidy and suggest they apply</li>
+                        <li>
+                            Apply for WorkBC Employment Services and explore if a wage subsidy opportunity is a good fit
+                            for you
+                        </li>
+                    </ul>
+                    <p>
+                        If you are currently receiving case management services from a{" "}
+                        <a href="/discover-employment-services/workbc-centres/workbc-centre-locations">WorkBC Centre</a>
+                        , you may be eligible for other supports to prepare for employment and a new job. Contact your{" "}
+                        <a href="/discover-employment-services/workbc-centres/workbc-centre-locations">WorkBC Centre</a>{" "}
+                        to learn more.
+                    </p>
+                </div>
+                <div>
+                    <h2>Before you submit</h2>
+                    <div>
+                        <p>
+                            <strong>
+                                In order to submit your application for Wage Subsidy, you will need the following
+                                information:
+                            </strong>
+                        </p>
+                        <ul>
+                            <li>Your CRA Business Number</li>
+                            <li>Your employee’s e-mail address (if you have an employee)</li>
+                        </ul>
+                    </div>
+                    <p>
+                        <strong>Wage subsidy offers employers:</strong>
+                    </p>
                     <ul>
                         <li>A portion of employee wages</li>
                         <li>Support for ongoing operations and expansion</li>
@@ -42,15 +85,6 @@ function App() {
                             <li>Better connect job seekers and employers to meet hiring needs</li>
                         </ul>
                         <li>Job Seeker Eligibility: All residents of B.C. who are not employed at all</li>
-                    </ul>
-                </div>
-                <div>
-                    <p>
-                        In order to submit your application for Wage Subsidy, you will need the following information:
-                    </p>
-                    <ul>
-                        <li>Your CRA Business Number</li>
-                        <li>Your employee’s e-mail address (if you have an employee)</li>
                     </ul>
                 </div>
             </motion.div>
