@@ -31,8 +31,8 @@ export const getWageByCatchment = async (ca: number[]) => {
 }
 
 export const getWageByID = async (id: string) => {
-    const claims = await knex("wage_subsidy_applications").where((builder: any) => builder.where("id", id))
-    return claims[0]
+    const wages = await knex("wage_subsidy_applications").where((builder: any) => builder.where("id", id))
+    return wages[0]
 }
 
 export const insertWage = async (id: string, user: string, formType: string, userGuid: string) => {
