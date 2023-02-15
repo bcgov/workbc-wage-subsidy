@@ -131,3 +131,43 @@ describe("getClaim", () => {
         expect(res.send).toHaveBeenCalledWith("Not found or Not Authorized")
     })
 })
+
+describe("updateClaim", () => {
+    let req: any
+    let res: express.Response
+    beforeEach(() => {
+        req = {
+            kauth: {
+                grant: {
+                    access_token: "test_access_token"
+                }
+            },
+            query: {
+                sort: "id,ASC",
+                filter: '{"name": "John Doe"}',
+                page: "1",
+                perPage: "10"
+            },
+            params: {
+                id: "1"
+            }
+        }
+        res = express.response
+        res.status = jest.fn().mockReturnValue(res)
+        res.send = jest.fn()
+        res.set = jest.fn()
+    })
+
+    afterEach(() => {
+        jest.clearAllMocks()
+    })
+    it("returns 200 with updated claim data", async () => {
+        const catchment = ["test_catchment"]
+        ;(getCatchment as jest.Mock).mockResolvedValue(catchment)
+        const claim = [{ id: "1", name: "John Doe" }]
+        ;(claimService.updateClaim as jest.Mock).mockResolvedValue(claim)
+        await updateClaim(req, res)
+        expect(res.status).toHaveBeenCalledWith(200)
+        expect(res.send).toHaveBeenCalledWith({ id: claim[0].id })
+    })
+})

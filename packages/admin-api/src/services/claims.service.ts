@@ -2,6 +2,7 @@
 import { knex } from "../config/db-config"
 
 export const getAllClaims = async (perPage: number, currPage: number, filters: any, sort: any, permission: any[]) => {
+    console.log(filters)
     const claims = await knex("wage_subsidy_claim_form")
         .modify((queryBuilder: any) => {
             if (filters.catchmentno) {
