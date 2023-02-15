@@ -23,7 +23,7 @@ import {
     TopToolbar,
     useRecordContext
 } from "react-admin"
-import { CustomShow } from "../Claims/CustomShow"
+import { CustomShow } from "./WageCustomShow"
 
 const FormattedFunctionField = ({ source }: any) => {
     const record = useRecordContext()

@@ -76,25 +76,11 @@ const FormattedFunctionField = ({ source }: { source: string }) => {
     return null
 }
 
-const PostShow = () => {
-    const record = useRecordContext()
-    console.log(record)
-    return (
-        <CustomShow sx={{ display: "grid" }}>
-            {Object.keys(record).map((key: string) => {
-                if (record[key] === null) {
-                    return null
-                }
-                return <FormattedFunctionField source={key} />
-            })}
-        </CustomShow>
-    )
-}
 export const ApplicationList = (props: any) => {
     const { keycloak } = useKeycloak()
     return (
         <List {...props} actions={<ListActions />} filters={formFilters}>
-            <Datagrid expand={<PostShow {...props} />} bulkActionButtons={<FormBulkActionButtons />}>
+            <Datagrid bulkActionButtons={<FormBulkActionButtons />}>
                 <TextField label="ID" source="id" />
                 <FunctionField
                     label="Form Type"

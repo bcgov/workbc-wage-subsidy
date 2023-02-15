@@ -27,10 +27,15 @@ import jwt_decode from "jwt-decode"
 const CustomToolbar = () => (
     <Toolbar>
         <SaveButton label="Save" />
+        <ListButton
+            label="Back to Claims"
+            sx={{ height: "30px", padding: "16px 6px", marginLeft: "8px" }}
+            icon={<></>}
+        />
     </Toolbar>
 )
 
-const CalculatedInput = ({ source, value }: any, ...props: any) => {
+const CalculatedInput = ({ source, value }: any) => {
     // const a = useInput(props)
     // console.log(a)
     const decoded: any = jwt_decode(localStorage.getItem("token")?.toString() || "")
@@ -265,8 +270,9 @@ export const ClaimsEdit = (props: any) => {
         return <p>ERROR</p>
     }
     // eslint-disable-next-line @typescript-eslint/no-redeclare
-    const [update, { isLoading, error }] = useUpdate()
+    const [update] = useUpdate()
     const claimSave = (newdata: any) => {
+        const decoded: any = jwt_decode(localStorage.getItem("token")?.toString() || "")
         // update totalweeks element of newdata with totalweeks1
         // eslint-disable-next-line no-param-reassign
         console.log(newdata.totalwage1)
@@ -284,9 +290,14 @@ export const ClaimsEdit = (props: any) => {
         newdata.mercsreimbursed2 = Math.round((Number(newdata.subsidyratepercent2) * Number(newdata.totalmercs2)) / 100)
         newdata.wagesreimbursed1 = Math.round((Number(newdata.subsidyratepercent1) * Number(eligiblewages1)) / 100)
         newdata.wagesreimbursed2 = Math.round((Number(newdata.subsidyratepercent2) * Number(eligiblewages2)) / 100)
+        newdata.eligiblewages = Number(eligiblewages1)
+        newdata.eligiblewages2 = Number(eligiblewages2)
         newdata.totalamountreimbursed1 = Math.round(newdata.wagesreimbursed1 + newdata.mercsreimbursed1)
         newdata.totalamountreimbursed2 = Math.round(newdata.wagesreimbursed2 + newdata.mercsreimbursed2)
         newdata.totalsubsidyclaimed = Math.round(newdata.totalamountreimbursed1 + newdata.totalamountreimbursed2)
+        if (newdata.claimapprovedby === "NULL") {
+            newdata.claimapprovedby = decoded.display_name || ""
+        }
         update(
             "claims",
             { id: recordId, data: newdata, previousData: data },
@@ -300,14 +311,6 @@ export const ClaimsEdit = (props: any) => {
                 }
             }
         )
-        if (isLoading) {
-            notify(`Updating`, { type: "info" })
-            return
-        }
-        if (error) {
-            notify(`Error ${error}`, { type: "error" })
-            return
-        }
     }
     return (
         <Edit actions={<EditActions />}>
