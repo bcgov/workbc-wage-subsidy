@@ -8,11 +8,13 @@ import {
     BooleanField,
     BulkDeleteButton,
     BulkUpdateButton,
+    Button,
     CheckboxGroupInput,
     Datagrid,
     DateField,
     EditButton,
     FilterButton,
+    FunctionField,
     List,
     NumberField,
     SearchInput,
@@ -29,7 +31,11 @@ const FormattedFunctionField = ({ source }: any) => {
     const re = /[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{3}Z/
     console.log(record[source])
     if (source === "applicationid") {
-        return <Typography variant="body2">{record[source].toString().substring(0, 8)}</Typography>
+        return (
+            <Typography variant="body2">
+                {record[source] && record[source].toString().length > 8 && record[source].toString().substring(0, 8)}
+            </Typography>
+        )
     }
     if (record[source] === null || !record) {
         return null
@@ -158,6 +164,7 @@ if (localStorage.getItem("provider") === "BCEID") {
     }
 }
 console.log(choices)
+const EditIcon = () => <></>
 
 const formFilters = [
     <SelectInput key="caFilter" source="catchmentno" label="Catchment" choices={choices} emptyText="All" alwaysOn />,
@@ -223,6 +230,19 @@ export const ClaimsList = (props: any) => (
             <FormattedFunctionField source="applicationid" />
             <TextField source="title" />
             <FormattedFunctionField source="applicationstatus" />
+            <FunctionField
+                label="Actions"
+                render={(record: any) => (
+                    <div>
+                        <EditButton
+                            variant="contained"
+                            sx={{ backgroundColor: "#003366" }}
+                            label="Open Calculator"
+                            icon={<EditIcon />}
+                        />
+                    </div>
+                )}
+            />
         </Datagrid>
     </List>
 )

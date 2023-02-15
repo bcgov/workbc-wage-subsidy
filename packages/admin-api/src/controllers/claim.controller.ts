@@ -18,7 +18,7 @@ export const getAllClaims = async (req: any, res: express.Response) => {
         const sorted = sort ? sort.replace(/[^a-zA-Z0-9,]/g, "").split(",") : ["id", "ASC"]
         // console.log(sorted)
         const claims = await claimService.getAllClaims(Number(perPage), Number(page), filters, sorted, catchment)
-        // console.log(claims)
+        console.log(claims)
         res.set({
             "Access-Control-Expose-Headers": "Content-Range",
             "Content-Range": `0 - ${claims.pagination.to} / ${claims.pagination.total}`
