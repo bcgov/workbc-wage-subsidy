@@ -3,10 +3,9 @@
 /* eslint-disable react/forbid-prop-types */
 /* eslint-disable import/prefer-default-export */
 import { Typography } from "@mui/material"
-import { minWidth, ResponsiveStyleValue, Stack, styled, SxProps } from "@mui/system"
-import clsx from "clsx"
+import { ResponsiveStyleValue, Stack, styled, SxProps } from "@mui/system"
 import PropTypes from "prop-types"
-import { Children, isValidElement, ReactNode } from "react"
+import { ReactNode } from "react"
 import { Labeled, OptionalRecordContextProvider, RaRecord, useRecordContext } from "react-admin"
 import Table from "@mui/material/Table"
 import TableBody from "@mui/material/TableBody"
@@ -15,6 +14,12 @@ import TableContainer from "@mui/material/TableContainer"
 import TableHead from "@mui/material/TableHead"
 import TableRow from "@mui/material/TableRow"
 import Paper from "@mui/material/Paper"
+import type { LabeledProps } from "react-admin"
+/*
+    a custom view of each claim application modelled to mirror the paper form
+    takes in 5 props: className, children, divider, spacing, and rest
+    Outputs a formatted view of the claim application with the provided props
+*/
 
 export const CustomShow = (props: CustomShowProps) => {
     const { className, children, divider, spacing = 1, ...rest } = props
@@ -23,6 +28,15 @@ export const CustomShow = (props: CustomShowProps) => {
     if (!record) {
         return null
     }
+    // a custom lebelled component that passes the children to the Labelled component with only the label
+    //  being in 14px font size
+    const CustomLabeled = (props: LabeledProps) => {
+        return (
+            <Labeled key={props.key} label={<Typography sx={{ fontSize: "14px" }}>{props.label}</Typography>}>
+                {props.children}
+            </Labeled>
+        )
+    }
     return (
         <OptionalRecordContextProvider value={props.record}>
             <Root className={className} {...sanitizeRestProps(rest)}>
@@ -30,90 +44,96 @@ export const CustomShow = (props: CustomShowProps) => {
                     <Typography variant="subtitle2">
                         <strong>WORK EXPERIENCE WAGE SUBSIDY - CLAIM FORM</strong>
                     </Typography>
-                    <Labeled key="id" label="ID">
+                    <CustomLabeled key="id" label="ID">
                         <Typography variant="body2">{record.id && record.id.toString()}</Typography>
-                    </Labeled>
-                    <Labeled key="Title" label="Title">
-                        <Typography variant="body2">{record.title && record.title}</Typography>
-                    </Labeled>
-                    <Labeled key="applicationid" label="Application ID">
+                    </CustomLabeled>
+                    <CustomLabeled key="Title" label="Title">
+                        <Typography variant="body2">{record.title}</Typography>
+                    </CustomLabeled>
+                    <CustomLabeled key="applicationid" label="Application ID">
                         <Typography variant="body2">
                             {record.applicationid ? record.applicationid.toString().substring(0, 8) : ""}
                         </Typography>
-                    </Labeled>
-                    <Labeled key="applicationstatus" label="Application Status">
+                    </CustomLabeled>
+                    <CustomLabeled key="applicationstatus" label="Application Status">
                         <Typography variant="body2">
                             {record.applicationstatus && record.applicationstatus.replace("NULL", "New")}
                         </Typography>
-                    </Labeled>
-                    <Labeled key="created" label="Application Created Date">
+                    </CustomLabeled>
+                    <CustomLabeled key="created" label="Application Created Date">
                         <Typography variant="body2">
                             {record.created && record.created.toString().substring(0, 10)}
                         </Typography>
-                    </Labeled>
+                    </CustomLabeled>
                     <Typography variant="subtitle2">
                         <strong>CLAIM FORM DETAILS</strong>
                     </Typography>
-                    <Labeled key="catchmentno" label="Catchment">
+                    <CustomLabeled
+                        key="catchmentno"
+                        label={<Typography sx={{ fontSize: "14px" }}>Catchment Number:</Typography>}
+                    >
                         <Typography variant="body2">{record.catchmentno && record.catchmentno.toString()}</Typography>
-                    </Labeled>
-                    <Labeled key="Periodstart1" label="Period claim covered from:">
+                    </CustomLabeled>
+                    <CustomLabeled
+                        key="Periodstart1"
+                        label={<Typography sx={{ fontSize: "14px" }}>Period claim covered from:</Typography>}
+                    >
                         <Typography variant="body2">
                             {record.periodstart1 && record.periodstart1.toString().substring(0, 10)}
                         </Typography>
-                    </Labeled>
-                    <Labeled key="Periodstart2" label="Period claim covered to:">
+                    </CustomLabeled>
+                    <CustomLabeled key="Periodstart2" label="Period claim covered to:">
                         <Typography variant="body2">
                             {record.periodstart2 && record.periodstart2.toString().substring(0, 10)}
                         </Typography>
-                    </Labeled>
-                    <Labeled key="Isfinalclaim" label="Final Claim?">
+                    </CustomLabeled>
+                    <CustomLabeled key="Isfinalclaim" label="Final Claim?">
                         <Typography variant="body2">
                             {record.isfinalclaim && record.isfinalclaim === true ? "Yes" : "No"}
                         </Typography>
-                    </Labeled>
+                    </CustomLabeled>
                     <Stack direction="row" spacing={2} justifyContent="space-between">
                         <Stack>
-                            <Labeled key="operatingname" label="Employer/Business Name:">
-                                <Typography variant="body2">{record.operatingname && record.operatingname}</Typography>
-                            </Labeled>
-                            <Labeled key="businessphone" label="Business Phone:">
+                            <CustomLabeled key="operatingname" label="Employer/Business Name:">
+                                <Typography variant="body2">{record.operatingname}</Typography>
+                            </CustomLabeled>
+                            <CustomLabeled key="businessphone" label="Business Phone:">
                                 <Typography variant="body2">
                                     {record.businessphone && record.businessphone.toString()}
                                 </Typography>
-                            </Labeled>
-                            <Labeled key="businessaddress1" label="Business Address 1:">
+                            </CustomLabeled>
+                            <CustomLabeled key="businessaddress1" label="Business Address 1:">
                                 <Typography variant="body2">
                                     {record.businessaddress1 && record.businessaddress1.toString()}
                                 </Typography>
-                            </Labeled>
-                            <Labeled key="businessaddress2" label="Business Address 2:">
+                            </CustomLabeled>
+                            <CustomLabeled key="businessaddress2" label="Business Address 2:">
                                 <Typography variant="body2">
                                     {record.businessaddress2 && record.businessaddress2.toString()}
                                 </Typography>
-                            </Labeled>
+                            </CustomLabeled>
                         </Stack>
                         <Stack>
-                            <Labeled key="" label="Contact Person:">
-                                <Typography variant="body2">{record.contactperson && record.contactperson}</Typography>
-                            </Labeled>
-                            <Labeled key="businesscity" label="Business City:">
-                                <Typography variant="body2">{record.businesscity && record.businesscity}</Typography>
-                            </Labeled>
-                            <Labeled key="businesspostal" label="Business Postal Code:">
+                            <CustomLabeled key="" label="Contact Person:">
+                                <Typography variant="body2">{record.contactperson}</Typography>
+                            </CustomLabeled>
+                            <CustomLabeled key="businesscity" label="Business City:">
+                                <Typography variant="body2">{record.businesscity}</Typography>
+                            </CustomLabeled>
+                            <CustomLabeled key="businesspostal" label="Business Postal Code:">
                                 <Typography variant="body2">
                                     {record.businesspostal && record.businesspostal.toString()}
                                 </Typography>
-                            </Labeled>
+                            </CustomLabeled>
                         </Stack>
                         <div></div>
                     </Stack>
-                    <Labeled key="employeefirstname" label="Employee First Name:">
-                        <Typography variant="body2">{record.employeefirstname && record.employeefirstname}</Typography>
-                    </Labeled>
-                    <Labeled key="employeelastname" label="Employee Last Name:">
-                        <Typography variant="body2">{record.employeelastname && record.employeelastname}</Typography>
-                    </Labeled>
+                    <CustomLabeled key="employeefirstname" label="Employee First Name:">
+                        <Typography variant="body2">{record.employeefirstname}</Typography>
+                    </CustomLabeled>
+                    <CustomLabeled key="employeelastname" label="Employee Last Name:">
+                        <Typography variant="body2">{record.employeelastname}</Typography>
+                    </CustomLabeled>
                     <TableContainer component={Paper}>
                         <Table sx={{ minWidth: 650 }} aria-label="simple table">
                             <TableHead>
@@ -238,20 +258,18 @@ export const CustomShow = (props: CustomShowProps) => {
                             </TableBody>
                         </Table>
                     </TableContainer>
-                    <Labeled
+                    <CustomLabeled
                         key="workactivitiesandissues"
                         label="Summary of the job activities, employee’s progress and any issues:"
                     >
-                        <Typography variant="body2">
-                            {record.workactivitiesandissues && record.workactivitiesandissues}
-                        </Typography>
-                    </Labeled>
+                        <Typography variant="body2">{record.workactivitiesandissues}</Typography>
+                    </CustomLabeled>
                     <Typography variant="subtitle2">
                         <strong>ONLINE CLAIM CALCULATOR</strong>
                     </Typography>
-                    <Labeled key="eligiblewages" label="Eligible this claim:">
-                        <Typography variant="body2">{record.eligiblewages && record.eligiblewages}</Typography>
-                    </Labeled>
+                    <CustomLabeled key="eligiblewages" label="Eligible this claim:">
+                        <Typography variant="body2">{record.eligiblewages}</Typography>
+                    </CustomLabeled>
                     <TableContainer component={Paper}>
                         <Table sx={{ minWidth: 650 }} aria-label="simple table">
                             <TableHead>
@@ -266,13 +284,13 @@ export const CustomShow = (props: CustomShowProps) => {
                             </TableHead>
                             <TableBody>
                                 <TableRow key="1" sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
-                                    <TableCell align="center">Subsidy Rate Date From:</TableCell>
+                                    <TableCell align="left">Subsidy Rate Date From:</TableCell>
                                     <TableCell align="center">
                                         {record.subsidyratedatefrom1
                                             ? record.subsidyratedatefrom1.toString().substring(0, 10)
                                             : "N/A"}
                                     </TableCell>
-                                    <TableCell align="center">Subsidy Rate Date From:</TableCell>
+                                    <TableCell align="left">Subsidy Rate Date From:</TableCell>
                                     <TableCell align="center" sx={{ minWidth: "25%" }}>
                                         {record.subsidyratedatefrom2
                                             ? record.subsidyratedatefrom2.toString().substring(0, 10)
@@ -280,13 +298,13 @@ export const CustomShow = (props: CustomShowProps) => {
                                     </TableCell>
                                 </TableRow>
                                 <TableRow key="2" sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
-                                    <TableCell align="center">Subsidy Rate Date To:</TableCell>
+                                    <TableCell align="left">Subsidy Rate Date To:</TableCell>
                                     <TableCell align="center">
                                         {record.subsidyratedateto1
                                             ? record.subsidyratedateto1.toString().substring(0, 10)
                                             : "N/A"}
                                     </TableCell>
-                                    <TableCell align="center">Subsidy Rate Date To:</TableCell>
+                                    <TableCell align="left">Subsidy Rate Date To:</TableCell>
                                     <TableCell align="center">
                                         {record.subsidyratedateto2
                                             ? record.subsidyratedateto2.toString().substring(0, 10)
@@ -294,99 +312,99 @@ export const CustomShow = (props: CustomShowProps) => {
                                     </TableCell>
                                 </TableRow>
                                 <TableRow key="3" sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
-                                    <TableCell align="center">Total Weeks</TableCell>
+                                    <TableCell align="left">Total Weeks</TableCell>
                                     <TableCell align="center">
                                         {record.totalweeks1 && record.totalweeks1.toString()}
                                     </TableCell>
-                                    <TableCell align="center">Total Weeks</TableCell>
+                                    <TableCell align="left">Total Weeks</TableCell>
                                     <TableCell align="center">
                                         {record.totalweeks2 && record.totalweeks2.toString()}
                                     </TableCell>
                                 </TableRow>
                                 <TableRow key="4" sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
-                                    <TableCell align="center">Subsidy Rate Percent</TableCell>
+                                    <TableCell align="left">Subsidy Rate Percent</TableCell>
                                     <TableCell align="center">
                                         {record.subsidyratepercent1 && record.subsidyratepercent1.toString()}%
                                     </TableCell>
-                                    <TableCell align="center">Subsidy Rate Percent</TableCell>
+                                    <TableCell align="left">Subsidy Rate Percent</TableCell>
                                     <TableCell align="center">
                                         {record.subsidyratepercent2 && record.subsidyratepercent2.toString()}%
                                     </TableCell>
                                 </TableRow>
                                 <TableRow key="5" sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
-                                    <TableCell align="center">Total Wages Paid</TableCell>
+                                    <TableCell align="left">Total Wages Paid</TableCell>
                                     <TableCell align="center">
                                         ${record.totalwage1 && (Number(record.totalwage1) / 100).toString()}
                                     </TableCell>
-                                    <TableCell align="center">Total Wages Paid</TableCell>
+                                    <TableCell align="left">Total Wages Paid</TableCell>
                                     <TableCell align="center">
                                         ${record.totalwage2 && (Number(record.totalwage2) / 100).toString()}
                                     </TableCell>
                                 </TableRow>
                                 <TableRow key="6" sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
-                                    <TableCell align="center">Eligible Wages</TableCell>
+                                    <TableCell align="left">Eligible Wages</TableCell>
                                     <TableCell align="center">
-                                        ${record.eligiblewages && (Number(record.eligiblewages) / 100).toString()}
+                                        ${record.eligiblewages && record.eligiblewages.toString()}
                                     </TableCell>
-                                    <TableCell align="center">Eligible Wages</TableCell>
+                                    <TableCell align="left">Eligible Wages</TableCell>
                                     <TableCell align="center">
-                                        ${record.eligiblewages2 && (Number(record.eligiblewages2) / 100).toString()}
+                                        ${record.eligiblewages2 && record.eligiblewages2.toString()}
                                     </TableCell>
                                 </TableRow>
                                 <TableRow key="7" sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
-                                    <TableCell align="center">Wages Reimbursed</TableCell>
+                                    <TableCell align="left">Wages Reimbursed</TableCell>
                                     <TableCell align="center">
                                         ${record.wagesreimbursed1 && record.wagesreimbursed1.toString()}
                                     </TableCell>
-                                    <TableCell align="center">Wages Reimbursed</TableCell>
+                                    <TableCell align="left">Wages Reimbursed</TableCell>
                                     <TableCell align="center">
                                         ${record.wagesreimbursed2 && record.wagesreimbursed2.toString()}
                                     </TableCell>
                                 </TableRow>
                                 <TableRow key="8" sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
-                                    <TableCell align="center">Total MERCs paid</TableCell>
+                                    <TableCell align="left">Total MERCs paid</TableCell>
                                     <TableCell align="center">
                                         ${record.totalmercs1 && record.totalmercs1.toString()}
                                     </TableCell>
-                                    <TableCell align="center">Total MERCs paid</TableCell>
+                                    <TableCell align="left">Total MERCs paid</TableCell>
                                     <TableCell align="center">
                                         ${record.totalmercs2 && record.totalmercs2.toString()}
                                     </TableCell>
                                 </TableRow>
                                 <TableRow key="9" sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
-                                    <TableCell align="center">MERCs Reimbursed</TableCell>
+                                    <TableCell align="left">MERCs Reimbursed</TableCell>
                                     <TableCell align="center">
                                         ${record.mercsreimbursed1 && record.mercsreimbursed1.toString()}
                                     </TableCell>
-                                    <TableCell align="center">MERCs Reimbursed</TableCell>
+                                    <TableCell align="left">MERCs Reimbursed</TableCell>
                                     <TableCell align="center">
                                         ${record.mercsreimbursed2 && record.mercsreimbursed2.toString()}
                                     </TableCell>
                                 </TableRow>
                                 <TableRow key="10" sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
-                                    <TableCell align="center">Total Reimbursed</TableCell>
+                                    <TableCell align="left">Total Reimbursed</TableCell>
                                     <TableCell align="center">
                                         ${record.totalamountreimbursed1 && record.totalamountreimbursed1.toString()}
                                     </TableCell>
-                                    <TableCell align="center">Total Reimbursed</TableCell>
+                                    <TableCell align="left">Total Reimbursed</TableCell>
                                     <TableCell align="center">
                                         ${record.totalamountreimbursed2 && record.totalamountreimbursed2.toString()}
                                     </TableCell>
                                 </TableRow>
                                 <TableRow key="11" sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
-                                    <TableCell align="center">Total Subsidy Claimed</TableCell>
+                                    <TableCell align="left">Total Subsidy Claimed</TableCell>
                                     <TableCell align="right" colSpan={3}>
                                         ${record.totalsubsidyclaimed && record.totalsubsidyclaimed.toString()}
                                     </TableCell>
                                 </TableRow>
                                 <TableRow key="12" sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
-                                    <TableCell align="center">Claim Approved By</TableCell>
+                                    <TableCell align="left">Claim Approved By</TableCell>
                                     <TableCell align="right" colSpan={3}>
                                         {record.claimapprovedby1 && record.claimapprovedby1.toString()}
                                     </TableCell>
                                 </TableRow>
                                 <TableRow key="13" sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
-                                    <TableCell align="center">Claim Verified Date</TableCell>
+                                    <TableCell align="left">Claim Verified Date</TableCell>
                                     <TableCell align="right" colSpan={3}>
                                         {record.claimverifieddate &&
                                             record.claimverifieddate.toString().substring(0, 10)}

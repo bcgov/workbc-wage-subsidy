@@ -9,7 +9,7 @@ const Header = () => (
             </a>
             <h1>WorkBC Wage Subsidy</h1>
             <div aria-label="This application is currently in Beta phase" className="Beta-PhaseBanner">
-                Beta
+                {import.meta.env.VITE_REACT_ENVIRONMENT || "Beta"}
             </div>
         </motion.div>
         <motion.div initial={{ opacity: 1 }} className="other">

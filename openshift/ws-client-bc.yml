@@ -72,6 +72,10 @@ objects:
             value: ${REACT_APP_DRAFT_URL}
           - name: REACT_APP_VIEW_URL
             value: ${REACT_APP_VIEW_URL}
+          - name: REACT_APP_ENVIRONMENT
+            value: ${REACT_APP_ENVIRONMENT}
+          - name: VITE_REACT_ENVIRONMENT
+            value: ${REACT_APP_ENVIRONMENT}
         dockerfilePath: Dockerfile
     postCommit: {}
     resources:
@@ -181,5 +185,10 @@ parameters:
 - description: REACT_APP_ADMIN_API_URL
   displayName: REACT_APP_ADMIN_API_URL
   name: REACT_APP_ADMIN_API_URL
+  required: true
+  value: ""
+- description: REACT_APP_ENVIRONMENT
+  displayName: REACT_APP_ENVIRONMENT
+  name: REACT_APP_ENVIRONMENT
   required: true
   value: ""

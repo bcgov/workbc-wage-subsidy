@@ -24,7 +24,7 @@ import {
     useRecordContext
 } from "react-admin"
 import { useKeycloak } from "@react-keycloak/web"
-import { CustomShow } from "./CustomShow"
+import { CustomShow } from "./ClaimsCustomShow"
 
 const FormattedFunctionField = ({ source }: any) => {
     const record = useRecordContext()
@@ -62,6 +62,7 @@ const FormattedFunctionField = ({ source }: any) => {
     return null
 }
 
+// feeds the infomation to our custom show component
 const PostShow = (...props: any) => (
     <CustomShow>
         <EditButton />
