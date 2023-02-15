@@ -38,3 +38,4 @@ jobs:
             'start-build workbc-wage-subsidy-v2-employer-api -n ${{secrets.PROJECT_TOOLS_4}}'
             'start-build workbc-wage-subsidy-v2-admin-client -n ${{secrets.PROJECT_TOOLS_4}}'
             'start-build workbc-wage-subsidy-v2-employer-client -n ${{secrets.PROJECT_TOOLS_4}}'
+            'start-build workbc-wage-subsidy-v2-static -n ${{secrets.PROJECT_TOOLS_4}}'
