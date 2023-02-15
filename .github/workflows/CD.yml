@@ -6,7 +6,9 @@ name: CD
 # events but only for the master branch
 on:
   push:
-    branches: [ main, next-claims ]
+    branches: [ main ]
+    paths-ignore:
+    - '.github/workflows/**'
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -33,9 +35,3 @@ jobs:
             'start-build workbc-wage-subsidy -n ${{secrets.PROJECT_TOOLS_4}}'
             'start-build workbc-wage-subsidy-api -n ${{secrets.PROJECT_TOOLS_4}}'
             'start-build workbc-wage-subsidy-cron -n ${{secrets.PROJECT_TOOLS_4}}'
-            'start-build workbc-wage-subsidy-v2-form-api -n ${{secrets.PROJECT_TOOLS_4}}'
-            'start-build workbc-wage-subsidy-v2-admin-api -n ${{secrets.PROJECT_TOOLS_4}}'
-            'start-build workbc-wage-subsidy-v2-employer-api -n ${{secrets.PROJECT_TOOLS_4}}'
-            'start-build workbc-wage-subsidy-v2-admin-client -n ${{secrets.PROJECT_TOOLS_4}}'
-            'start-build workbc-wage-subsidy-v2-employer-client -n ${{secrets.PROJECT_TOOLS_4}}'
-            'start-build workbc-wage-subsidy-v2-static -n ${{secrets.PROJECT_TOOLS_4}}'
