@@ -13,12 +13,19 @@ export const getAllClaims = async (req: any, res: express.Response) => {
         } catch (e: any) {
             return res.status(403).send("Not Authorized")
         }
-        const { sort, filter, page, perPage } = req.query
+        const { filter, sort, page, perPage } = req.query
         const filters = filter ? JSON.parse(filter) : {}
+        console.log(filters)
+        if (req.kauth.grant.access_token.content.bceid_user_guid && filters.catchmentno) {
+            // console.log("bceid", typeof filters.catchmentno, filters.catchmentno)
+            if (!catchment.map((e: string) => Number(e)).includes(Number(filters.catchmentno))) {
+                return res.status(403).send("Not Authorized")
+            }
+        }
         const sorted = sort ? sort.replace(/[^a-zA-Z0-9,]/g, "").split(",") : ["id", "ASC"]
         // console.log(sorted)
         const claims = await claimService.getAllClaims(Number(perPage), Number(page), filters, sorted, catchment)
-        console.log(claims)
+        // console.log(claims)
         res.set({
             "Access-Control-Expose-Headers": "Content-Range",
             "Content-Range": `0 - ${claims.pagination.to} / ${claims.pagination.total}`
@@ -41,7 +48,7 @@ export const getClaim = async (req: any, res: express.Response) => {
         }
         console.log(catchment)
         // console.log(req.params.id)
-        // console.log(req.params)
+        console.log(req.params)
         const { id } = req.params
         const claims = await claimService.getClaimByID(id, catchment)
         if (claims.length === 0) {

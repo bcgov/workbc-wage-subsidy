@@ -18,6 +18,7 @@ import {
     List,
     NumberField,
     Pagination,
+    SearchInput,
     SelectInput,
     TextField,
     TopToolbar,
@@ -164,7 +165,10 @@ const formFilters = [
             { id: "Cancelled", name: "Cancelled" }
         ]}
         alwaysOn
-    />
+    />,
+    <SearchInput key="searchID" placeholder="Search ID" source="id" />,
+    <SearchInput key="searchApplicationId" placeholder="Search Application ID" source="applicationid" />,
+    <SearchInput key="title" source="title" placeholder="Search Title" alwaysOn />
 ]
 
 const ListActions = () => (

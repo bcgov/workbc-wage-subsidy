@@ -20,7 +20,7 @@ import {
     TopToolbar,
     useRecordContext
 } from "react-admin"
-import { CustomShow } from "../Admin/CustomShow"
+import { CustomShow } from "./ClaimsCustomShow"
 
 const formFilters = [
     <BooleanInput
@@ -46,9 +46,17 @@ const FormBulkActionButtons = () => (
     </>
 )
 
-const FormattedFunctionField = ({ source }: { source: string }) => {
+const FormattedFunctionField = ({ source }: any) => {
     const record = useRecordContext()
     const re = /[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{3}Z/
+    console.log(record[source])
+    if (source === "applicationid") {
+        return (
+            <Typography variant="body2">
+                {record[source] && record[source].toString().length > 8 && record[source].toString().substring(0, 8)}
+            </Typography>
+        )
+    }
     if (record[source] === null || !record) {
         return null
     }
@@ -76,26 +84,93 @@ const FormattedFunctionField = ({ source }: { source: string }) => {
 
 const EditIcon = () => <></>
 
-// const PostShow = () => {
-//     const record = useRecordContext()
-//     console.log(record)
-//     return (
-//         <CustomShow sx={{ display: "grid" }}>
-//             {Object.keys(record).map((key: string) => {
-//                 if (record[key] === null) {
-//                     return null
-//                 }
-//                 return <FormattedFunctionField source={key} />
-//             })}
-//         </CustomShow>
-//     )
-// }
+const PostShow = (...props: any) => (
+    <CustomShow>
+        <FormattedFunctionField source="id" />
+        <FormattedFunctionField source="title" />
+        <FormattedFunctionField source="catchmentno" />
+        <FormattedFunctionField source="formtype" />
+        <FormattedFunctionField source="applicationid" />
+        <FormattedFunctionField source="applicationstatus" />
+        <FormattedFunctionField source="periodstart1" />
+        <FormattedFunctionField source="periodstart2" />
+        <FormattedFunctionField source="isfinalclaim" />
+        <FormattedFunctionField source="operatingname" />
+        <FormattedFunctionField source="businessaddress1" />
+        <FormattedFunctionField source="businesscity" />
+        <FormattedFunctionField source="businesspostal" />
+        <FormattedFunctionField source="businessphone" />
+        <FormattedFunctionField source="employeefirstname" />
+        <FormattedFunctionField source="employeelastname" />
+        <FormattedFunctionField source="datefrom1" />
+        <FormattedFunctionField source="datefrom2" />
+        <FormattedFunctionField source="datefrom3" />
+        <FormattedFunctionField source="datefrom4" />
+        <FormattedFunctionField source="datefrom5" />
+        <FormattedFunctionField source="dateto1" />
+        <FormattedFunctionField source="dateto2" />
+        <FormattedFunctionField source="dateto3" />
+        <FormattedFunctionField source="dateto4" />
+        <FormattedFunctionField source="dateto5" />
+        <FormattedFunctionField source="hoursworked1" />
+        <FormattedFunctionField source="hoursworked2" />
+        <FormattedFunctionField source="hoursworked3" />
+        <FormattedFunctionField source="hoursworked4" />
+        <FormattedFunctionField source="hoursworked5" />
+        <FormattedFunctionField source="hourlywage1" />
+        <FormattedFunctionField source="hourlywage2" />
+        <FormattedFunctionField source="hourlywage3" />
+        <FormattedFunctionField source="hourlywage4" />
+        <FormattedFunctionField source="hourlywage5" />
+        <FormattedFunctionField source="workactivitiesandissues" />
+        <FormattedFunctionField source="totalwage1" />
+        <FormattedFunctionField source="totalwage2" />
+        <FormattedFunctionField source="totalwage3" />
+        <FormattedFunctionField source="totalwage4" />
+        <FormattedFunctionField source="totalwage5" />
+        <FormattedFunctionField source="eligiblewages" />
+        <FormattedFunctionField source="eligiblewages2" />
+        <FormattedFunctionField source="totalmercs1" />
+        <FormattedFunctionField source="totalmercs2" />
+        <FormattedFunctionField source="subsidyratepercent1" />
+        <FormattedFunctionField source="subsidyratepercent2" />
+        <FormattedFunctionField source="subsidyratedatefrom1" />
+        <FormattedFunctionField source="subsidyratedateto1" />
+        <FormattedFunctionField source="totalamountreimbursed1" />
+        <FormattedFunctionField source="claimapprovedby1" />
+        <FormattedFunctionField source="subsidyratedatefrom2" />
+        <FormattedFunctionField source="subsidyratedateto2" />
+        <FormattedFunctionField source="totalamountreimbursed2" />
+        <FormattedFunctionField source="claimapprovedby2" />
+        <FormattedFunctionField source="claimverifieddate" />
+        <FormattedFunctionField source="totalsubsidyclaimed" />
+        <FormattedFunctionField source="totalweeks1" />
+        <FormattedFunctionField source="totalweeks2" />
+        <FormattedFunctionField source="wagesreimbursed1" />
+        <FormattedFunctionField source="wagesreimbursed2" />
+        <FormattedFunctionField source="mercsreimbursed1" />
+        <FormattedFunctionField source="mercsreimbursed2" />
+        <FormattedFunctionField source="claimemployeeinfo" />
+        <FormattedFunctionField source="originalapplicationid" />
+        <FormattedFunctionField source="history" />
+        <FormattedFunctionField source="sf" />
+        <FormattedFunctionField source="centrename" />
+        <FormattedFunctionField source="markedfordeletion" />
+        <FormattedFunctionField source="internalid" />
+        <FormattedFunctionField source="modified" />
+        <FormattedFunctionField source="created" showDate showTime />
+        <FormattedFunctionField source="status" />
+        <FormattedFunctionField source="createdby" />
+        <FormattedFunctionField source="createdbyguid" />
+        <FormattedFunctionField source="confirmationid" />
+    </CustomShow>
+)
 
 export const ClaimList = (props: any) => {
     const { keycloak } = useKeycloak()
     return (
         <List {...props} actions={<ListActions />} filters={formFilters} empty={false}>
-            <Datagrid bulkActionButtons={<FormBulkActionButtons />}>
+            <Datagrid expand={<PostShow {...props} />} bulkActionButtons={<FormBulkActionButtons />}>
                 <TextField label="ID" source="id" />
                 <FunctionField
                     label="Status"

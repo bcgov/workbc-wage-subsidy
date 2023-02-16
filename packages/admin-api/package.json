@@ -2,7 +2,7 @@
     "name": "wage-subsidy-admin-api",
     "version": "1.0.0",
     "private": true,
-    "main": "dist/app.js",
+    "main": "dist/src/app.js",
     "scripts": {
         "build": "tsc",
         "start": "node -r dotenv/config .",

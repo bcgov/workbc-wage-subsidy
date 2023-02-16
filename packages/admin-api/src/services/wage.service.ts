@@ -3,7 +3,17 @@ import { knex } from "../config/db-config"
 
 export const getAllWage = async (perPage: number, currPage: number, filters: any, sort: any, permission: any[]) => {
     const claims = await knex("wage_subsidy_applications")
+        .whereNotNull("applicationstatus")
         .modify((queryBuilder: any) => {
+            if (filters.id) {
+                queryBuilder.where("id", Number(filters.id))
+            }
+            if (filters.applicationid) {
+                queryBuilder.whereLike("applicationid", `%${filters.applicationid}%`)
+            }
+            if (filters.title) {
+                queryBuilder.whereLike("title", `%${filters.title}%`)
+            }
             if (filters.catchmentno) {
                 queryBuilder.where("catchmentno", Number(filters.catchmentno))
             } else if (permission.length > 0 && permission[0] !== "*") {

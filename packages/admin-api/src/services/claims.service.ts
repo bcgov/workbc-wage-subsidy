@@ -4,11 +4,20 @@ import { knex } from "../config/db-config"
 export const getAllClaims = async (perPage: number, currPage: number, filters: any, sort: any, permission: any[]) => {
     console.log(filters)
     const claims = await knex("wage_subsidy_claim_form")
+        .whereNotNull("applicationstatus")
         .modify((queryBuilder: any) => {
+            if (filters.id) {
+                queryBuilder.where("id", Number(filters.id))
+            }
+            if (filters.applicationid) {
+                queryBuilder.whereLike("applicationid", `%${filters.applicationid}%`)
+            }
+            if (filters.title) {
+                queryBuilder.whereLike("title", `%${filters.title}%`)
+            }
             if (filters.catchmentno) {
                 queryBuilder.where("catchmentno", Number(filters.catchmentno))
             } else if (permission.length > 0 && permission[0] !== "*") {
-                console.log(permission)
                 queryBuilder.whereIn("catchmentno", permission)
             } else if (permission.length === 0) {
                 queryBuilder.whereIn("catchmentno", [0])
