@@ -33,6 +33,30 @@ export const getAllWage = async (req: any, res: express.Response) => {
     }
 }
 
+export const getWage = async (req: any, res: express.Response) => {
+    try {
+        let catchment
+        try {
+            catchment = await getCatchment(req.kauth.grant.access_token)
+        } catch (e: any) {
+            // console.log(e)
+            return res.status(403).send("Not Authorized")
+        }
+        // console.log(catchment)
+        // console.log(req.params.id)
+        // console.log(req.params)
+        const { id } = req.params
+        const wages = await wageService.getWageByID(id, catchment)
+        if (wages.length === 0) {
+            return res.status(404).send("Not found or Not Authorized")
+        }
+        return res.status(200).send(wages[0])
+    } catch (e: any) {
+        console.log(e)
+        return res.status(500).send("Server Error")
+    }
+}
+
 export const updateWage = async (req: any, res: express.Response) => {
     try {
         let catchment
@@ -58,23 +82,24 @@ export const updateWage = async (req: any, res: express.Response) => {
 
 export const deleteWage = async (req: any, res: express.Response) => {
     try {
+        let catchment
         if (req.kauth.grant.access_token.content.identity_provider !== "idir") {
             return res.status(401).send("Access denied")
         }
         try {
-            await getCatchment(req.kauth.grant.access_token)
+            catchment = await getCatchment(req.kauth.grant.access_token)
         } catch (e: any) {
             // console.log(e)
             return res.status(401).send("Not Authorized")
         }
         const { id } = req.params
-        const deleted = await wageService.deleteWage(id)
+        const deleted = await wageService.deleteWage(id, catchment)
 
         if (deleted) {
             // eslint-disable-next-line object-shorthand
             return res.status(200).send({ id: id })
         }
-        return res.status(404).send("Not Found or Deletion Error")
+        return res.status(404).send("Not Found or Not Authorized")
     } catch (e: any) {
         // console.log(e)
         return res.status(500).send("Server Error")
@@ -84,7 +109,7 @@ export const deleteWage = async (req: any, res: express.Response) => {
 export const generatePDF = async (req: any, res: express.Response) => {
     try {
         const { id } = req.params
-        const wage = await wageService.getWageById(id)
+        const wage = await wageService.getWageByIdPDF(id)
         console.log(wage[0])
         const data = wage[0].data ? wage[0].data : wage[0]
         const templateConfig = {

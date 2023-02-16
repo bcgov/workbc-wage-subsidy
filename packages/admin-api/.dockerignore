@@ -1,5 +1,5 @@
 node_modules
-build
+dist
 jest.config.js
 ./__test__/*.test.ts
 *.test.ts

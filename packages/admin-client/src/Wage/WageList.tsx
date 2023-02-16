@@ -13,6 +13,7 @@ import {
     CheckboxGroupInput,
     Datagrid,
     DateField,
+    EditButton,
     FilterButton,
     FunctionField,
     List,
@@ -176,6 +177,7 @@ const ListActions = () => (
         <FilterButton />
     </TopToolbar>
 )
+const EditIcon = () => <></>
 
 const MarkCompletedButton = () => (
     <BulkUpdateButton
@@ -211,41 +213,43 @@ const WagesBulkActionButtons = () => {
 
 const PostPagination = () => <Pagination rowsPerPageOptions={[10, 25, 50, 100]} />
 
-export const WageList = (props: any) => (
-    <List {...props} actions={<ListActions />} filters={formFilters} pagination={<PostPagination />}>
-        <Datagrid expand={<PostShow {...props} />} bulkActionButtons={<WagesBulkActionButtons />}>
-            <TextField source="id" />
-            <NumberField source="catchmentno" label="CA" />
-            <DateField source="created" />
-            <FormattedFunctionField source="applicationid" />
-            <TextField source="title" />
-            <FormattedFunctionField source="applicationstatus" label="SP Application Status" />
-            <TextField source="status" label="Employer Appplication Status" />
-            <FunctionField
-                label="Generate PDF"
-                render={(record: any) => (
-                    <div>
-                        <Button
-                            href="#"
-                            variant="contained"
-                            sx={{ backgroundColor: "#003366" }}
-                            onClick={async () => {
-                                const pdfRequest = new Request(
-                                    `${process.env.REACT_APP_ADMIN_API_URL || "http://localhost:8002"}/wage/pdf/${
-                                        record.id
-                                    }`,
-                                    {
-                                        method: "GET",
-                                        headers: new Headers({
-                                            Authorization: `Bearer ${localStorage.getItem("token")}`
-                                        })
-                                    }
-                                )
-                                try {
-                                    const pdf = await fetch(pdfRequest).then((response) => response.blob())
-                                    console.log(record)
-                                    saveAs(pdf, `${record.confirmationid}.pdf`)
-                                    /*
+export const WageList = (props: any) => {
+    const keycloak = useKeycloak()
+    return (
+        <List {...props} actions={<ListActions />} filters={formFilters} pagination={<PostPagination />}>
+            <Datagrid expand={<PostShow {...props} />} bulkActionButtons={<WagesBulkActionButtons />}>
+                <TextField source="id" />
+                <NumberField source="catchmentno" label="CA" />
+                <DateField source="created" />
+                <FormattedFunctionField source="applicationid" />
+                <TextField source="title" />
+                <FormattedFunctionField source="applicationstatus" label="SP Application Status" />
+                <TextField source="status" label="Employer Appplication Status" />
+                <FunctionField
+                    label="Actions"
+                    render={(record: any) => (
+                        <div>
+                            <Button
+                                href="#"
+                                variant="contained"
+                                sx={{ backgroundColor: "#003366" }}
+                                onClick={async () => {
+                                    const pdfRequest = new Request(
+                                        `${process.env.REACT_APP_ADMIN_API_URL || "http://localhost:8002"}/wage/pdf/${
+                                            record.id
+                                        }`,
+                                        {
+                                            method: "GET",
+                                            headers: new Headers({
+                                                Authorization: `Bearer ${localStorage.getItem("token")}`
+                                            })
+                                        }
+                                    )
+                                    try {
+                                        const pdf = await fetch(pdfRequest).then((response) => response.blob())
+                                        console.log(record)
+                                        saveAs(pdf, `${record.confirmationid}.pdf`)
+                                        /*
                                         console.log(pdf)
                                         const url = window.URL.createObjectURL(pdf);
                                         const a = document.createElement('a');
@@ -258,18 +262,27 @@ export const WageList = (props: any) => (
                                         document.body.removeChild(a);
                                         window.URL.revokeObjectURL(url);
                                         */
-                                    // return pdf
-                                } catch (error: any) {
-                                    console.log(error)
-                                    alert("Something happened while generating the PDF")
-                                }
-                            }}
-                        >
-                            Download
-                        </Button>
-                    </div>
-                )}
-            />
-        </Datagrid>
-    </List>
-)
+                                        // return pdf
+                                    } catch (error: any) {
+                                        console.log(error)
+                                        alert("Something happened while generating the PDF")
+                                    }
+                                }}
+                            >
+                                Download as PDF
+                            </Button>
+                            {keycloak.keycloak.tokenParsed?.identity_provider === "idir" && (
+                                <EditButton
+                                    variant="contained"
+                                    sx={{ backgroundColor: "#003366", margin: "5px" }}
+                                    label="Change Catchment/Shared With"
+                                    icon={<EditIcon />}
+                                />
+                            )}
+                        </div>
+                    )}
+                />
+            </Datagrid>
+        </List>
+    )
+}

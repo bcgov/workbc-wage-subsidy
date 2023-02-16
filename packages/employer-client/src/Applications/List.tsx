@@ -1,10 +1,8 @@
-import { DoneAll } from "@mui/icons-material"
 import CircleIcon from "@mui/icons-material/Circle"
 import Button from "@mui/material/Button"
 import {
     BooleanInput,
     BulkDeleteButton,
-    BulkUpdateButton,
     CreateButton,
     Datagrid,
     EditButton,

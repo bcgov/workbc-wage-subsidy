@@ -68,8 +68,11 @@ export const updateClaim = async (id: number, data: any, permission: any[]) => {
     return 0
 }
 
-export const deleteClaim = async (id: number) => {
-    const result = await knex("wage_subsidy_claim_form").where("id", id).del()
+export const deleteClaim = async (id: number, permission: string[]) => {
+    if (permission[0] === "*") {
+        const result = await knex("wage_subsidy_claim_form").where("id", id).del()
+        return result
+    }
     // console.log(result)
-    return result
+    return 0
 }
