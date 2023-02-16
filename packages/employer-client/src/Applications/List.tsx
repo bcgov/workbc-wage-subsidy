@@ -19,7 +19,7 @@ import {
     useRecordContext
 } from "react-admin"
 import { useKeycloak } from "@react-keycloak/web"
-import { CustomShow } from "../Admin/CustomShow"
+import { CustomShow } from "./ApplicationCustomShow"
 import { Typography } from "@mui/material"
 
 const formFilters = [
@@ -48,11 +48,15 @@ const FormBulkActionButtons = () => (
 
 const EditIcon = () => <></>
 
-const FormattedFunctionField = ({ source }: { source: string }) => {
+const FormattedFunctionField = ({ source }: any) => {
     const record = useRecordContext()
     const re = /[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{3}Z/
+    console.log(record[source])
     if (record[source] === null || !record) {
         return null
+    }
+    if (source === "applicationid") {
+        return <Typography variant="body2">{record[source].toString().substring(0, 8)}</Typography>
     }
     if (typeof record[source] === "number") {
         if (source.includes("wage")) {
@@ -76,11 +80,85 @@ const FormattedFunctionField = ({ source }: { source: string }) => {
     return null
 }
 
+const PostShow = (...props: any) => (
+    <CustomShow>
+        <FormattedFunctionField source="id" />
+        <FormattedFunctionField source="title" />
+        <FormattedFunctionField source="catchmentno" />
+        <FormattedFunctionField source="formtype" />
+        <FormattedFunctionField source="applicationid" />
+        <FormattedFunctionField source="applicationstatus" />
+        <FormattedFunctionField source="operatingname" />
+        <FormattedFunctionField source="businessnumber" />
+        <FormattedFunctionField source="businessaddress1" />
+        <FormattedFunctionField source="businesscity" />
+        <FormattedFunctionField source="businessprovince" />
+        <FormattedFunctionField source="businesspostal" />
+        <FormattedFunctionField source="businessphone" />
+        <FormattedFunctionField source="businessfax" />
+        <FormattedFunctionField source="businessemail" />
+        <FormattedFunctionField source="otherworkaddress" />
+        <FormattedFunctionField source="sectortype" />
+        <FormattedFunctionField source="typeofindustry" />
+        <FormattedFunctionField source="organizationsize" />
+        <FormattedFunctionField source="cewsandorcrhp" />
+        <FormattedFunctionField source="employeedisplacement" />
+        <FormattedFunctionField source="labourdispute" />
+        <FormattedFunctionField source="unionconcurrence" />
+        <FormattedFunctionField source="liabilitycoverage" />
+        <FormattedFunctionField source="wagesubsidy" />
+        <FormattedFunctionField source="wsbccoverage" />
+        <FormattedFunctionField source="lawcomplianceconsent" />
+        <FormattedFunctionField source="orgeligibilityconsent" />
+        <FormattedFunctionField source="wsbcnumber" />
+        <FormattedFunctionField source="addressalt" />
+        <FormattedFunctionField source="cityalt" />
+        <FormattedFunctionField source="provincealt" />
+        <FormattedFunctionField source="postalalt" />
+        <FormattedFunctionField source="participantemail0" />
+        <FormattedFunctionField source="participantemail1" />
+        <FormattedFunctionField source="participantemail2" />
+        <FormattedFunctionField source="participantemail3" />
+        <FormattedFunctionField source="participantemail4" />
+        <FormattedFunctionField source="positiontitle0" />
+        <FormattedFunctionField source="numberofpositions0" />
+        <FormattedFunctionField source="startdate0" />
+        <FormattedFunctionField source="hours0" />
+        <FormattedFunctionField source="wage0" />
+        <FormattedFunctionField source="applicationmercs0" />
+        <FormattedFunctionField source="duties0" />
+        <FormattedFunctionField source="skills0" />
+        <FormattedFunctionField source="workexperience0" />
+        <FormattedFunctionField source="positiontitle1" />
+        <FormattedFunctionField source="numberofpositions1" />
+        <FormattedFunctionField source="startdate1" />
+        <FormattedFunctionField source="hours1" />
+        <FormattedFunctionField source="wage1" />
+        <FormattedFunctionField source="applicationmercs1" />
+        <FormattedFunctionField source="duties1" />
+        <FormattedFunctionField source="skills1" />
+        <FormattedFunctionField source="workexperience1" />
+        <FormattedFunctionField source="signatory1" />
+        <FormattedFunctionField source="organizationconsent" />
+        <FormattedFunctionField source="history" />
+        <FormattedFunctionField source="sf" />
+        <FormattedFunctionField source="centrename" />
+        <FormattedFunctionField source="markedfordeletion" />
+        <FormattedFunctionField source="internalid" />
+        <FormattedFunctionField source="modified" />
+        <FormattedFunctionField source="created" showDate showTime />
+        <FormattedFunctionField source="status" />
+        <FormattedFunctionField source="createdby" />
+        <FormattedFunctionField source="createdbyguid" />
+        <FormattedFunctionField source="confirmationid" />
+    </CustomShow>
+)
+
 export const ApplicationList = (props: any) => {
     const { keycloak } = useKeycloak()
     return (
         <List {...props} actions={<ListActions />} filters={formFilters}>
-            <Datagrid bulkActionButtons={<FormBulkActionButtons />}>
+            <Datagrid expand={<PostShow {...props} />} bulkActionButtons={<FormBulkActionButtons />}>
                 <TextField label="ID" source="id" />
                 <FunctionField
                     label="Form Type"
