@@ -11,6 +11,7 @@ import { ClaimsEdit } from "./Claims/ClaimsEdit"
 import { ClaimsList } from "./Claims/ClaimsList"
 import { dataProvider } from "./DataProvider/DataProvider"
 import { WageList } from "./Wage/WageList"
+import { ApplicationEdit } from "./Wage/WageEdit"
 import Ready from "./admin/ready"
 
 console.log({
@@ -133,7 +134,7 @@ const CustomAdminWithKeycloak = () => {
         >
             {permissions && (
                 <>
-                    <Resource name="wage" options={{ label: "Applications" }} list={WageList} />
+                    <Resource name="wage" options={{ label: "Applications" }} list={WageList} edit={ApplicationEdit} />
                     <Resource name="claims" list={ClaimsList} edit={ClaimsEdit} />
                 </>
             )}

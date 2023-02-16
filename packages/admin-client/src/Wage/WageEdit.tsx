@@ -15,6 +15,7 @@ export const ApplicationEdit = () => (
     <Edit>
         <SimpleForm toolbar={<CustomToolbar />}>
             <TextInput label="BCeIDs shared with" source="sharedwith" />
+            <TextInput label="Catchment Number" source="catchmentno" />
         </SimpleForm>
     </Edit>
 )

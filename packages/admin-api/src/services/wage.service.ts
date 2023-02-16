@@ -35,6 +35,19 @@ export const getAllWage = async (perPage: number, currPage: number, filters: any
     return claims
 }
 
+export const getWageByID = async (id: number, permission: any[]) => {
+    // console.log(id)
+    if (permission[0] !== "*") {
+        permission.map((p: any) => Number(p))
+    }
+    const wage = await knex("wage_subsidy_applications").where("id", id)
+    if (wage[0].catchmentno in permission || permission[0] === "*") {
+        // console.log("yes")
+        return wage
+    }
+    return []
+}
+
 // export const getWageByCatchment = async (ca: number[]) => {
 //     const claims = await knex("wage_subsidy_applications").where((builder: any) => builder.whereIn("catchmentno", ca))
 //     return claims
@@ -57,13 +70,19 @@ export const updateWage = async (id: number, data: any, permission: any[]) => {
     return 0
 }
 
-export const deleteWage = async (id: number) => {
-    const result = await knex("wage_subsidy_applications").where("id", id).del()
-    console.log(result)
-    return result
+export const deleteWage = async (id: number, permission: string[]) => {
+    const wages = await knex("wage_subsidy_applications").where("id", id)
+    if (wages.length === 0) {
+        return 0
+    }
+    if (permission[0] === "*") {
+        const result = await knex("wage_subsidy_applications").where("id", id).del()
+        return result
+    }
+    return 0
 }
 
-export const getWageById = async (id: number) => {
+export const getWageByIdPDF = async (id: number) => {
     const wage = await knex("wage_subsidy_applications").where("id", id)
     return wage
 }

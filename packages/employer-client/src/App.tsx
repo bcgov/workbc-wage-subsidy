@@ -32,7 +32,7 @@ const initOptions = {
     clientId: process.env.REACT_APP_KEYCLOAK_CLIENT_ID || ""
 }
 
-const keycloak = new Keycloak(initOptions)
+let keycloak = new Keycloak(initOptions)
 
 const onToken = () => {
     if (keycloak.token && keycloak.refreshToken) {
