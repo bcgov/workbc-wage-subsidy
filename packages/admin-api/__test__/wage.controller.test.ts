@@ -189,7 +189,7 @@ describe("deleteWage", () => {
         ;(wageService.deleteWage as jest.Mock).mockResolvedValue(null)
         await deleteWage(req, res)
         expect(res.status).toHaveBeenCalledWith(404)
-        expect(res.send).toHaveBeenCalledWith("Not Found or Deletion Error")
+        expect(res.send).toHaveBeenCalledWith("Not Found or Not Authorized")
     })
     it("returns 500 when an error occurs", async () => {
         const catchment = ["test_catchment"]
