@@ -10,7 +10,8 @@
     "scripts": {
         "changeset": "changeset",
         "prepare": "husky install",
-        "release": "changeset publish"
+        "release": "changeset publish",
+        "test": "npx jest --detectOpenHandles --forceExit"
     },
     "dependencies": {
         "@react-keycloak/web": "^3.4.0",
