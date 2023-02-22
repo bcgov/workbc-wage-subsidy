@@ -16,7 +16,7 @@ describe("getAllClaims", () => {
                 grant: {
                     access_token: {
                         content: {
-                            identity_provider: "idir",
+                            identity_provider: "bceid",
                             bceid_user_guid: "test_bceid_user_guid"
                         }
                     }
@@ -24,12 +24,9 @@ describe("getAllClaims", () => {
             },
             query: {
                 sort: "id,ASC",
-                filter: '{"name": "John Doe"}',
+                filter: '{"name": "John Doe","catchmentno": "0"}',
                 page: "1",
                 perPage: "10"
-            },
-            filters: {
-                catchmentno: "test_catchment"
             }
         }
         res = express.response
@@ -43,7 +40,7 @@ describe("getAllClaims", () => {
     })
 
     it("returns 200 with claims data", async () => {
-        const catchment = ["test_catchment"]
+        const catchment = ["0"]
         ;(getCatchment as jest.Mock).mockResolvedValue(catchment)
         const claims = {
             data: [{ id: 1, name: "John Doe" }],
@@ -61,6 +58,15 @@ describe("getAllClaims", () => {
             "Content-Range": `0 - ${claims.pagination.to} / ${claims.pagination.total}`
         })
     })
+    it("return 403 when filter catchment is different then getCatchment catchments on bceid", async () => {
+        const catchment = ["0"]
+        ;(getCatchment as jest.Mock).mockResolvedValue(catchment)
+        req.query.filter = '{"name": "John Doe","catchmentno": "1"}'
+        await getAllClaims(req, res)
+        expect(res.status).toHaveBeenCalledWith(403)
+        expect(res.send).toHaveBeenCalledWith("Not Authorized")
+    })
+
     it("returns 403 when getCatchment throws an error", async () => {
         ;(getCatchment as jest.Mock).mockRejectedValue(new Error("Access denied"))
         await getAllClaims(req, res)
@@ -68,7 +74,7 @@ describe("getAllClaims", () => {
         expect(res.send).toHaveBeenCalledWith("Not Authorized")
     })
     it("returns 500 when getAllClaims throws an error", async () => {
-        const catchment = ["test_catchment"]
+        const catchment = ["0"]
         ;(getCatchment as jest.Mock).mockResolvedValue(catchment)
         ;(claimService.getAllClaims as jest.Mock).mockRejectedValue(new Error("test_error"))
         await getAllClaims(req, res)
@@ -108,7 +114,7 @@ describe("getClaim", () => {
     })
 
     it("returns 200 with claim data", async () => {
-        const catchment = ["test_catchment"]
+        const catchment = ["0"]
         ;(getCatchment as jest.Mock).mockResolvedValue(catchment)
         const claim = [{ id: 1, name: "John Doe" }]
         ;(claimService.getClaimByID as jest.Mock).mockResolvedValue(claim)
@@ -123,7 +129,7 @@ describe("getClaim", () => {
         expect(res.send).toHaveBeenCalledWith("Not Authorized")
     })
     it("returns 500 when getClaimByID throws an error", async () => {
-        const catchment = ["test_catchment"]
+        const catchment = ["0"]
         ;(getCatchment as jest.Mock).mockResolvedValue(catchment)
         ;(claimService.getClaimByID as jest.Mock).mockRejectedValue(new Error("test_error"))
         await getClaim(req, res)
@@ -131,7 +137,7 @@ describe("getClaim", () => {
         expect(res.send).toHaveBeenCalledWith("Server Error")
     })
     it("returns 404 when getClaimByID returns empty array", async () => {
-        const catchment = ["test_catchment"]
+        const catchment = ["0"]
         ;(getCatchment as jest.Mock).mockResolvedValue(catchment)
         ;(claimService.getClaimByID as jest.Mock).mockResolvedValue([])
         await getClaim(req, res)
@@ -170,7 +176,7 @@ describe("updateClaim", () => {
         jest.clearAllMocks()
     })
     it("returns 200 with updated claim data", async () => {
-        const catchment = ["test_catchment"]
+        const catchment = ["0"]
         ;(getCatchment as jest.Mock).mockResolvedValue(catchment)
         const claim = [{ id: "1", name: "John Doe" }]
         ;(claimService.updateClaim as jest.Mock).mockResolvedValue(claim)
