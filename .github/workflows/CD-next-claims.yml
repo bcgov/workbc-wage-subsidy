@@ -30,7 +30,6 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
       - run: npm install
-      - run: npm run build
       - run: npm test
       - name: OpenShift4 build Action
         uses: redhat-developer/openshift-actions@v2.1.0
