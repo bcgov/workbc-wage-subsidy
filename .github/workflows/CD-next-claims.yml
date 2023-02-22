@@ -18,10 +18,21 @@ jobs:
   build:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [10.x, 12.x, 14.x, 15.x, 16.x, 18.x]
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      - name: OpenShift4 Action
+      - uses: actions/checkout@v3
+      - name: Use Node.js ${{ matrix.node-version }} run Tests
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+      - run: npm install
+      - run: npm run build
+      - run: npm test
+      - name: OpenShift4 build Action
         uses: redhat-developer/openshift-actions@v2.1.0
         env:
           ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
