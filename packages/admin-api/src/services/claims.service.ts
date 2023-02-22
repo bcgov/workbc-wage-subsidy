@@ -31,6 +31,10 @@ export const getAllClaims = async (perPage: number, currPage: number, filters: a
                 }
                 queryBuilder.whereIn("applicationstatus", filters.applicationstatus)
             }
+            // guard clause for legacy applications, can be changed to sharepoint later if needed
+            if (!filters.status) {
+                queryBuilder.whereNotNull("status")
+            }
         })
         .paginate({ perPage, currentPage: currPage, isLengthAware: true })
     return claims

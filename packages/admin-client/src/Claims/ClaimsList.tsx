@@ -181,6 +181,13 @@ const formFilters = [
         ]}
         alwaysOn
     />,
+    <CheckboxGroupInput
+        key="statusFilter"
+        source="status"
+        label=""
+        choices={[{ id: "NULL", name: "Legacy" }]}
+        alwaysOn
+    />,
     <SearchInput key="searchID" placeholder="Search ID" source="id" />,
     <SearchInput key="searchApplicationId" placeholder="Search Application ID" source="applicationid" />,
     <SearchInput key="title" source="title" placeholder="Search Title" alwaysOn />
