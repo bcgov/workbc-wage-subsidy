@@ -15,10 +15,12 @@ export const getAllClaims = async (req: any, res: express.Response) => {
         }
         const { filter, sort, page, perPage } = req.query
         const filters = filter ? JSON.parse(filter) : {}
-        // console.log(filters)
         if (req.kauth.grant.access_token.content.bceid_user_guid && filters.catchmentno) {
             // console.log("bceid", typeof filters.catchmentno, filters.catchmentno)
-            if (!catchment.map((e: string) => Number(e)).includes(Number(filters.catchmentno))) {
+            if (
+                catchment.length === 0 ||
+                !catchment.map((e: string) => Number(e)).includes(Number(filters.catchmentno))
+            ) {
                 return res.status(403).send("Not Authorized")
             }
         }
