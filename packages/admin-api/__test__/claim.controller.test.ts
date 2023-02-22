@@ -14,7 +14,12 @@ describe("getAllClaims", () => {
         req = {
             kauth: {
                 grant: {
-                    access_token: "test_access_token"
+                    access_token: {
+                        content: {
+                            identity_provider: "idir",
+                            bceid_user_guid: "test_bceid_user_guid"
+                        }
+                    }
                 }
             },
             query: {
@@ -22,6 +27,9 @@ describe("getAllClaims", () => {
                 filter: '{"name": "John Doe"}',
                 page: "1",
                 perPage: "10"
+            },
+            filters: {
+                catchmentno: "test_catchment"
             }
         }
         res = express.response

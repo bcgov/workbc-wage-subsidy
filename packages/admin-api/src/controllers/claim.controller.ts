@@ -32,7 +32,7 @@ export const getAllClaims = async (req: any, res: express.Response) => {
         })
         return res.status(200).send(claims.data)
     } catch (e: any) {
-        // console.log(e)
+        console.log(e)
         return res.status(500).send("Server Error")
     }
 }
