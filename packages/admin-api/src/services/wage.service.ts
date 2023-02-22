@@ -30,6 +30,10 @@ export const getAllWage = async (perPage: number, currPage: number, filters: any
             if (sort) {
                 queryBuilder.orderBy(sort[0], sort[1])
             }
+            // guard clause for legacy applications, can be changed to sharepoint later if needed
+            if (!filters.status) {
+                queryBuilder.whereNotNull("status")
+            }
         })
         .paginate({ perPage, currentPage: currPage, isLengthAware: true })
     return claims
