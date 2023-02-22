@@ -14,6 +14,16 @@ import type { LabeledProps } from "react-admin"
     Outputs a formatted view of the claim application with the provided props
 */
 
+// a custom lebelled component that passes the children to the Labelled component with only the label
+//  being in 14px font size
+const CustomLabeled = (props: LabeledProps) => {
+    return (
+        <Labeled key={props.key} label={<Typography sx={{ fontSize: "14px" }}>{props.label}</Typography>}>
+            {props.children}
+        </Labeled>
+    )
+}
+
 export const CustomShow = (props: CustomShowProps) => {
     const { className, children, divider, spacing = 1, ...rest } = props
     const record = useRecordContext(props)
@@ -22,21 +32,20 @@ export const CustomShow = (props: CustomShowProps) => {
         return null
     }
     const positions = ["0", "1"]
-    // a custom lebelled component that passes the children to the Labelled component with only the label
-    //  being in 14px font size
-    const CustomLabeled = (props: LabeledProps) => {
-        return (
-            <Labeled key={props.key} label={<Typography sx={{ fontSize: "14px" }}>{props.label}</Typography>}>
-                {props.children}
-            </Labeled>
-        )
-    }
     return (
         <OptionalRecordContextProvider value={props.record}>
             <Root className={className} {...sanitizeRestProps(rest)}>
                 <Stack spacing={spacing} divider={divider} className={SimpleShowLayoutClasses.stack}>
                     <Typography variant="subtitle2">
-                        <strong>WORK EXPERIENCE WAGE SUBSIDY - {record.formtype} FORM</strong>
+                        <strong>
+                            WORK EXPERIENCE WAGE SUBSIDY -{" "}
+                            {record.formtype === "haveEmployee"
+                                ? "HAVE EMPLOYEE"
+                                : record.formtype === "wage"
+                                ? "LEGACY WAGE APPLICATION"
+                                : "NEED EMPLOYEE"}{" "}
+                            FORM
+                        </strong>
                     </Typography>
                     <CustomLabeled key="id" label="ID">
                         <Typography variant="body2">{record.id && record.id.toString()}</Typography>
