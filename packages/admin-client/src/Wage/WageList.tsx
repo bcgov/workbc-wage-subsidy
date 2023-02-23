@@ -35,7 +35,11 @@ const FormattedFunctionField = ({ source }: any) => {
         return null
     }
     if (source === "applicationid") {
-        return <Typography variant="body2">{record[source].toString().substring(0, 8)}</Typography>
+        return (
+            <Typography variant="body2">
+                {record[source].toString().length > 10 ? record[source].toString().substring(0, 8) : record[source]}
+            </Typography>
+        )
     }
     if (typeof record[source] === "number") {
         if (source.includes("wage")) {
