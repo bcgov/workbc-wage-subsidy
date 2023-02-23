@@ -10,7 +10,7 @@ name: CI/CD Runtests and build on Dev
 # events but only for the master branch
 on:
   push:
-    branches: [ main ]
+    branches: [ dev ]
     paths-ignore:
         - '.github/workflows/**'
 
