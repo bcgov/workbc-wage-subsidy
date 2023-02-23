@@ -8,7 +8,6 @@ import {
     BooleanField,
     BulkDeleteButton,
     BulkUpdateButton,
-    Button,
     CheckboxGroupInput,
     Datagrid,
     DateField,
@@ -33,7 +32,7 @@ const FormattedFunctionField = ({ source }: any) => {
     if (source === "applicationid") {
         return (
             <Typography variant="body2">
-                {record[source] && record[source].toString().length > 8 && record[source].toString().substring(0, 8)}
+                {record[source].toString().length > 10 ? record[source].toString().substring(0, 8) : record[source]}
             </Typography>
         )
     }
