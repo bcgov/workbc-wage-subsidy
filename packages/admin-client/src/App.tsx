@@ -14,11 +14,6 @@ import { WageList } from "./Wage/WageList"
 import { ApplicationEdit } from "./Wage/WageEdit"
 import Ready from "./admin/ready"
 
-console.log({
-    url: process.env.REACT_APP_KEYCLOAK_URL,
-    realm: process.env.REACT_APP_KEYCLOAK_REALM,
-    clientId: process.env.REACT_APP_KEYCLOAK_CLIENT_ID
-})
 const initOptions = {
     url: process.env.REACT_APP_KEYCLOAK_URL || "",
     realm: process.env.REACT_APP_KEYCLOAK_REALM || "",

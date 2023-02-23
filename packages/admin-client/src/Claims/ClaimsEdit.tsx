@@ -1,5 +1,4 @@
 /* eslint-disable camelcase */
-/* eslint-disable react-hooks/rules-of-hooks */
 /* eslint-disable no-param-reassign */
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable import/prefer-default-export */
@@ -262,19 +261,10 @@ export const ClaimsEdit = (props: any) => {
             }
         }
     )
-
-    if (isLoadingOne) {
-        return <Loading />
-    }
-    if (oneError) {
-        return <p>ERROR</p>
-    }
-    // eslint-disable-next-line @typescript-eslint/no-redeclare
     const [update] = useUpdate()
     const claimSave = (newdata: any) => {
         const decoded: any = jwt_decode(localStorage.getItem("token")?.toString() || "")
         // update totalweeks element of newdata with totalweeks1
-        // eslint-disable-next-line no-param-reassign
         console.log(newdata.totalwage1)
         const eligiblewages1 = Math.round(
             Number(newdata.totalwage1) / 100 > Number(newdata.totalweeks1) * 1000
@@ -311,6 +301,12 @@ export const ClaimsEdit = (props: any) => {
                 }
             }
         )
+    }
+    if (isLoadingOne) {
+        return <Loading />
+    }
+    if (oneError) {
+        return <p>ERROR</p>
     }
     return (
         <Edit actions={<EditActions />}>
