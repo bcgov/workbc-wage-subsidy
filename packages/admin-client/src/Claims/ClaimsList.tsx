@@ -8,7 +8,6 @@ import {
     BooleanField,
     BulkDeleteButton,
     BulkUpdateButton,
-    Button,
     CheckboxGroupInput,
     Datagrid,
     DateField,
