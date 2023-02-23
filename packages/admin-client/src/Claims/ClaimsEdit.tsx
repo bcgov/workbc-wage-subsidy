@@ -263,12 +263,6 @@ export const ClaimsEdit = (props: any) => {
         }
     )
 
-    if (isLoadingOne) {
-        return <Loading />
-    }
-    if (oneError) {
-        return <p>ERROR</p>
-    }
     // eslint-disable-next-line @typescript-eslint/no-redeclare
     const [update] = useUpdate()
     const claimSave = (newdata: any) => {
@@ -311,6 +305,12 @@ export const ClaimsEdit = (props: any) => {
                 }
             }
         )
+    }
+    if (isLoadingOne) {
+        return <Loading />
+    }
+    if (oneError) {
+        return <p>ERROR</p>
     }
     return (
         <Edit actions={<EditActions />}>
