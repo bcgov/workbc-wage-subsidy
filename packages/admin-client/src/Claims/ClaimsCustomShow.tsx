@@ -1,12 +1,17 @@
-/* eslint-disable react/destructuring-assignment */
-/* eslint-disable react/require-default-props */
-/* eslint-disable react/forbid-prop-types */
-/* eslint-disable import/prefer-default-export */
 import { Typography } from "@mui/material"
 import { ResponsiveStyleValue, Stack, styled, SxProps } from "@mui/system"
+import { saveAs } from "file-saver"
 import PropTypes from "prop-types"
 import { ReactNode } from "react"
-import { Labeled, OptionalRecordContextProvider, RaRecord, useRecordContext } from "react-admin"
+import {
+    Labeled,
+    NotificationType,
+    OptionalRecordContextProvider,
+    RaRecord,
+    useNotify,
+    useRecordContext
+} from "react-admin"
+import InsertDriveFileIcon from "@mui/icons-material/InsertDriveFile"
 import Table from "@mui/material/Table"
 import TableBody from "@mui/material/TableBody"
 import TableCell from "@mui/material/TableCell"
@@ -15,13 +20,55 @@ import TableHead from "@mui/material/TableHead"
 import TableRow from "@mui/material/TableRow"
 import Paper from "@mui/material/Paper"
 import type { LabeledProps } from "react-admin"
+
+const CustomLabeled = (props: LabeledProps) => {
+    return (
+        <Labeled key={props.key} label={<Typography sx={{ fontSize: "14px" }}>{props.label}</Typography>}>
+            {props.children}
+        </Labeled>
+    )
+}
+
+const getFile = async (
+    id: number,
+    fileid: string,
+    name: string,
+    notify: (
+        message: string,
+        options?:
+            | (NotificationOptions & {
+                  type: NotificationType | undefined
+              })
+            | undefined
+    ) => void
+) => {
+    notify("Downloading File")
+    const pdfRequest = new Request(
+        `${process.env.REACT_APP_ADMIN_API_URL || "http://localhost:8002"}/claims/${id}/file/${fileid}`,
+        {
+            method: "GET",
+            headers: new Headers({
+                Authorization: `Bearer ${localStorage.getItem("token")}`
+            })
+        }
+    )
+    try {
+        const file = await fetch(pdfRequest).then((response) => response.blob())
+        notify("File Downloaded", { type: "success" })
+        saveAs(file, `${name}`)
+    } catch (error) {
+        notify("Error Downloading File", { type: "error" })
+        console.log(error)
+    }
+}
+
 /*
     a custom view of each claim application modelled to mirror the paper form
     takes in 5 props: className, children, divider, spacing, and rest
     Outputs a formatted view of the claim application with the provided props
 */
-
-export const CustomShow = (props: CustomShowProps) => {
+const CustomShow = (props: CustomShowProps) => {
+    const notify = useNotify()
     const { className, children, divider, spacing = 1, ...rest } = props
     const record = useRecordContext(props)
     console.log(record)
@@ -30,17 +77,39 @@ export const CustomShow = (props: CustomShowProps) => {
     }
     // a custom lebelled component that passes the children to the Labelled component with only the label
     //  being in 14px font size
-    const CustomLabeled = (props: LabeledProps) => {
-        return (
-            <Labeled key={props.key} label={<Typography sx={{ fontSize: "14px" }}>{props.label}</Typography>}>
-                {props.children}
-            </Labeled>
-        )
-    }
+
     return (
         <OptionalRecordContextProvider value={props.record}>
             <Root className={className} {...sanitizeRestProps(rest)}>
                 <Stack spacing={spacing} divider={divider} className={SimpleShowLayoutClasses.stack}>
+                    <Typography variant="subtitle2">
+                        <strong>Attachments</strong>
+                    </Typography>
+                    <Stack direction="row" spacing={2} justifyContent="flex-start">
+                        {record.files && record.files.files.length > 0 ? (
+                            record.files.files.map((file: any) => (
+                                <Stack
+                                    sx={{
+                                        cursor: "pointer",
+                                        textDecoration: "underline",
+                                        ":hover": { textColor: "#036" }
+                                    }}
+                                    key={file.data.id}
+                                >
+                                    <div
+                                        onClick={() => {
+                                            getFile(Number(record.id), file.data.id, file.originalName, notify)
+                                        }}
+                                    >
+                                        <InsertDriveFileIcon sx={{ fontSize: 40 }} />
+                                        <Typography variant="body2">{file.originalName}</Typography>
+                                    </div>
+                                </Stack>
+                            ))
+                        ) : (
+                            <Typography variant="body2">No Attachments</Typography>
+                        )}
+                    </Stack>
                     <Typography variant="subtitle2">
                         <strong>WORK EXPERIENCE WAGE SUBSIDY - CLAIM FORM</strong>
                     </Typography>
@@ -457,3 +526,5 @@ const Root = styled("div", {
 }))
 
 const sanitizeRestProps = ({ record, resource, initialValues, translate, ...rest }: any) => rest
+
+export default CustomShow

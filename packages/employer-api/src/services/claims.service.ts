@@ -85,6 +85,7 @@ export const updateClaimsData = async (body: any, id: number) => {
     })
     console.log("inside body", body)
     console.log("inside update claim data", data)
+    console.log("supporting documents", data.supportingDocuments)
     const claimsData = {
         title: `Claim - ${data.employerName} - ${body.confirmationId}`,
         catchmentno: data.workbcCentre.split("-")[0],
@@ -130,6 +131,7 @@ export const updateClaimsData = async (body: any, id: number) => {
         totalwage3: Number(data.hourlyWage3 || "0") * Number(data.hoursWorked3 || "0") * 100,
         totalwage4: Number(data.hourlyWage4 || "0") * Number(data.hoursWorked4 || "0") * 100,
         totalwage5: Number(data.hourlyWage5 || "0") * Number(data.hoursWorked5 || "0") * 100,
+        files: { files: data.supportingDocuments },
         // eligiblewages: data.eligiblewages,
         // eligiblewages2: data.eligiblewages2,
         totalmercs1: data.totalMERCs,
@@ -222,7 +224,7 @@ export const updateClaimsData = async (body: any, id: number) => {
     if (data.totalWage5 === 0) {
         claimsData.totalwage5 = 0
     }
-    console.log(claimsData)
+    console.log("data to be updated", claimsData)
     const insert = await knex("wage_subsidy_claim_form").where("id", id).update(claimsData)
     return insert
 }

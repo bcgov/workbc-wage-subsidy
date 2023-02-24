@@ -37,7 +37,7 @@ export const getAllWage = async (req: any, res: express.Response) => {
         const params = {
             fields: `userInfo,internalId,applicationId,storefrontId,catchmentNo,formHandler,areYouCurrentlyWorkingWithAWorkBcCentre,catchmentNoStoreFront,operatingName,businessNumber,businessAddress,businessCity,businessProvince,businessPostal,validateAddress,businessPhone,businessFax,employerEmail,businessEmail,otherWorkAddress,container,sectorType,typeOfIndustry,organizationSize,CEWSAndOrCRHP,employeeDisplacement,labourDispute,unionConcurrence,liabilityCoverage,wageSubsidy,WSBCCoverage,orgEligibilityConsent,lawComplianceConsent,next2,addAnotherPosition,positionTitle0,numberOfPositions0,employeeEmail0,employeeEmail1,employeeEmail2,employeeEmail3,employeeEmail4,startDate0,wage0,hours0,applicationMERCs0,duties0,skills0,workExperience0,position2,previous,next4,signatoryTitle,signatory1,organizationConsent,previous1`,
             // eslint-disable-next-line camelcase
-            createdBy: bceid_username,
+            // createdBy: bceid_username,
             deleted: false
         }
         // console.log(params)
@@ -71,7 +71,7 @@ export const getAllWage = async (req: any, res: express.Response) => {
                 process.env.HAVE_EMPLOYEE_PASS || "",
                 params
             )
-            console.log(haveEmployeeApplications)
+            console.log(haveEmployeeApplications.reverse())
             haveEmployeeApplications.forEach(async (h: any) => {
                 const app = applications.data.find((a: any) => a.internalid === h.internalId) || null
                 if (app) {

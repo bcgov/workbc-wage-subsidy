@@ -7,6 +7,7 @@ import { ResponsiveStyleValue, Stack, styled, SxProps } from "@mui/system"
 import PropTypes from "prop-types"
 import { ReactNode } from "react"
 import { Labeled, OptionalRecordContextProvider, RaRecord, useRecordContext } from "react-admin"
+import InsertDriveFileIcon from "@mui/icons-material/InsertDriveFile"
 import Table from "@mui/material/Table"
 import TableBody from "@mui/material/TableBody"
 import TableCell from "@mui/material/TableCell"
@@ -41,6 +42,21 @@ export const CustomShow = (props: CustomShowProps) => {
         <OptionalRecordContextProvider value={props.record}>
             <Root className={className} {...sanitizeRestProps(rest)}>
                 <Stack spacing={spacing} divider={divider} className={SimpleShowLayoutClasses.stack}>
+                    <Typography variant="subtitle2">
+                        <strong>Attachments</strong>
+                    </Typography>
+                    <Stack direction="row" spacing={2} justifyContent="flex-start">
+                        {record.files && record.files.files.length > 0 ? (
+                            record.files.files.map((file: any) => (
+                                <Stack key={file.data.id}>
+                                    <InsertDriveFileIcon sx={{ fontSize: 40 }} />
+                                    <Typography variant="body2">{file.originalName}</Typography>
+                                </Stack>
+                            ))
+                        ) : (
+                            <Typography variant="body2">No Attachments</Typography>
+                        )}
+                    </Stack>
                     <Typography variant="subtitle2">
                         <strong>WORK EXPERIENCE WAGE SUBSIDY - CLAIM FORM</strong>
                     </Typography>

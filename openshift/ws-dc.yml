@@ -211,8 +211,16 @@ objects:
             value: ${CDOGS_CLIENT}
           - name: CDOGS_CLIENT_SECRET
             value: ${CDOGS_CLIENT_SECRET}
+          - name: CUSTOM_AUTH_REALM
+            value: ${CUSTOM_AUTH_REALM}
+          - name: CHEFS_CLIENT
+            value: ${CHEFS_CLIENT}
+          - name: CHEFS_CLIENT_SECRET
+            value: ${CHEFS_CLIENT_SECRET}
           - name: CDOGS_URL
             value: ${CDOGS_URL}
+          - name: CHEFS_URL
+            value: ${CHEFS_URL}
           livenessProbe:
             failureThreshold: 3
             initialDelaySeconds: 300
@@ -727,6 +735,10 @@ parameters:
   displayName: Common Services Auth Realm
   name: COMMON_SERVICES_AUTH_REALM
   value: ""
+- description: Custom Auth Realm
+  displayName: Custom Auth Realm
+  name: CUSTOM_AUTH_REALM
+  value: ""
 - description: CDOGS Client
   displayName: CDOGS Client
   name: CDOGS_CLIENT
@@ -734,6 +746,14 @@ parameters:
 - description: CDOGS Client Secret
   displayName: CDOGS Client Secret
   name: CDOGS_CLIENT_SECRET
+  value: ""
+- description: CHEFS Client
+  displayName: CHEFS Client
+  name: CHEFS_CLIENT
+  value: ""
+- description: CHEFS Client Secret
+  displayName: CHEFS Client Secret
+  name: CHEFS_CLIENT_SECRET
   value: ""
 - description: CDOGS URL
   displayName: CDOGS URL
