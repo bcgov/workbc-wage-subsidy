@@ -23,7 +23,7 @@ import {
     useRecordContext
 } from "react-admin"
 import { useKeycloak } from "@react-keycloak/web"
-import { CustomShow } from "./ClaimsCustomShow"
+import CustomShow from "./ClaimsCustomShow"
 
 const FormattedFunctionField = ({ source }: any) => {
     const record = useRecordContext()

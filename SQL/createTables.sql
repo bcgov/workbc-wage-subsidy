@@ -125,4 +125,5 @@
         Modified date,
         Created date
         sharedwith varchar(255)
+        files jsonb
         );

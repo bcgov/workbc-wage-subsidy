@@ -114,3 +114,29 @@ export const deleteClaim = async (req: any, res: express.Response) => {
         return res.status(500).send("Server Error")
     }
 }
+
+export const getFile = async (req: any, res: express.Response) => {
+    try {
+        let catchment
+        try {
+            catchment = await getCatchment(req.kauth.grant.access_token)
+        } catch (e: any) {
+            // console.log(e)
+            return res.status(403).send("Not Authorized")
+        }
+        const { id, fileid } = req.params
+        const claim = await claimService.getClaimByID(id, catchment)
+        // console.log(claim)
+        if (claim.length === 0) {
+            return res.status(404).send("Not found")
+        }
+        const file = claim[0].files.files.find((f: any) => f.data.id === fileid)
+        // console.log(file)
+        const fileres = await claimService.getFile(file.url)
+        res.setHeader("Content-Disposition", `attachment; filename=pdf.pdf`)
+        return res.status(200).send(fileres)
+    } catch (e: any) {
+        console.log(e)
+        return res.status(500).send("Server Error")
+    }
+}

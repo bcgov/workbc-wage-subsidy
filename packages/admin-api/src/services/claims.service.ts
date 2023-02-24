@@ -1,8 +1,10 @@
 /* eslint-disable import/prefer-default-export */
+import axios from "axios"
 import { knex } from "../config/db-config"
+import { getCHEFSToken } from "./common.service"
 
 export const getAllClaims = async (perPage: number, currPage: number, filters: any, sort: any, permission: any[]) => {
-    console.log(filters)
+    // console.log(filters)
     const claims = await knex("wage_subsidy_claim_form")
         .whereNotNull("applicationstatus")
         .modify((queryBuilder: any) => {
@@ -79,4 +81,29 @@ export const deleteClaim = async (id: number, permission: string[]) => {
     }
     // console.log(result)
     return 0
+}
+
+export const getFile = async (url: string) => {
+    try {
+        const token = await getCHEFSToken()
+        const res = await axios({
+            // need to use axios like this as otherwise it won't accept the Authorization header
+            method: "get",
+            url: `${process.env.CHEFS_URL}${url}`,
+            responseType: "arraybuffer",
+            responseEncoding: "binary",
+            headers: {
+                Authorization: `Bearer ${token}`,
+                "Content-Type": "application/json",
+                "Accept-Encoding": "gzip, deflate, br",
+                Accept: "application/pdf",
+                Connection: "keep-alive"
+            }
+        })
+        // console.log(res)
+        return res.data
+    } catch (error: any) {
+        // console.log(error)
+        throw new Error(error)
+    }
 }

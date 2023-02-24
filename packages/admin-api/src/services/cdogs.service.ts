@@ -5,7 +5,7 @@ import { getCDOGSToken } from "./common.service"
 export const generateDocumentTemplate = async (templateHash: string, templateConfig: any) => {
     try {
         const token: string = await getCDOGSToken()
-        console.log(token,templateConfig)
+        console.log(token, templateConfig)
         const cdogsResponse = await axios({
             // need to use axios like this as otherwise it won't accept the Authorization header
             method: "post",
