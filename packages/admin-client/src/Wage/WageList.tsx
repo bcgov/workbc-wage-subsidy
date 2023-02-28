@@ -23,6 +23,7 @@ import {
     SelectInput,
     TextField,
     TopToolbar,
+    useNotify,
     useRecordContext
 } from "react-admin"
 import { CustomShow } from "./WageCustomShow"
@@ -225,6 +226,7 @@ const WagesBulkActionButtons = () => {
 const PostPagination = () => <Pagination rowsPerPageOptions={[10, 25, 50, 100]} />
 
 export const WageList = (props: any) => {
+    const notify = useNotify()
     const keycloak = useKeycloak()
     return (
         <List {...props} actions={<ListActions />} filters={formFilters} pagination={<PostPagination />}>
@@ -244,7 +246,9 @@ export const WageList = (props: any) => {
                                 href="#"
                                 variant="contained"
                                 sx={{ backgroundColor: "#003366" }}
-                                onClick={async () => {
+                                onClick={async (e) => {
+                                    e.preventDefault()
+                                    notify("Downloading PDF...", { autoHideDuration: 0 })
                                     const pdfRequest = new Request(
                                         `${process.env.REACT_APP_ADMIN_API_URL || "http://localhost:8002"}/wage/pdf/${
                                             record.id
@@ -260,6 +264,7 @@ export const WageList = (props: any) => {
                                         const pdf = await fetch(pdfRequest).then((response) => response.blob())
                                         console.log(record)
                                         saveAs(pdf, `${record.confirmationid}.pdf`)
+                                        notify("PDF Downloaded", { type: "success" })
                                         /*
                                         console.log(pdf)
                                         const url = window.URL.createObjectURL(pdf);
@@ -276,7 +281,7 @@ export const WageList = (props: any) => {
                                         // return pdf
                                     } catch (error: any) {
                                         console.log(error)
-                                        alert("Something happened while generating the PDF")
+                                        notify(`Error: ${error}`, { type: "error" })
                                     }
                                 }}
                             >

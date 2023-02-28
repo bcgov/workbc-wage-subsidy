@@ -3,7 +3,8 @@
 /* eslint-disable react/forbid-prop-types */
 /* eslint-disable import/prefer-default-export */
 import { Cancel, Check } from "@mui/icons-material"
-import { Typography } from "@mui/material"
+import { Button, Typography } from "@mui/material"
+import { saveAs } from "file-saver"
 import {
     BooleanField,
     BulkDeleteButton,
@@ -20,6 +21,7 @@ import {
     SelectInput,
     TextField,
     TopToolbar,
+    useNotify,
     useRecordContext
 } from "react-admin"
 import { useKeycloak } from "@react-keycloak/web"
@@ -230,28 +232,76 @@ const ClaimsBulkActionButtons = () => {
     )
 }
 
-export const ClaimsList = (props: any) => (
-    <List {...props} actions={<ListActions />} filters={formFilters}>
-        <Datagrid expand={<PostShow {...props} />} bulkActionButtons={<ClaimsBulkActionButtons />}>
-            <TextField source="id" />
-            <NumberField source="catchmentno" label="CA" />
-            <DateField source="created" />
-            <FormattedFunctionField source="applicationid" />
-            <TextField source="title" />
-            <FormattedFunctionField source="applicationstatus" />
-            <FunctionField
-                label="Actions"
-                render={(record: any) => (
-                    <div>
-                        <EditButton
-                            variant="contained"
-                            sx={{ backgroundColor: "#003366" }}
-                            label="Open Calculator"
-                            icon={<EditIcon />}
-                        />
-                    </div>
-                )}
-            />
-        </Datagrid>
-    </List>
-)
+export const ClaimsList = (props: any) => {
+    const notify = useNotify()
+    return (
+        <List {...props} actions={<ListActions />} filters={formFilters}>
+            <Datagrid expand={<PostShow {...props} />} bulkActionButtons={<ClaimsBulkActionButtons />}>
+                <TextField source="id" />
+                <NumberField source="catchmentno" label="CA" />
+                <DateField source="created" />
+                <FormattedFunctionField source="applicationid" />
+                <TextField source="title" />
+                <FormattedFunctionField source="applicationstatus" />
+                <FunctionField
+                    label="Actions"
+                    render={(record: any) => (
+                        <div>
+                            <Button
+                                href="#"
+                                variant="contained"
+                                sx={{ backgroundColor: "#003366", margin: "5px" }}
+                                onClick={async (e) => {
+                                    notify("Downloading PDF...", { autoHideDuration: 0 })
+                                    e.preventDefault()
+                                    const pdfRequest = new Request(
+                                        `${process.env.REACT_APP_ADMIN_API_URL || "http://localhost:8002"}/claims/pdf/${
+                                            record.id
+                                        }`,
+                                        {
+                                            method: "GET",
+                                            headers: new Headers({
+                                                Authorization: `Bearer ${localStorage.getItem("token")}`
+                                            })
+                                        }
+                                    )
+                                    try {
+                                        const pdf = await fetch(pdfRequest).then((response) => response.blob())
+                                        console.log(record)
+                                        saveAs(pdf, `${record.confirmationid}.pdf`)
+                                        notify("PDF Downloaded", { type: "success" })
+                                        /*
+                                        console.log(pdf)
+                                        const url = window.URL.createObjectURL(pdf);
+                                        const a = document.createElement('a');
+                                        a.style.display = 'none';
+                                        a.href = url;
+                                        // the filename you want
+                                        a.download = `pdf`;
+                                        document.body.appendChild(a);
+                                        a.click();
+                                        document.body.removeChild(a);
+                                        window.URL.revokeObjectURL(url);
+                                        */
+                                        // return pdf
+                                    } catch (error: any) {
+                                        console.log(error)
+                                        notify(`Error: ${error.message}`, { type: "error" })
+                                    }
+                                }}
+                            >
+                                Download as PDF
+                            </Button>
+                            <EditButton
+                                variant="contained"
+                                sx={{ backgroundColor: "#003366" }}
+                                label="Open Calculator"
+                                icon={<EditIcon />}
+                            />
+                        </div>
+                    )}
+                />
+            </Datagrid>
+        </List>
+    )
+}

@@ -37,12 +37,13 @@ const getFile = async (
         message: string,
         options?:
             | (NotificationOptions & {
-                  type: NotificationType | undefined
+                  type?: NotificationType
+                  autoHideDuration?: number
               })
             | undefined
     ) => void
 ) => {
-    notify("Downloading File")
+    notify("Downloading File", { autoHideDuration: 0 })
     const pdfRequest = new Request(
         `${process.env.REACT_APP_ADMIN_API_URL || "http://localhost:8002"}/claims/${id}/file/${fileid}`,
         {
