@@ -7,7 +7,6 @@ import { ResponsiveStyleValue, Stack, styled, SxProps } from "@mui/system"
 import PropTypes from "prop-types"
 import { ReactNode } from "react"
 import { Labeled, OptionalRecordContextProvider, RaRecord, useRecordContext } from "react-admin"
-import InsertDriveFileIcon from "@mui/icons-material/InsertDriveFile"
 import Table from "@mui/material/Table"
 import TableBody from "@mui/material/TableBody"
 import TableCell from "@mui/material/TableCell"
@@ -16,6 +15,16 @@ import TableHead from "@mui/material/TableHead"
 import TableRow from "@mui/material/TableRow"
 import Paper from "@mui/material/Paper"
 import type { LabeledProps } from "react-admin"
+
+// a custom lebelled component that passes the children to the Labelled component with only the label
+//  being in 14px font size
+const CustomLabeled = (props: LabeledProps) => {
+    return (
+        <Labeled key={props.key} label={<Typography sx={{ fontSize: "14px" }}>{props.label}</Typography>}>
+            {props.children}
+        </Labeled>
+    )
+}
 /*
     a custom view of each claim application modelled to mirror the paper form
     takes in 5 props: className, children, divider, spacing, and rest
@@ -29,34 +38,10 @@ export const CustomShow = (props: CustomShowProps) => {
     if (!record) {
         return null
     }
-    // a custom lebelled component that passes the children to the Labelled component with only the label
-    //  being in 14px font size
-    const CustomLabeled = (props: LabeledProps) => {
-        return (
-            <Labeled key={props.key} label={<Typography sx={{ fontSize: "14px" }}>{props.label}</Typography>}>
-                {props.children}
-            </Labeled>
-        )
-    }
     return (
         <OptionalRecordContextProvider value={props.record}>
             <Root className={className} {...sanitizeRestProps(rest)}>
                 <Stack spacing={spacing} divider={divider} className={SimpleShowLayoutClasses.stack}>
-                    <Typography variant="subtitle2">
-                        <strong>Attachments</strong>
-                    </Typography>
-                    <Stack direction="row" spacing={2} justifyContent="flex-start">
-                        {record.files && record.files.files.length > 0 ? (
-                            record.files.files.map((file: any) => (
-                                <Stack key={file.data.id}>
-                                    <InsertDriveFileIcon sx={{ fontSize: 40 }} />
-                                    <Typography variant="body2">{file.originalName}</Typography>
-                                </Stack>
-                            ))
-                        ) : (
-                            <Typography variant="body2">No Attachments</Typography>
-                        )}
-                    </Stack>
                     <Typography variant="subtitle2">
                         <strong>WORK EXPERIENCE WAGE SUBSIDY - CLAIM FORM</strong>
                     </Typography>

@@ -225,7 +225,7 @@ export const sendEmail = async (req: any, res: express.Response) => {
         await emailService.sendEmail(await getToken(), emailHTML, `Wage Subsidy Application Submitted`, recipients)
         // console.log(email)
         return res.status(200).send("Email sent")
-    } catch (e: any) {
+    } catch (e: unknown) {
         console.log(e)
         return res.status(500).send("Server Error")
     }

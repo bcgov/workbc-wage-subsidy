@@ -126,9 +126,9 @@ export const generatePDF = async (req: any, res: express.Response) => {
             }
         }
         const templateHash = wage[0].participantEmail0 === null ? needEmployeeHash : haveEmployeeHash
-        console.log(templateHash)
+        // console.log(templateHash)
         const pdf = await generateDocumentTemplate(templateHash, templateConfig)
-        console.log(pdf)
+        // console.log(pdf)
         res.setHeader("Content-Disposition", `attachment; filename=pdf.pdf`)
         return res.status(200).send(pdf)
     } catch (e: any) {
