@@ -84,6 +84,7 @@ export const updateClaim = async (req: any, res: express.Response) => {
         const { id } = req.params
         // console.log(req.body, id)
         if (
+            req.body.applicationstatus &&
             req.body.applicationstatus === "Marked for Deletion" &&
             req.kauth.grant.access_token.content.identity_provider !== "idir"
         ) {
@@ -97,7 +98,7 @@ export const updateClaim = async (req: any, res: express.Response) => {
         }
         return res.status(404).send("Not Found or Not Authorized")
     } catch (e: unknown) {
-        // console.log(e)
+        console.log(e)
         return res.status(500).send("Server Error")
     }
 }
