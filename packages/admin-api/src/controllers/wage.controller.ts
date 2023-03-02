@@ -131,6 +131,7 @@ export const generatePDF = async (req: any, res: express.Response) => {
                 reportName: `pdf.pdf`
             }
         }
+        console.log(data)
         const templateHash = wage[0].participantEmail0 === null ? needEmployeeHash : haveEmployeeHash
         // console.log(templateHash)
         const pdf = await generateDocumentTemplate(templateHash, templateConfig)
