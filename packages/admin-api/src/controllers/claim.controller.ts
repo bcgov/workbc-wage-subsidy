@@ -83,6 +83,12 @@ export const updateClaim = async (req: any, res: express.Response) => {
         // console.log(catchment)
         const { id } = req.params
         // console.log(req.body, id)
+        if (
+            req.body.applicationstatus === "Marked for Deletion" &&
+            req.kauth.grant.access_token.content.identity_provider !== "idir"
+        ) {
+            return res.status(403).send("Access denied")
+        }
         const updated = await claimService.updateClaim(id, req.body, catchment)
 
         if (updated !== 0) {
