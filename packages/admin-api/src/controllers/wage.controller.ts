@@ -14,7 +14,7 @@ export const getAllWage = async (req: any, res: express.Response) => {
         let catchment
         try {
             catchment = await getCatchment(req.kauth.grant.access_token)
-        } catch (e: any) {
+        } catch (e: unknown) {
             return res.status(401).send("Not Authorized")
         }
         const { sort, filter, page, perPage } = req.query
@@ -27,8 +27,8 @@ export const getAllWage = async (req: any, res: express.Response) => {
             "Content-Range": `0 - ${claims.pagination.to} / ${claims.pagination.total}`
         })
         return res.status(200).send(claims.data)
-    } catch (e: any) {
-        console.log(e)
+    } catch (e: unknown) {
+        // console.log(e)
         return res.status(500).send("Server Error")
     }
 }
@@ -38,7 +38,7 @@ export const getWage = async (req: any, res: express.Response) => {
         let catchment
         try {
             catchment = await getCatchment(req.kauth.grant.access_token)
-        } catch (e: any) {
+        } catch (e: unknown) {
             // console.log(e)
             return res.status(403).send("Not Authorized")
         }
@@ -51,8 +51,8 @@ export const getWage = async (req: any, res: express.Response) => {
             return res.status(404).send("Not found or Not Authorized")
         }
         return res.status(200).send(wages[0])
-    } catch (e: any) {
-        console.log(e)
+    } catch (e: unknown) {
+        // console.log(e)
         return res.status(500).send("Server Error")
     }
 }
@@ -62,10 +62,10 @@ export const updateWage = async (req: any, res: express.Response) => {
         let catchment
         try {
             catchment = await getCatchment(req.kauth.grant.access_token)
-        } catch (e: any) {
+        } catch (e: unknown) {
             return res.status(401).send("Not Authorized")
         }
-        console.log(catchment)
+        // console.log(catchment)
         const { id } = req.params
         // console.log(req.body, id)
         const updated = await wageService.updateWage(id, req.body, catchment)
@@ -74,7 +74,7 @@ export const updateWage = async (req: any, res: express.Response) => {
             return res.status(200).send({ id: id })
         }
         return res.status(404).send("Not Found or Not Authorized")
-    } catch (e: any) {
+    } catch (e: unknown) {
         // console.log(e)
         return res.status(500).send("Server Error")
     }
@@ -88,7 +88,7 @@ export const deleteWage = async (req: any, res: express.Response) => {
         }
         try {
             catchment = await getCatchment(req.kauth.grant.access_token)
-        } catch (e: any) {
+        } catch (e: unknown) {
             // console.log(e)
             return res.status(401).send("Not Authorized")
         }
@@ -100,7 +100,7 @@ export const deleteWage = async (req: any, res: express.Response) => {
             return res.status(200).send({ id: id })
         }
         return res.status(404).send("Not Found or Not Authorized")
-    } catch (e: any) {
+    } catch (e: unknown) {
         // console.log(e)
         return res.status(500).send("Server Error")
     }
@@ -110,7 +110,7 @@ export const generatePDF = async (req: any, res: express.Response) => {
     try {
         const { id } = req.params
         const wage = await wageService.getWageByIdPDF(id)
-        console.log(wage[0])
+        // console.log(wage[0])
         const data = wage[0].data ? wage[0].data : wage[0]
         const templateConfig = {
             // eslint-disable-next-line object-shorthand
@@ -131,8 +131,8 @@ export const generatePDF = async (req: any, res: express.Response) => {
         // console.log(pdf)
         res.setHeader("Content-Disposition", `attachment; filename=pdf.pdf`)
         return res.status(200).send(pdf)
-    } catch (e: any) {
-        console.log(e)
+    } catch (e: unknown) {
+        // console.log(e)
         return res.status(500).send("Internal Server Error")
     }
 }

@@ -2,13 +2,12 @@
 /* eslint-disable react/require-default-props */
 /* eslint-disable react/forbid-prop-types */
 /* eslint-disable import/prefer-default-export */
-import { Cancel, Check } from "@mui/icons-material"
+import { Cancel, Check, Delete } from "@mui/icons-material"
 import { Button, Typography } from "@mui/material"
 import { useKeycloak } from "@react-keycloak/web"
 import { saveAs } from "file-saver"
 import {
     BooleanField,
-    BulkDeleteButton,
     BulkUpdateButton,
     CheckboxGroupInput,
     Datagrid,
@@ -179,6 +178,13 @@ const formFilters = [
         choices={[{ id: "NULL", name: "Legacy" }]}
         alwaysOn
     />,
+    <CheckboxGroupInput
+        key="statusFilter"
+        source="applicationstatus"
+        label=""
+        choices={[{ id: "Marked for Deletion", name: "Marked for Deletion" }]}
+        alwaysOn
+    />,
     <SearchInput key="searchID" placeholder="Search ID" source="id" />,
     <SearchInput key="searchApplicationId" placeholder="Search Application ID" source="applicationid" />,
     <SearchInput key="title" source="title" placeholder="Search Title" alwaysOn />
@@ -211,6 +217,17 @@ const MarkInProgressButton = () => (
     />
 )
 
+const MarkForDeletionButton = () => (
+    <BulkUpdateButton
+        label="Mark for Deletion"
+        data={{
+            applicationstatus: "Marked for Deletion"
+        }}
+        icon={<Delete />}
+        sx={{ color: "red" }}
+    />
+)
+
 const WagesBulkActionButtons = () => {
     const keycloak = useKeycloak()
     return (
@@ -218,7 +235,7 @@ const WagesBulkActionButtons = () => {
             <MarkCompletedButton />
             <MarkInProgressButton />
             {/* default bulk delete action */}
-            {keycloak.keycloak.tokenParsed?.identity_provider === "idir" && <BulkDeleteButton />}
+            {keycloak.keycloak.tokenParsed?.identity_provider === "idir" && <MarkForDeletionButton />}
         </>
     )
 }

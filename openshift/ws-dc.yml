@@ -134,11 +134,11 @@ objects:
     strategy:
       resources:
         limits:
-          cpu: 20m
-          memory: 80Mi
+          cpu: 50m
+          memory: 100Mi
         requests:
-          cpu: 10m
-          memory: 65Mi
+          cpu: 40m
+          memory: 80Mi
     template:
       metadata:
         creationTimestamp: null
@@ -239,11 +239,11 @@ objects:
             timeoutSeconds: 1
           resources:
             limits:
-              cpu: 20m
-              memory: 80Mi
+              cpu: 50m
+              memory: 100Mi
             requests:
-              cpu: 10m
-              memory: 65Mi
+              cpu: 40m
+              memory: 80Mi
     test: false
     triggers:
     - type: ConfigChange
@@ -408,11 +408,11 @@ objects:
     strategy:
       resources:
         limits:
-          cpu: 10m
-          memory: 75Mi
+          cpu: 50m
+          memory: 100Mi
         requests:
-          cpu: 5m
-          memory: 60Mi
+          cpu: 40m
+          memory: 80Mi
     template:
       metadata:
         creationTimestamp: null
@@ -452,11 +452,11 @@ objects:
             timeoutSeconds: 1
           resources:
             limits:
-              cpu: 10m
-              memory: 75Mi
+              cpu: 50m
+              memory: 100Mi
             requests:
-              cpu: 5m
-              memory: 60Mi
+              cpu: 40m
+              memory: 80Mi
     test: false
     triggers:
     - type: ConfigChange

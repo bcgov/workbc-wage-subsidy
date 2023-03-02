@@ -21,6 +21,10 @@ export const getAllWage = async (perPage: number, currPage: number, filters: any
             } else if (permission.length === 0) {
                 queryBuilder.whereIn("catchmentno", [0])
             }
+            // If there are no status filters or the status filter is not marked for deletion we do not show the ones marked for deletion
+            if (!filters.applicationstatus || !filters.applicationstatus.includes("Marked for Deletion")) {
+                queryBuilder.whereNotIn("applicationstatus", ["Marked for Deletion"])
+            }
             if (filters.applicationstatus) {
                 if (filters.applicationstatus.includes("NULL")) {
                     filters.applicationstatus.push("New")
