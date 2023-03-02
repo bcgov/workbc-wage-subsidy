@@ -2,6 +2,7 @@
 import * as express from "express"
 
 import memoryStreams from "memory-streams"
+// import muhammara from "muhammara"
 import * as claimService from "../services/claims.service"
 import { getCatchment } from "../lib/catchment"
 import { generateDocumentTemplate } from "../services/cdogs.service"
@@ -162,6 +163,7 @@ export const generatePDF = async (req: any, res: express.Response) => {
         const claim = await claimService.getClaimByID(id, catchment)
         // console.log(claim[0])
         const data = claim[0].data ? claim[0].data : claim[0]
+        // console.log(data)
         const templateConfig = {
             // eslint-disable-next-line object-shorthand
             data: data,
@@ -195,6 +197,7 @@ export const generatePDF = async (req: any, res: express.Response) => {
 }
 
 // HELPER FUNCTIONS //
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const combinePDFBuffers = (firstBuffer: Buffer | undefined, secondBuffer: Buffer) => {
     if (!firstBuffer) return secondBuffer
 

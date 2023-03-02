@@ -17,6 +17,10 @@ export const getAllClaims = async (perPage: number, currPage: number, filters: a
             if (filters.title) {
                 queryBuilder.whereLike("title", `%${filters.title}%`)
             }
+            // If there are no status filters or the status filter is not marked for deletion we do not show the ones marked for deletion
+            if (!filters.applicationstatus || !filters.applicationstatus.includes("Marked for Deletion")) {
+                queryBuilder.whereNotIn("applicationstatus", ["Marked for Deletion"])
+            }
             if (filters.catchmentno) {
                 queryBuilder.where("catchmentno", Number(filters.catchmentno))
             } else if (permission.length > 0 && permission[0] !== "*") {
@@ -104,6 +108,6 @@ export const getFile = async (url: string) => {
         return res.data
     } catch (error: any) {
         // console.log(error)
-        throw new Error(error)
+        throw new Error(error.message)
     }
 }
