@@ -203,6 +203,8 @@ objects:
             value: ${HAVE_EMPLOYEE_HASH}
           - name: NEED_EMPLOYEE_HASH
             value: ${NEED_EMPLOYEE_HASH}
+          - name: CLAIM_HASH
+            value: ${CLAIM_HASH}
           - name: COMMON_SERVICES_KEYCLOAK_AUTH
             value: ${COMMON_SERVICES_KEYCLOAK_AUTH}
           - name: COMMON_SERVICES_AUTH_REALM
@@ -726,6 +728,10 @@ parameters:
 - description: Need Employee Hash
   displayName: Need Employee Hash
   name: NEED_EMPLOYEE_HASH
+  value: ""
+- description: This is the Hash for the Claim form PDF on CDOGS
+  displayName: Claim Hash
+  name: CLAIM_HASH
   value: ""
 - description: Common Services Keycloak Auth
   displayName: Common Services Keycloak Auth

@@ -10,8 +10,7 @@ import { generateDocumentTemplate } from "../services/cdogs.service"
 // eslint-disable-next-line @typescript-eslint/no-require-imports, @typescript-eslint/no-var-requires
 const muhammara = require("muhammara")
 
-const needEmployeeHash = process.env.NEED_EMPLOYEE_HASH || ""
-const haveEmployeeHash = process.env.HAVE_EMPLOYEE_HASH || ""
+const claimHash = process.env.CLAIM_HASH || ""
 
 export const getAllClaims = async (req: any, res: express.Response) => {
     try {
@@ -184,7 +183,7 @@ export const generatePDF = async (req: any, res: express.Response) => {
                 reportName: `pdf.pdf`
             }
         }
-        const templateHash = claim[0].participantEmail0 === null ? needEmployeeHash : haveEmployeeHash
+        const templateHash = claimHash
         const pdf = await generateDocumentTemplate(templateHash, templateConfig)
         mergedPDF = combinePDFBuffers(mergedPDF, pdf)
         if (data.files && data.files.files.length > 0) {
