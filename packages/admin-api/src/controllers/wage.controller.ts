@@ -21,7 +21,6 @@ export const getAllWage = async (req: any, res: express.Response) => {
         const filters = filter ? JSON.parse(filter) : {}
         const sorted = sort ? sort.replace(/[^a-zA-Z0-9,]/g, "").split(",") : ["id", "ASC"]
         const claims = await wageService.getAllWage(Number(perPage), Number(page), filters, sorted, catchment)
-        // console.log(claims)
         res.set({
             "Access-Control-Expose-Headers": "Content-Range",
             "Content-Range": `0 - ${claims.pagination.to} / ${claims.pagination.total}`
