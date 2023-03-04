@@ -61,7 +61,7 @@ export const getWageByID = async (id: number, permission: any[]) => {
 //     return claims
 // }
 
-export const updateWage = async (id: number, data: any, permission: any[]) => {
+export const updateWage = async (id: number, data: any, permission: any[], user: string) => {
     // console.log(data, id)
     if (permission[0] !== "*") {
         permission.map((p: any) => Number(p))
@@ -71,7 +71,20 @@ export const updateWage = async (id: number, data: any, permission: any[]) => {
         return 0
     }
     if (wages[0].catchmentno in permission || permission[0] === "*") {
-        const result = await knex("wage_subsidy_applications").where("id", id).update(data)
+        const result = await knex("wage_subsidy_applications")
+            .where("id", id)
+            .update(
+                wages[0].history
+                    ? {
+                          ...data,
+                          history: {
+                              history: [{ by: user, date: new Date(), changes: data }, ...wages[0].history.history]
+                          }
+                      }
+                    : {
+                          data
+                      }
+            )
         return result
     }
     // console.log(result)

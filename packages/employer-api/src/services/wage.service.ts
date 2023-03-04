@@ -83,9 +83,9 @@ export const deleteWage = async (id: number) => {
 export const updateWageData = async (body: any, id: number) => {
     // Insert into wage table
     const data = body
-    console.log(data)
+    // console.log(data)
     Object.keys(data).forEach((e) => {
-        console.log(data[e])
+        // console.log(data[e])
         if (data[e] === "") {
             data[e] = null
         } else if (e === "position2") {
@@ -96,7 +96,8 @@ export const updateWageData = async (body: any, id: number) => {
             })
         }
     })
-    console.log(data)
+    // console.log(data)
+    const wage = await knex("wage_subsidy_applications").where("id", id)
     const insertData = {
         title: `${data.operatingName} - ${data.confirmationId}`,
         catchmentno: data.catchmentNo,
@@ -161,7 +162,12 @@ export const updateWageData = async (body: any, id: number) => {
         sf: data.storefrontId,
         centrename: "",
         markedfordeletion: false,
-        status: "submitted"
+        status: "submitted",
+        history: {
+            history: [
+                { changes: { applicationstatus: "New" }, date: wage[0].created, by: `bceid:${wage[0].createdby}` }
+            ]
+        }
         // internalid: data.internalId
         // modified: new Date(),
         // created: new Date()

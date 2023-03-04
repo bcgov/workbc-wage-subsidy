@@ -73,7 +73,11 @@ export const updateWage = async (req: any, res: express.Response) => {
         ) {
             return res.status(403).send("Access denied")
         }
-        const updated = await wageService.updateWage(id, req.body, catchment)
+        const user =
+            req.kauth.grant.access_token.content.identity_provider === "idir"
+                ? `idir:${req.kauth.grant.access_token.content.idir_username}`
+                : `bceid:${req.kauth.grant.access_token.content.bceid_username}`
+        const updated = await wageService.updateWage(id, req.body, catchment, user)
         if (updated !== 0) {
             // eslint-disable-next-line object-shorthand
             return res.status(200).send({ id: id })
