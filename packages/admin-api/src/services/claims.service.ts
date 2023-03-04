@@ -64,14 +64,28 @@ export const getClaimByID = async (id: number, permission: any[]) => {
     return []
 }
 
-export const updateClaim = async (id: number, data: any, permission: any[]) => {
+export const updateClaim = async (id: number, data: any, permission: any[], user: string) => {
     // console.log(data, id)
     if (permission[0] !== "*") {
         permission.map((p: any) => Number(p))
     }
     const claims = await knex("wage_subsidy_claim_form").where("id", id)
     if (claims[0].catchmentno in permission || permission[0] === "*") {
-        const result = await knex("wage_subsidy_claim_form").where("id", id).update(data)
+        // console.log([{ by: user, date: new Date(), changes: data }, ...claims[0].history.history])
+        const result = await knex("wage_subsidy_claim_form")
+            .where("id", id)
+            .update(
+                claims[0].history
+                    ? {
+                          ...data,
+                          history: {
+                              history: [{ by: user, date: new Date(), changes: data }, ...claims[0].history.history]
+                          }
+                      }
+                    : {
+                          data
+                      }
+            )
         return result
     }
     // console.log(result)

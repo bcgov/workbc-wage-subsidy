@@ -89,7 +89,12 @@ export const updateClaim = async (req: any, res: express.Response) => {
         ) {
             return res.status(403).send("Access denied")
         }
-        const updated = await claimService.updateClaim(id, req.body, catchment)
+        console.log(req.kauth.grant.access_token.content)
+        const user =
+            req.kauth.grant.access_token.content.identity_provider === "idir"
+                ? `idir:${req.kauth.grant.access_token.content.idir_username}`
+                : `bceid:${req.kauth.grant.access_token.content.bceid_username}`
+        const updated = await claimService.updateClaim(id, req.body, catchment, user)
 
         if (updated !== 0) {
             // eslint-disable-next-line object-shorthand
@@ -124,7 +129,7 @@ export const deleteClaim = async (req: any, res: express.Response) => {
         }
         return res.status(404).send("Not Found or Not Authorized")
     } catch (e: unknown) {
-        // console.log(e)
+        console.log(e)
         return res.status(500).send("Server Error")
     }
 }

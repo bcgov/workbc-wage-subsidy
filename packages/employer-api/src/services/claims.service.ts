@@ -70,22 +70,27 @@ export const updateClaims = async (
 }
 
 export const deleteClaim = async (id: number) => {
-    const result = await knex("wage_subsidy_claim_form").where("id", id).del()
-    return result
+    const claims = await knex("wage_subsidy_claim_form").where("id", id)
+    if (claims.length !== 0 && (claims[0].status === null || claims[0].status === "draft")) {
+        const result = await knex("wage_subsidy_claim_form").where("id", id).del()
+        return result
+    }
+    return null
 }
 
 export const updateClaimsData = async (body: any, id: number) => {
     // Insert into wage table
     const data = body.container
     Object.keys(data).forEach((e) => {
-        console.log(data[e])
+        // console.log(data[e])
         if (data[e] === "") {
             data[e] = null
         }
     })
-    console.log("inside body", body)
-    console.log("inside update claim data", data)
-    console.log("supporting documents", data.supportingDocuments)
+    const claim = await knex("wage_subsidy_claim_form").where("id", id)
+    // console.log("inside body", body)
+    // console.log("inside update claim data", data)
+    // console.log("supporting documents", data.supportingDocuments)
     const claimsData = {
         title: `Claim - ${data.employerName} - ${body.confirmationId}`,
         catchmentno: data.workbcCentre.split("-")[0],
@@ -132,6 +137,11 @@ export const updateClaimsData = async (body: any, id: number) => {
         totalwage4: Number(data.hourlyWage4 || "0") * Number(data.hoursWorked4 || "0") * 100,
         totalwage5: Number(data.hourlyWage5 || "0") * Number(data.hoursWorked5 || "0") * 100,
         files: { files: data.supportingDocuments },
+        history: {
+            history: [
+                { changes: { applicationstatus: "New" }, date: claim[0].created, by: `bceid:${claim[0].createdby}` }
+            ]
+        },
         // eligiblewages: data.eligiblewages,
         // eligiblewages2: data.eligiblewages2,
         totalmercs1: data.totalMERCs,
