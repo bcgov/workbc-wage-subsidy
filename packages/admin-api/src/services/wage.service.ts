@@ -70,6 +70,10 @@ export const updateWage = async (id: number, data: any, permission: any[], user:
     if (wages.length === 0) {
         return 0
     }
+    // This helper function takes the old data and the new data and returns the difference
+    // Source: https://stackoverflow.com/questions/57669696/getting-difference-object-from-two-objects-using-es6
+    const getDifference = (a: any, b: any) =>
+        Object.fromEntries(Object.entries(b).filter(([key, val]) => key in a && a[key] !== val))
     if (wages[0].catchmentno in permission || permission[0] === "*") {
         const result = await knex("wage_subsidy_applications")
             .where("id", id)
@@ -78,7 +82,14 @@ export const updateWage = async (id: number, data: any, permission: any[], user:
                     ? {
                           ...data,
                           history: {
-                              history: [{ by: user, date: new Date(), changes: data }, ...wages[0].history.history]
+                              history: [
+                                  {
+                                      by: user,
+                                      date: new Date(),
+                                      changes: getDifference(wages[0], data)
+                                  },
+                                  ...wages[0].history.history
+                              ]
                           }
                       }
                     : {

@@ -70,6 +70,13 @@ export const updateClaim = async (id: number, data: any, permission: any[], user
         permission.map((p: any) => Number(p))
     }
     const claims = await knex("wage_subsidy_claim_form").where("id", id)
+    if (claims.length === 0) {
+        return 0
+    }
+    // This helper function takes the old data and the new data and returns the difference
+    // Source: https://stackoverflow.com/questions/57669696/getting-difference-object-from-two-objects-using-es6
+    const getDifference = (a: any, b: any) =>
+        Object.fromEntries(Object.entries(b).filter(([key, val]) => key in a && a[key] !== val))
     if (claims[0].catchmentno in permission || permission[0] === "*") {
         // console.log([{ by: user, date: new Date(), changes: data }, ...claims[0].history.history])
         const result = await knex("wage_subsidy_claim_form")
@@ -79,7 +86,10 @@ export const updateClaim = async (id: number, data: any, permission: any[], user
                     ? {
                           ...data,
                           history: {
-                              history: [{ by: user, date: new Date(), changes: data }, ...claims[0].history.history]
+                              history: [
+                                  { by: user, date: new Date(), changes: getDifference(claims[0], data) },
+                                  ...claims[0].history.history
+                              ]
                           }
                       }
                     : {
