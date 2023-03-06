@@ -223,6 +223,8 @@ objects:
             value: ${CDOGS_URL}
           - name: CHEFS_URL
             value: ${CHEFS_URL}
+          - name: S3_STATIC_IMG_URL
+            value: ${S3_STATIC_IMG_URL}
           livenessProbe:
             failureThreshold: 3
             initialDelaySeconds: 300
@@ -768,6 +770,10 @@ parameters:
 - description: CHEFS URL
   displayName: CHEFS URL
   name: CHEFS_URL
+  value: ""
+- description: S3 Bucket Static Image URL
+  displayName: S3 Bucket Static Image URL
+  name: S3_STATIC_IMG_URL
   value: ""
 - description: Have Employee ID
   displayName: Have Employee ID
