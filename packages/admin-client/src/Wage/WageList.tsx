@@ -3,9 +3,10 @@
 /* eslint-disable react/forbid-prop-types */
 /* eslint-disable import/prefer-default-export */
 import { Cancel, Check, Delete } from "@mui/icons-material"
-import { Button, Typography } from "@mui/material"
+import { Box, Button, CircularProgress, Modal, Typography } from "@mui/material"
 import { useKeycloak } from "@react-keycloak/web"
 import { saveAs } from "file-saver"
+import React from "react"
 import {
     BooleanField,
     BulkUpdateButton,
@@ -22,7 +23,7 @@ import {
     SelectInput,
     TextField,
     TopToolbar,
-    useNotify,
+    // useNotify,
     useRecordContext
 } from "react-admin"
 import { CustomShow } from "./WageCustomShow"
@@ -242,11 +243,49 @@ const WagesBulkActionButtons = () => {
 
 const PostPagination = () => <Pagination rowsPerPageOptions={[10, 25, 50, 100]} />
 
+const style = {
+    position: "absolute" as "absolute",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    width: "60%",
+    bgcolor: "background.paper",
+    p: 4
+}
+
 export const WageList = (props: any) => {
-    const notify = useNotify()
+    // const notify = useNotify()
     const keycloak = useKeycloak()
+    // const notify = useNotify()
+    const [open, setOpen] = React.useState(false)
+    const [modalText, setModalText] = React.useState("")
+    // On every open, set the text in modal to empty to allow for the spinner to appear
+    const handleOpen = () => {
+        setModalText("")
+        setOpen(true)
+    }
+    const handleClose = () => setOpen(false)
     return (
         <List {...props} actions={<ListActions />} filters={formFilters} pagination={<PostPagination />}>
+            {/* Code for the PDF-saving modal */}
+            <Modal
+                open={open}
+                onClose={handleClose}
+                aria-labelledby="modal-modal-title"
+                aria-describedby="modal-modal-description"
+            >
+                <Box sx={style}>
+                    <Typography id="modal-modal-title" variant="h6" component="h2">
+                        Generating PDF...
+                    </Typography>
+                    <Box sx={{ display: "flex" }}>
+                        <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+                            {modalText === "" ? <CircularProgress /> : modalText}
+                        </Typography>
+                    </Box>
+                </Box>
+            </Modal>
+            {/* Data code */}
             <Datagrid expand={<PostShow {...props} />} bulkActionButtons={<WagesBulkActionButtons />}>
                 <TextField source="id" />
                 <NumberField source="catchmentno" label="CA" />
@@ -265,7 +304,8 @@ export const WageList = (props: any) => {
                                 sx={{ backgroundColor: "#003366" }}
                                 onClick={async (e) => {
                                     e.preventDefault()
-                                    notify("Downloading PDF...", { autoHideDuration: 0 })
+                                    handleOpen()
+                                    // notify("Downloading PDF...", { autoHideDuration: 0 })
                                     const pdfRequest = new Request(
                                         `${process.env.REACT_APP_ADMIN_API_URL || "http://localhost:8002"}/wage/pdf/${
                                             record.id
@@ -278,10 +318,37 @@ export const WageList = (props: any) => {
                                         }
                                     )
                                     try {
-                                        const pdf = await fetch(pdfRequest).then((response) => response.blob())
+                                        // Helper function to fetch with a specified timeout
+                                        // Use for long and big PDFs
+                                        const fetchWithTimeout = async (
+                                            resource: Request,
+                                            options: { timeout: number }
+                                        ) => {
+                                            const { timeout = 8000 } = options
+
+                                            const controller = new AbortController()
+                                            const id = setTimeout(() => controller.abort(), timeout)
+                                            const response = await fetch(resource, {
+                                                ...options,
+                                                signal: controller.signal
+                                            })
+                                            clearTimeout(id)
+                                            return response
+                                        }
+                                        //execute pull PDF then change the text in modal to PDF Downloaded
+                                        const pdf = await fetchWithTimeout(pdfRequest, { timeout: 30000 }).then(
+                                            (response) => {
+                                                setModalText("PDF Downloaded")
+                                                return response.blob()
+                                            }
+                                        )
                                         console.log(record)
+                                        // save then close the modal
                                         saveAs(pdf, `${record.confirmationid}.pdf`)
-                                        notify("PDF Downloaded", { type: "success" })
+                                        setTimeout(() => {
+                                            handleClose()
+                                        }, 3000)
+                                        // notify("PDF Downloaded", { type: "success" })
                                         /*
                                         console.log(pdf)
                                         const url = window.URL.createObjectURL(pdf);
@@ -298,7 +365,11 @@ export const WageList = (props: any) => {
                                         // return pdf
                                     } catch (error: any) {
                                         console.log(error)
-                                        notify(`Error: ${error}`, { type: "error" })
+                                        setModalText("Error Downloading PDF")
+                                        setTimeout(() => {
+                                            handleClose()
+                                        }, 5000)
+                                        // notify(`Error: ${error}`, { type: "error" })
                                     }
                                 }}
                             >
