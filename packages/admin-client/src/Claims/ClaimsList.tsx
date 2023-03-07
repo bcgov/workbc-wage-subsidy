@@ -3,7 +3,8 @@
 /* eslint-disable react/forbid-prop-types */
 /* eslint-disable import/prefer-default-export */
 import { Cancel, Check, Delete } from "@mui/icons-material"
-import { Button, Typography } from "@mui/material"
+import { Box, Button, Modal, Typography } from "@mui/material"
+import CircularProgress from "@mui/material/CircularProgress"
 import { saveAs } from "file-saver"
 import {
     BooleanField,
@@ -20,11 +21,12 @@ import {
     SelectInput,
     TextField,
     TopToolbar,
-    useNotify,
+    // useNotify,
     useRecordContext
 } from "react-admin"
 import { useKeycloak } from "@react-keycloak/web"
 import CustomShow from "./ClaimsCustomShow"
+import React from "react"
 
 const FormattedFunctionField = ({ source }: any) => {
     const record = useRecordContext()
@@ -249,10 +251,47 @@ const ClaimsBulkActionButtons = () => {
     )
 }
 
+const style = {
+    position: "absolute" as "absolute",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    width: "60%",
+    bgcolor: "background.paper",
+    p: 4
+}
+
 export const ClaimsList = (props: any) => {
-    const notify = useNotify()
+    // const notify = useNotify()
+    const [open, setOpen] = React.useState(false)
+    const [modalText, setModalText] = React.useState("")
+    // On every open, set the text in modal to empty to allow for the spinner to appear
+    const handleOpen = () => {
+        setModalText("")
+        setOpen(true)
+    }
+    const handleClose = () => setOpen(false)
     return (
         <List {...props} actions={<ListActions />} filters={formFilters}>
+            {/* Code for the PDF-saving modal */}
+            <Modal
+                open={open}
+                onClose={handleClose}
+                aria-labelledby="modal-modal-title"
+                aria-describedby="modal-modal-description"
+            >
+                <Box sx={style}>
+                    <Typography id="modal-modal-title" variant="h6" component="h2">
+                        Generating PDF...
+                    </Typography>
+                    <Box sx={{ display: "flex" }}>
+                        <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+                            {modalText === "" ? <CircularProgress /> : modalText}
+                        </Typography>
+                    </Box>
+                </Box>
+            </Modal>
+            {/* Data code */}
             <Datagrid expand={<PostShow {...props} />} bulkActionButtons={<ClaimsBulkActionButtons />}>
                 <TextField source="id" />
                 <NumberField source="catchmentno" label="CA" />
@@ -269,8 +308,9 @@ export const ClaimsList = (props: any) => {
                                 variant="contained"
                                 sx={{ backgroundColor: "#003366", margin: "5px" }}
                                 onClick={async (e) => {
-                                    notify("Downloading PDF...", { autoHideDuration: 0 })
+                                    // notify("Downloading PDF...", { autoHideDuration: 0 })
                                     e.preventDefault()
+                                    handleOpen()
                                     const pdfRequest = new Request(
                                         `${process.env.REACT_APP_ADMIN_API_URL || "http://localhost:8002"}/claims/pdf/${
                                             record.id
@@ -283,10 +323,37 @@ export const ClaimsList = (props: any) => {
                                         }
                                     )
                                     try {
-                                        const pdf = await fetch(pdfRequest).then((response) => response.blob())
+                                        // Helper function to fetch with a specified timeout
+                                        // Use for long and big PDFs
+                                        const fetchWithTimeout = async (
+                                            resource: Request,
+                                            options: { timeout: number }
+                                        ) => {
+                                            const { timeout = 8000 } = options
+
+                                            const controller = new AbortController()
+                                            const id = setTimeout(() => controller.abort(), timeout)
+                                            const response = await fetch(resource, {
+                                                ...options,
+                                                signal: controller.signal
+                                            })
+                                            clearTimeout(id)
+                                            return response
+                                        }
+                                        //execute pull PDF then change the text in modal to PDF Downloaded
+                                        const pdf = await fetchWithTimeout(pdfRequest, { timeout: 30000 }).then(
+                                            (response) => {
+                                                setModalText("PDF Downloaded")
+                                                return response.blob()
+                                            }
+                                        )
                                         console.log(record)
+                                        // save then close the modal
                                         saveAs(pdf, `${record.confirmationid}.pdf`)
-                                        notify("PDF Downloaded", { type: "success" })
+                                        setTimeout(() => {
+                                            handleClose()
+                                        }, 3000)
+                                        // notify("PDF Downloaded", { type: "success" })
                                         /*
                                         console.log(pdf)
                                         const url = window.URL.createObjectURL(pdf);
@@ -301,9 +368,13 @@ export const ClaimsList = (props: any) => {
                                         window.URL.revokeObjectURL(url);
                                         */
                                         // return pdf
-                                    } catch (error: any) {
+                                    } catch (error: unknown) {
                                         console.log(error)
-                                        notify(`Error: ${error.message}`, { type: "error" })
+                                        setModalText("Error Downloading PDF")
+                                        setTimeout(() => {
+                                            handleClose()
+                                        }, 5000)
+                                        // notify(`Error: ${error}`, { type: "error" })
                                     }
                                 }}
                             >
