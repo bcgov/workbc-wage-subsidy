@@ -21,6 +21,7 @@ import {
     SelectInput,
     TextField,
     TopToolbar,
+    useStore,
     // useNotify,
     useRecordContext
 } from "react-admin"
@@ -263,6 +264,8 @@ const style = {
 
 export const ClaimsList = (props: any) => {
     // const notify = useNotify()
+    const keycloak = useKeycloak()
+    const [, setCalculator] = useStore("calculator", false)
     const [open, setOpen] = React.useState(false)
     const [modalText, setModalText] = React.useState("")
     // On every open, set the text in modal to empty to allow for the spinner to appear
@@ -329,7 +332,7 @@ export const ClaimsList = (props: any) => {
                                             resource: Request,
                                             options: { timeout: number }
                                         ) => {
-                                            const { timeout = 8000 } = options
+                                            const { timeout = 60000 } = options
 
                                             const controller = new AbortController()
                                             const id = setTimeout(() => controller.abort(), timeout)
@@ -341,7 +344,7 @@ export const ClaimsList = (props: any) => {
                                             return response
                                         }
                                         //execute pull PDF then change the text in modal to PDF Downloaded
-                                        const pdf = await fetchWithTimeout(pdfRequest, { timeout: 30000 }).then(
+                                        const pdf = await fetchWithTimeout(pdfRequest, { timeout: 60000 }).then(
                                             (response) => {
                                                 setModalText("PDF Downloaded")
                                                 return response.blob()
@@ -382,10 +385,24 @@ export const ClaimsList = (props: any) => {
                             </Button>
                             <EditButton
                                 variant="contained"
-                                sx={{ backgroundColor: "#003366" }}
+                                sx={{ backgroundColor: "#003366", margin: "5px" }}
                                 label="Open Calculator"
                                 icon={<EditIcon />}
+                                onClick={() => {
+                                    setCalculator(true)
+                                }}
                             />
+                            {keycloak.keycloak.tokenParsed?.identity_provider === "idir" && (
+                                <EditButton
+                                    variant="contained"
+                                    sx={{ backgroundColor: "#003366", margin: "5px" }}
+                                    label="Change Catchment/Shared With"
+                                    icon={<EditIcon />}
+                                    onClick={() => {
+                                        setCalculator(false)
+                                    }}
+                                />
+                            )}
                         </div>
                     )}
                 />
