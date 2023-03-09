@@ -23,7 +23,6 @@ import {
     SelectInput,
     TextField,
     TopToolbar,
-    // useNotify,
     useRecordContext
 } from "react-admin"
 import { CustomShow } from "./WageCustomShow"
@@ -254,9 +253,7 @@ const style = {
 }
 
 export const WageList = (props: any) => {
-    // const notify = useNotify()
     const keycloak = useKeycloak()
-    // const notify = useNotify()
     const [open, setOpen] = React.useState(false)
     const [modalText, setModalText] = React.useState("")
     // On every open, set the text in modal to empty to allow for the spinner to appear
@@ -324,7 +321,7 @@ export const WageList = (props: any) => {
                                             resource: Request,
                                             options: { timeout: number }
                                         ) => {
-                                            const { timeout = 8000 } = options
+                                            const { timeout = 60000 } = options
 
                                             const controller = new AbortController()
                                             const id = setTimeout(() => controller.abort(), timeout)
@@ -336,7 +333,7 @@ export const WageList = (props: any) => {
                                             return response
                                         }
                                         //execute pull PDF then change the text in modal to PDF Downloaded
-                                        const pdf = await fetchWithTimeout(pdfRequest, { timeout: 30000 }).then(
+                                        const pdf = await fetchWithTimeout(pdfRequest, { timeout: 60000 }).then(
                                             (response) => {
                                                 setModalText("PDF Downloaded")
                                                 return response.blob()
