@@ -352,7 +352,12 @@ export const ClaimsList = (props: any) => {
                                         )
                                         console.log(record)
                                         // save then close the modal
-                                        saveAs(pdf, `${record.confirmationid}.pdf`)
+                                        saveAs(
+                                            pdf,
+                                            `${
+                                                record.confirmationid ? record.confirmationid : record.applicationid
+                                            }.pdf`
+                                        )
                                         setTimeout(() => {
                                             handleClose()
                                         }, 3000)

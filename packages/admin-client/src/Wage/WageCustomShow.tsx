@@ -295,6 +295,24 @@ export const CustomShow = (props: CustomShowProps) => {
                                             </Stack>
                                             <div></div>
                                         </Stack>
+                                        {record.formtype === "haveEmployee" && (
+                                            <CustomLabeled key="participantemail" label="Employee Emails:">
+                                                <Typography variant="body2">
+                                                    {record.participantemail0 &&
+                                                        record.participantemail0.toString().split(";")[position]}{" "}
+                                                    {record.participantemail1 &&
+                                                        record.participantemail1.toString().split(";")[position]}{" "}
+                                                    {record.participantemail2 &&
+                                                        record.participantemail2.toString().split(";")[position]}{" "}
+                                                    {record.participantemail3 &&
+                                                        record.participantemail3.toString().split(";")[position]}{" "}
+                                                    {record.participantemail4 &&
+                                                        record.participantemail4.toString().split(";")[position]}{" "}
+                                                    {record.participantemail5 &&
+                                                        record.participantemail5.toString().split(";")[position]}
+                                                </Typography>
+                                            </CustomLabeled>
+                                        )}
                                         <CustomLabeled key="duties" label="Description of duties:">
                                             <Typography variant="body2">{record[`duties${position}`]}</Typography>
                                         </CustomLabeled>
