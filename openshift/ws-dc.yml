@@ -78,6 +78,8 @@ objects:
             value: ${CHEF_ENV_URL}
           - name: STATIC_URL
             value: ${STATIC_URL}
+          - name: S3_STATIC_IMG_URL
+            value: ${S3_STATIC_IMG_URL}
           image: ${NAME}-form-api:${TAG}
           livenessProbe:
             failureThreshold: 3
@@ -838,4 +840,8 @@ parameters:
 - description: React App View URL
   displayName: React App View URL
   name: REACT_APP_VIEW_URL
+  value: ""
+- description: S3 Static Image URL
+  displayName: S3 Static Image URL
+  name: S3_STATIC_IMG_URL
   value: ""

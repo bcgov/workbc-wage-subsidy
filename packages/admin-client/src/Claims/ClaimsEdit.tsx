@@ -1,7 +1,5 @@
 /* eslint-disable camelcase */
 /* eslint-disable no-param-reassign */
-/* eslint-disable react-hooks/exhaustive-deps */
-/* eslint-disable import/prefer-default-export */
 import { Grid } from "@mui/material"
 import {
     DateInput,

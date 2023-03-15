@@ -132,11 +132,21 @@ export const updateWageData = async (body: any, id: number) => {
         cityalt: data.cityAlt,
         provincealt: data.provinceAlt,
         postalalt: data.postalAlt,
-        participantemail0: data.participantEmail0,
-        participantemail1: null,
-        participantemail2: null,
-        participantemail3: null,
-        participantemail4: null,
+        participantemail0: `${data.employeeEmail0 ? data.employeeEmail0 : ""};${
+            data.position2.employeeEmail0 !== undefined ? data.position2.employeeEmail0 : ""
+        }`,
+        participantemail1: `${data.employeeEmail1 ? data.employeeEmail1 : ""};${
+            data.position2.employeeEmail1 !== undefined ? data.position2.employeeEmail1 : ""
+        }`,
+        participantemail2: `${data.employeeEmail2 ? data.employeeEmail2 : ""};${
+            data.position2.employeeEmail2 !== undefined ? data.position2.employeeEmail2 : ""
+        }`,
+        participantemail3: `${data.employeeEmail3 ? data.employeeEmail3 : ""};${
+            data.position2.employeeEmail3 !== undefined ? data.position2.employeeEmail3 : ""
+        }`,
+        participantemail4: `${data.employeeEmail4 ? data.employeeEmail4 : ""};${
+            data.position2.employeeEmail4 !== undefined ? data.position2.employeeEmail4 : ""
+        }`,
         positiontitle0: data.positionTitle0,
         numberofpositions0: data.numberOfPositions0,
         startdate0: data.startDate0,
@@ -150,7 +160,7 @@ export const updateWageData = async (body: any, id: number) => {
         numberofpositions1: data.position2.numberOfPositions1,
         startdate1: data.startDate1,
         hours1: data.position2.hours1,
-        wage1: data.position2.wage1 ? Math.round(100 * parseFloat(data.wage1)) : null,
+        wage1: data.position2.wage1 ? Math.round(100 * parseFloat(data.position2.wage1)) : 0,
         applicationmercs1: data.position2.applicationMERCs1,
         duties1: data.position2.duties1,
         skills1: data.position2.skills1,
@@ -183,54 +193,54 @@ export const updateWageData = async (body: any, id: number) => {
     }
     */
 
-    if (data.numberOfPositions0 === 5) {
-        insertData.participantemail1 = data.participantEmail1
-        insertData.participantemail2 = data.participantEmail2
-        insertData.participantemail3 = data.participantEmail3
-        insertData.participantemail4 = data.participantEmail4
-    } else if (data.numberOfPositions0 === 4) {
-        insertData.participantemail1 = data.participantEmail1
-        insertData.participantemail2 = data.participantEmail2
-        insertData.participantemail3 = data.participantEmail3
-        if (data.position2.numberOfPositions1 === 1) {
-            insertData.participantemail4 = data.position2.participantEmail0
-        }
-    } else if (data.numberOfPositions0 === 3) {
-        insertData.participantemail1 = data.participantEmail1
-        insertData.participantemail2 = data.participantEmail2
-        if (data.position2.numberOfPositions1 === 2) {
-            insertData.participantemail3 = data.position2.participantEmail0
-            insertData.participantemail4 = data.position2.participantEmail1
-        } else if (data.position2.numberOfPositions1 === 1) {
-            insertData.participantemail3 = data.position2.participantEmail0
-        }
-    } else if (data.numberOfPositions0 === 2) {
-        insertData.participantemail1 = data.participantEmail1
-        if (data.position2.numberOfPositions1 === 3) {
-            insertData.participantemail2 = data.position2.participantEmail0
-            insertData.participantemail3 = data.position2.participantEmail1
-            insertData.participantemail4 = data.position2.participantEmail2
-        } else if (data.position2.numberOfPositions1 === 2) {
-            insertData.participantemail2 = data.position2.participantEmail0
-            insertData.participantemail2 = data.position2.participantEmail1
-        } else if (data.position2.numberOfPositions1 === 1) {
-            insertData.participantemail2 = data.position2.participantEmail0
-        }
-    } else if (data.position2.numberOfPositions1 === 4) {
-        insertData.participantemail1 = data.position2.participantEmail0
-        insertData.participantemail2 = data.position2.participantEmail1
-        insertData.participantemail3 = data.position2.participantEmail2
-        insertData.participantemail4 = data.position2.participantEmail3
-    } else if (data.position2.numberOfPositions1 === 3) {
-        insertData.participantemail1 = data.position2.participantEmail0
-        insertData.participantemail2 = data.position2.participantEmail1
-        insertData.participantemail3 = data.position2.participantEmail2
-    } else if (data.position2.numberOfPositions1 === 2) {
-        insertData.participantemail1 = data.position2.participantEmail0
-        insertData.participantemail2 = data.position2.participantEmail1
-    } else if (data.position2.numberOfPositions1 === 1) {
-        insertData.participantemail1 = data.position2.participantEmail0
-    }
+    // if (data.numberOfPositions0 === 5) {
+    //     insertData.participantemail1 = data.participantEmail1
+    //     insertData.participantemail2 = data.participantEmail2
+    //     insertData.participantemail3 = data.participantEmail3
+    //     insertData.participantemail4 = data.participantEmail4
+    // } else if (data.numberOfPositions0 === 4) {
+    //     insertData.participantemail1 = data.participantEmail1
+    //     insertData.participantemail2 = data.participantEmail2
+    //     insertData.participantemail3 = data.participantEmail3
+    //     if (data.position2.numberOfPositions1 === 1) {
+    //         insertData.participantemail4 = data.position2.participantEmail0
+    //     }
+    // } else if (data.numberOfPositions0 === 3) {
+    //     insertData.participantemail1 = data.participantEmail1
+    //     insertData.participantemail2 = data.participantEmail2
+    //     if (data.position2.numberOfPositions1 === 2) {
+    //         insertData.participantemail3 = data.position2.participantEmail0
+    //         insertData.participantemail4 = data.position2.participantEmail1
+    //     } else if (data.position2.numberOfPositions1 === 1) {
+    //         insertData.participantemail3 = data.position2.participantEmail0
+    //     }
+    // } else if (data.numberOfPositions0 === 2) {
+    //     insertData.participantemail1 = data.participantEmail1
+    //     if (data.position2.numberOfPositions1 === 3) {
+    //         insertData.participantemail2 = data.position2.participantEmail0
+    //         insertData.participantemail3 = data.position2.participantEmail1
+    //         insertData.participantemail4 = data.position2.participantEmail2
+    //     } else if (data.position2.numberOfPositions1 === 2) {
+    //         insertData.participantemail2 = data.position2.participantEmail0
+    //         insertData.participantemail2 = data.position2.participantEmail1
+    //     } else if (data.position2.numberOfPositions1 === 1) {
+    //         insertData.participantemail2 = data.position2.participantEmail0
+    //     }
+    // } else if (data.position2.numberOfPositions1 === 4) {
+    //     insertData.participantemail1 = data.position2.participantEmail0
+    //     insertData.participantemail2 = data.position2.participantEmail1
+    //     insertData.participantemail3 = data.position2.participantEmail2
+    //     insertData.participantemail4 = data.position2.participantEmail3
+    // } else if (data.position2.numberOfPositions1 === 3) {
+    //     insertData.participantemail1 = data.position2.participantEmail0
+    //     insertData.participantemail2 = data.position2.participantEmail1
+    //     insertData.participantemail3 = data.position2.participantEmail2
+    // } else if (data.position2.numberOfPositions1 === 2) {
+    //     insertData.participantemail1 = data.position2.participantEmail0
+    //     insertData.participantemail2 = data.position2.participantEmail1
+    // } else if (data.position2.numberOfPositions1 === 1) {
+    //     insertData.participantemail1 = data.position2.participantEmail0
+    // }
     const insert = await knex("wage_subsidy_applications").where("id", id).update(insertData)
     return insert
 }

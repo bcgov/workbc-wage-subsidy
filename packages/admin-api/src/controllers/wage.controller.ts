@@ -121,6 +121,25 @@ export const generatePDF = async (req: any, res: express.Response) => {
         const wage = await wageService.getWageByIdPDF(id)
         // console.log(wage[0])
         const data = wage[0].data ? wage[0].data : wage[0]
+        if (
+            data.participantemail0 &&
+            data.participantemail0.includes(";") &&
+            data.participantemail0.split(";")[0] !== ""
+        ) {
+            data.position1emails = `${data.participantemail0.split(";")[0]} ${data.participantemail1.split(";")[0]} ${
+                data.participantemail2.split(";")[0]
+            } ${data.participantemail3.split(";")[0]} ${data.participantemail4.split(";")[0]}`
+            data.position2emails = `${data.participantemail0.split(";")[1]} ${data.participantemail1.split(";")[1]} ${
+                data.participantemail2.split(";")[1]
+            } ${data.participantemail3.split(";")[1]} ${data.participantemail4.split(";")[1]}`
+        } else if (
+            // This is strictly in the case of legacy applications where participantemail0 is not in the new format
+            data.participantemail0 &&
+            !data.participantemail0.includes(";") &&
+            data.participantemail0.includes("@")
+        ) {
+            data.position1emails = data.participantemail0
+        }
         const templateConfig = {
             // eslint-disable-next-line object-shorthand
             data: data,
@@ -135,7 +154,10 @@ export const generatePDF = async (req: any, res: express.Response) => {
             }
         }
         console.log(data)
-        const templateHash = wage[0].participantEmail0 === null ? needEmployeeHash : haveEmployeeHash
+        const templateHash =
+            wage[0].participantemail0 && wage[0].participantemail0 !== (";" || null)
+                ? haveEmployeeHash
+                : needEmployeeHash
         // console.log(templateHash)
         const pdf = await generateDocumentTemplate(templateHash, templateConfig)
         // console.log(pdf)
