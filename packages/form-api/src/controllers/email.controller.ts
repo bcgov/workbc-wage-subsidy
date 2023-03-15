@@ -45,7 +45,7 @@ const createEmail = (data: any) => {
                 `Sincerely,<br><b>Your WorkBC team<br></b>`
             ]
         )
-    } else if (data.employeeEmail0 === null) {
+    } else if (data.positionTitle0 && data.employeeEmail0 === undefined) {
         emailHTML = generateHTMLEmail(
             "Thank you, your application has been received",
             [
@@ -59,7 +59,7 @@ const createEmail = (data: any) => {
         emailHTML = generateHTMLEmail(
             "A Wage Subsidy Claim Application has been submitted",
             [
-                `<b>Catchment: ${data.workbcCentre.split("-")[0]}</b>`,
+                `<b>Catchment: ${data.container.workbcCentre.split("-")[0]}</b>`,
                 `Thank you for your interest in WorkBC Wage Subsidy services.`
             ],
             [],
@@ -71,6 +71,7 @@ const createEmail = (data: any) => {
 
 export const sendEmail = async (req: any, res: express.Response) => {
     try {
+        // console.log(req.body.data)
         const { data } = req.body
         // const token = await getToken()
         // console.log(data)
@@ -85,7 +86,7 @@ export const sendEmail = async (req: any, res: express.Response) => {
                 })
                 .filter((email: string) => email !== null)
                 .filter((v: string, i: number, a: string[]) => a.indexOf(v) === i)
-        } else if (data.employeeEmail0 === null) {
+        } else if (data.positionTitle0 && data.employeeEmail0 === undefined) {
             recipients = Object.keys(data)
                 .map((key: string) => {
                     if (key.includes("businessEmail")) {
@@ -96,11 +97,11 @@ export const sendEmail = async (req: any, res: express.Response) => {
                 .filter((email: string) => email !== null)
                 .filter((v: string, i: number, a: string[]) => a.indexOf(v) === i)
         }
-        if (data.workbcCentre) {
+        if (data.container.workbcCentre && data.employeeEmail0 === undefined) {
             const email = await knex("wage_subsidy_catchment_emails")
-                .where("catchmentno", Number(data.workbcCentre.split("-")[0]))
+                .where("catchmentno", Number(data.container.workbcCentre.split("-")[0]))
                 .first()
-            recipients = [email.emailcontact]
+            recipients = email.emailcontact.split(";")
         }
 
         const emailHTML = createEmail(data)
