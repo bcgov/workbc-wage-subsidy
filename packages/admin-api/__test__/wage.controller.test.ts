@@ -84,7 +84,11 @@ describe("updateWage", () => {
         req = {
             kauth: {
                 grant: {
-                    access_token: "test_access_token"
+                    access_token: {
+                        content: {
+                            identity_provider: "bceid"
+                        }
+                    }
                 }
             },
             query: {},
@@ -104,6 +108,12 @@ describe("updateWage", () => {
         jest.clearAllMocks()
     })
     it("returns 200 with wages data", async () => {
+        req.kauth.grant.access_token.content = {
+            identity_provider: "idir"
+        }
+        req.body = {
+            applicationstatus: "Submitted"
+        }
         const catchment = ["test_catchment"]
         ;(getCatchment as jest.Mock).mockResolvedValue(catchment)
         ;(wageService.updateWage as jest.Mock).mockResolvedValue({ id: 1, name: "John Doe" })

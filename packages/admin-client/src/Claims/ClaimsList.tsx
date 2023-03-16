@@ -2,11 +2,12 @@
 /* eslint-disable react/require-default-props */
 /* eslint-disable react/forbid-prop-types */
 /* eslint-disable import/prefer-default-export */
-import { Cancel, Check } from "@mui/icons-material"
-import { Typography } from "@mui/material"
+import { Cancel, Check, Delete } from "@mui/icons-material"
+import { Box, Button, Modal, Typography } from "@mui/material"
+import CircularProgress from "@mui/material/CircularProgress"
+import { saveAs } from "file-saver"
 import {
     BooleanField,
-    BulkDeleteButton,
     BulkUpdateButton,
     CheckboxGroupInput,
     Datagrid,
@@ -20,10 +21,13 @@ import {
     SelectInput,
     TextField,
     TopToolbar,
+    useStore,
+    // useNotify,
     useRecordContext
 } from "react-admin"
 import { useKeycloak } from "@react-keycloak/web"
-import { CustomShow } from "./ClaimsCustomShow"
+import CustomShow from "./ClaimsCustomShow"
+import React from "react"
 
 const FormattedFunctionField = ({ source }: any) => {
     const record = useRecordContext()
@@ -187,6 +191,13 @@ const formFilters = [
         choices={[{ id: "NULL", name: "Legacy" }]}
         alwaysOn
     />,
+    <CheckboxGroupInput
+        key="statusFilter"
+        source="applicationstatus"
+        label=""
+        choices={[{ id: "Marked for Deletion", name: "Marked for Deletion" }]}
+        alwaysOn
+    />,
     <SearchInput key="searchID" placeholder="Search ID" source="id" />,
     <SearchInput key="searchApplicationId" placeholder="Search Application ID" source="applicationid" />,
     <SearchInput key="title" source="title" placeholder="Search Title" alwaysOn />
@@ -218,6 +229,17 @@ const MarkInProgressButton = () => (
     />
 )
 
+const MarkForDeletionButton = () => (
+    <BulkUpdateButton
+        label="Mark for Deletion"
+        data={{
+            applicationstatus: "Marked for Deletion"
+        }}
+        icon={<Delete />}
+        sx={{ color: "red" }}
+    />
+)
+
 const ClaimsBulkActionButtons = () => {
     const keycloak = useKeycloak()
     return (
@@ -225,33 +247,171 @@ const ClaimsBulkActionButtons = () => {
             <MarkCompletedButton />
             <MarkInProgressButton />
             {/* default bulk delete action */}
-            {keycloak.keycloak.tokenParsed?.identity_provider === "idir" && <BulkDeleteButton />}
+            {keycloak.keycloak.tokenParsed?.identity_provider === "idir" && <MarkForDeletionButton />}
         </>
     )
 }
 
-export const ClaimsList = (props: any) => (
-    <List {...props} actions={<ListActions />} filters={formFilters}>
-        <Datagrid expand={<PostShow {...props} />} bulkActionButtons={<ClaimsBulkActionButtons />}>
-            <TextField source="id" />
-            <NumberField source="catchmentno" label="CA" />
-            <DateField source="created" />
-            <FormattedFunctionField source="applicationid" />
-            <TextField source="title" />
-            <FormattedFunctionField source="applicationstatus" />
-            <FunctionField
-                label="Actions"
-                render={(record: any) => (
-                    <div>
-                        <EditButton
-                            variant="contained"
-                            sx={{ backgroundColor: "#003366" }}
-                            label="Open Calculator"
-                            icon={<EditIcon />}
-                        />
-                    </div>
-                )}
-            />
-        </Datagrid>
-    </List>
-)
+const style = {
+    position: "absolute" as "absolute",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    width: "60%",
+    bgcolor: "background.paper",
+    p: 4
+}
+
+export const ClaimsList = (props: any) => {
+    // const notify = useNotify()
+    const keycloak = useKeycloak()
+    const [, setCalculator] = useStore("calculator", false)
+    const [open, setOpen] = React.useState(false)
+    const [modalText, setModalText] = React.useState("")
+    // On every open, set the text in modal to empty to allow for the spinner to appear
+    const handleOpen = () => {
+        setModalText("")
+        setOpen(true)
+    }
+    const handleClose = () => setOpen(false)
+    return (
+        <List {...props} actions={<ListActions />} filters={formFilters}>
+            {/* Code for the PDF-saving modal */}
+            <Modal
+                open={open}
+                onClose={handleClose}
+                aria-labelledby="modal-modal-title"
+                aria-describedby="modal-modal-description"
+            >
+                <Box sx={style}>
+                    <Typography id="modal-modal-title" variant="h6" component="h2">
+                        Generating PDF...
+                    </Typography>
+                    <Box sx={{ display: "flex" }}>
+                        <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+                            {modalText === "" ? <CircularProgress /> : modalText}
+                        </Typography>
+                    </Box>
+                </Box>
+            </Modal>
+            {/* Data code */}
+            <Datagrid expand={<PostShow {...props} />} bulkActionButtons={<ClaimsBulkActionButtons />}>
+                <TextField source="id" />
+                <NumberField source="catchmentno" label="CA" />
+                <DateField source="created" />
+                <FormattedFunctionField source="applicationid" />
+                <TextField source="title" />
+                <FormattedFunctionField source="applicationstatus" />
+                <FunctionField
+                    label="Actions"
+                    render={(record: any) => (
+                        <div>
+                            <Button
+                                href="#"
+                                variant="contained"
+                                sx={{ backgroundColor: "#003366", margin: "5px" }}
+                                onClick={async (e) => {
+                                    // notify("Downloading PDF...", { autoHideDuration: 0 })
+                                    e.preventDefault()
+                                    handleOpen()
+                                    const pdfRequest = new Request(
+                                        `${process.env.REACT_APP_ADMIN_API_URL || "http://localhost:8002"}/claims/pdf/${
+                                            record.id
+                                        }`,
+                                        {
+                                            method: "GET",
+                                            headers: new Headers({
+                                                Authorization: `Bearer ${localStorage.getItem("token")}`
+                                            })
+                                        }
+                                    )
+                                    try {
+                                        // Helper function to fetch with a specified timeout
+                                        // Use for long and big PDFs
+                                        const fetchWithTimeout = async (
+                                            resource: Request,
+                                            options: { timeout: number }
+                                        ) => {
+                                            const { timeout = 90000 } = options
+
+                                            const controller = new AbortController()
+                                            const id = setTimeout(() => controller.abort(), timeout)
+                                            const response = await fetch(resource, {
+                                                ...options,
+                                                signal: controller.signal
+                                            })
+                                            clearTimeout(id)
+                                            return response
+                                        }
+                                        //execute pull PDF then change the text in modal to PDF Downloaded
+                                        const pdf = await fetchWithTimeout(pdfRequest, { timeout: 90000 }).then(
+                                            (response) => {
+                                                setModalText("PDF Downloaded")
+                                                return response.blob()
+                                            }
+                                        )
+                                        console.log(record)
+                                        // save then close the modal
+                                        saveAs(
+                                            pdf,
+                                            `${
+                                                record.confirmationid ? record.confirmationid : record.applicationid
+                                            }.pdf`
+                                        )
+                                        setTimeout(() => {
+                                            handleClose()
+                                        }, 3000)
+                                        // notify("PDF Downloaded", { type: "success" })
+                                        /*
+                                        console.log(pdf)
+                                        const url = window.URL.createObjectURL(pdf);
+                                        const a = document.createElement('a');
+                                        a.style.display = 'none';
+                                        a.href = url;
+                                        // the filename you want
+                                        a.download = `pdf`;
+                                        document.body.appendChild(a);
+                                        a.click();
+                                        document.body.removeChild(a);
+                                        window.URL.revokeObjectURL(url);
+                                        */
+                                        // return pdf
+                                    } catch (error: unknown) {
+                                        console.log(error)
+                                        setModalText("Error Downloading PDF")
+                                        setTimeout(() => {
+                                            handleClose()
+                                        }, 5000)
+                                        // notify(`Error: ${error}`, { type: "error" })
+                                    }
+                                }}
+                            >
+                                Download as PDF
+                            </Button>
+                            <EditButton
+                                variant="contained"
+                                sx={{ backgroundColor: "#003366", margin: "5px" }}
+                                label="Open Calculator"
+                                icon={<EditIcon />}
+                                onClick={() => {
+                                    setCalculator(true)
+                                }}
+                            />
+                            {keycloak.keycloak.tokenParsed?.identity_provider === "idir" && (
+                                <EditButton
+                                    variant="contained"
+                                    sx={{ backgroundColor: "#003366", margin: "5px" }}
+                                    label="Change Catchment/Shared With"
+                                    icon={<EditIcon />}
+                                    onClick={() => {
+                                        setCalculator(false)
+                                    }}
+                                />
+                            )}
+                        </div>
+                    )}
+                />
+            </Datagrid>
+        </List>
+    )
+}

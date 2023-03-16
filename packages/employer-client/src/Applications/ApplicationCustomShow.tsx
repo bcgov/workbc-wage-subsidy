@@ -8,12 +8,22 @@ import PropTypes from "prop-types"
 import { ReactNode } from "react"
 import { Labeled, OptionalRecordContextProvider, RaRecord, useRecordContext } from "react-admin"
 import type { LabeledProps } from "react-admin"
+
+// a custom lebelled component that passes the children to the Labelled component with only the label
+//  being in 14px font size
+const CustomLabeled = (props: LabeledProps) => {
+    return (
+        <Labeled key={props.key} label={<Typography sx={{ fontSize: "14px" }}>{props.label}</Typography>}>
+            {props.children}
+        </Labeled>
+    )
+}
+
 /*
     a custom view of each claim application modelled to mirror the paper form
     takes in 5 props: className, children, divider, spacing, and rest
     Outputs a formatted view of the claim application with the provided props
 */
-
 export const CustomShow = (props: CustomShowProps) => {
     const { className, children, divider, spacing = 1, ...rest } = props
     const record = useRecordContext(props)
@@ -22,15 +32,7 @@ export const CustomShow = (props: CustomShowProps) => {
         return null
     }
     const positions = ["0", "1"]
-    // a custom lebelled component that passes the children to the Labelled component with only the label
-    //  being in 14px font size
-    const CustomLabeled = (props: LabeledProps) => {
-        return (
-            <Labeled key={props.key} label={<Typography sx={{ fontSize: "14px" }}>{props.label}</Typography>}>
-                {props.children}
-            </Labeled>
-        )
-    }
+
     return (
         <OptionalRecordContextProvider value={props.record}>
             <Root className={className} {...sanitizeRestProps(rest)}>
@@ -267,6 +269,24 @@ export const CustomShow = (props: CustomShowProps) => {
                                         </Stack>
                                         <div></div>
                                     </Stack>
+                                    {record.formtype === "haveEmployee" && (
+                                        <CustomLabeled key="participantemail" label="Employee Emails:">
+                                            <Typography variant="body2">
+                                                {record.participantemail0 &&
+                                                    record.participantemail0.toString().split(";")[position]}{" "}
+                                                {record.participantemail1 &&
+                                                    record.participantemail1.toString().split(";")[position]}{" "}
+                                                {record.participantemail2 &&
+                                                    record.participantemail2.toString().split(";")[position]}{" "}
+                                                {record.participantemail3 &&
+                                                    record.participantemail3.toString().split(";")[position]}{" "}
+                                                {record.participantemail4 &&
+                                                    record.participantemail4.toString().split(";")[position]}{" "}
+                                                {record.participantemail5 &&
+                                                    record.participantemail5.toString().split(";")[position]}
+                                            </Typography>
+                                        </CustomLabeled>
+                                    )}
                                     <CustomLabeled key="duties" label="Description of duties:">
                                         <Typography variant="body2">{record[`duties${position}`]}</Typography>
                                     </CustomLabeled>

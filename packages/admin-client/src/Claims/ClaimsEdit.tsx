@@ -1,7 +1,5 @@
 /* eslint-disable camelcase */
 /* eslint-disable no-param-reassign */
-/* eslint-disable react-hooks/exhaustive-deps */
-/* eslint-disable import/prefer-default-export */
 import { Grid } from "@mui/material"
 import {
     DateInput,
@@ -17,7 +15,8 @@ import {
     useGetOne,
     useGetRecordId,
     useNotify,
-    useUpdate
+    useUpdate,
+    useStore
 } from "react-admin"
 import { useWatch } from "react-hook-form"
 import { useNavigate } from "react-router"
@@ -245,6 +244,8 @@ const EditActions = () => (
 )
 
 export const ClaimsEdit = (props: any) => {
+    const calculator = useStore("calculator")
+    console.log(calculator[0])
     const navigate = useNavigate()
     const notify = useNotify()
     const recordId = useGetRecordId()
@@ -307,6 +308,16 @@ export const ClaimsEdit = (props: any) => {
     }
     if (oneError) {
         return <p>ERROR</p>
+    }
+    if (!calculator[0]) {
+        return (
+            <Edit>
+                <SimpleForm toolbar={<CustomToolbar />}>
+                    <TextInput label="BCeIDs shared with" source="sharedwith" />
+                    <TextInput label="Catchment Number" source="catchmentno" />
+                </SimpleForm>
+            </Edit>
+        )
     }
     return (
         <Edit actions={<EditActions />}>
