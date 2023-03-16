@@ -14,21 +14,20 @@ export const getAllWage = async (req: any, res: express.Response) => {
         let catchment
         try {
             catchment = await getCatchment(req.kauth.grant.access_token)
-        } catch (e: any) {
+        } catch (e: unknown) {
             return res.status(401).send("Not Authorized")
         }
         const { sort, filter, page, perPage } = req.query
         const filters = filter ? JSON.parse(filter) : {}
         const sorted = sort ? sort.replace(/[^a-zA-Z0-9,]/g, "").split(",") : ["id", "ASC"]
         const claims = await wageService.getAllWage(Number(perPage), Number(page), filters, sorted, catchment)
-        // console.log(claims)
         res.set({
             "Access-Control-Expose-Headers": "Content-Range",
             "Content-Range": `0 - ${claims.pagination.to} / ${claims.pagination.total}`
         })
         return res.status(200).send(claims.data)
-    } catch (e: any) {
-        console.log(e)
+    } catch (e: unknown) {
+        // console.log(e)
         return res.status(500).send("Server Error")
     }
 }
@@ -38,7 +37,7 @@ export const getWage = async (req: any, res: express.Response) => {
         let catchment
         try {
             catchment = await getCatchment(req.kauth.grant.access_token)
-        } catch (e: any) {
+        } catch (e: unknown) {
             // console.log(e)
             return res.status(403).send("Not Authorized")
         }
@@ -51,8 +50,8 @@ export const getWage = async (req: any, res: express.Response) => {
             return res.status(404).send("Not found or Not Authorized")
         }
         return res.status(200).send(wages[0])
-    } catch (e: any) {
-        console.log(e)
+    } catch (e: unknown) {
+        // console.log(e)
         return res.status(500).send("Server Error")
     }
 }
@@ -62,19 +61,29 @@ export const updateWage = async (req: any, res: express.Response) => {
         let catchment
         try {
             catchment = await getCatchment(req.kauth.grant.access_token)
-        } catch (e: any) {
+        } catch (e: unknown) {
             return res.status(401).send("Not Authorized")
         }
-        console.log(catchment)
+        // console.log(catchment)
         const { id } = req.params
         // console.log(req.body, id)
-        const updated = await wageService.updateWage(id, req.body, catchment)
+        if (
+            req.body.applicationstatus === "Marked for Deletion" &&
+            req.kauth.grant.access_token.content.identity_provider !== "idir"
+        ) {
+            return res.status(403).send("Access denied")
+        }
+        const user =
+            req.kauth.grant.access_token.content.identity_provider === "idir"
+                ? `idir:${req.kauth.grant.access_token.content.idir_username}`
+                : `bceid:${req.kauth.grant.access_token.content.bceid_username}`
+        const updated = await wageService.updateWage(id, req.body, catchment, user)
         if (updated !== 0) {
             // eslint-disable-next-line object-shorthand
             return res.status(200).send({ id: id })
         }
         return res.status(404).send("Not Found or Not Authorized")
-    } catch (e: any) {
+    } catch (e: unknown) {
         // console.log(e)
         return res.status(500).send("Server Error")
     }
@@ -88,7 +97,7 @@ export const deleteWage = async (req: any, res: express.Response) => {
         }
         try {
             catchment = await getCatchment(req.kauth.grant.access_token)
-        } catch (e: any) {
+        } catch (e: unknown) {
             // console.log(e)
             return res.status(401).send("Not Authorized")
         }
@@ -100,7 +109,7 @@ export const deleteWage = async (req: any, res: express.Response) => {
             return res.status(200).send({ id: id })
         }
         return res.status(404).send("Not Found or Not Authorized")
-    } catch (e: any) {
+    } catch (e: unknown) {
         // console.log(e)
         return res.status(500).send("Server Error")
     }
@@ -110,8 +119,27 @@ export const generatePDF = async (req: any, res: express.Response) => {
     try {
         const { id } = req.params
         const wage = await wageService.getWageByIdPDF(id)
-        console.log(wage[0])
+        // console.log(wage[0])
         const data = wage[0].data ? wage[0].data : wage[0]
+        if (
+            data.participantemail0 &&
+            data.participantemail0.includes(";") &&
+            data.participantemail0.split(";")[0] !== ""
+        ) {
+            data.position1emails = `${data.participantemail0.split(";")[0]} ${data.participantemail1.split(";")[0]} ${
+                data.participantemail2.split(";")[0]
+            } ${data.participantemail3.split(";")[0]} ${data.participantemail4.split(";")[0]}`
+            data.position2emails = `${data.participantemail0.split(";")[1]} ${data.participantemail1.split(";")[1]} ${
+                data.participantemail2.split(";")[1]
+            } ${data.participantemail3.split(";")[1]} ${data.participantemail4.split(";")[1]}`
+        } else if (
+            // This is strictly in the case of legacy applications where participantemail0 is not in the new format
+            data.participantemail0 &&
+            !data.participantemail0.includes(";") &&
+            data.participantemail0.includes("@")
+        ) {
+            data.position1emails = data.participantemail0
+        }
         const templateConfig = {
             // eslint-disable-next-line object-shorthand
             data: data,
@@ -125,14 +153,18 @@ export const generatePDF = async (req: any, res: express.Response) => {
                 reportName: `pdf.pdf`
             }
         }
-        const templateHash = wage[0].participantEmail0 === null ? needEmployeeHash : haveEmployeeHash
-        console.log(templateHash)
+        console.log(data)
+        const templateHash =
+            wage[0].participantemail0 && wage[0].participantemail0 !== (";" || null)
+                ? haveEmployeeHash
+                : needEmployeeHash
+        // console.log(templateHash)
         const pdf = await generateDocumentTemplate(templateHash, templateConfig)
-        console.log(pdf)
+        // console.log(pdf)
         res.setHeader("Content-Disposition", `attachment; filename=pdf.pdf`)
         return res.status(200).send(pdf)
-    } catch (e: any) {
-        console.log(e)
+    } catch (e: unknown) {
+        // console.log(e)
         return res.status(500).send("Internal Server Error")
     }
 }
