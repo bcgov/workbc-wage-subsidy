@@ -7,20 +7,20 @@ import claimRoute from "./routes/claim.route"
 import emailRoute from "./routes/email.route"
 import wageRoute from "./routes/wage.route"
 
-// const whitelist = [
-//     process.env.CHEF_DEV_URL,
-//     process.env.CHEF_TEST_URL,
-//     process.env.OPENSHIFT_NODEJS_ORIGIN_URL || "http://localhost:3000"
-// ]
+const whitelist = [
+    process.env.CHEF_DEV_URL,
+    process.env.CHEF_TEST_URL,
+    process.env.OPENSHIFT_NODEJS_ORIGIN_URL || "http://localhost:3000"
+]
 const corsOptions = {
-    // origin: (origin: any, callback: any) => {
-    //     if (whitelist.indexOf(origin) !== -1) {
-    //         callback(null, true)
-    //     } else {
-    //         callback(new Error("Not allowed by CORS"))
-    //     }
-    // },
-    origin: "*",
+    origin: (origin: any, callback: any) => {
+        if (whitelist.indexOf(origin) !== -1) {
+            callback(null, true)
+        } else {
+            callback(new Error("Not allowed by CORS"))
+        }
+    },
+    // origin: "*",
     credentials: true,
     optionsSuccessStatus: 200
 }
