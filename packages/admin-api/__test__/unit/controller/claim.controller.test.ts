@@ -1,10 +1,10 @@
 import express from "express"
-import * as claimService from "../src/services/claims.service"
-import { getCatchment } from "../src/lib/catchment"
-import { getAllClaims, getClaim, updateClaim, deleteClaim } from "../src/controllers/claim.controller"
+import * as claimService from "../../../src/services/claims.service"
+import { getCatchment } from "../../../src/lib/catchment"
+import { getAllClaims, getClaim, updateClaim, deleteClaim } from "../../../src/controllers/claim.controller"
 
-jest.mock("../src/services/claims.service")
-jest.mock("../src/lib/catchment")
+jest.mock("../../../src/services/claims.service")
+jest.mock("../../../src/lib/catchment")
 
 describe("getAllClaims", () => {
     let req: any
