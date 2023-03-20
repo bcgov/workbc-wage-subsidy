@@ -1,10 +1,10 @@
 import express from "express"
-import { getAllWage, updateWage, deleteWage } from "../src/controllers/wage.controller"
-import { getCatchment } from "../src/lib/catchment"
-import * as wageService from "../src/services/wage.service"
+import { getAllWage, updateWage, deleteWage } from "../../../src/controllers/wage.controller"
+import { getCatchment } from "../../../src/lib/catchment"
+import * as wageService from "../../../src/services/wage.service"
 
-jest.mock("../src/services/wage.service")
-jest.mock("../src/lib/catchment")
+jest.mock("../../../src/services/wage.service")
+jest.mock("../../../src/lib/catchment")
 
 describe("getAllWage", () => {
     let req: any
