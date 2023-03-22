@@ -1,5 +1,6 @@
 node_modules
 dist
 jest.config.js
-./__test__/*.test.ts
+./__test__/**/**/*.test.ts
 *.test.ts
+__test__/
