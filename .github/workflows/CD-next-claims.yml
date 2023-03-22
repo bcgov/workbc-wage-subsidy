@@ -46,6 +46,8 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       - uses: actions/checkout@v3
+        with:
+          ref: 'dev'
       - name: Use Node.js ${{ matrix.node-version }} run Tests
         uses: actions/setup-node@v3
         with:
@@ -95,7 +97,6 @@ jobs:
           tags: latest
           context: ./packages/static
           containerfiles: ./packages/static/Dockerfile
-          ref: dev
           tls-verify: false
           build-args: |
             VITE_REACT_ENVIRONMENT=Dev
@@ -106,7 +107,7 @@ jobs:
           image: ${{ steps.build-image.outputs.image }}
           tags: ${{ steps.build-image.outputs.tags }}
           registry: image-registry.apps.silver.devops.gov.bc.ca/1c4f9c-tools
-          username: ""
+          username: ${{ secrets.API_TOKEN_4 }}
           password: ${{ secrets.API_TOKEN_4 }}
 #       - name: OpenShift4 build Action
 #         uses: redhat-developer/openshift-actions@v2.1.0
