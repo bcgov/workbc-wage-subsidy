@@ -21,7 +21,7 @@ export const getAllWage = async (perPage: number, currPage: number, filters: any
             } else if (permission.length === 0) {
                 queryBuilder.whereIn("catchmentno", [0])
             }
-            // If there are no status filters or the status filter is not marked for deletion we do not show the ones marked for deletion
+            // if there are no filters, default to new and in progress
             if (!filters.applicationstatus) {
                 queryBuilder.whereIn("applicationstatus", ["NULL", "New", "In Progress"])
             } else if (filters.applicationstatus) {
