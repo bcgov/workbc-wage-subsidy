@@ -5,6 +5,8 @@ import * as express from "express"
 import * as claimService from "../services/claims.service"
 import * as formService from "../services/submissions.service"
 
+// import type kAuthRequest from "../interfaces/kauth-request.d"
+
 export const getAllClaims = async (req: any, res: express.Response) => {
     try {
         const { sort, filter, page, perPage } = req.query
