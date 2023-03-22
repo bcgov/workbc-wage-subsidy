@@ -65,9 +65,9 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v4
         with:
-          context: "{{defaultContext}}:packages/static"
+          context: "{{defaultContext}}:tree/dev/packages/static"
           push: true
-          tags: image-registry.apps.silver.devops.gov.bc.ca/1c4f9c-tools/workbc-wage-subsidy-v2-static:lastest,elmsd/workbc-wage-subsidy-v2-static:latest
+          tags: elmsd/workbc-wage-subsidy-v2-static:latest
           
 #       - name: OpenShift4 build Action
 #         uses: redhat-developer/openshift-actions@v2.1.0
