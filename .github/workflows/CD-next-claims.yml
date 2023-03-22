@@ -93,7 +93,8 @@ jobs:
         with:
           image: image-registry.apps.silver.devops.gov.bc.ca/1c4f9c-tools/workbc-wage-subsidy-v2-static
           tags: latest ${{ github.sha }}
-          context: "https://github.com/bcgov/workbc-wage-subsidy.git#dev:packages/static"
+          context: ./packages/static
+          ref: dev
           containerfiles: |
             ./Dockerfile
           tls-verify: false
