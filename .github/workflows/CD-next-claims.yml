@@ -53,9 +53,21 @@ jobs:
 
           # Optional - this sets your Kubernetes context's current namespace after logging in.
           namespace: ${{secrets.PROJECT_TOOLS_4}}
-      - name: Build static image
-        working-directory: ./packages/static
-        run: docker build -t image-registry.apps.silver.devops.gov.bc.ca/1c4f9c-tools/workbc-wage-subsidy-v2-static:lastest -t elmsd/workbc-wage-subsidy-v2-static:latest
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+      - name: Login to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_USER }}
+          password: ${{ secrets.DOCKER_TOKEN }}
+      - name: Build and push
+        uses: docker/build-push-action@v4
+        with:
+          context: "{{defaultContext}}:packages/static"
+          push: true
+          tags: image-registry.apps.silver.devops.gov.bc.ca/1c4f9c-tools/workbc-wage-subsidy-v2-static:lastest,elmsd/workbc-wage-subsidy-v2-static:latest
           
 #       - name: OpenShift4 build Action
 #         uses: redhat-developer/openshift-actions@v2.1.0
