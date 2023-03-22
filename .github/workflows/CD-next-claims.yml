@@ -92,11 +92,10 @@ jobs:
         uses: redhat-actions/buildah-build@v2
         with:
           image: image-registry.apps.silver.devops.gov.bc.ca/1c4f9c-tools/workbc-wage-subsidy-v2-static
-          tags: latest ${{ github.sha }}
+          tags: latest
           context: ./packages/static
+          containerfiles: ./Dockerfile
           ref: dev
-          containerfiles: |
-            ./Dockerfile
           tls-verify: false
           build-args: |
             VITE_REACT_ENVIRONMENT=Dev
