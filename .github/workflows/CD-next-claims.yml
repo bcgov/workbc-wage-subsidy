@@ -33,22 +33,46 @@ jobs:
           node-version: ${{ matrix.node-version }}
       - run: npm install
       - run: npm test
-      - name: OpenShift4 build Action
-        uses: redhat-developer/openshift-actions@v2.1.0
-        env:
-          ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
+      - name: Install oc v3
+        uses: redhat-actions/openshift-tools-installer@v1
         with:
-          # Choose the oc version you want to use to execute the command. It can be a version or an url where to download oc cli desired. If left blank latest oc cli will be used.
-          version: latest
-          # The URL of the Openshift cluster
+          oc: 3
+      - name: Authenticate and set context
+        uses: redhat-actions/oc-login@v1
+        with:
+          # URL to your OpenShift cluster.
+          # Refer to Step 2.
           openshift_server_url: ${{secrets.OCP4_SERVER_URL}}
-          # JSON with values to connect to the Openshift cluster
-          parameters: '{"apitoken": "${{ secrets.API_TOKEN_4 }}", "acceptUntrustedCerts": "true"}'
-          # Oc command to be executed
-          cmd: |
-            'start-build workbc-wage-subsidy-v2-form-api -n ${{secrets.PROJECT_TOOLS_4}}'
-            'start-build workbc-wage-subsidy-v2-admin-api -n ${{secrets.PROJECT_TOOLS_4}}'
-            'start-build workbc-wage-subsidy-v2-employer-api -n ${{secrets.PROJECT_TOOLS_4}}'
-            'start-build workbc-wage-subsidy-v2-admin-client -n ${{secrets.PROJECT_TOOLS_4}}'
-            'start-build workbc-wage-subsidy-v2-employer-client -n ${{secrets.PROJECT_TOOLS_4}}'
-            'start-build workbc-wage-subsidy-v2-static -n ${{secrets.PROJECT_TOOLS_4}}'
+
+          # Authentication Token. Can use username and password instead.
+          # Refer to Step 3.
+          openshift_token: ${{ secrets.API_TOKEN_4 }}
+
+          # Disables SSL cert checking. Use this if you don't have the certificate authority data.
+          insecure_skip_tls_verify: true
+
+          # Optional - this sets your Kubernetes context's current namespace after logging in.
+          namespace: ${{secrets.PROJECT_TOOLS_4}}
+      - name: Build static image
+        working-directory: ./packages/static
+        run: docker build -t image-registry.apps.silver.devops.gov.bc.ca/1c4f9c-tools/workbc-wage-subsidy-v2-static:lastest -t elmsd/workbc-wage-subsidy-v2-static:latest
+          
+#       - name: OpenShift4 build Action
+#         uses: redhat-developer/openshift-actions@v2.1.0
+#         env:
+#           ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
+#         with:
+#           # Choose the oc version you want to use to execute the command. It can be a version or an url where to download oc cli desired. If left blank latest oc cli will be used.
+#           version: latest
+#           # The URL of the Openshift cluster
+#           openshift_server_url: ${{secrets.OCP4_SERVER_URL}}
+#           # JSON with values to connect to the Openshift cluster
+#           parameters: '{"apitoken": "${{ secrets.API_TOKEN_4 }}", "acceptUntrustedCerts": "true"}'
+#           # Oc command to be executed
+#           cmd: |
+#             'start-build workbc-wage-subsidy-v2-form-api -n ${{secrets.PROJECT_TOOLS_4}}'
+#             'start-build workbc-wage-subsidy-v2-admin-api -n ${{secrets.PROJECT_TOOLS_4}}'
+#             'start-build workbc-wage-subsidy-v2-employer-api -n ${{secrets.PROJECT_TOOLS_4}}'
+#             'start-build workbc-wage-subsidy-v2-admin-client -n ${{secrets.PROJECT_TOOLS_4}}'
+#             'start-build workbc-wage-subsidy-v2-employer-client -n ${{secrets.PROJECT_TOOLS_4}}'
+#             'start-build workbc-wage-subsidy-v2-static -n ${{secrets.PROJECT_TOOLS_4}}'
