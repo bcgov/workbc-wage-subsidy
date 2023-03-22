@@ -91,7 +91,7 @@ jobs:
         id: build-image
         uses: redhat-actions/buildah-build@v2
         with:
-          image: image-registry.apps.silver.devops.gov.bc.ca/1c4f9c-tools/workbc-wage-subsidy-v2-static
+          image: workbc-wage-subsidy-v2-static
           tags: latest
           context: ./packages/static
           containerfiles: ./packages/static/Dockerfile
@@ -105,8 +105,8 @@ jobs:
         with:
           image: ${{ steps.build-image.outputs.image }}
           tags: ${{ steps.build-image.outputs.tags }}
-          registry: image-registry.apps.silver.devops.gov.bc.ca/1c4f9c-tools/workbc-wage-subsidy-v2-static
-          username: ${{secrets.PROJECT_TOOLS_4}}
+          registry: image-registry.apps.silver.devops.gov.bc.ca/1c4f9c-tools
+#           username: ${{secrets.PROJECT_TOOLS_4}}
           password: ${{ secrets.API_TOKEN_4 }}
 #       - name: OpenShift4 build Action
 #         uses: redhat-developer/openshift-actions@v2.1.0
