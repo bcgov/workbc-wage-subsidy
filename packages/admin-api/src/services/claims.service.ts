@@ -17,14 +17,6 @@ export const getAllClaims = async (perPage: number, currPage: number, filters: a
             if (filters.title) {
                 queryBuilder.whereLike("title", `%${filters.title}%`)
             }
-            // If there are no status filters or the status filter is not marked for deletion we do not show the ones marked for deletion
-            if (
-                !filters.applicationstatus ||
-                (!filters.applicationstatus.includes("Marked for Deletion") &&
-                    !filters.applicationstatus.includes("In ICM"))
-            ) {
-                queryBuilder.whereNotIn("applicationstatus", ["Marked for Deletion", "In ICM"])
-            }
             if (filters.catchmentno) {
                 queryBuilder.where("catchmentno", Number(filters.catchmentno))
             } else if (permission.length > 0 && permission[0] !== "*") {
@@ -32,14 +24,17 @@ export const getAllClaims = async (perPage: number, currPage: number, filters: a
             } else if (permission.length === 0) {
                 queryBuilder.whereIn("catchmentno", [0])
             }
-            if (sort) {
-                queryBuilder.orderBy(sort[0], sort[1])
-            }
-            if (filters.applicationstatus) {
+            // If there are no status filters or the status filter is not marked for deletion we do not show the ones marked for deletion
+            if (!filters.applicationstatus) {
+                queryBuilder.whereIn("applicationstatus", ["NULL", "New", "In Progress"])
+            } else if (filters.applicationstatus) {
                 if (filters.applicationstatus.includes("NULL")) {
                     filters.applicationstatus.push("New")
                 }
                 queryBuilder.whereIn("applicationstatus", filters.applicationstatus)
+            }
+            if (sort) {
+                queryBuilder.orderBy(sort[0], sort[1])
             }
             // guard clause for legacy applications, can be changed to sharepoint later if needed
             if (!filters.status) {
