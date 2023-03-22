@@ -94,7 +94,7 @@ jobs:
           image: image-registry.apps.silver.devops.gov.bc.ca/1c4f9c-tools/workbc-wage-subsidy-v2-static
           tags: latest
           context: ./packages/static
-          containerfiles: ./Dockerfile
+          containerfiles: ./packages/static/Dockerfile
           ref: dev
           tls-verify: false
           build-args: |
