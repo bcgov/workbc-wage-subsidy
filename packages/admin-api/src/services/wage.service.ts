@@ -55,11 +55,6 @@ export const getWageByID = async (id: number, permission: any[]) => {
     return []
 }
 
-// export const getWageByCatchment = async (ca: number[]) => {
-//     const claims = await knex("wage_subsidy_applications").where((builder: any) => builder.whereIn("catchmentno", ca))
-//     return claims
-// }
-
 export const updateWage = async (id: number, data: any, permission: any[], user: string) => {
     // console.log(data, id)
     if (permission[0] !== "*") {
