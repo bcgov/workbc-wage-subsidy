@@ -72,22 +72,42 @@ jobs:
 
           # Optional - this sets your Kubernetes context's current namespace after logging in.
           namespace: ${{secrets.PROJECT_TOOLS_4}}
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v2
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
-      - name: Login to Docker Hub
-        uses: docker/login-action@v2
+#       - name: Set up QEMU
+#         uses: docker/setup-qemu-action@v2
+#       - name: Set up Docker Buildx
+#         uses: docker/setup-buildx-action@v2
+#       - name: Login to Docker Hub
+#         uses: docker/login-action@v2
+#         with:
+#           username: ${{ secrets.DOCKER_USER }}
+#           password: ${{ secrets.DOCKER_TOKEN }}
+#       - name: Build and push
+#         uses: docker/build-push-action@v4
+#         with:
+#           context: "https://github.com/bcgov/workbc-wage-subsidy.git#dev:packages/static"
+#           push: true
+#           tags: elmsd/workbc-wage-subsidy-v2-static:latest
+      - name: Build for pushing to OpenShift registry
+        id: build-image
+        uses: redhat-actions/buildah-build@v2
         with:
-          username: ${{ secrets.DOCKER_USER }}
-          password: ${{ secrets.DOCKER_TOKEN }}
-      - name: Build and push
-        uses: docker/build-push-action@v4
-        with:
+          image: image-registry.apps.silver.devops.gov.bc.ca/1c4f9c-tools/workbc-wage-subsidy-v2-static
+          tags: latest ${{ github.sha }}
           context: "https://github.com/bcgov/workbc-wage-subsidy.git#dev:packages/static"
-          push: true
-          tags: elmsd/workbc-wage-subsidy-v2-static:latest
-          
+          containerfiles: |
+            ./Dockerfile
+          tls-verify: false
+          build-args: |
+            VITE_REACT_ENVIRONMENT=Dev
+      - name: Push To OpenShift Image repo
+        id: push-to-quay
+        uses: redhat-actions/push-to-registry@v2
+        with:
+          image: ${{ steps.build-image.outputs.image }}
+          tags: ${{ steps.build-image.outputs.tags }}
+          registry: image-registry.apps.silver.devops.gov.bc.ca/1c4f9c-tools/workbc-wage-subsidy-v2-static
+          username: ${{secrets.PROJECT_TOOLS_4}}
+          password: ${{ secrets.API_TOKEN_4 }}
 #       - name: OpenShift4 build Action
 #         uses: redhat-developer/openshift-actions@v2.1.0
 #         env:
