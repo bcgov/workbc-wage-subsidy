@@ -39,16 +39,29 @@ jobs:
   build:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        imagename: ["workbc-wage-subsidy-v2-static","workbc-wage-subsidy-v2-admin-api"]
+        include:
+          - imagename: "workbc-wage-subsidy-v2-static"
+            context: "./packages/static"
+          - imagename: "workbc-wage-subsidy-v2-admin-api"
+            context: "./packages/admin-api"
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       - uses: actions/checkout@v3
         with:
           ref: 'dev'
+      
       - name: Use Node.js
         uses: actions/setup-node@v3
         with:
           node-version: '18.x'
+      - name: "Read dockerignore admin api contents"
+        uses: andstor/file-reader-action@v1
+        with:
+          path: "./packages/admin-api/.dockerignore"
       - run: npm install
       - run: npm test
       - name: Install oc v3
@@ -71,73 +84,33 @@ jobs:
 
           # Optional - this sets your Kubernetes context's current namespace after logging in.
           namespace: ${{secrets.PROJECT_TOOLS_4}}
-#       - name: Set up QEMU
-#         uses: docker/setup-qemu-action@v2
-#       - name: Set up Docker Buildx
-#         uses: docker/setup-buildx-action@v2
-#       - name: Login to Docker Hub
-#         uses: docker/login-action@v2
-#         with:
-#           username: ${{ secrets.DOCKER_USER }}
-#           password: ${{ secrets.DOCKER_TOKEN }}
-#       #static docker
-#       - name: Build and push static app to docker hub
-#         uses: docker/build-push-action@v4
-#         with:
-#           context: "{{defaultContext}}:packages/static"
-#           push: true
-#           tags: elmsd/workbc-wage-subsidy-v2-static:latest
-#       #admin-client docker
-#       - name: Build and push admin client app to docker hub
-#         uses: docker/build-push-action@v4
-#         with:
-#           context: "{{defaultContext}}:packages/admin-client"
-#           push: true
-#           tags: elmsd/workbc-wage-subsidy-v2-admin-client:latest
-#       #admin-api docker
-#       - name: Build and push admin api to docker hub
-#         uses: docker/build-push-action@v4
-#         with:
-#           context: "{{defaultContext}}:packages/admin-api"
-#           push: true
-#           tags: elmsd/workbc-wage-subsidy-v2-admin-api:latest
-#       #employer-client docker
-#       - name: Build and push employer client app to docker hub
-#         uses: docker/build-push-action@v4
-#         with:
-#           context: "{{defaultContext}}:packages/employer-client"
-#           push: true
-#           tags: elmsd/workbc-wage-subsidy-v2-employer-client:latest
-#       #employer-api docker
-#       - name: Build and push employer api to docker hub
-#         uses: docker/build-push-action@v4
-#         with:
-#           context: "{{defaultContext}}:packages/employer-api"
-#           push: true
-#           tags: elmsd/workbc-wage-subsidy-v2-employer-api:latest
-#       #form-api docker
-#       - name: Build and push form api to docker hub
-#         uses: docker/build-push-action@v4
-#         with:
-#           context: "{{defaultContext}}:packages/form-api"
-#           push: true
-#           tags: elmsd/workbc-wage-subsidy-v2-form-api:latest
       #static openshift
       - name: Build for pushing static image to OpenShift registry
-        id: build-static-image
+        id: build-static-image-os
         uses: redhat-actions/buildah-build@v2
         with:
-          tags: workbc-wage-subsidy-v2-static:latest elmsd/workbc-wage-subsidy-v2-static:latest
-          context: ./packages/static
-          containerfiles: ./packages/static/Dockerfile
+          image: ${{ matrix.imagename }}
+          tags: latest
+          context: ${{ matrix.context }}
+          containerfiles: ${{ matrix.context }}/Dockerfile
+          tls-verify: false
+          build-args: VITE_REACT_ENVIRONMENT=Dev
+      - name: Build for pushing static image to OpenShift registry
+        id: build-static-image-docker
+        uses: redhat-actions/buildah-build@v2
+        with:
+          image: elmsd/${{ matrix.imagename }}
+          tags: latest
+          context: ${{ matrix.context }}
+          containerfiles: ${{ matrix.context }}/Dockerfile
           tls-verify: false
           build-args: VITE_REACT_ENVIRONMENT=Dev
       - name: Push Static To OpenShift Image repo
         id: push-to-os-static
         uses: redhat-actions/push-to-registry@v2
         with:
-          image: workbc-wage-subsidy-v2-static
-          tags: lastest
+          image: ${{ steps.build-static-image-os.outputs.image }}
+          tags: ${{ steps.build-static-image-os.outputs.tags }}
           registry: image-registry.apps.silver.devops.gov.bc.ca/1c4f9c-tools
           username: ${{ secrets.API_TOKEN_4 }}
           password: ${{ secrets.API_TOKEN_4 }}
@@ -145,8 +118,8 @@ jobs:
         id: push-to-docker-static
         uses: redhat-actions/push-to-registry@v2
         with:
-          image: elmsd/workbc-wage-subsidy-v2-static
-          tags: lastest
-          registry: docker.io/elmsd
+          image: ${{ steps.build-static-image-docker.outputs.image }}
+          tags: ${{ steps.build-static-image-docker.outputs.tags }}
+          registry: docker.io
           username: ${{ secrets.DOCKER_USER }}
           password: ${{ secrets.DOCKER_TOKEN }}
