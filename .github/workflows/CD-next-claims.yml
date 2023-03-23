@@ -98,8 +98,7 @@ jobs:
           context: ./packages/static
           containerfiles: ./packages/static/Dockerfile
           tls-verify: false
-          build-args: |
-            VITE_REACT_ENVIRONMENT=Dev
+          build-args: VITE_REACT_ENVIRONMENT=Dev
       - name: Push To OpenShift Image repo
         id: push-to-quay
         uses: redhat-actions/push-to-registry@v2
