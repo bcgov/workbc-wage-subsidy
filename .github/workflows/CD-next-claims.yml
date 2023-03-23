@@ -49,10 +49,6 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: '18.x'
-      - name: Use Node.js ${{ matrix.node-version }} run Tests
-        uses: actions/setup-node@v3
-        with:
-          node-version: ${{ matrix.node-version }}
       - run: npm install
       - run: npm test
       - name: Install oc v3
@@ -88,42 +84,42 @@ jobs:
       - name: Build and push static app to docker hub
         uses: docker/build-push-action@v4
         with:
-          context: "https://github.com/bcgov/workbc-wage-subsidy.git#dev:packages/static"
+          context: "{{defaultContext}}:packages/static"
           push: true
           tags: elmsd/workbc-wage-subsidy-v2-static:latest
       #admin-client docker
       - name: Build and push admin client app to docker hub
         uses: docker/build-push-action@v4
         with:
-          context: "https://github.com/bcgov/workbc-wage-subsidy.git#dev:packages/admin-client"
+          context: "{{defaultContext}}:packages/admin-client"
           push: true
           tags: elmsd/workbc-wage-subsidy-v2-admin-client:latest
       #admin-api docker
       - name: Build and push admin api to docker hub
         uses: docker/build-push-action@v4
         with:
-          context: "https://github.com/bcgov/workbc-wage-subsidy.git#dev:packages/admin-api"
+          context: "{{defaultContext}}:packages/admin-api"
           push: true
           tags: elmsd/workbc-wage-subsidy-v2-admin-api:latest
       #employer-client docker
       - name: Build and push employer client app to docker hub
         uses: docker/build-push-action@v4
         with:
-          context: "https://github.com/bcgov/workbc-wage-subsidy.git#dev:packages/employer-client"
+          context: "{{defaultContext}}:packages/employer-client"
           push: true
           tags: elmsd/workbc-wage-subsidy-v2-employer-client:latest
       #employer-api docker
       - name: Build and push employer api to docker hub
         uses: docker/build-push-action@v4
         with:
-          context: "https://github.com/bcgov/workbc-wage-subsidy.git#dev:packages/employer-api"
+          context: "{{defaultContext}}:packages/employer-api"
           push: true
           tags: elmsd/workbc-wage-subsidy-v2-employer-api:latest
       #form-api docker
       - name: Build and push form api to docker hub
         uses: docker/build-push-action@v4
         with:
-          context: "https://github.com/bcgov/workbc-wage-subsidy.git#dev:packages/form-api"
+          context: "{{defaultContext}}:packages/form-api"
           push: true
           tags: elmsd/workbc-wage-subsidy-v2-form-api:latest
       #static openshift
