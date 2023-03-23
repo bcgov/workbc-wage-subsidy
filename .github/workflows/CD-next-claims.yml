@@ -71,64 +71,63 @@ jobs:
 
           # Optional - this sets your Kubernetes context's current namespace after logging in.
           namespace: ${{secrets.PROJECT_TOOLS_4}}
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v2
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
-      - name: Login to Docker Hub
-        uses: docker/login-action@v2
-        with:
-          username: ${{ secrets.DOCKER_USER }}
-          password: ${{ secrets.DOCKER_TOKEN }}
-      #static docker
-      - name: Build and push static app to docker hub
-        uses: docker/build-push-action@v4
-        with:
-          context: "{{defaultContext}}:packages/static"
-          push: true
-          tags: elmsd/workbc-wage-subsidy-v2-static:latest
-      #admin-client docker
-      - name: Build and push admin client app to docker hub
-        uses: docker/build-push-action@v4
-        with:
-          context: "{{defaultContext}}:packages/admin-client"
-          push: true
-          tags: elmsd/workbc-wage-subsidy-v2-admin-client:latest
-      #admin-api docker
-      - name: Build and push admin api to docker hub
-        uses: docker/build-push-action@v4
-        with:
-          context: "{{defaultContext}}:packages/admin-api"
-          push: true
-          tags: elmsd/workbc-wage-subsidy-v2-admin-api:latest
-      #employer-client docker
-      - name: Build and push employer client app to docker hub
-        uses: docker/build-push-action@v4
-        with:
-          context: "{{defaultContext}}:packages/employer-client"
-          push: true
-          tags: elmsd/workbc-wage-subsidy-v2-employer-client:latest
-      #employer-api docker
-      - name: Build and push employer api to docker hub
-        uses: docker/build-push-action@v4
-        with:
-          context: "{{defaultContext}}:packages/employer-api"
-          push: true
-          tags: elmsd/workbc-wage-subsidy-v2-employer-api:latest
-      #form-api docker
-      - name: Build and push form api to docker hub
-        uses: docker/build-push-action@v4
-        with:
-          context: "{{defaultContext}}:packages/form-api"
-          push: true
-          tags: elmsd/workbc-wage-subsidy-v2-form-api:latest
+#       - name: Set up QEMU
+#         uses: docker/setup-qemu-action@v2
+#       - name: Set up Docker Buildx
+#         uses: docker/setup-buildx-action@v2
+#       - name: Login to Docker Hub
+#         uses: docker/login-action@v2
+#         with:
+#           username: ${{ secrets.DOCKER_USER }}
+#           password: ${{ secrets.DOCKER_TOKEN }}
+#       #static docker
+#       - name: Build and push static app to docker hub
+#         uses: docker/build-push-action@v4
+#         with:
+#           context: "{{defaultContext}}:packages/static"
+#           push: true
+#           tags: elmsd/workbc-wage-subsidy-v2-static:latest
+#       #admin-client docker
+#       - name: Build and push admin client app to docker hub
+#         uses: docker/build-push-action@v4
+#         with:
+#           context: "{{defaultContext}}:packages/admin-client"
+#           push: true
+#           tags: elmsd/workbc-wage-subsidy-v2-admin-client:latest
+#       #admin-api docker
+#       - name: Build and push admin api to docker hub
+#         uses: docker/build-push-action@v4
+#         with:
+#           context: "{{defaultContext}}:packages/admin-api"
+#           push: true
+#           tags: elmsd/workbc-wage-subsidy-v2-admin-api:latest
+#       #employer-client docker
+#       - name: Build and push employer client app to docker hub
+#         uses: docker/build-push-action@v4
+#         with:
+#           context: "{{defaultContext}}:packages/employer-client"
+#           push: true
+#           tags: elmsd/workbc-wage-subsidy-v2-employer-client:latest
+#       #employer-api docker
+#       - name: Build and push employer api to docker hub
+#         uses: docker/build-push-action@v4
+#         with:
+#           context: "{{defaultContext}}:packages/employer-api"
+#           push: true
+#           tags: elmsd/workbc-wage-subsidy-v2-employer-api:latest
+#       #form-api docker
+#       - name: Build and push form api to docker hub
+#         uses: docker/build-push-action@v4
+#         with:
+#           context: "{{defaultContext}}:packages/form-api"
+#           push: true
+#           tags: elmsd/workbc-wage-subsidy-v2-form-api:latest
       #static openshift
       - name: Build for pushing static image to OpenShift registry
         id: build-static-image
         uses: redhat-actions/buildah-build@v2
         with:
-          image: workbc-wage-subsidy-v2-static
-          tags: latest
+          tags: workbc-wage-subsidy-v2-static:latest elmsd/workbc-wage-subsidy-v2-static:latest
           context: ./packages/static
           containerfiles: ./packages/static/Dockerfile
           tls-verify: false
@@ -137,8 +136,17 @@ jobs:
         id: push-to-os-static
         uses: redhat-actions/push-to-registry@v2
         with:
-          image: ${{ steps.build-static-image.outputs.image }}
-          tags: ${{ steps.build-static-image.outputs.tags }}
+          image: workbc-wage-subsidy-v2-static
+          tags: lastest
           registry: image-registry.apps.silver.devops.gov.bc.ca/1c4f9c-tools
           username: ${{ secrets.API_TOKEN_4 }}
           password: ${{ secrets.API_TOKEN_4 }}
+      - name: Push Static To DockerHub Image repo
+        id: push-to-docker-static
+        uses: redhat-actions/push-to-registry@v2
+        with:
+          image: elmsd/workbc-wage-subsidy-v2-static
+          tags: lastest
+          registry: docker.io/elmsd
+          username: ${{ secrets.DOCKER_USER }}
+          password: ${{ secrets.DOCKER_TOKEN }}
