@@ -2,7 +2,7 @@ FROM node:18-alpine as builder
 # Set the working directory to /app inside the container
 ENV NODE_ENV=production
 ARG VITE_REACT_ENVIRONMENT
-ENV VITE_REACT_ENVIRONMENT=${VITE_REACT_ENVIRONMENT}
+ENV VITE_REACT_ENVIRONMENT=$VITE_REACT_ENVIRONMENT
 WORKDIR /app
 # Copy app files
 COPY . /app
