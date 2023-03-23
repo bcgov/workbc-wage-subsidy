@@ -126,18 +126,18 @@ jobs:
           containerfiles: ${{ matrix.context }}/Dockerfile
           tls-verify: false
           build-args: |
-          VITE_REACT_ENVIRONMENT=Dev
-          REACT_APP_DATA_PROVIDER_URL=${{ secrets.REACT_APP_DATA_PROVIDER_URL_DEV }}
-          REACT_APP_ADMIN_API_URL=${{ secrets.REACT_APP_ADMIN_API_URL_DEV }}
-          REACT_APP_KEYCLOAK_REALM=${{ secrets.REACT_APP_KEYCLOAK_REALM_DEV }}
-          REACT_APP_KEYCLOAK_URL=${{ secrets.REACT_APP_KEYCLOAK_URL_DEV }}
-          REACT_APP_KEYCLOAK_CLIENT_ID=${{ secrets.REACT_APP_KEYCLOAK_CLIENT_ID_DEV }}
-          REACT_APP_HAVE_EMPLOYEE_URL=${{ secrets.REACT_APP_HAVE_EMPLOYEE_URL_DEV }}
-          REACT_APP_NEED_EMPLOYEE_URL=${{ secrets.REACT_APP_NEED_EMPLOYEE_URL_DEV }}
-          REACT_APP_CLAIM_URL=${{ secrets.REACT_APP_CLAIM_URL_DEV }}
-          REACT_APP_DRAFT_URL=${{ secrets.REACT_APP_DRAFT_URL_DEV }}
-          REACT_APP_VIEW_URL=${{ secrets.REACT_APP_VIEW_URL_DEV }}
-          REACT_APP_ENVIRONMENT=Dev
+            VITE_REACT_ENVIRONMENT=Dev
+            REACT_APP_DATA_PROVIDER_URL=${{ secrets.REACT_APP_DATA_PROVIDER_URL_DEV }}
+            REACT_APP_ADMIN_API_URL=${{ secrets.REACT_APP_ADMIN_API_URL_DEV }}
+            REACT_APP_KEYCLOAK_REALM=${{ secrets.REACT_APP_KEYCLOAK_REALM_DEV }}
+            REACT_APP_KEYCLOAK_URL=${{ secrets.REACT_APP_KEYCLOAK_URL_DEV }}
+            REACT_APP_KEYCLOAK_CLIENT_ID=${{ secrets.REACT_APP_KEYCLOAK_CLIENT_ID_DEV }}
+            REACT_APP_HAVE_EMPLOYEE_URL=${{ secrets.REACT_APP_HAVE_EMPLOYEE_URL_DEV }}
+            REACT_APP_NEED_EMPLOYEE_URL=${{ secrets.REACT_APP_NEED_EMPLOYEE_URL_DEV }}
+            REACT_APP_CLAIM_URL=${{ secrets.REACT_APP_CLAIM_URL_DEV }}
+            REACT_APP_DRAFT_URL=${{ secrets.REACT_APP_DRAFT_URL_DEV }}
+            REACT_APP_VIEW_URL=${{ secrets.REACT_APP_VIEW_URL_DEV }}
+            REACT_APP_ENVIRONMENT=Dev
       - name: Build for pushing static image to OpenShift registry
         id: build-static-image-docker
         uses: redhat-actions/buildah-build@v2
@@ -148,18 +148,18 @@ jobs:
           containerfiles: ${{ matrix.context }}/Dockerfile
           tls-verify: false
           build-args: |
-          VITE_REACT_ENVIRONMENT=Dev
-          REACT_APP_DATA_PROVIDER_URL=${{ secrets.REACT_APP_DATA_PROVIDER_URL_DEV }}
-          REACT_APP_ADMIN_API_URL=${{ secrets.REACT_APP_ADMIN_API_URL_DEV }}
-          REACT_APP_KEYCLOAK_REALM=${{ secrets.REACT_APP_KEYCLOAK_REALM_DEV }}
-          REACT_APP_KEYCLOAK_URL=${{ secrets.REACT_APP_KEYCLOAK_URL_DEV }}
-          REACT_APP_KEYCLOAK_CLIENT_ID=${{ secrets.REACT_APP_KEYCLOAK_CLIENT_ID_DEV }}
-          REACT_APP_HAVE_EMPLOYEE_URL=${{ secrets.REACT_APP_HAVE_EMPLOYEE_URL_DEV }}
-          REACT_APP_NEED_EMPLOYEE_URL=${{ secrets.REACT_APP_NEED_EMPLOYEE_URL_DEV }}
-          REACT_APP_CLAIM_URL=${{ secrets.REACT_APP_CLAIM_URL_DEV }}
-          REACT_APP_DRAFT_URL=${{ secrets.REACT_APP_DRAFT_URL_DEV }}
-          REACT_APP_VIEW_URL=${{ secrets.REACT_APP_VIEW_URL_DEV }}
-          REACT_APP_ENVIRONMENT=Dev
+            VITE_REACT_ENVIRONMENT=Dev
+            REACT_APP_DATA_PROVIDER_URL=${{ secrets.REACT_APP_DATA_PROVIDER_URL_DEV }}
+            REACT_APP_ADMIN_API_URL=${{ secrets.REACT_APP_ADMIN_API_URL_DEV }}
+            REACT_APP_KEYCLOAK_REALM=${{ secrets.REACT_APP_KEYCLOAK_REALM_DEV }}
+            REACT_APP_KEYCLOAK_URL=${{ secrets.REACT_APP_KEYCLOAK_URL_DEV }}
+            REACT_APP_KEYCLOAK_CLIENT_ID=${{ secrets.REACT_APP_KEYCLOAK_CLIENT_ID_DEV }}
+            REACT_APP_HAVE_EMPLOYEE_URL=${{ secrets.REACT_APP_HAVE_EMPLOYEE_URL_DEV }}
+            REACT_APP_NEED_EMPLOYEE_URL=${{ secrets.REACT_APP_NEED_EMPLOYEE_URL_DEV }}
+            REACT_APP_CLAIM_URL=${{ secrets.REACT_APP_CLAIM_URL_DEV }}
+            REACT_APP_DRAFT_URL=${{ secrets.REACT_APP_DRAFT_URL_DEV }}
+            REACT_APP_VIEW_URL=${{ secrets.REACT_APP_VIEW_URL_DEV }}
+            REACT_APP_ENVIRONMENT=Dev
       - name: Push Static To OpenShift Image repo
         id: push-to-os-static
         uses: redhat-actions/push-to-registry@v2
