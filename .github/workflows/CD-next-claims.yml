@@ -39,19 +39,16 @@ jobs:
   build:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node-version: [18.x]
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       - uses: actions/checkout@v3
         with:
           ref: 'dev'
-      - name: Use Node.js ${{ matrix.node-version }} run Tests
+      - name: Use Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: '18.x'
       - run: npm install
       - run: npm test
       - name: Install oc v3
@@ -83,47 +80,73 @@ jobs:
 #         with:
 #           username: ${{ secrets.DOCKER_USER }}
 #           password: ${{ secrets.DOCKER_TOKEN }}
-#       - name: Build and push
+#       #static docker
+#       - name: Build and push static app to docker hub
 #         uses: docker/build-push-action@v4
 #         with:
-#           context: "https://github.com/bcgov/workbc-wage-subsidy.git#dev:packages/static"
+#           context: "{{defaultContext}}:packages/static"
 #           push: true
 #           tags: elmsd/workbc-wage-subsidy-v2-static:latest
-      - name: Build for pushing to OpenShift registry
-        id: build-image
+#       #admin-client docker
+#       - name: Build and push admin client app to docker hub
+#         uses: docker/build-push-action@v4
+#         with:
+#           context: "{{defaultContext}}:packages/admin-client"
+#           push: true
+#           tags: elmsd/workbc-wage-subsidy-v2-admin-client:latest
+#       #admin-api docker
+#       - name: Build and push admin api to docker hub
+#         uses: docker/build-push-action@v4
+#         with:
+#           context: "{{defaultContext}}:packages/admin-api"
+#           push: true
+#           tags: elmsd/workbc-wage-subsidy-v2-admin-api:latest
+#       #employer-client docker
+#       - name: Build and push employer client app to docker hub
+#         uses: docker/build-push-action@v4
+#         with:
+#           context: "{{defaultContext}}:packages/employer-client"
+#           push: true
+#           tags: elmsd/workbc-wage-subsidy-v2-employer-client:latest
+#       #employer-api docker
+#       - name: Build and push employer api to docker hub
+#         uses: docker/build-push-action@v4
+#         with:
+#           context: "{{defaultContext}}:packages/employer-api"
+#           push: true
+#           tags: elmsd/workbc-wage-subsidy-v2-employer-api:latest
+#       #form-api docker
+#       - name: Build and push form api to docker hub
+#         uses: docker/build-push-action@v4
+#         with:
+#           context: "{{defaultContext}}:packages/form-api"
+#           push: true
+#           tags: elmsd/workbc-wage-subsidy-v2-form-api:latest
+      #static openshift
+      - name: Build for pushing static image to OpenShift registry
+        id: build-static-image
         uses: redhat-actions/buildah-build@v2
         with:
-          image: workbc-wage-subsidy-v2-static
-          tags: latest
+          tags: workbc-wage-subsidy-v2-static:latest elmsd/workbc-wage-subsidy-v2-static:latest
           context: ./packages/static
           containerfiles: ./packages/static/Dockerfile
           tls-verify: false
-          extra-args: --env VITE_REACT_ENVIRONMENT=Dev
-      - name: Push To OpenShift Image repo
-        id: push-to-quay
+          build-args: VITE_REACT_ENVIRONMENT=Dev
+      - name: Push Static To OpenShift Image repo
+        id: push-to-os-static
         uses: redhat-actions/push-to-registry@v2
         with:
-          image: ${{ steps.build-image.outputs.image }}
-          tags: ${{ steps.build-image.outputs.tags }}
+          image: workbc-wage-subsidy-v2-static
+          tags: lastest
           registry: image-registry.apps.silver.devops.gov.bc.ca/1c4f9c-tools
           username: ${{ secrets.API_TOKEN_4 }}
           password: ${{ secrets.API_TOKEN_4 }}
-#       - name: OpenShift4 build Action
-#         uses: redhat-developer/openshift-actions@v2.1.0
-#         env:
-#           ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
-#         with:
-#           # Choose the oc version you want to use to execute the command. It can be a version or an url where to download oc cli desired. If left blank latest oc cli will be used.
-#           version: latest
-#           # The URL of the Openshift cluster
-#           openshift_server_url: ${{secrets.OCP4_SERVER_URL}}
-#           # JSON with values to connect to the Openshift cluster
-#           parameters: '{"apitoken": "${{ secrets.API_TOKEN_4 }}", "acceptUntrustedCerts": "true"}'
-#           # Oc command to be executed
-#           cmd: |
-#             'start-build workbc-wage-subsidy-v2-form-api -n ${{secrets.PROJECT_TOOLS_4}}'
-#             'start-build workbc-wage-subsidy-v2-admin-api -n ${{secrets.PROJECT_TOOLS_4}}'
-#             'start-build workbc-wage-subsidy-v2-employer-api -n ${{secrets.PROJECT_TOOLS_4}}'
-#             'start-build workbc-wage-subsidy-v2-admin-client -n ${{secrets.PROJECT_TOOLS_4}}'
-#             'start-build workbc-wage-subsidy-v2-employer-client -n ${{secrets.PROJECT_TOOLS_4}}'
-#             'start-build workbc-wage-subsidy-v2-static -n ${{secrets.PROJECT_TOOLS_4}}'
+      - name: Push Static To DockerHub Image repo
+        id: push-to-docker-static
+        uses: redhat-actions/push-to-registry@v2
+        with:
+          image: elmsd/workbc-wage-subsidy-v2-static
+          tags: lastest
+          registry: docker.io/elmsd
+          username: ${{ secrets.DOCKER_USER }}
+          password: ${{ secrets.DOCKER_TOKEN }}
