@@ -45,8 +45,13 @@ jobs:
         include:
           - imagename: "workbc-wage-subsidy-v2-static"
             context: "./packages/static"
+            env: true
           - imagename: "workbc-wage-subsidy-v2-admin-api"
             context: "./packages/admin-api"
+            env: false
+          - imagename: "workbc-wage-subsidy-v2-admin-client"
+            context: "./packages/admin-client"
+            env: true
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
@@ -84,6 +89,24 @@ jobs:
 
           # Optional - this sets your Kubernetes context's current namespace after logging in.
           namespace: ${{secrets.PROJECT_TOOLS_4}}
+      - name: Make envfile
+        if: ${{ matrix.env == true }}
+        uses: SpicyPizza/create-envfile@v1.3
+        with:
+          envkey_REACT_APP_DATA_PROVIDER_URL: ${{ secrets.REACT_APP_DATA_PROVIDER_URL_DEV }}
+          envkey_REACT_APP_ADMIN_API_URL: ${{ secrets.REACT_APP_ADMIN_API_URL_DEV }}
+          envkey_REACT_APP_KEYCLOAK_REALM: ${{ secrets.REACT_APP_KEYCLOAK_REALM_DEV }}
+          envkey_REACT_APP_KEYCLOAK_URL: ${{ secrets.REACT_APP_KEYCLOAK_URL_DEV }}
+          envkey_REACT_APP_KEYCLOAK_CLIENT_ID: ${{ secrets.REACT_APP_KEYCLOAK_CLIENT_ID_DEV }}
+          envkey_REACT_APP_HAVE_EMPLOYEE_URL: ${{ secrets.REACT_APP_HAVE_EMPLOYEE_URL_DEV }}
+          envkey_REACT_APP_NEED_EMPLOYEE_URL: ${{ secrets.REACT_APP_NEED_EMPLOYEE_URL_DEV }}
+          envkey_REACT_APP_CLAIM_URL: ${{ secrets.REACT_APP_CLAIM_URL_DEV }}
+          envkey_REACT_APP_DRAFT_URL: ${{ secrets.REACT_APP_DRAFT_URL_DEV }}
+          envkey_REACT_APP_VIEW_URL: ${{ secrets.REACT_APP_VIEW_URL_DEV }}
+          envkey_REACT_APP_ENVIRONMENT: "Dev"
+          envkey_VITE_REACT_ENVIRONMENT: "Dev"
+          directory: ${{ matrix.context }}
+          file_name: .env
       #static openshift
       - name: Build for pushing static image to OpenShift registry
         id: build-static-image-os
