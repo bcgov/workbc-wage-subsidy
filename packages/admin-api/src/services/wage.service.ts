@@ -21,11 +21,10 @@ export const getAllWage = async (perPage: number, currPage: number, filters: any
             } else if (permission.length === 0) {
                 queryBuilder.whereIn("catchmentno", [0])
             }
-            // If there are no status filters or the status filter is not marked for deletion we do not show the ones marked for deletion
-            if (!filters.applicationstatus || !filters.applicationstatus.includes("Marked for Deletion")) {
-                queryBuilder.whereNotIn("applicationstatus", ["Marked for Deletion"])
-            }
-            if (filters.applicationstatus) {
+            // if there are no filters, default to new and in progress
+            if (!filters.applicationstatus) {
+                queryBuilder.whereIn("applicationstatus", ["NULL", "New", "In Progress"])
+            } else if (filters.applicationstatus) {
                 if (filters.applicationstatus.includes("NULL")) {
                     filters.applicationstatus.push("New")
                 }
@@ -55,11 +54,6 @@ export const getWageByID = async (id: number, permission: any[]) => {
     }
     return []
 }
-
-// export const getWageByCatchment = async (ca: number[]) => {
-//     const claims = await knex("wage_subsidy_applications").where((builder: any) => builder.whereIn("catchmentno", ca))
-//     return claims
-// }
 
 export const updateWage = async (id: number, data: any, permission: any[], user: string) => {
     // console.log(data, id)

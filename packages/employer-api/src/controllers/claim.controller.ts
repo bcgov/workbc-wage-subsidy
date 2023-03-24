@@ -5,6 +5,8 @@ import * as express from "express"
 import * as claimService from "../services/claims.service"
 import * as formService from "../services/submissions.service"
 
+// import type kAuthRequest from "../interfaces/kauth-request.d"
+
 export const getAllClaims = async (req: any, res: express.Response) => {
     try {
         const { sort, filter, page, perPage } = req.query
@@ -57,8 +59,8 @@ export const getAllClaims = async (req: any, res: express.Response) => {
             "Content-Range": `0 - ${claims.pagination.to} / ${claims.pagination.total}`
         })
         return res.status(200).send(claims.data)
-    } catch (e: any) {
-        console.log(e)
+    } catch (e: unknown) {
+        console.error(e)
         return res.status(500).send("Server Error")
     }
 }
@@ -75,13 +77,13 @@ export const createClaim = async (req: any, res: express.Response) => {
             req.body.formtype,
             req.body.guid
         )
-        console.log("created is")
-        console.log(created)
+        // console.log("created is")
+        // console.log(created)
         if (created) {
             return res.status(200).send({ data: created })
         }
         return res.status(500).send("Internal Server Error")
-    } catch (e: any) {
+    } catch (e: unknown) {
         console.log(e)
         return res.status(500).send("Internal Server Error")
     }
@@ -96,7 +98,7 @@ export const getOneClaim = async (req: any, res: express.Response) => {
         const { id } = req.params
         const claims = await claimService.getClaimByID(id)
         return res.status(200).send(claims)
-    } catch (e: any) {
+    } catch (e: unknown) {
         console.log(e)
         return res.status(500).send("Internal Server Error")
     }
@@ -115,7 +117,7 @@ export const updateClaim = async (req: any, res: express.Response) => {
             return res.status(200).send({ id: id })
         }
         return res.status(401).send("Not Found or Not Authorized")
-    } catch (e: any) {
+    } catch (e: unknown) {
         console.log(e)
         return res.status(500).send("Internal Server Error")
     }
@@ -129,8 +131,10 @@ export const deleteClaim = async (req: any, res: express.Response) => {
         }
         const { id } = req.params
         const claim = await claimService.getClaimByID(id)
-        console.log(claim)
-        if (claim.createdby !== bceid_username) {
+        // console.log(claim)
+        /* Only applications created by the user who sent the request
+        or if the status is Awaiting Submission can be deleted */
+        if (claim.createdby !== bceid_username || claim.status !== null) {
             return res.status(401).send("Not Authorized")
         }
         const deleted = await claimService.deleteClaim(id)
@@ -138,7 +142,7 @@ export const deleteClaim = async (req: any, res: express.Response) => {
             return res.status(200).send({ id })
         }
         return res.status(401).send("Not Found or Not Authorized")
-    } catch (e: any) {
+    } catch (e: unknown) {
         console.log(e)
         return res.status(500).send("Internal Server Error")
     }
