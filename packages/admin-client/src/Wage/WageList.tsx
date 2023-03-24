@@ -2,8 +2,10 @@
 /* eslint-disable react/require-default-props */
 /* eslint-disable react/forbid-prop-types */
 /* eslint-disable import/prefer-default-export */
-import { Cancel, Check, Delete } from "@mui/icons-material"
+import { Check, Delete } from "@mui/icons-material"
 import { Box, Button, CircularProgress, Modal, Typography } from "@mui/material"
+import PendingIcon from "@mui/icons-material/Pending"
+import InputIcon from "@mui/icons-material/Input"
 import { useKeycloak } from "@react-keycloak/web"
 import { saveAs } from "file-saver"
 import React from "react"
@@ -167,7 +169,9 @@ const formFilters = [
             { id: "NULL", name: "New", defaultChecked: true },
             { id: "In Progress", name: "In Progress", defaultChecked: true },
             { id: "Completed", name: "Completed" },
-            { id: "Cancelled", name: "Cancelled" }
+            { id: "Cancelled", name: "Cancelled" },
+            { id: "Marked for Deletion", name: "Marked for Deletion" },
+            { id: "In ICM", name: "In ICM" }
         ]}
         alwaysOn
     />,
@@ -176,13 +180,6 @@ const formFilters = [
         source="status"
         label=""
         choices={[{ id: "NULL", name: "Legacy" }]}
-        alwaysOn
-    />,
-    <CheckboxGroupInput
-        key="statusFilter"
-        source="applicationstatus"
-        label=""
-        choices={[{ id: "Marked for Deletion", name: "Marked for Deletion" }]}
         alwaysOn
     />,
     <SearchInput key="searchID" placeholder="Search ID" source="id" />,
@@ -213,7 +210,7 @@ const MarkInProgressButton = () => (
         data={{
             applicationstatus: "In Progress"
         }}
-        icon={<Cancel />}
+        icon={<PendingIcon />}
     />
 )
 
@@ -228,6 +225,16 @@ const MarkForDeletionButton = () => (
     />
 )
 
+const MarkInICMButton = () => (
+    <BulkUpdateButton
+        label="In ICM"
+        data={{
+            applicationstatus: "In ICM"
+        }}
+        icon={<InputIcon />}
+    />
+)
+
 const WagesBulkActionButtons = () => {
     const keycloak = useKeycloak()
     return (
@@ -235,7 +242,12 @@ const WagesBulkActionButtons = () => {
             <MarkCompletedButton />
             <MarkInProgressButton />
             {/* default bulk delete action */}
-            {keycloak.keycloak.tokenParsed?.identity_provider === "idir" && <MarkForDeletionButton />}
+            {keycloak.keycloak.tokenParsed?.identity_provider === "idir" && (
+                <>
+                    <MarkInICMButton />
+                    <MarkForDeletionButton />
+                </>
+            )}
         </>
     )
 }

@@ -1,4 +1,3 @@
-import { DoneAll } from "@mui/icons-material"
 import CircleIcon from "@mui/icons-material/Circle"
 import { Typography } from "@mui/material"
 import Button from "@mui/material/Button"
@@ -7,7 +6,6 @@ import {
     BooleanField,
     BooleanInput,
     BulkDeleteButton,
-    BulkUpdateButton,
     CreateButton,
     Datagrid,
     DateField,
@@ -24,6 +22,7 @@ import { CustomShow } from "./ClaimsCustomShow"
 
 const formFilters = [
     <BooleanInput
+        key={"status"}
         source="status"
         label="Complete"
         defaultValue={true}

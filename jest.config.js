@@ -7,7 +7,7 @@ module.exports = {
     },
     testPathIgnorePatterns: ["/dist/", ".js", ".d.ts"],
     moduleFileExtensions: ["ts", "js"],
-    testMatch: ["**/**/__test__/*.test.ts"],
+    testMatch: ["**/**/__test__/**/**/*.test.ts", "**/**/__test__/**/*.test.ts"],
     verbose: true,
     forceExit: true,
     transform: {
