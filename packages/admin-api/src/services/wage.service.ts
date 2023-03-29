@@ -21,7 +21,10 @@ export const getAllWage = async (perPage: number, currPage: number, filters: any
             } else if (permission.length === 0) {
                 queryBuilder.whereIn("catchmentno", [0])
             }
-            if (filters.applicationstatus) {
+            // if there are no filters, default to new and in progress
+            if (!filters.applicationstatus) {
+                queryBuilder.whereIn("applicationstatus", ["NULL", "New", "In Progress"])
+            } else if (filters.applicationstatus) {
                 if (filters.applicationstatus.includes("NULL")) {
                     filters.applicationstatus.push("New")
                 }
@@ -52,12 +55,7 @@ export const getWageByID = async (id: number, permission: any[]) => {
     return []
 }
 
-// export const getWageByCatchment = async (ca: number[]) => {
-//     const claims = await knex("wage_subsidy_applications").where((builder: any) => builder.whereIn("catchmentno", ca))
-//     return claims
-// }
-
-export const updateWage = async (id: number, data: any, permission: any[]) => {
+export const updateWage = async (id: number, data: any, permission: any[], user: string) => {
     // console.log(data, id)
     if (permission[0] !== "*") {
         permission.map((p: any) => Number(p))
@@ -66,8 +64,32 @@ export const updateWage = async (id: number, data: any, permission: any[]) => {
     if (wages.length === 0) {
         return 0
     }
+    // This helper function takes the old data and the new data and returns the difference
+    // Source: https://stackoverflow.com/questions/57669696/getting-difference-object-from-two-objects-using-es6
+    const getDifference = (a: any, b: any) =>
+        Object.fromEntries(Object.entries(b).filter(([key, val]) => key in a && a[key] !== val))
     if (wages[0].catchmentno in permission || permission[0] === "*") {
-        const result = await knex("wage_subsidy_applications").where("id", id).update(data)
+        const result = await knex("wage_subsidy_applications")
+            .where("id", id)
+            .update(
+                wages[0].history
+                    ? {
+                          ...data,
+                          history: {
+                              history: [
+                                  {
+                                      by: user,
+                                      date: new Date(),
+                                      changes: getDifference(wages[0], data)
+                                  },
+                                  ...wages[0].history.history
+                              ]
+                          }
+                      }
+                    : {
+                          data
+                      }
+            )
         return result
     }
     // console.log(result)

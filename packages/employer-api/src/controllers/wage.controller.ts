@@ -37,7 +37,7 @@ export const getAllWage = async (req: any, res: express.Response) => {
         const params = {
             fields: `userInfo,internalId,applicationId,storefrontId,catchmentNo,formHandler,areYouCurrentlyWorkingWithAWorkBcCentre,catchmentNoStoreFront,operatingName,businessNumber,businessAddress,businessCity,businessProvince,businessPostal,validateAddress,businessPhone,businessFax,employerEmail,businessEmail,otherWorkAddress,container,sectorType,typeOfIndustry,organizationSize,CEWSAndOrCRHP,employeeDisplacement,labourDispute,unionConcurrence,liabilityCoverage,wageSubsidy,WSBCCoverage,orgEligibilityConsent,lawComplianceConsent,next2,addAnotherPosition,positionTitle0,numberOfPositions0,employeeEmail0,employeeEmail1,employeeEmail2,employeeEmail3,employeeEmail4,startDate0,wage0,hours0,applicationMERCs0,duties0,skills0,workExperience0,position2,previous,next4,signatoryTitle,signatory1,organizationConsent,previous1`,
             // eslint-disable-next-line camelcase
-            createdBy: bceid_username,
+            // createdBy: bceid_username,
             deleted: false
         }
         // console.log(params)
@@ -47,7 +47,7 @@ export const getAllWage = async (req: any, res: express.Response) => {
                 process.env.NEED_EMPLOYEE_PASS || "",
                 params
             )
-            console.log(hasNeedEmployeeApplications)
+            // console.log(hasNeedEmployeeApplications)
             hasNeedEmployeeApplications.forEach(async (h: any) => {
                 const app = applications.data.find((a: any) => a.internalid === h.internalId) || null
                 if (app) {
@@ -71,7 +71,7 @@ export const getAllWage = async (req: any, res: express.Response) => {
                 process.env.HAVE_EMPLOYEE_PASS || "",
                 params
             )
-            console.log(haveEmployeeApplications)
+            // console.log(haveEmployeeApplications.reverse())
             haveEmployeeApplications.forEach(async (h: any) => {
                 const app = applications.data.find((a: any) => a.internalid === h.internalId) || null
                 if (app) {
@@ -99,7 +99,7 @@ export const getAllWage = async (req: any, res: express.Response) => {
             "Content-Range": `0 - ${applications.pagination.to} / ${applications.pagination.total}`
         })
         return res.status(200).send(applications.data)
-    } catch (e: any) {
+    } catch (e: unknown) {
         console.log(e)
         return res.status(500).send("Server Error")
     }
@@ -123,7 +123,7 @@ export const createWage = async (req: any, res: express.Response) => {
             return res.status(200).send({ data: created })
         }
         return res.status(500).send("Internal Server Error")
-    } catch (e: any) {
+    } catch (e: unknown) {
         console.log(e)
         return res.status(500).send("Internal Server Error")
     }
@@ -139,7 +139,7 @@ export const getOneWage = async (req: any, res: express.Response) => {
         console.log(id)
         const applications = await wageService.getWageByID(id)
         return res.status(200).send(applications)
-    } catch (e: any) {
+    } catch (e: unknown) {
         console.log(e)
         return res.status(500).send("Internal Server Error")
     }
@@ -158,7 +158,7 @@ export const updateWage = async (req: any, res: express.Response) => {
             return res.status(200).send({ id: id })
         }
         return res.status(401).send("Not Found or Not Authorized")
-    } catch (e: any) {
+    } catch (e: unknown) {
         console.log(e)
         return res.status(500).send("Internal Server Error")
     }
@@ -172,8 +172,10 @@ export const deleteWage = async (req: any, res: express.Response) => {
         }
         const { id } = req.params
         const wage = await wageService.getWageByID(id)
-        console.log(wage)
-        if (wage.createdby !== bceid_username) {
+        // console.log(wage)
+        /* Only applications created by the user who sent the request
+        or if the status is Awaiting Submission can be deleted */
+        if (wage.createdby !== bceid_username || wage.status !== null) {
             return res.status(401).send("Not Authorized")
         }
         const deleted = await wageService.deleteWage(id)
@@ -181,7 +183,7 @@ export const deleteWage = async (req: any, res: express.Response) => {
             return res.status(200).send({ id })
         }
         return res.status(401).send("Not Found or Not Authorized")
-    } catch (e: any) {
+    } catch (e: unknown) {
         console.log(e)
         return res.status(500).send("Internal Server Error")
     }

@@ -125,4 +125,10 @@
         Modified date,
         Created date
         sharedwith varchar(255)
+        files jsonb
         );
+CREATE TABLE wage_subsidy_catchment_emails (
+        ID SERIAL NOT NULL PRIMARY KEY,
+        CatchmentNo int,
+        EmailContact varchar(255),
+        )

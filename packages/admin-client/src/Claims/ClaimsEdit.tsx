@@ -1,8 +1,5 @@
 /* eslint-disable camelcase */
-/* eslint-disable react-hooks/rules-of-hooks */
 /* eslint-disable no-param-reassign */
-/* eslint-disable react-hooks/exhaustive-deps */
-/* eslint-disable import/prefer-default-export */
 import { Grid } from "@mui/material"
 import {
     DateInput,
@@ -18,7 +15,8 @@ import {
     useGetOne,
     useGetRecordId,
     useNotify,
-    useUpdate
+    useUpdate,
+    useStore
 } from "react-admin"
 import { useWatch } from "react-hook-form"
 import { useNavigate } from "react-router"
@@ -246,6 +244,8 @@ const EditActions = () => (
 )
 
 export const ClaimsEdit = (props: any) => {
+    const calculator = useStore("calculator")
+    console.log(calculator[0])
     const navigate = useNavigate()
     const notify = useNotify()
     const recordId = useGetRecordId()
@@ -262,19 +262,10 @@ export const ClaimsEdit = (props: any) => {
             }
         }
     )
-
-    if (isLoadingOne) {
-        return <Loading />
-    }
-    if (oneError) {
-        return <p>ERROR</p>
-    }
-    // eslint-disable-next-line @typescript-eslint/no-redeclare
     const [update] = useUpdate()
     const claimSave = (newdata: any) => {
         const decoded: any = jwt_decode(localStorage.getItem("token")?.toString() || "")
         // update totalweeks element of newdata with totalweeks1
-        // eslint-disable-next-line no-param-reassign
         console.log(newdata.totalwage1)
         const eligiblewages1 = Math.round(
             Number(newdata.totalwage1) / 100 > Number(newdata.totalweeks1) * 1000
@@ -310,6 +301,22 @@ export const ClaimsEdit = (props: any) => {
                     notify(`Error ${error}`, { type: "error" })
                 }
             }
+        )
+    }
+    if (isLoadingOne) {
+        return <Loading />
+    }
+    if (oneError) {
+        return <p>ERROR</p>
+    }
+    if (!calculator[0]) {
+        return (
+            <Edit>
+                <SimpleForm toolbar={<CustomToolbar />}>
+                    <TextInput label="BCeIDs shared with" source="sharedwith" />
+                    <TextInput label="Catchment Number" source="catchmentno" />
+                </SimpleForm>
+            </Edit>
         )
     }
     return (

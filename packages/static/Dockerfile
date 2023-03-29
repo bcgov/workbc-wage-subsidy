@@ -1,6 +1,8 @@
 FROM node:18-alpine as builder
 # Set the working directory to /app inside the container
-ENV NODE_ENV production
+ENV NODE_ENV=production
+ARG VITE_REACT_ENVIRONMENT
+ENV VITE_REACT_ENVIRONMENT=$VITE_REACT_ENVIRONMENT
 WORKDIR /app
 # Copy app files
 COPY . /app
@@ -11,7 +13,7 @@ RUN npm install --omit=dev
 RUN npm run build
 
 # Bundle static assets with nginx
-FROM nginxinc/nginx-unprivileged:1.22-alpine as production
+FROM nginxinc/nginx-unprivileged:1.23-alpine as production
 # Copy built assets from `builder` image
 COPY --from=builder /app/dist /usr/share/nginx/html
 # Add your nginx.conf

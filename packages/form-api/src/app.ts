@@ -20,6 +20,7 @@ const corsOptions = {
             callback(new Error("Not allowed by CORS"))
         }
     },
+    // origin: "*",
     credentials: true,
     optionsSuccessStatus: 200
 }
