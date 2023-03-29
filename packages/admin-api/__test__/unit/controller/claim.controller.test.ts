@@ -1,10 +1,10 @@
 import express from "express"
-import * as claimService from "../src/services/claims.service"
-import { getCatchment } from "../src/lib/catchment"
-import { getAllClaims, getClaim, updateClaim, deleteClaim } from "../src/controllers/claim.controller"
+import * as claimService from "../../../src/services/claims.service"
+import { getCatchment } from "../../../src/lib/catchment"
+import { getAllClaims, getClaim, updateClaim, deleteClaim } from "../../../src/controllers/claim.controller"
 
-jest.mock("../src/services/claims.service")
-jest.mock("../src/lib/catchment")
+jest.mock("../../../src/services/claims.service")
+jest.mock("../../../src/lib/catchment")
 
 describe("getAllClaims", () => {
     let req: any
@@ -153,7 +153,11 @@ describe("updateClaim", () => {
         req = {
             kauth: {
                 grant: {
-                    access_token: "test_access_token"
+                    access_token: {
+                        content: {
+                            identity_provider: "bceid"
+                        }
+                    }
                 }
             },
             query: {
@@ -176,9 +180,15 @@ describe("updateClaim", () => {
         jest.clearAllMocks()
     })
     it("returns 200 with updated claim data", async () => {
+        req.kauth.grant.access_token.content = {
+            identity_provider: "idir"
+        }
+        req.body = {
+            applicationstatus: "Submitted"
+        }
         const catchment = ["0"]
         ;(getCatchment as jest.Mock).mockResolvedValue(catchment)
-        const claim = [{ id: "1", name: "John Doe" }]
+        const claim = [{ id: "1", name: "John Doe", applicationstatus: "Submitted" }]
         ;(claimService.updateClaim as jest.Mock).mockResolvedValue(claim)
         await updateClaim(req, res)
         expect(res.status).toHaveBeenCalledWith(200)

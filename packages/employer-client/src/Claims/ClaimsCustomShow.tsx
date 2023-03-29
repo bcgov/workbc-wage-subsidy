@@ -15,6 +15,16 @@ import TableHead from "@mui/material/TableHead"
 import TableRow from "@mui/material/TableRow"
 import Paper from "@mui/material/Paper"
 import type { LabeledProps } from "react-admin"
+
+// a custom lebelled component that passes the children to the Labelled component with only the label
+//  being in 14px font size
+const CustomLabeled = (props: LabeledProps) => {
+    return (
+        <Labeled key={props.key} label={<Typography sx={{ fontSize: "14px" }}>{props.label}</Typography>}>
+            {props.children}
+        </Labeled>
+    )
+}
 /*
     a custom view of each claim application modelled to mirror the paper form
     takes in 5 props: className, children, divider, spacing, and rest
@@ -27,15 +37,6 @@ export const CustomShow = (props: CustomShowProps) => {
     console.log(record)
     if (!record) {
         return null
-    }
-    // a custom lebelled component that passes the children to the Labelled component with only the label
-    //  being in 14px font size
-    const CustomLabeled = (props: LabeledProps) => {
-        return (
-            <Labeled key={props.key} label={<Typography sx={{ fontSize: "14px" }}>{props.label}</Typography>}>
-                {props.children}
-            </Labeled>
-        )
     }
     return (
         <OptionalRecordContextProvider value={props.record}>
