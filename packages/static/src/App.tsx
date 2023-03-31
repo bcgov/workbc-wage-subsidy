@@ -103,7 +103,7 @@ function App() {
                     <button
                         className="BC-Gov-PrimaryButton"
                         type="button"
-                        onClick={() => window.open("https://wage-sub-dev-employer.es.workbc.ca")}
+                        onClick={() => window.open("https://wage-sub-test-employer.es.workbc.ca")}
                     >
                         Go to Application
                     </button>
@@ -120,7 +120,7 @@ function App() {
                     <button
                         className="BC-Gov-PrimaryButton"
                         type="button"
-                        onClick={() => window.open("https://wage-sub-dev-sp.es.workbc.ca")}
+                        onClick={() => window.open("https://wage-sub-test-sp.es.workbc.ca")}
                     >
                         Go to Application
                     </button>
