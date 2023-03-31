@@ -11,6 +11,7 @@ const generateHTMLEmail = require("../utils/htmlEmail")
 const s3static = process.env.S3_STATIC_IMG_URL || ""
 
 const createEmail = (data: any) => {
+    console.log(data)
     let emailHTML: string
     if (data.employeeEmail0) {
         emailHTML = generateHTMLEmail(
