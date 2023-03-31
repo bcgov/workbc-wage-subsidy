@@ -46,7 +46,7 @@
         centreName varchar(255),
         markedForDeletion boolean,
         Modified date,
-        Created date
+        Created date,
         sharedwith varchar(255)
         );
     
@@ -123,12 +123,12 @@
         markedForDeletion boolean,
         CONSTRAINT fk_applicationID FOREIGN KEY (ApplicationID) REFERENCES WAGE_SUBSIDY_APPLICATIONS(ApplicationID),
         Modified date,
-        Created date
-        sharedwith varchar(255)
+        Created date,
+        sharedwith varchar(255),
         files jsonb
         );
 CREATE TABLE wage_subsidy_catchment_emails (
         ID SERIAL NOT NULL PRIMARY KEY,
         CatchmentNo int,
-        EmailContact varchar(255),
-        )
+        EmailContact varchar(255)
+        );
