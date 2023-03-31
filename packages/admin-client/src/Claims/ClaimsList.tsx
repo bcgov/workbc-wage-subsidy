@@ -287,7 +287,7 @@ export const ClaimsList = (props: any) => {
     }
     const handleClose = () => setOpen(false)
     return (
-        <List {...props} actions={<ListActions />} filters={formFilters}>
+        <List empty={false} {...props} actions={<ListActions />} filters={formFilters}>
             {/* Code for the PDF-saving modal */}
             <Modal
                 open={open}

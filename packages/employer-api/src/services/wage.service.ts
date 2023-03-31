@@ -14,7 +14,7 @@ export const getAllWage = async (perPage: number, currPage: number, filters: any
                 queryBuilder.whereIn("status", filters.status)
             }
             if (user) {
-                console.log(user)
+                // console.log(user)
                 queryBuilder.whereLike("createdby", user).orWhereLike("sharedwith", `%${user}%`)
             }
             if (sort) {
