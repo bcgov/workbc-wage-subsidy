@@ -1,5 +1,3 @@
-import CircleIcon from "@mui/icons-material/Circle"
-import Button from "@mui/material/Button"
 import {
     BooleanInput,
     BulkDeleteButton,
@@ -14,11 +12,15 @@ import {
     BooleanField,
     DateField,
     NumberField,
-    useRecordContext
+    useRecordContext,
+    useStore
 } from "react-admin"
 import { useKeycloak } from "@react-keycloak/web"
-import { CustomShow } from "./ApplicationCustomShow"
+import CircleIcon from "@mui/icons-material/Circle"
+import Button from "@mui/material/Button"
 import { Typography } from "@mui/material"
+import { CustomShow } from "./ApplicationCustomShow"
+import { ApplicationListAside } from "./ApplicationListAside"
 
 const formFilters = [
     <BooleanInput
@@ -152,10 +154,20 @@ const PostShow = (...props: any) => (
     </CustomShow>
 )
 
+export const applicationStatusFilters = {
+    All: { label: "All" },
+    NotSubmitted: { label: "Not Submitted", applicationstatus: null },
+    InProgress: { label: "In Progress", applicationstatus: "In Progress" },
+    Completed: { label: "Completed", applicationstatus: "Completed" },
+    Cancelled: { label: "Cancelled", applicationstatus: "Cancelled" }
+} as { [key: string]: any }
+
 export const ApplicationList = (props: any) => {
     const { keycloak } = useKeycloak()
+    const [statusFilter] = useStore("resources.applications.list.statusFilter", applicationStatusFilters.All)
+
     return (
-        <List {...props} actions={<ListActions />} filters={formFilters}>
+        <List {...props} actions={<ListActions />} filter={statusFilter} filters={[]} aside={<ApplicationListAside />}>
             <Datagrid expand={<PostShow {...props} />} bulkActionButtons={<FormBulkActionButtons />}>
                 <TextField label="ID" source="id" />
                 <FunctionField
@@ -170,7 +182,7 @@ export const ApplicationList = (props: any) => {
                         !record.status ? (
                             <div>
                                 <CircleIcon sx={{ fontSize: 10 }} htmlColor="#ec4c47" />
-                                <div style={{ display: "inline-block", paddingLeft: "0.5vw" }}>Awaiting Submission</div>
+                                <div style={{ display: "inline-block", paddingLeft: "0.5vw" }}>Not Submitted</div>
                             </div>
                         ) : record.status === "submitted" ? (
                             <>
@@ -281,66 +293,6 @@ export const ApplicationList = (props: any) => {
                         )
                     }}
                 />
-                {/*
-                <FunctionField
-                    label="Enter Details"
-                    render={(record: any) => !record.isCreated ?
-                        <div>
-                            <Button
-                                href={`${record.providerUrl.trim()}&token=${record.key}`}
-                                target="_blank"
-                                rel='noopener noreferrer'
-                                variant="contained"
-                                sx={{ textAlign: 'center', backgroundColor: '#003366' }}>Fill Out Form
-                            </Button>
-                        </div>
-                        :
-                        `N/A`} />
-                <FunctionField
-                    label="Copy URL"
-                    render={(record: any) => !record.isCompleted && record.isCreated ?
-                        <CopyToClipboard text={`${record.clientUrl.trim()}&token=${record.key}&lang=${record.language.toLowerCase()}`}>
-                            <Button
-                                variant="contained"
-                                sx={{ backgroundColor: '#003366' }}>Copy
-                            </Button>
-                        </CopyToClipboard>
-                        :
-                        `N/A`} />
-                <FunctionField
-                    label="Generate PDF"
-                    render={(record: any) => record.isCompleted ?
-                        <div>
-                            <Button
-                                href="#"
-                                variant="contained"
-                                sx={{ backgroundColor: '#003366' }}
-                                onClick={async () => {
-                                    const pdfRequest = new Request(`http://localhost:8000/pdf/${record.key}`, {
-                                        method: "GET",
-                                        headers: new Headers({
-                                            Authorization: `Bearer ${localStorage.getItem('token')}`
-                                        })
-                                    })
-                                    try {
-                                        const pdf = await fetch(pdfRequest)
-                                        .then(response => {
-                                            return response.blob()
-                                        })
-                                        console.log(record)
-                                        saveAs(pdf, `${record.formCode}_${record.firstName}_${record.lastName}.pdf`)
-                                    } catch (error: any){
-                                        console.log(error)
-                                        alert("Something happened while generating the PDF")
-                                    }
-                                }}
-                            >
-                                Download
-                            </Button>
-                        </div>
-                        :
-                        `Not Available`} />
-                */}
             </Datagrid>
         </List>
     )

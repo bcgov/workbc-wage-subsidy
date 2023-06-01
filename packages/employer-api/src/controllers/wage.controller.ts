@@ -15,7 +15,7 @@ export const getAllWage = async (req: any, res: express.Response) => {
         const page = req.query.page || 1
         const perPage = req.query.perPage || 1
         const filters = filter ? JSON.parse(filter) : {}
-        // console.log(filters.applicationstatus)
+        console.log("xdddd", filters)
         const sorted = sort ? sort.replace(/[^a-zA-Z0-9,]/g, "").split(",") : ["id", "ASC"]
         // console.log(sorted)
         // get applications in the Database
