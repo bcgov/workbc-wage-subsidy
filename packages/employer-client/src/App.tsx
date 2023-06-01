@@ -2,9 +2,10 @@ import { ReactKeycloakProvider } from "@react-keycloak/web"
 import Keycloak from "keycloak-js"
 import React, { useState } from "react"
 import { Admin, Resource } from "react-admin"
+import { ContainerLayout } from "@react-admin/ra-navigation"
 import "./App.css"
-import { ApplicationCreate } from "./Applications/Create"
-import { ApplicationList } from "./Applications/List"
+import { ApplicationCreate } from "./Applications/ApplicationCreate"
+import { ApplicationList } from "./Applications/ApplicationList"
 import useAuthProvider from "./Auth/authProvider"
 import { CreateClaim } from "./Claims/Create"
 import { ClaimList } from "./Claims/List"
@@ -14,17 +15,12 @@ import Footer from "./footer"
 import Layout from "./Layout"
 import { ApplicationEdit } from "./Applications/ApplicationsEdit"
 import { ClaimEdit } from "./Claims/ClaimEdit"
-
-/*
-const dataProvider = fakeDataProvider({
-  my_forms: [
-      { id: 0, formCode: 0, created: true, url: "https://some-url.ca", client_completed: true },
-  ],
-  forms: [
-    {id: 0, title: 'Test Form', formCode: "HR123456", url: ""},
-  ]
-})
-*/
+import { RefreshIconButton } from "react-admin"
+import { ReactQueryDevtools } from "react-query/devtools"
+import { Box } from "@mui/material"
+import KitchenIcon from "@mui/icons-material/Kitchen"
+import Logo from "./Logo"
+import Tag from "./Tag"
 
 const initOptions = {
     url: process.env.REACT_APP_KEYCLOAK_URL || "",
@@ -35,6 +31,8 @@ const initOptions = {
 let keycloak = new Keycloak(initOptions)
 
 const onToken = () => {
+    console.log("onToken!")
+    console.log(keycloak.token)
     if (keycloak.token && keycloak.refreshToken) {
         localStorage.setItem("token", keycloak.token)
         localStorage.setItem("refresh-token", keycloak.refreshToken)
@@ -47,7 +45,7 @@ const onTokenExpired = () => {
     keycloak
         .updateToken(30)
         .then(() => {
-            console.log("successfully get a new token", keycloak.token)
+            console.log("successfully got a new token", keycloak.token)
             if (keycloak.token && keycloak.refreshToken) {
                 localStorage.setItem("token", keycloak.token)
                 localStorage.setItem("refresh-token", keycloak.refreshToken)
@@ -74,16 +72,25 @@ export const lightTheme = {
     }
 }
 
-//const dataProvider = simpleRestProvider("http://localhost:8000", httpClient)
-
-console.log(process.env.REACT_APP_DATA_PROVIDER_URL)
-console.log(dataProvider)
+// const Layout = (props: any) => (
+//     <>
+//       <ContainerLayout
+//         {...props}
+//         maxWidth="xl"
+//         toolbar={
+//           <Box display="flex" gap={1} mr={1}>
+//             <RefreshIconButton />
+//           </Box>
+//         }
+//       />
+//       <ReactQueryDevtools initialIsOpen={false} />
+//     </>
+// )
 
 const CustomAdminWithKeycloak = () => {
     const customAuthProvider = useAuthProvider(process.env.REACT_APP_KEYCLOAK_CLIENT_ID || "")
     const [permissions, setPermissions] = useState(keycloak.idTokenParsed?.identity_provider === "bceid")
     React.useEffect(() => {
-        console.log(keycloak.idTokenParsed?.identity_provider)
         if (keycloak && keycloak.idTokenParsed?.identity_provider === "bceidboth") {
             setPermissions(true)
         }
@@ -98,6 +105,13 @@ const CustomAdminWithKeycloak = () => {
             disableTelemetry
             requireAuth
             ready={Ready}
+            title={
+                <Box display="flex" gap={1} alignItems="center">
+                    <Logo />
+                    <Tag />
+                    <b>WorkBC Wage Subsidy</b>
+                </Box>
+            }
         >
             {permissions && (
                 <>

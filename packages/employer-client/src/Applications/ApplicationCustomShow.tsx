@@ -40,6 +40,7 @@ export const CustomShow = (props: CustomShowProps) => {
                     <Typography variant="subtitle2">
                         <strong>WORK EXPERIENCE WAGE SUBSIDY - {record.formtype} FORM</strong>
                     </Typography>
+                    q
                     <CustomLabeled key="id" label="ID">
                         <Typography variant="body2">{record.id && record.id.toString()}</Typography>
                     </CustomLabeled>

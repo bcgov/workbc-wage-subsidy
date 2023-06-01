@@ -4,8 +4,12 @@ import { knex } from "../config/db-config"
 export const getAllWage = async (perPage: number, currPage: number, filters: any, sort: any, user: string) => {
     const claims = await knex("wage_subsidy_applications")
         .modify((queryBuilder: any) => {
+            console.log("filters", filters)
+            console.log("user", user)
+            console.log("sort", sort)
             if (filters.applicationstatus) {
-                queryBuilder.whereIn("applicationstatus", filters.applicationstatus)
+                // console.log("@@@@2", filters.applicationstatus)
+                queryBuilder.where("applicationstatus", filters.applicationstatus)
             }
             if (filters.catchmentno) {
                 queryBuilder.where("catchmentno", Number(filters.catchmentno))
