@@ -1,6 +1,6 @@
 .card-container .card {
     border-radius: 21px;
-    padding: 65px;
+    padding: 20px 30px;
     height: auto;
     width: auto;
     box-shadow: 0 0 15px 0 rgb(0 0 0 / 15%);
@@ -10,4 +10,8 @@
   
   .card-container .card:hover {
     box-shadow: 0 0 30px 0 rgb(0 0 0 / 15%);
+  }
+
+  .card-container .BC-Gov-PrimaryButton {
+    margin-top: 25px
   }
