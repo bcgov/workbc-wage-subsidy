@@ -2,7 +2,6 @@ import { ReactKeycloakProvider } from "@react-keycloak/web"
 import Keycloak from "keycloak-js"
 import React, { useState } from "react"
 import { Admin, Resource } from "react-admin"
-import { ContainerLayout } from "@react-admin/ra-navigation"
 import "./App.css"
 import { ApplicationCreate } from "./Applications/ApplicationCreate"
 import { ApplicationList } from "./Applications/ApplicationList"
@@ -15,10 +14,7 @@ import Footer from "./footer"
 import Layout from "./Layout"
 import { ApplicationEdit } from "./Applications/ApplicationsEdit"
 import { ClaimEdit } from "./Claims/ClaimEdit"
-import { RefreshIconButton } from "react-admin"
-import { ReactQueryDevtools } from "react-query/devtools"
 import { Box } from "@mui/material"
-import KitchenIcon from "@mui/icons-material/Kitchen"
 import Logo from "./Logo"
 import Tag from "./Tag"
 
@@ -62,30 +58,26 @@ export const lightTheme = {
     components: {
         MuiAppBar: {
             styleOverrides: {
-                colorSecondary: {
+                colorPrimary: {
                     color: "#fff",
                     backgroundColor: "#003366",
+                    borderBottom: "3px solid #FCBA19"
+                },
+                colorSecondary: {
+                    color: "#fff",
+                    indicatorColor: "#FCBA19",
+                    backgroundColor: "#395889",
                     borderBottom: "3px solid #FCBA19"
                 }
             }
         }
+    },
+    palette: {
+        secondary: {
+            main: "#FCBA19"
+        }
     }
 }
-
-// const Layout = (props: any) => (
-//     <>
-//       <ContainerLayout
-//         {...props}
-//         maxWidth="xl"
-//         toolbar={
-//           <Box display="flex" gap={1} mr={1}>
-//             <RefreshIconButton />
-//           </Box>
-//         }
-//       />
-//       <ReactQueryDevtools initialIsOpen={false} />
-//     </>
-// )
 
 const CustomAdminWithKeycloak = () => {
     const customAuthProvider = useAuthProvider(process.env.REACT_APP_KEYCLOAK_CLIENT_ID || "")

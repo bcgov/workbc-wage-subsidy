@@ -1,31 +1,22 @@
-import { ContainerLayout, Header, HorizontalMenu } from "@react-admin/ra-navigation"
-import { Layout, LayoutProps } from "react-admin"
-import { AppBar } from "react-admin"
-import { RefreshIconButton } from "react-admin"
+import { HorizontalMenu } from "@react-admin/ra-navigation"
 import { ReactQueryDevtools } from "react-query/devtools"
-import { Box, Typography } from "@mui/material"
-import KitchenIcon from "@mui/icons-material/Kitchen"
-import Logo from "./Logo"
-import Tag from "./Tag"
+import { CustomContainerLayout } from "./CustomContainerLayout"
 
 // eslint-disable-next-line import/no-anonymous-default-export
 export default (props: any) => {
+    const itemStyle = { backgroundColor: "#5a7daa", height: "100%", paddingLeft: 35, paddingRight: 35 }
     return (
+        // use a custom ContainerLayout implementation in order to be able to display two headers
         <>
-            <ContainerLayout
+            <CustomContainerLayout
                 {...props}
                 maxWidth="xl"
-                // menu={
-                //     <HorizontalMenu>
-                //         <HorizontalMenu.Item label="Applications" to="/wage" value="wage" style={{ backgroundColor: "#5a7daa", height: "100%", paddingRight: 35, paddingLeft: 35 }}/>
-                //         <HorizontalMenu.Item label="Claim Forms" to="/claims" value="claims" style={{ backgroundColor: "#5a7daa", height: "100%", paddingRight: 35, paddingLeft: 35 }} />
-                //     </HorizontalMenu>
-                // }
-                // toolbar={
-                //     <Box display="flex" gap={1} mr={1}>
-                //     </Box>
-                // }
-                //toolbar={}
+                menu={
+                    <HorizontalMenu indicatorColor="secondary">
+                        <HorizontalMenu.Item label="Applications" to="/wage" value="wage" style={itemStyle} />
+                        <HorizontalMenu.Item label="Claim Forms" to="/claims" value="claims" style={itemStyle} />
+                    </HorizontalMenu>
+                }
             />
             <ReactQueryDevtools initialIsOpen={false} />
         </>
