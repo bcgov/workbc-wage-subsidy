@@ -14,7 +14,7 @@ const ServiceProviderCard = () => (
             </Grid>
             <Grid item>
                 <Box display="flex" justifyContent="right">
-                    <img width="250em" src="/employer.svg" alt="Employer logo" />
+                    <img width="400em" src="/service-provider.svg" alt="Employer logo" />
                 </Box>
             </Grid>
             <Grid item xs>

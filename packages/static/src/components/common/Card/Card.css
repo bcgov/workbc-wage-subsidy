@@ -8,7 +8,8 @@
     background-color: #fff;
     min-width: 35em;
     max-width: 35em;
-    min-height: 28em;
+    /* min-height: 20em; */
+    /* max-height: 34em; */
   }
   
 .card-container .card:hover {
@@ -17,5 +18,5 @@
 
 .card-container .BC-Gov-PrimaryButton {
   border-radius: 50px;
-  margin: 2.5em 0em 0em 0em;
+  margin: 0em 0em 0em 0em;
 }

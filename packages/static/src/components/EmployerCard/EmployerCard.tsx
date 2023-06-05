@@ -61,14 +61,20 @@ const EmployerCard = () => {
                 <h2>BCeID Options</h2>
                 <h3>Business BCeID</h3>
                 <p>
-                    Use a <a href="https://www2.gov.bc.ca/gov/content/home">Business BCeID</a> if you would like to view
-                    and <strong>share applications</strong> and
+                    Use a{" "}
+                    <a href="https://www.bceid.ca/register/business/getting_started/getting_started.aspx">
+                        Business BCeID
+                    </a>{" "}
+                    if you would like to view and <strong>share applications</strong> and
                     <strong> claim forms within your organization.</strong>
                 </p>
                 <p>
                     Note that if you are starting a new Business BCeID registration, it can take some time to verify
                     your business if it is not already registered with{" "}
-                    <a href="https://www2.gov.bc.ca/gov/content/home">BC Registries and Online Services</a>.
+                    <a href="https://www2.gov.bc.ca/gov/content/governments/organizational-structure/ministries-organizations/ministries/citizens-services/bc-registries-online-services">
+                        BC Registries and Online Services
+                    </a>
+                    .
                 </p>
                 <p>
                     Note also that you can <strong>convert</strong> a <strong>Basic BCeID</strong> to a
@@ -82,8 +88,12 @@ const EmployerCard = () => {
                 </p>
                 <h3>Basic BCeID</h3>
                 <p>
-                    With a <a href="https://www2.gov.bc.ca/gov/content/home">Basic BCeID</a>, you will be able to log in
-                    to Wage Subsidy to submit and view your own applications and claim forms.
+                    With a{" "}
+                    <a href="https://www.bceid.ca/register/basic/account_details.aspx?type=regular&eServiceType=basic">
+                        Basic BCeID
+                    </a>
+                    , you will be able to log in to Wage Subsidy to submit and view your own applications and claim
+                    forms.
                 </p>
                 <p>
                     Note that you will <strong>not</strong> be able to share applications and claim forms with others if
@@ -91,9 +101,9 @@ const EmployerCard = () => {
                     within their own organization.
                 </p>
                 <p>
-                    For <a href="https://www2.gov.bc.ca/gov/content/home">more information</a> and{" "}
-                    <a href="https://www2.gov.bc.ca/gov/content/home">Frequently Asked Questions</a>, visit{" "}
-                    <a href="https://www2.gov.bc.ca/gov/content/home">www.bceid.ca</a>
+                    For <a href="https://www.bceid.ca/">more information</a> and{" "}
+                    <a href="https://www.bceid.ca/aboutbceid/faqs.aspx">Frequently Asked Questions</a>, visit{" "}
+                    <a href="https://www.bceid.ca/">www.bceid.ca</a>
                 </p>
             </BCGovModal>
         </Card>
