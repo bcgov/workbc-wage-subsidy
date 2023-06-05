@@ -10,6 +10,8 @@ import {
     useStore
 } from "react-admin"
 import { Chip } from "@mui/material"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { faHandshake } from "@fortawesome/pro-solid-svg-icons"
 import { ApplicationListAside } from "./ApplicationListAside"
 
 const ListActions = () => (
@@ -29,9 +31,10 @@ const ListActions = () => (
 )
 
 const FormBulkActionButtons = () => (
-    <>
-        <BulkDeleteButton />
-    </>
+    <div style={{ display: "flex", flexDirection: "row", alignItems: "center", cursor: "pointer" }}>
+        <FontAwesomeIcon icon={faHandshake} style={{ marginRight: 10 }} />
+        SHARE
+    </div>
 )
 
 export const applicationStatusFilters = {

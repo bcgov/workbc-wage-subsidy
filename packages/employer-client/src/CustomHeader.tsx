@@ -46,7 +46,7 @@ export const Header = (props: HeaderProps) => {
                         style={{ display: "flex", flexDirection: "row", alignItems: "center", cursor: "pointer" }}
                         onClick={() => console.log("TODO!")}
                     >
-                        <FontAwesomeIcon icon={faBookOpenReader} size="2x" style={{ marginRight: 20 }} />
+                        <FontAwesomeIcon icon={faBookOpenReader} size="2x" style={{ marginRight: 15 }} />
                         Employer Handbook
                     </div>
                 </Toolbar>
