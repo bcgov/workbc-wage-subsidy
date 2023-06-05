@@ -14,7 +14,7 @@ const ModalButton: React.FC<ModalButtonProps> = ({ text, showIcon, onClick }) =>
             <img
                 width="20em"
                 src="/external-link-alt-solid.svg"
-                alt="Employer logo"
+                alt="Information popout link icon"
                 style={{ transform: "translate(0.5em, 0.12em)" }}
             />
         )
