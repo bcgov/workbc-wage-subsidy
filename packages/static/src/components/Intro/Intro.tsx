@@ -1,26 +1,12 @@
 import React, { useCallback } from "react"
-import Modal from "react-modal"
+import BCGovModal from "../common/BCGovModal/BCGovModal"
+import ModalButton from "../common/BCGovModalButton/BCGovModalButton"
 import "./Intro.css"
-
-const modalStyles = {
-    content: {
-        top: "50%",
-        left: "50%",
-        right: "auto",
-        bottom: "auto",
-        marginRight: "-50%",
-        transform: "translate(-50%, -50%)"
-    }
-}
 
 const Intro = () => {
     const [modalIsOpen, setIsOpen] = React.useState(false)
 
     const openModal = useCallback(() => {
-        setIsOpen(true)
-    }, [])
-
-    const afterOpenModal = useCallback(() => {
         setIsOpen(true)
     }, [])
 
@@ -35,14 +21,10 @@ const Intro = () => {
                 The WorkBC Wage Subsidy program provides funding to eligible employers to hire, provide work experience
                 and on-the-job training to unemployed British Columbians.
             </p>
-            <button type="button" onClick={openModal}>
-                Find out more
-            </button>
-            <Modal
+            <ModalButton text="Find out more" showIcon onClick={openModal} />
+            <BCGovModal
                 isOpen={modalIsOpen}
-                onAfterOpen={afterOpenModal}
                 onRequestClose={closeModal}
-                style={modalStyles}
                 contentLabel="Find out more about the WorkBC Wage Subsidy"
             >
                 <h2>Wage Subsidy Benefits for Employers</h2>
@@ -59,10 +41,7 @@ const Intro = () => {
                     </ul>
                     <li>Job Seeker Eligibility: All residents of B.C. who are not employed at all</li>
                 </ul>
-                <button type="button" onClick={closeModal}>
-                    OK
-                </button>
-            </Modal>
+            </BCGovModal>
         </div>
     )
 }

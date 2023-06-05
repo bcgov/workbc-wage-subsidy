@@ -1,0 +1,15 @@
+.bc-gov-modal-button {
+    color: blue;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    font-family: 'BCSans', 'Noto Sans', Verdana, Arial, sans-serif;
+    font-weight: 400;
+    padding: 0em 0em 0em 0em;
+  }
+  
+.bc-gov-modal-button:hover {
+  text-decoration: underline;
+  opacity: 0.80;
+}
