@@ -12,7 +12,7 @@ import { dataProvider } from "./DataProvider/DataProvider"
 import Ready from "./Admin/ready"
 import Footer from "./footer"
 import Layout from "./Layout"
-import { ApplicationEdit } from "./Applications/ApplicationsEdit"
+import { ApplicationShow } from "./Applications/ApplicationsShow"
 import { ClaimEdit } from "./Claims/ClaimEdit"
 import { Box } from "@mui/material"
 import Logo from "./Logo"
@@ -112,7 +112,7 @@ const CustomAdminWithKeycloak = () => {
                         options={{ label: "Applications" }}
                         list={ApplicationList}
                         create={ApplicationCreate}
-                        edit={ApplicationEdit}
+                        show={ApplicationShow}
                     />
                     <Resource name="claims" list={ClaimList} edit={ClaimEdit} create={CreateClaim} />
                 </>
