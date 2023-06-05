@@ -1,9 +1,9 @@
 .card-container {
-    padding:65px 65px;
-    width: 100%-130px;
-    margin-bottom: 30px;
+    padding:3em 0em 3em 0em;
+    max-width: 100%;
+    margin-bottom: 3em;
     height: auto;
-    display: grid;
-    gap: 30px;
-    grid-template-columns: 1fr 1fr;
+    display: flex;
+    gap: 2em;
+    flex-direction: horizontal;
 }
