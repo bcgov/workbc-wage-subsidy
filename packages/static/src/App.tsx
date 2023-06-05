@@ -14,7 +14,7 @@ function App() {
     return (
         <div className="App">
             <Header />
-            <Box padding="0em 8em 0em 8em">
+            <Box padding="0em 8em">
                 <Intro />
                 <CardContainer>
                     <EmployerCard />

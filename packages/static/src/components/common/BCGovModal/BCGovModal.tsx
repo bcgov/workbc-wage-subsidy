@@ -11,11 +11,12 @@ const modalStyles = {
         bottom: "auto",
         marginRight: "-50%",
         transform: "translate(-50%, -50%)",
-        borderRadius: "12px",
-        maxWidth: "50em"
+        borderRadius: "6px",
+        maxWidth: "47em",
+        boxShadow: "0 0 30px 0 rgb(0 0 0 / 15%)"
     },
     overlay: {
-        backgroundColor: "rgba(0, 0, 0, 0.75)"
+        backgroundColor: "rgba(210, 210, 210, 0.58)"
     }
 }
 
@@ -28,9 +29,11 @@ interface BCGovModalProps {
 
 const BCGovModal: React.FC<BCGovModalProps> = ({ isOpen, onRequestClose, contentLabel, children }) => (
     <Modal isOpen={isOpen} onRequestClose={onRequestClose} style={modalStyles} contentLabel={contentLabel}>
-        {children}
-        <Box width="100%" textAlign="right">
-            <ModalButton text="OK" showIcon={false} onClick={onRequestClose as () => void} />
+        <Box paddingRight="2.5em">
+            {children}
+            <Box width="100%" textAlign="right" paddingTop="1em" style={{ transform: "translate(0.8em, 0.0em)" }}>
+                <ModalButton text="OK" showIcon={false} onClick={onRequestClose as () => void} />
+            </Box>
         </Box>
     </Modal>
 )

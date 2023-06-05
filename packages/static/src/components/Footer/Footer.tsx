@@ -1,4 +1,5 @@
 import Box from "@mui/material/Box"
+import "./Footer.css"
 
 const Footer = () => (
     <footer className="footer">
