@@ -1,9 +1,10 @@
 import React from "react"
 import { Link as RouterLink } from "react-router-dom"
-import { Toolbar, AppBar, AppBarProps, Box, Link } from "@mui/material"
+import { Toolbar, AppBar, AppBarProps, Box, Link, IconButton } from "@mui/material"
 import { styled } from "@mui/material/styles"
 import { UserMenu, LoadingIndicator, LocalesMenuButton, TitleComponent, useLocales } from "react-admin"
-
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { faBookOpenReader } from "@fortawesome/pro-solid-svg-icons"
 import { useContainerLayout, HorizontalMenu } from "@react-admin/ra-navigation"
 
 export const Header = (props: HeaderProps) => {
@@ -41,6 +42,13 @@ export const Header = (props: HeaderProps) => {
             >
                 <Toolbar variant="dense" className={HeaderClasses.toolbar}>
                     <Box>{menu}</Box>
+                    <div
+                        style={{ display: "flex", flexDirection: "row", alignItems: "center", cursor: "pointer" }}
+                        onClick={() => console.log("TODO!")}
+                    >
+                        <FontAwesomeIcon icon={faBookOpenReader} size="2x" style={{ marginRight: 20 }} />
+                        Employer Handbook
+                    </div>
                 </Toolbar>
             </Root2>
         </>

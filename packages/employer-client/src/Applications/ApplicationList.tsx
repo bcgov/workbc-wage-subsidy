@@ -1,41 +1,29 @@
 import {
-    BooleanInput,
     BulkDeleteButton,
     CreateButton,
     Datagrid,
-    EditButton,
     FilterButton,
     FunctionField,
     List,
     TextField,
     TopToolbar,
-    BooleanField,
-    DateField,
-    NumberField,
-    useRecordContext,
     useStore
 } from "react-admin"
-import { useKeycloak } from "@react-keycloak/web"
-import CircleIcon from "@mui/icons-material/Circle"
-import Button from "@mui/material/Button"
-import { Typography } from "@mui/material"
-import { CustomShow } from "./ApplicationCustomShow"
+import { Chip } from "@mui/material"
 import { ApplicationListAside } from "./ApplicationListAside"
-
-const formFilters = [
-    <BooleanInput
-        source="status"
-        label="Complete"
-        defaultValue={true}
-        sx={{ paddingBottom: "20px", paddingLeft: "20px" }}
-    />
-]
 
 const ListActions = () => (
     <TopToolbar sx={{ paddingTop: "5vh" }}>
         <div>
             <FilterButton />
-            <CreateButton />
+            <CreateButton
+                label="New Application"
+                sx={{
+                    color: "#fff",
+                    backgroundColor: "#003366",
+                    marginBottom: 2
+                }}
+            />
         </div>
     </TopToolbar>
 )
@@ -44,114 +32,6 @@ const FormBulkActionButtons = () => (
     <>
         <BulkDeleteButton />
     </>
-)
-
-const EditIcon = () => <></>
-
-const FormattedFunctionField = ({ source }: any) => {
-    const record = useRecordContext()
-    const re = /[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{3}Z/
-    console.log(record[source])
-    if (record[source] === null || !record) {
-        return null
-    }
-    if (source === "applicationid") {
-        return <Typography variant="body2">{record[source].toString().substring(0, 8)}</Typography>
-    }
-    if (typeof record[source] === "number") {
-        if (source.includes("wage")) {
-            const value = (record[source] / 100).toFixed(2)
-            return <Typography variant="body2">${value}</Typography>
-        }
-        return <NumberField source={source} />
-    }
-    if (typeof record[source] === "string" && re.test(record[source])) {
-        return <DateField source={source} />
-    }
-    if (typeof record[source] === "string") {
-        if (record[source] === "NULL" && source === "applicationstatus") {
-            return <Typography variant="body2">New</Typography>
-        }
-        return <TextField source={source} />
-    }
-    if (typeof record[source] === "boolean") {
-        return <BooleanField source={source} />
-    }
-    return null
-}
-
-const PostShow = (...props: any) => (
-    <CustomShow>
-        <FormattedFunctionField source="id" />
-        <FormattedFunctionField source="title" />
-        <FormattedFunctionField source="catchmentno" />
-        <FormattedFunctionField source="formtype" />
-        <FormattedFunctionField source="applicationid" />
-        <FormattedFunctionField source="applicationstatus" />
-        <FormattedFunctionField source="operatingname" />
-        <FormattedFunctionField source="businessnumber" />
-        <FormattedFunctionField source="businessaddress1" />
-        <FormattedFunctionField source="businesscity" />
-        <FormattedFunctionField source="businessprovince" />
-        <FormattedFunctionField source="businesspostal" />
-        <FormattedFunctionField source="businessphone" />
-        <FormattedFunctionField source="businessfax" />
-        <FormattedFunctionField source="businessemail" />
-        <FormattedFunctionField source="otherworkaddress" />
-        <FormattedFunctionField source="sectortype" />
-        <FormattedFunctionField source="typeofindustry" />
-        <FormattedFunctionField source="organizationsize" />
-        <FormattedFunctionField source="cewsandorcrhp" />
-        <FormattedFunctionField source="employeedisplacement" />
-        <FormattedFunctionField source="labourdispute" />
-        <FormattedFunctionField source="unionconcurrence" />
-        <FormattedFunctionField source="liabilitycoverage" />
-        <FormattedFunctionField source="wagesubsidy" />
-        <FormattedFunctionField source="wsbccoverage" />
-        <FormattedFunctionField source="lawcomplianceconsent" />
-        <FormattedFunctionField source="orgeligibilityconsent" />
-        <FormattedFunctionField source="wsbcnumber" />
-        <FormattedFunctionField source="addressalt" />
-        <FormattedFunctionField source="cityalt" />
-        <FormattedFunctionField source="provincealt" />
-        <FormattedFunctionField source="postalalt" />
-        <FormattedFunctionField source="participantemail0" />
-        <FormattedFunctionField source="participantemail1" />
-        <FormattedFunctionField source="participantemail2" />
-        <FormattedFunctionField source="participantemail3" />
-        <FormattedFunctionField source="participantemail4" />
-        <FormattedFunctionField source="positiontitle0" />
-        <FormattedFunctionField source="numberofpositions0" />
-        <FormattedFunctionField source="startdate0" />
-        <FormattedFunctionField source="hours0" />
-        <FormattedFunctionField source="wage0" />
-        <FormattedFunctionField source="applicationmercs0" />
-        <FormattedFunctionField source="duties0" />
-        <FormattedFunctionField source="skills0" />
-        <FormattedFunctionField source="workexperience0" />
-        <FormattedFunctionField source="positiontitle1" />
-        <FormattedFunctionField source="numberofpositions1" />
-        <FormattedFunctionField source="startdate1" />
-        <FormattedFunctionField source="hours1" />
-        <FormattedFunctionField source="wage1" />
-        <FormattedFunctionField source="applicationmercs1" />
-        <FormattedFunctionField source="duties1" />
-        <FormattedFunctionField source="skills1" />
-        <FormattedFunctionField source="workexperience1" />
-        <FormattedFunctionField source="signatory1" />
-        <FormattedFunctionField source="organizationconsent" />
-        <FormattedFunctionField source="history" />
-        <FormattedFunctionField source="sf" />
-        <FormattedFunctionField source="centrename" />
-        <FormattedFunctionField source="markedfordeletion" />
-        <FormattedFunctionField source="internalid" />
-        <FormattedFunctionField source="modified" />
-        <FormattedFunctionField source="created" showDate showTime />
-        <FormattedFunctionField source="status" />
-        <FormattedFunctionField source="createdby" />
-        <FormattedFunctionField source="createdbyguid" />
-        <FormattedFunctionField source="confirmationid" />
-    </CustomShow>
 )
 
 export const applicationStatusFilters = {
@@ -163,54 +43,78 @@ export const applicationStatusFilters = {
 } as { [key: string]: any }
 
 export const ApplicationList = (props: any) => {
-    const { keycloak } = useKeycloak()
     const [statusFilter] = useStore("resources.applications.list.statusFilter", applicationStatusFilters.All)
 
     return (
         <List {...props} actions={<ListActions />} filter={statusFilter} filters={[]} aside={<ApplicationListAside />}>
-            <Datagrid expand={<PostShow {...props} />} bulkActionButtons={<FormBulkActionButtons />}>
-                <TextField label="ID" source="id" />
-                <FunctionField
-                    label="Form Type"
-                    render={(record: any) =>
-                        record.formtype === "haveEmployee" ? <div>Have Employee</div> : <div>Need Employee</div>
+            <Datagrid
+                bulkActionButtons={<FormBulkActionButtons />}
+                sx={{
+                    "& .column-lock": {
+                        padding: "6px 0",
+                        "& svg": { verticalAlign: "middle" }
                     }
-                />
+                }}
+                rowClick="show"
+            >
+                <TextField label="Submission ID" source="applicationid" emptyText="-" textAlign="center" />
+                <TextField label="Position Title" source="title" emptyText="-" textAlign="center" />
+                <TextField
+                    label="Number of Positions"
+                    source="numberofpositions0"
+                    emptyText="-"
+                    textAlign="center"
+                />{" "}
+                {/* TODO */}
+                <TextField label="Submitted Date" source="submitted" emptyText="-" textAlign="center" /> {/* TODO */}
+                <TextField label="Shared With" source="sharedwith" emptyText="-" textAlign="center" /> {/* TODO */}
                 <FunctionField
-                    label="Status"
-                    render={(record: any) =>
-                        !record.status ? (
-                            <div>
-                                <CircleIcon sx={{ fontSize: 10 }} htmlColor="#ec4c47" />
-                                <div style={{ display: "inline-block", paddingLeft: "0.5vw" }}>Not Submitted</div>
-                            </div>
-                        ) : record.status === "submitted" ? (
-                            <>
-                                {record.applicationstatus === "New" ? (
-                                    <div>
-                                        <CircleIcon sx={{ fontSize: 10 }} htmlColor="#47b881" />
-                                        <div style={{ display: "inline-block", paddingLeft: "0.5vw" }}>Submitted</div>
-                                    </div>
-                                ) : record.applicationstatus === "In Progress" ? (
-                                    <div>
-                                        <CircleIcon sx={{ fontSize: 10 }} htmlColor="yellow" />
-                                        <div style={{ display: "inline-block", paddingLeft: "0.5vw" }}>In Progress</div>
-                                    </div>
-                                ) : (
-                                    <div>
-                                        <CircleIcon sx={{ fontSize: 10 }} htmlColor="green" />
-                                        <div style={{ display: "inline-block", paddingLeft: "0.5vw" }}>Completed</div>
-                                    </div>
-                                )}
-                            </>
-                        ) : (
-                            <div>
-                                <CircleIcon sx={{ fontSize: 10 }} htmlColor="#f7d154" />
-                                <div style={{ display: "inline-block", paddingLeft: "0.5vw" }}>In Draft</div>
-                            </div>
+                    label=""
+                    render={
+                        (record: any) => (
+                            <Chip
+                                label={record.status ?? "Not Submitted"}
+                                size="small"
+                                color={
+                                    record.status === "New"
+                                        ? "primary"
+                                        : record.status === "In Progress"
+                                        ? "secondary"
+                                        : record.status === "Submitted"
+                                        ? "success"
+                                        : "info"
+                                }
+                            />
                         )
+
+                        // record.status === "submitted" ? (
+                        //     <>
+                        //         {record.applicationstatus === "New" ? (
+                        //             <div>
+                        //                 <CircleIcon sx={{ fontSize: 10 }} htmlColor="#47b881" />
+                        //                 <div style={{ display: "inline-block", paddingLeft: "0.5vw" }}>Submitted</div>
+                        //             </div>
+                        //         ) : record.applicationstatus === "In Progress" ? (
+                        //             <div>
+                        //                 <CircleIcon sx={{ fontSize: 10 }} htmlColor="yellow" />
+                        //                 <div style={{ display: "inline-block", paddingLeft: "0.5vw" }}>In Progress</div>
+                        //             </div>
+                        //         ) : (
+                        //             <div>
+                        //                 <CircleIcon sx={{ fontSize: 10 }} htmlColor="green" />
+                        //                 <div style={{ display: "inline-block", paddingLeft: "0.5vw" }}>Completed</div>
+                        //             </div>
+                        //         )}
+                        //     </>
+                        // ) : (
+                        //     <div>
+                        //         <CircleIcon sx={{ fontSize: 10 }} htmlColor="#f7d154" />
+                        //         <div style={{ display: "inline-block", paddingLeft: "0.5vw" }}>In Draft</div>
+                        //     </div>
+                        // )
                     }
                 />
+                {/*
                 <FunctionField
                     label="Confirmation ID"
                     render={(record: any) =>
@@ -292,7 +196,7 @@ export const ApplicationList = (props: any) => {
                             `N/A`
                         )
                     }}
-                />
+                /> */}
             </Datagrid>
         </List>
     )
