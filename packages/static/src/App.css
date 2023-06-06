@@ -9,11 +9,11 @@
 
 a {
   color: #307FE2;
+  text-decoration: none;
 }
 
 a:hover {
   opacity: 0.80;
-  text-decoration: underline;
 }
 
 :focus {
