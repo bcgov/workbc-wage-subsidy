@@ -7,7 +7,7 @@ import BCGovPrimaryButton from "../common/BCGovPrimaryButton/BCGovPrimaryButton"
 import Card from "../common/Card/Card"
 
 const EmployerCard = () => {
-    const [modalIsOpen, setIsOpen] = React.useState(false)
+    const [isOpen, setIsOpen] = React.useState(false)
 
     const openModal = useCallback(() => {
         setIsOpen(true)
@@ -31,7 +31,7 @@ const EmployerCard = () => {
                                     <li>Claim Forms</li>
                                 </ul>
                                 <p>
-                                    You can log in with either a <strong>Basic BCeID</strong> or a{" "}
+                                    You can log in with either a <strong>Basic BCeID</strong> or a&nbsp;
                                     <strong>Business BCeID</strong>
                                 </p>
                                 <ModalButton text="More info on BCeID" showIcon onClick={openModal} />
@@ -48,29 +48,25 @@ const EmployerCard = () => {
                     <Box display="flex" height="100%" justifyContent="center" alignItems="end" sx={{ flexGrow: 1 }}>
                         <BCGovPrimaryButton
                             text="Employer Login"
-                            onClick={() => window.open("https://wage-sub-dev-employer.es.workbc.ca")}
+                            onClick={() => window.open(import.meta.env.VITE_EMPLOYER_URL)}
                         />
                     </Box>
                 </Grid>
             </Grid>
-            <BCGovModal
-                isOpen={modalIsOpen}
-                onRequestClose={closeModal}
-                contentLabel="Find out more about the WorkBC Wage Subsidy"
-            >
+            <BCGovModal isOpen={isOpen} onRequestClose={closeModal} contentLabel="More info on BCeID">
                 <h2>BCeID Options</h2>
                 <h3>Business BCeID</h3>
                 <p>
-                    Use a{" "}
+                    Use a&nbsp;
                     <a href="https://www.bceid.ca/register/business/getting_started/getting_started.aspx">
                         Business BCeID
-                    </a>{" "}
-                    if you would like to view and <strong>share applications</strong> and
+                    </a>
+                    &nbsp;if you would like to view and <strong>share applications</strong> and
                     <strong> claim forms within your organization.</strong>
                 </p>
                 <p>
                     Note that if you are starting a new Business BCeID registration, it can take some time to verify
-                    your business if it is not already registered with{" "}
+                    your business if it is not already registered with&nbsp;
                     <a href="https://www2.gov.bc.ca/gov/content/governments/organizational-structure/ministries-organizations/ministries/citizens-services/bc-registries-online-services">
                         BC Registries and Online Services
                     </a>
@@ -88,7 +84,7 @@ const EmployerCard = () => {
                 </p>
                 <h3>Basic BCeID</h3>
                 <p>
-                    With a{" "}
+                    With a&nbsp;
                     <a href="https://www.bceid.ca/register/basic/account_details.aspx?type=regular&eServiceType=basic">
                         Basic BCeID
                     </a>
@@ -101,8 +97,8 @@ const EmployerCard = () => {
                     within their own organization.
                 </p>
                 <p>
-                    For <a href="https://www.bceid.ca/">more information</a> and{" "}
-                    <a href="https://www.bceid.ca/aboutbceid/faqs.aspx">Frequently Asked Questions</a>, visit{" "}
+                    For <a href="https://www.bceid.ca/">more information</a> and&nbsp;
+                    <a href="https://www.bceid.ca/aboutbceid/faqs.aspx">Frequently Asked Questions</a>, visit&nbsp;
                     <a href="https://www.bceid.ca/">www.bceid.ca</a>
                 </p>
             </BCGovModal>

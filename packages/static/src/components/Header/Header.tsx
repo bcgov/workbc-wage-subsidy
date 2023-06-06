@@ -15,7 +15,7 @@ const Header = () => (
             <button
                 className="ministry-login-button"
                 type="button"
-                onClick={() => window.open("https://www2.gov.bc.ca/gov/content/home")}
+                onClick={() => window.open(import.meta.env.VITE_MINISTRY_URL)}
             >
                 MINISTRY LOGIN
             </button>
