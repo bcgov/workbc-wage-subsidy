@@ -22,11 +22,11 @@ const Intro = () => {
                 The WorkBC Wage Subsidy program provides funding to eligible employers to hire, provide work experience
                 and on-the-job training to unemployed British Columbians.
             </p>
-            <ModalButton text="Find out more" showIcon onClick={openModal} />
+            <ModalButton text="Find out more" showIcon onClick={openModal} ariaHasPopup="dialog" />
             <BCGovModal
                 isOpen={modalIsOpen}
                 onRequestClose={closeModal}
-                contentLabel="Find out more about the WorkBC Wage Subsidy"
+                contentLabel="More information about the WorkBC Wage Subsidy"
             >
                 <h2>Wage Subsidy Benefits for Employers</h2>
                 <Box paddingLeft="1em">

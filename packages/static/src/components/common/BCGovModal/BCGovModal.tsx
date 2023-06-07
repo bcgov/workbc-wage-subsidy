@@ -13,7 +13,8 @@ const modalStyles = {
         transform: "translate(-50%, -50%)",
         borderRadius: "6px",
         maxWidth: "47em",
-        boxShadow: "0 0 30px 0 rgb(0 0 0 / 15%)"
+        boxShadow: "0 0 30px 0 rgb(0 0 0 / 15%)",
+        maxHeight: "80%"
     },
     overlay: {
         backgroundColor: "rgba(210, 210, 210, 0.58)"
@@ -31,8 +32,13 @@ const BCGovModal: React.FC<BCGovModalProps> = ({ isOpen, onRequestClose, content
     <Modal isOpen={isOpen} onRequestClose={onRequestClose} style={modalStyles} contentLabel={contentLabel}>
         <Box paddingRight="2.5em">
             {children}
-            <Box width="100%" textAlign="right" paddingTop="1em" style={{ transform: "translate(0.8em, 0.0em)" }}>
-                <ModalButton text="OK" showIcon={false} onClick={onRequestClose as () => void} />
+            <Box width="100%" textAlign="right" paddingTop="1em" style={{ transform: "translate(1.1em, 0.0em)" }}>
+                <ModalButton
+                    text="OK"
+                    showIcon={false}
+                    onClick={onRequestClose as () => void}
+                    ariaLabel="Close dialog"
+                />
             </Box>
         </Box>
     </Modal>

@@ -14,7 +14,12 @@ const ServiceProviderCard = () => (
             </Grid>
             <Grid item>
                 <Box display="flex" justifyContent="right">
-                    <img width="400em" src="/service-provider.svg" alt="Service Provider logo" />
+                    <img
+                        width="400em"
+                        src="/service-provider.svg"
+                        alt=""
+                        style={{ transform: "translate(-2.0em, 0.0em)" }}
+                    />
                 </Box>
             </Grid>
             <Grid item xs>

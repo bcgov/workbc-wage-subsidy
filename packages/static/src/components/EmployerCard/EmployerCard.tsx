@@ -34,12 +34,22 @@ const EmployerCard = () => {
                                     You can log in with either a <strong>Basic BCeID</strong> or a&nbsp;
                                     <strong>Business BCeID</strong>
                                 </p>
-                                <ModalButton text="More info on BCeID" showIcon onClick={openModal} />
+                                <ModalButton
+                                    text="More info on BCeID"
+                                    showIcon
+                                    onClick={openModal}
+                                    ariaHasPopup="dialog"
+                                />
                             </Box>
                         </Grid>
                         <Grid item xs={6}>
                             <Box display="flex" height="100%" justifyContent="center" alignItems="center">
-                                <img width="250em" src="/employer.svg" alt="Employer logo" />
+                                <img
+                                    width="250em"
+                                    src="/employer.svg"
+                                    alt=""
+                                    style={{ transform: "translate(0.0em, -0.75em)" }}
+                                />
                             </Box>
                         </Grid>
                     </Grid>
@@ -53,7 +63,7 @@ const EmployerCard = () => {
                     </Box>
                 </Grid>
             </Grid>
-            <BCGovModal isOpen={isOpen} onRequestClose={closeModal} contentLabel="More info on BCeID">
+            <BCGovModal isOpen={isOpen} onRequestClose={closeModal} contentLabel="More information about BCeIDs">
                 <h2>BCeID Options</h2>
                 <h3>Business BCeID</h3>
                 <p>
