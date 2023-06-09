@@ -9,7 +9,7 @@ import {
     TopToolbar,
     useStore
 } from "react-admin"
-import { Chip } from "@mui/material"
+import { Button, Chip } from "@mui/material"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faHandshake } from "@fortawesome/pro-solid-svg-icons"
 import { ApplicationListAside } from "./ApplicationListAside"
@@ -18,12 +18,25 @@ const ListActions = () => (
     <TopToolbar sx={{ paddingTop: "5vh" }}>
         <div>
             <FilterButton />
+            {/* <Button
+                href={`${process.env.REACT_APP_NEED_EMPLOYEE_URL}&token=${record.internalid}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                variant="contained"
+                sx={{ textAlign: "center", backgroundColor: "#003366" }}
+            >
+                Fill Out Form
+            </Button> */}
             <CreateButton
                 label="New Application"
                 sx={{
                     color: "#fff",
-                    backgroundColor: "#003366",
+                    backgroundColor: "#002d72",
+                    fontWeight: "bold",
                     marginBottom: 2
+                }}
+                onClick={() => {
+                    console.log("xd")
                 }}
             />
         </div>
@@ -39,10 +52,11 @@ const FormBulkActionButtons = () => (
 
 export const applicationStatusFilters = {
     All: { label: "All" },
-    NotSubmitted: { label: "Not Submitted", applicationstatus: null },
-    InProgress: { label: "In Progress", applicationstatus: "In Progress" },
-    Completed: { label: "Completed", applicationstatus: "Completed" },
-    Cancelled: { label: "Cancelled", applicationstatus: "Cancelled" }
+    NotSubmitted: { label: "Not Submitted", status: "not submitted" },
+    Submitted: { label: "Submitted", applicationstatus: "New", status: "submitted" },
+    Processing: { label: "Processing", applicationstatus: "In Progress", status: "submitted" },
+    Completed: { label: "Completed", applicationstatus: "Completed", status: "submitted" },
+    Cancelled: { label: "Cancelled", status: "cancelled" }
 } as { [key: string]: any }
 
 export const ApplicationList = (props: any) => {
@@ -56,11 +70,20 @@ export const ApplicationList = (props: any) => {
                     "& .column-lock": {
                         padding: "6px 0",
                         "& svg": { verticalAlign: "middle" }
+                    },
+                    "& .RaDatagrid-rowCell": {
+                        textAlign: "center"
+                    },
+                    "& .RaDatagrid-headerCell": {
+                        fontWeight: "bold"
                     }
+                    // "& .RaDatagrid-checkbox": {
+                    //     color: "#3974cb",
+                    // }
                 }}
                 rowClick="show"
             >
-                <TextField label="Submission ID" source="applicationid" emptyText="-" textAlign="center" />
+                <TextField label="Submission ID" source="id" emptyText="-" textAlign="center" />
                 <TextField label="Position Title" source="title" emptyText="-" textAlign="center" />
                 <TextField
                     label="Number of Positions"
@@ -73,71 +96,38 @@ export const ApplicationList = (props: any) => {
                 <TextField label="Shared With" source="sharedwith" emptyText="-" textAlign="center" /> {/* TODO */}
                 <FunctionField
                     label=""
-                    render={
-                        (record: any) => (
-                            <Chip
-                                label={record.status ?? "Not Submitted"}
-                                size="small"
-                                color={
-                                    record.status === "New"
-                                        ? "primary"
-                                        : record.status === "In Progress"
-                                        ? "secondary"
-                                        : record.status === "Submitted"
-                                        ? "success"
-                                        : "info"
-                                }
-                            />
-                        )
-
-                        // record.status === "submitted" ? (
-                        //     <>
-                        //         {record.applicationstatus === "New" ? (
-                        //             <div>
-                        //                 <CircleIcon sx={{ fontSize: 10 }} htmlColor="#47b881" />
-                        //                 <div style={{ display: "inline-block", paddingLeft: "0.5vw" }}>Submitted</div>
-                        //             </div>
-                        //         ) : record.applicationstatus === "In Progress" ? (
-                        //             <div>
-                        //                 <CircleIcon sx={{ fontSize: 10 }} htmlColor="yellow" />
-                        //                 <div style={{ display: "inline-block", paddingLeft: "0.5vw" }}>In Progress</div>
-                        //             </div>
-                        //         ) : (
-                        //             <div>
-                        //                 <CircleIcon sx={{ fontSize: 10 }} htmlColor="green" />
-                        //                 <div style={{ display: "inline-block", paddingLeft: "0.5vw" }}>Completed</div>
-                        //             </div>
-                        //         )}
-                        //     </>
-                        // ) : (
-                        //     <div>
-                        //         <CircleIcon sx={{ fontSize: 10 }} htmlColor="#f7d154" />
-                        //         <div style={{ display: "inline-block", paddingLeft: "0.5vw" }}>In Draft</div>
-                        //     </div>
-                        // )
-                    }
+                    render={(record: any) => (
+                        <Chip
+                            label={
+                                record.status === "submitted" && record.applicationstatus === "New"
+                                    ? "Submitted"
+                                    : record.status === "submitted" && record.applicationstatus === "In Progress"
+                                    ? "Processing"
+                                    : record.status === "submitted" && record.applicationstatus === "Completed"
+                                    ? "Completed"
+                                    : record.status === "cancelled"
+                                    ? "Cancelled"
+                                    : "Not Submitted"
+                            }
+                            size="small"
+                            color={
+                                record.status === "submitted" && record.applicationstatus === "New"
+                                    ? "primary"
+                                    : record.status === "submitted" && record.applicationstatus === "In Progress"
+                                    ? "warning"
+                                    : record.status === "submitted" && record.applicationstatus === "Completed"
+                                    ? "success"
+                                    : record.status === "cancelled"
+                                    ? "error"
+                                    : "info"
+                            }
+                        />
+                    )}
                 />
-                {/*
-                <FunctionField
-                    label="Confirmation ID"
-                    render={(record: any) =>
-                        record.confirmationid === null ? <div>N/A</div> : <div>{record.confirmationid}</div>
-                    }
-                />
-                <FunctionField label="Owner" render={(record: any) => <div>{record.createdby}</div>} />
-                <FunctionField
-                    label="BCeIDs Shared With"
-                    render={(record: any) =>
-                        record.sharedwith === "" ? <div>N/A</div> : <div>{record.sharedwith}</div>
-                    }
-                />
-                <FunctionField
+                {/* <FunctionField
                     label="Actions"
                     render={(record: any) => {
-                        if (keycloak.idTokenParsed?.bceid_username !== record.createdby) {
-                            return <>N/A</>
-                        }
-                        return record.status === null ? (
+                        return record.status === "not submitted" ? (
                             <div>
                                 <Button
                                     href={`${
@@ -176,24 +166,6 @@ export const ApplicationList = (props: any) => {
                                 >
                                     View Application
                                 </Button>
-                                {keycloak.idTokenParsed?.bceid_username === record.createdby && (
-                                    <EditButton
-                                        icon={(<EditIcon />) as React.ReactElement<any>}
-                                        label="Share"
-                                        sx={{
-                                            textAlign: "center",
-                                            backgroundColor: "#003366",
-                                            color: "white",
-                                            padding: "6px 16px 6px",
-                                            width: "auto",
-                                            height: "36.5px",
-                                            fontSize: "14px",
-                                            minWidth: "64px",
-                                            margin: "5px",
-                                            ":hover": { background: "#1976d2" }
-                                        }}
-                                    />
-                                )}
                             </>
                         ) : (
                             `N/A`

@@ -12,7 +12,7 @@ export const ApplicationCreate = (props: any) => {
 
     return !isLoading && !identityLoading && permissions ? (
         <Create {...props}>
-            <div style={{ position: "relative", height: "700px" }}>
+            {/* <div style={{ position: "relative", height: "700px" }}>
                 <div
                     style={{ backgroundColor: "white", width: "100%", height: "58px", position: "absolute", zIndex: 1 }}
                 >
@@ -23,8 +23,8 @@ export const ApplicationCreate = (props: any) => {
                     src="https://forms-dev.es.workbc.ca/app/form/submit?f=47794263-67fd-490e-b6ad-c26313b2563a"
                     style={{ width: "100%", height: "700px" }}
                 ></iframe>
-            </div>
-            {/* <SimpleForm defaultValues={defaultValues}>
+            </div> */}
+            <SimpleForm defaultValues={defaultValues}>
                 <SelectInput
                     source="formtype"
                     label="Application Type"
@@ -34,7 +34,7 @@ export const ApplicationCreate = (props: any) => {
                         { id: "needEmployee", name: "Need Employee" }
                     ]}
                 />
-            </SimpleForm> */}
+            </SimpleForm>
         </Create>
     ) : (
         <div>Loading</div>
