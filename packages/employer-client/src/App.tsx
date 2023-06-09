@@ -70,11 +70,33 @@ export const lightTheme = {
                     borderBottom: "3px solid #FCBA19"
                 }
             }
+        },
+        MuiChip: {
+            styleOverrides: {
+                colorSuccess: {
+                    color: "#fff"
+                }
+            }
         }
     },
     palette: {
+        primary: {
+            main: "#0745a3"
+        },
         secondary: {
             main: "#FCBA19"
+        },
+        info: {
+            main: "#4995ec"
+        },
+        warning: {
+            main: "#3974cb"
+        },
+        success: {
+            main: "#75b404"
+        },
+        error: {
+            main: "#e5e8ef"
         }
     }
 }

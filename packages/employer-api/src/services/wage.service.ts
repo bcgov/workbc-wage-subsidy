@@ -8,15 +8,17 @@ export const getAllWage = async (perPage: number, currPage: number, filters: any
             console.log("user", user)
             console.log("sort", sort)
             if (filters.applicationstatus) {
-                // console.log("@@@@2", filters.applicationstatus)
                 queryBuilder.where("applicationstatus", filters.applicationstatus)
+            }
+            if (filters.status) {
+                queryBuilder.where("status", filters.status)
             }
             if (filters.catchmentno) {
                 queryBuilder.where("catchmentno", Number(filters.catchmentno))
             }
-            if (filters.status) {
-                queryBuilder.whereIn("status", filters.status)
-            }
+            // if (filters.status) {
+            //     queryBuilder.whereIn("status", filters.status)
+            // }
             if (user) {
                 // console.log(user)
                 queryBuilder.whereLike("createdby", user).orWhereLike("sharedwith", `%${user}%`)
@@ -47,7 +49,8 @@ export const insertWage = async (id: string, user: string, formType: string, use
         formtype: formType,
         createdby: user,
         createdbyguid: userGuid,
-        sharedwith: ""
+        sharedwith: "",
+        status: "not submitted"
     }
     const result = await knex("wage_subsidy_applications").insert(data)
     console.log(result)
