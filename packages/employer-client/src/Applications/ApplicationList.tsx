@@ -17,7 +17,6 @@ import { ApplicationListAside } from "./ApplicationListAside"
 const ListActions = () => (
     <TopToolbar sx={{ paddingTop: "5vh" }}>
         <div>
-            <FilterButton />
             {/* <Button
                 href={`${process.env.REACT_APP_NEED_EMPLOYEE_URL}&token=${record.internalid}`}
                 target="_blank"
@@ -27,18 +26,7 @@ const ListActions = () => (
             >
                 Fill Out Form
             </Button> */}
-            <CreateButton
-                label="New Application"
-                sx={{
-                    color: "#fff",
-                    backgroundColor: "#002d72",
-                    fontWeight: "bold",
-                    marginBottom: 2
-                }}
-                onClick={() => {
-                    console.log("xd")
-                }}
-            />
+            <CreateButton label="New Application" />
         </div>
     </TopToolbar>
 )
@@ -77,9 +65,6 @@ export const ApplicationList = (props: any) => {
                     "& .RaDatagrid-headerCell": {
                         fontWeight: "bold"
                     }
-                    // "& .RaDatagrid-checkbox": {
-                    //     color: "#3974cb",
-                    // }
                 }}
                 rowClick="show"
             >

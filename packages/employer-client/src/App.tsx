@@ -77,6 +77,50 @@ export const lightTheme = {
                     color: "#fff"
                 }
             }
+        },
+        RaCreateButton: {
+            styleOverrides: {
+                "& .RaCreateButton-root": {
+                    textColor: "#fff",
+                    backgroundColor: "#002d72",
+                    fontWeight: "bold",
+                    marginBottom: 2
+                },
+                root: {
+                    color: "#fff",
+                    backgroundColor: "#002d72",
+                    fontWeight: "bold",
+                    marginBottom: 2,
+                    "&:hover": {
+                        color: "#fff",
+                        backgroundColor: "#4995ec"
+                    }
+                }
+            }
+        },
+        RaDatagrid: {
+            styleOverrides: {
+                root: {
+                    "& .RaDatagrid-checkbox": {
+                        color: "#3974cb"
+                    },
+                    "& .RaDatagrid-headerCell": {
+                        "& .MuiCheckbox-root": {
+                            color: "#3974cb"
+                        }
+                    }
+                }
+            }
+        },
+        RaBulkActionsToolbar: {
+            styleOverrides: {
+                root: {
+                    "& .RaBulkActionsToolbar-toolbar": {
+                        backgroundColor: "#d7f0fa",
+                        color: "#3a86e3"
+                    }
+                }
+            }
         }
     },
     palette: {
