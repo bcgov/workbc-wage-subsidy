@@ -72,7 +72,9 @@ export const lightTheme = {
             }
         },
         MuiChip: {
+            textAlign: "center",
             styleOverrides: {
+                textAlign: "center",
                 colorSuccess: {
                     color: "#fff"
                 }
@@ -94,7 +96,9 @@ export const lightTheme = {
                     "&:hover": {
                         color: "#fff",
                         backgroundColor: "#4995ec"
-                    }
+                    },
+                    borderRadius: 20,
+                    minWidth: 180
                 }
             }
         },

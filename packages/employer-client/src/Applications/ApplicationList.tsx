@@ -60,25 +60,21 @@ export const ApplicationList = (props: any) => {
                         "& svg": { verticalAlign: "middle" }
                     },
                     "& .RaDatagrid-rowCell": {
-                        textAlign: "center"
+                        textAlign: "left"
                     },
                     "& .RaDatagrid-headerCell": {
-                        fontWeight: "bold"
+                        fontWeight: "bold",
+                        textAlign: "left"
                     }
                 }}
                 rowClick="show"
             >
-                <TextField label="Submission ID" source="id" emptyText="-" textAlign="center" />
-                <TextField label="Position Title" source="title" emptyText="-" textAlign="center" />
-                <TextField
-                    label="Number of Positions"
-                    source="numberofpositions0"
-                    emptyText="-"
-                    textAlign="center"
-                />{" "}
-                {/* TODO */}
-                <TextField label="Submitted Date" source="submitted" emptyText="-" textAlign="center" /> {/* TODO */}
-                <TextField label="Shared With" source="sharedwith" emptyText="-" textAlign="center" /> {/* TODO */}
+                <TextField label="Submission ID" source="confirmationid" emptyText="-" />
+                <TextField label="Position Title" source="title" emptyText="-" />
+                <TextField label="Number of Positions" source="numberofpositions0" emptyText="-" />{" "}
+                {/* TODO - once submitted date is implemented */}
+                <TextField label="Submitted Date" source="submitted" emptyText="-" /> {/* TODO */}
+                <TextField label="Shared With" source="sharedwith" emptyText="-" /> {/* TODO */}
                 <FunctionField
                     label=""
                     render={(record: any) => (
@@ -109,54 +105,6 @@ export const ApplicationList = (props: any) => {
                         />
                     )}
                 />
-                {/* <FunctionField
-                    label="Actions"
-                    render={(record: any) => {
-                        return record.status === "not submitted" ? (
-                            <div>
-                                <Button
-                                    href={`${
-                                        record.formtype === "haveEmployee"
-                                            ? process.env.REACT_APP_HAVE_EMPLOYEE_URL
-                                            : process.env.REACT_APP_NEED_EMPLOYEE_URL
-                                    }&token=${record.internalid}`}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    variant="contained"
-                                    sx={{ textAlign: "center", backgroundColor: "#003366" }}
-                                >
-                                    Fill Out Form
-                                </Button>
-                            </div>
-                        ) : record.status === "draft" ? (
-                            <>
-                                <Button
-                                    href={`${process.env.REACT_APP_DRAFT_URL}${record.applicationid}`}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    variant="contained"
-                                    sx={{ textAlign: "center", backgroundColor: "#003366" }}
-                                >
-                                    Continue Application
-                                </Button>
-                            </>
-                        ) : record.status === "submitted" ? (
-                            <>
-                                <Button
-                                    href={`${process.env.REACT_APP_VIEW_URL}${record.applicationid}`}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    variant="contained"
-                                    sx={{ textAlign: "center", backgroundColor: "#003366" }}
-                                >
-                                    View Application
-                                </Button>
-                            </>
-                        ) : (
-                            `N/A`
-                        )
-                    }}
-                /> */}
             </Datagrid>
         </List>
     )
