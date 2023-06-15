@@ -4,9 +4,6 @@ import { knex } from "../config/db-config"
 export const getAllWage = async (perPage: number, currPage: number, filters: any, sort: any, user: string) => {
     const claims = await knex("wage_subsidy_applications")
         .modify((queryBuilder: any) => {
-            console.log("filters", filters)
-            console.log("user", user)
-            console.log("sort", sort)
             if (filters.applicationstatus) {
                 queryBuilder.where("applicationstatus", filters.applicationstatus)
             }
@@ -16,11 +13,7 @@ export const getAllWage = async (perPage: number, currPage: number, filters: any
             if (filters.catchmentno) {
                 queryBuilder.where("catchmentno", Number(filters.catchmentno))
             }
-            // if (filters.status) {
-            //     queryBuilder.whereIn("status", filters.status)
-            // }
             if (user) {
-                // console.log(user)
                 queryBuilder.whereLike("createdby", user).orWhereLike("sharedwith", `%${user}%`)
             }
             if (sort) {
@@ -44,7 +37,6 @@ export const getWageByID = async (id: string) => {
 export const insertWage = async (id: string, user: string, formType: string, userGuid: string) => {
     const data = {
         internalid: id,
-        // user: user
         created: new Date(),
         formtype: formType,
         createdby: user,
@@ -53,7 +45,6 @@ export const insertWage = async (id: string, user: string, formType: string, use
         status: "not submitted"
     }
     const result = await knex("wage_subsidy_applications").insert(data)
-    console.log(result)
     return result
 }
 
@@ -77,7 +68,6 @@ export const updateWage = async (
         applicationid: submissionId,
         status
     })
-    console.log(result)
     return result
 }
 
@@ -90,9 +80,7 @@ export const deleteWage = async (id: number) => {
 export const updateWageData = async (body: any, id: number) => {
     // Insert into wage table
     const data = body
-    // console.log(data)
     Object.keys(data).forEach((e) => {
-        // console.log(data[e])
         if (data[e] === "") {
             data[e] = null
         } else if (e === "position2") {
@@ -103,12 +91,10 @@ export const updateWageData = async (body: any, id: number) => {
             })
         }
     })
-    // console.log(data)
     const wage = await knex("wage_subsidy_applications").where("id", id)
     const insertData = {
         title: `${data.operatingName} - ${data.confirmationId}`,
         catchmentno: data.catchmentNo,
-        // formtype: "wage",
         applicationid: data.submissionId,
         confirmationid: data.confirmationId,
         applicationstatus: "New",
@@ -185,69 +171,7 @@ export const updateWageData = async (body: any, id: number) => {
                 { changes: { applicationstatus: "New" }, date: wage[0].created, by: `bceid:${wage[0].createdby}` }
             ]
         }
-        // internalid: data.internalId
-        // modified: new Date(),
-        // created: new Date()
     }
-
-    /*
-    for (let i = 0; i < pins.length; i += 1) {
-        for (let j = 0; i < pins[i].Storefronts.length; j += 1) {
-            if (i === data.storefrontId && j === data.catchmentNo) {
-                insertData.centrename = pins[i].Storefronts[j].name
-            }
-        }
-    }
-    */
-
-    // if (data.numberOfPositions0 === 5) {
-    //     insertData.participantemail1 = data.participantEmail1
-    //     insertData.participantemail2 = data.participantEmail2
-    //     insertData.participantemail3 = data.participantEmail3
-    //     insertData.participantemail4 = data.participantEmail4
-    // } else if (data.numberOfPositions0 === 4) {
-    //     insertData.participantemail1 = data.participantEmail1
-    //     insertData.participantemail2 = data.participantEmail2
-    //     insertData.participantemail3 = data.participantEmail3
-    //     if (data.position2.numberOfPositions1 === 1) {
-    //         insertData.participantemail4 = data.position2.participantEmail0
-    //     }
-    // } else if (data.numberOfPositions0 === 3) {
-    //     insertData.participantemail1 = data.participantEmail1
-    //     insertData.participantemail2 = data.participantEmail2
-    //     if (data.position2.numberOfPositions1 === 2) {
-    //         insertData.participantemail3 = data.position2.participantEmail0
-    //         insertData.participantemail4 = data.position2.participantEmail1
-    //     } else if (data.position2.numberOfPositions1 === 1) {
-    //         insertData.participantemail3 = data.position2.participantEmail0
-    //     }
-    // } else if (data.numberOfPositions0 === 2) {
-    //     insertData.participantemail1 = data.participantEmail1
-    //     if (data.position2.numberOfPositions1 === 3) {
-    //         insertData.participantemail2 = data.position2.participantEmail0
-    //         insertData.participantemail3 = data.position2.participantEmail1
-    //         insertData.participantemail4 = data.position2.participantEmail2
-    //     } else if (data.position2.numberOfPositions1 === 2) {
-    //         insertData.participantemail2 = data.position2.participantEmail0
-    //         insertData.participantemail2 = data.position2.participantEmail1
-    //     } else if (data.position2.numberOfPositions1 === 1) {
-    //         insertData.participantemail2 = data.position2.participantEmail0
-    //     }
-    // } else if (data.position2.numberOfPositions1 === 4) {
-    //     insertData.participantemail1 = data.position2.participantEmail0
-    //     insertData.participantemail2 = data.position2.participantEmail1
-    //     insertData.participantemail3 = data.position2.participantEmail2
-    //     insertData.participantemail4 = data.position2.participantEmail3
-    // } else if (data.position2.numberOfPositions1 === 3) {
-    //     insertData.participantemail1 = data.position2.participantEmail0
-    //     insertData.participantemail2 = data.position2.participantEmail1
-    //     insertData.participantemail3 = data.position2.participantEmail2
-    // } else if (data.position2.numberOfPositions1 === 2) {
-    //     insertData.participantemail1 = data.position2.participantEmail0
-    //     insertData.participantemail2 = data.position2.participantEmail1
-    // } else if (data.position2.numberOfPositions1 === 1) {
-    //     insertData.participantemail1 = data.position2.participantEmail0
-    // }
     const insert = await knex("wage_subsidy_applications").where("id", id).update(insertData)
     return insert
 }
