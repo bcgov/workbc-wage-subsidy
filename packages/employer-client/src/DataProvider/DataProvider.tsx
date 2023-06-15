@@ -45,7 +45,6 @@ export const dataProvider = {
             }
             const range = headers.get(countHeader.toLowerCase()) || "0"
             const total = range.split("/").pop() || "0"
-            console.log(total)
             return {
                 data: json,
                 total: parseInt(total, 10)
