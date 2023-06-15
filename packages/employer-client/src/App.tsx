@@ -2,29 +2,22 @@ import { ReactKeycloakProvider } from "@react-keycloak/web"
 import Keycloak from "keycloak-js"
 import React, { useState } from "react"
 import { Admin, Resource } from "react-admin"
+import { Box } from "@mui/material"
 import "./App.css"
-import { ApplicationCreate } from "./Applications/Create"
-import { ApplicationList } from "./Applications/List"
+import { COLOURS } from "./Colours"
+import { ApplicationList } from "./Applications/ApplicationList"
+import { ApplicationCreate } from "./Applications/ApplicationCreate"
+import { ApplicationShow } from "./Applications/ApplicationShow"
 import useAuthProvider from "./Auth/authProvider"
-import { CreateClaim } from "./Claims/Create"
-import { ClaimList } from "./Claims/List"
+import { ClaimList } from "./Claims/ClaimList"
+import { ClaimCreate } from "./Claims/ClaimCreate"
+import { ClaimEdit } from "./Claims/ClaimEdit"
 import { dataProvider } from "./DataProvider/DataProvider"
 import Ready from "./Admin/ready"
 import Footer from "./footer"
 import Layout from "./Layout"
-import { ApplicationEdit } from "./Applications/ApplicationsEdit"
-import { ClaimEdit } from "./Claims/ClaimEdit"
-
-/*
-const dataProvider = fakeDataProvider({
-  my_forms: [
-      { id: 0, formCode: 0, created: true, url: "https://some-url.ca", client_completed: true },
-  ],
-  forms: [
-    {id: 0, title: 'Test Form', formCode: "HR123456", url: ""},
-  ]
-})
-*/
+import Logo from "./Logo"
+import Tag from "./Tag"
 
 const initOptions = {
     url: process.env.REACT_APP_KEYCLOAK_URL || "",
@@ -35,6 +28,7 @@ const initOptions = {
 let keycloak = new Keycloak(initOptions)
 
 const onToken = () => {
+    console.log(keycloak.token)
     if (keycloak.token && keycloak.refreshToken) {
         localStorage.setItem("token", keycloak.token)
         localStorage.setItem("refresh-token", keycloak.refreshToken)
@@ -47,7 +41,7 @@ const onTokenExpired = () => {
     keycloak
         .updateToken(30)
         .then(() => {
-            console.log("successfully get a new token", keycloak.token)
+            console.log("successfully got a new token", keycloak.token)
             if (keycloak.token && keycloak.refreshToken) {
                 localStorage.setItem("token", keycloak.token)
                 localStorage.setItem("refresh-token", keycloak.refreshToken)
@@ -64,26 +58,101 @@ export const lightTheme = {
     components: {
         MuiAppBar: {
             styleOverrides: {
+                colorPrimary: {
+                    color: COLOURS.WHITE,
+                    backgroundColor: COLOURS.DARKBLUE,
+                    borderBottom: `3px solid ${COLOURS.BC_GOLD}`
+                },
                 colorSecondary: {
-                    color: "#fff",
-                    backgroundColor: "#003366",
-                    borderBottom: "3px solid #FCBA19"
+                    color: COLOURS.WHITE,
+                    indicatorColor: COLOURS.BC_GOLD,
+                    backgroundColor: COLOURS.BC_BLUE,
+                    borderBottom: `3px solid ${COLOURS.BC_GOLD}`
+                }
+            }
+        },
+        MuiChip: {
+            textAlign: "center",
+            styleOverrides: {
+                textAlign: "center",
+                colorSuccess: {
+                    color: COLOURS.WHITE
+                }
+            }
+        },
+        RaCreateButton: {
+            styleOverrides: {
+                "& .RaCreateButton-root": {
+                    textColor: COLOURS.WHITE,
+                    backgroundColor: COLOURS.BC_DARKBLUE,
+                    fontWeight: "bold",
+                    marginBottom: 2
+                },
+                root: {
+                    color: COLOURS.WHITE,
+                    backgroundColor: COLOURS.BC_DARKBLUE,
+                    fontWeight: "bold",
+                    marginBottom: 2,
+                    "&:hover": {
+                        color: COLOURS.WHITE,
+                        backgroundColor: COLOURS.LIGHTBLUE
+                    },
+                    borderRadius: 20,
+                    minWidth: 180
+                }
+            }
+        },
+        RaDatagrid: {
+            styleOverrides: {
+                root: {
+                    "& .RaDatagrid-checkbox": {
+                        color: COLOURS.DARKBLUE
+                    },
+                    "& .RaDatagrid-headerCell": {
+                        "& .MuiCheckbox-root": {
+                            color: COLOURS.DARKBLUE
+                        }
+                    }
+                }
+            }
+        },
+        RaBulkActionsToolbar: {
+            styleOverrides: {
+                root: {
+                    "& .RaBulkActionsToolbar-toolbar": {
+                        backgroundColor: "#d7f0fa",
+                        color: "#3a86e3"
+                    }
                 }
             }
         }
+    },
+    palette: {
+        primary: {
+            main: "#0745a3"
+        },
+        secondary: {
+            main: COLOURS.BC_GOLD
+        },
+        info: {
+            main: COLOURS.LIGHTBLUE
+        },
+        warning: {
+            main: COLOURS.BC_DARKBLUE
+        },
+        success: {
+            main: "#75b404"
+        },
+        error: {
+            main: "#e5e8ef"
+        }
     }
 }
-
-//const dataProvider = simpleRestProvider("http://localhost:8000", httpClient)
-
-console.log(process.env.REACT_APP_DATA_PROVIDER_URL)
-console.log(dataProvider)
 
 const CustomAdminWithKeycloak = () => {
     const customAuthProvider = useAuthProvider(process.env.REACT_APP_KEYCLOAK_CLIENT_ID || "")
     const [permissions, setPermissions] = useState(keycloak.idTokenParsed?.identity_provider === "bceid")
     React.useEffect(() => {
-        console.log(keycloak.idTokenParsed?.identity_provider)
         if (keycloak && keycloak.idTokenParsed?.identity_provider === "bceidboth") {
             setPermissions(true)
         }
@@ -98,6 +167,13 @@ const CustomAdminWithKeycloak = () => {
             disableTelemetry
             requireAuth
             ready={Ready}
+            title={
+                <Box display="flex" gap={1} alignItems="center">
+                    <Logo />
+                    <Tag />
+                    <b>WorkBC Wage Subsidy</b>
+                </Box>
+            }
         >
             {permissions && (
                 <>
@@ -106,9 +182,9 @@ const CustomAdminWithKeycloak = () => {
                         options={{ label: "Applications" }}
                         list={ApplicationList}
                         create={ApplicationCreate}
-                        edit={ApplicationEdit}
+                        show={ApplicationShow}
                     />
-                    <Resource name="claims" list={ClaimList} edit={ClaimEdit} create={CreateClaim} />
+                    <Resource name="claims" list={ClaimList} edit={ClaimEdit} create={ClaimCreate} />
                 </>
             )}
         </Admin>
