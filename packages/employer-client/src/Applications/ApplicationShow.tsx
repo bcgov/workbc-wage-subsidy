@@ -4,7 +4,6 @@ import { ResponsiveStyleValue, SxProps } from "@mui/system"
 
 export const ApplicationShow = (props: CustomShowProps) => {
     const record = useRecordContext(props)
-    console.log(record)
     return <a>{record?.internalid}</a>
 }
 
