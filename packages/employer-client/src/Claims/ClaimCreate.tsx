@@ -17,7 +17,7 @@ const FormReferenceInput = (props: any) => {
     )
 }
 
-export const CreateClaim = (props: any) => {
+export const ClaimCreate = (props: any) => {
     const { isLoading, permissions, error } = usePermissions()
     const { identity, isLoading: identityLoading } = useGetIdentity()
     //const [storeFronts, setStoreFronts] = useState<Array<any>>([])

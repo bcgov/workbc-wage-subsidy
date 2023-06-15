@@ -2,19 +2,20 @@ import { ReactKeycloakProvider } from "@react-keycloak/web"
 import Keycloak from "keycloak-js"
 import React, { useState } from "react"
 import { Admin, Resource } from "react-admin"
+import { Box } from "@mui/material"
 import "./App.css"
-import { ApplicationCreate } from "./Applications/ApplicationCreate"
+import { COLOURS } from "./Colours"
 import { ApplicationList } from "./Applications/ApplicationList"
+import { ApplicationCreate } from "./Applications/ApplicationCreate"
+import { ApplicationShow } from "./Applications/ApplicationShow"
 import useAuthProvider from "./Auth/authProvider"
-import { CreateClaim } from "./Claims/Create"
-import { ClaimList } from "./Claims/List"
+import { ClaimList } from "./Claims/ClaimList"
+import { ClaimCreate } from "./Claims/ClaimCreate"
+import { ClaimEdit } from "./Claims/ClaimEdit"
 import { dataProvider } from "./DataProvider/DataProvider"
 import Ready from "./Admin/ready"
 import Footer from "./footer"
 import Layout from "./Layout"
-import { ApplicationShow } from "./Applications/ApplicationsShow"
-import { ClaimEdit } from "./Claims/ClaimEdit"
-import { Box } from "@mui/material"
 import Logo from "./Logo"
 import Tag from "./Tag"
 
@@ -27,7 +28,6 @@ const initOptions = {
 let keycloak = new Keycloak(initOptions)
 
 const onToken = () => {
-    console.log("onToken!")
     console.log(keycloak.token)
     if (keycloak.token && keycloak.refreshToken) {
         localStorage.setItem("token", keycloak.token)
@@ -59,15 +59,15 @@ export const lightTheme = {
         MuiAppBar: {
             styleOverrides: {
                 colorPrimary: {
-                    color: "#fff",
-                    backgroundColor: "#003366",
-                    borderBottom: "3px solid #FCBA19"
+                    color: COLOURS.WHITE,
+                    backgroundColor: COLOURS.DARKBLUE,
+                    borderBottom: `3px solid ${COLOURS.BC_GOLD}`
                 },
                 colorSecondary: {
-                    color: "#fff",
-                    indicatorColor: "#FCBA19",
-                    backgroundColor: "#395889",
-                    borderBottom: "3px solid #FCBA19"
+                    color: COLOURS.WHITE,
+                    indicatorColor: COLOURS.BC_GOLD,
+                    backgroundColor: COLOURS.BC_BLUE,
+                    borderBottom: `3px solid ${COLOURS.BC_GOLD}`
                 }
             }
         },
@@ -76,26 +76,26 @@ export const lightTheme = {
             styleOverrides: {
                 textAlign: "center",
                 colorSuccess: {
-                    color: "#fff"
+                    color: COLOURS.WHITE
                 }
             }
         },
         RaCreateButton: {
             styleOverrides: {
                 "& .RaCreateButton-root": {
-                    textColor: "#fff",
-                    backgroundColor: "#002d72",
+                    textColor: COLOURS.WHITE,
+                    backgroundColor: COLOURS.BC_DARKBLUE,
                     fontWeight: "bold",
                     marginBottom: 2
                 },
                 root: {
-                    color: "#fff",
-                    backgroundColor: "#002d72",
+                    color: COLOURS.WHITE,
+                    backgroundColor: COLOURS.BC_DARKBLUE,
                     fontWeight: "bold",
                     marginBottom: 2,
                     "&:hover": {
-                        color: "#fff",
-                        backgroundColor: "#4995ec"
+                        color: COLOURS.WHITE,
+                        backgroundColor: COLOURS.LIGHTBLUE
                     },
                     borderRadius: 20,
                     minWidth: 180
@@ -106,11 +106,11 @@ export const lightTheme = {
             styleOverrides: {
                 root: {
                     "& .RaDatagrid-checkbox": {
-                        color: "#3974cb"
+                        color: COLOURS.DARKBLUE
                     },
                     "& .RaDatagrid-headerCell": {
                         "& .MuiCheckbox-root": {
-                            color: "#3974cb"
+                            color: COLOURS.DARKBLUE
                         }
                     }
                 }
@@ -132,13 +132,13 @@ export const lightTheme = {
             main: "#0745a3"
         },
         secondary: {
-            main: "#FCBA19"
+            main: COLOURS.BC_GOLD
         },
         info: {
-            main: "#4995ec"
+            main: COLOURS.LIGHTBLUE
         },
         warning: {
-            main: "#3974cb"
+            main: COLOURS.BC_DARKBLUE
         },
         success: {
             main: "#75b404"
@@ -184,7 +184,7 @@ const CustomAdminWithKeycloak = () => {
                         create={ApplicationCreate}
                         show={ApplicationShow}
                     />
-                    <Resource name="claims" list={ClaimList} edit={ClaimEdit} create={CreateClaim} />
+                    <Resource name="claims" list={ClaimList} edit={ClaimEdit} create={ClaimCreate} />
                 </>
             )}
         </Admin>
