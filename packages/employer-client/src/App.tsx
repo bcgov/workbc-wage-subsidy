@@ -28,7 +28,6 @@ const initOptions = {
 let keycloak = new Keycloak(initOptions)
 
 const onToken = () => {
-    console.log(keycloak.token)
     if (keycloak.token && keycloak.refreshToken) {
         localStorage.setItem("token", keycloak.token)
         localStorage.setItem("refresh-token", keycloak.refreshToken)
