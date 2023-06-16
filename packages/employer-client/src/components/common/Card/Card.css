@@ -1,0 +1,39 @@
+.card {
+  border-radius: 12px;
+  padding: 1em 2em;
+  height: auto;
+  /* width: auto; */
+  box-shadow: 0 0 15px 0 rgb(0 0 0 / 15%);
+  margin: 0;
+  background-color:#F2F8FF;
+  min-width: 60em;
+  max-width: 60em;
+  min-height: 26.5em;
+  /* max-height: 34em; */
+  line-height: 1.5;
+  font-weight: 400;
+  font-family: 'BCSans', 'Noto Sans', Verdana, Arial, sans-serif;
+  color: #313132;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-text-size-adjust: 100%;
+  letter-spacing: 0em;
+}
+
+.card p {
+  font-size: 16px;
+  line-height: 1.6;
+  color: #313132;
+}
+  
+.card:hover {
+  box-shadow: 0 0 30px 0 rgb(0 0 0 / 15%);
+}
+
+.card .BC-Gov-PrimaryButton {
+  border-radius: 50px;
+  margin: 0em 0em 0em 0em;
+  min-width: 18em;
+}
