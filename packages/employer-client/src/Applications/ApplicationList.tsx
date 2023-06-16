@@ -1,17 +1,8 @@
-import {
-    BulkDeleteButton,
-    CreateButton,
-    Datagrid,
-    FilterButton,
-    FunctionField,
-    List,
-    TextField,
-    TopToolbar,
-    useStore
-} from "react-admin"
-import { Button, Chip } from "@mui/material"
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faHandshake } from "@fortawesome/pro-solid-svg-icons"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { Chip } from "@mui/material"
+import { CreateButton, Datagrid, FunctionField, List, TextField, TopToolbar, useStore } from "react-admin"
+import { ApplicationCreateRedirect } from "./ApplicationCreateRedirect"
 import { ApplicationListAside } from "./ApplicationListAside"
 
 const ListActions = () => (
@@ -51,7 +42,14 @@ export const ApplicationList = (props: any) => {
     const [statusFilter] = useStore("resources.applications.list.statusFilter", applicationStatusFilters.All)
 
     return (
-        <List {...props} actions={<ListActions />} filter={statusFilter} filters={[]} aside={<ApplicationListAside />}>
+        <List
+            {...props}
+            actions={<ListActions />}
+            filter={statusFilter}
+            filters={[]}
+            aside={<ApplicationListAside />}
+            empty={<ApplicationCreateRedirect />}
+        >
             <Datagrid
                 bulkActionButtons={<FormBulkActionButtons />}
                 sx={{

@@ -1,23 +1,25 @@
+import { Box } from "@mui/material"
 import { ReactKeycloakProvider } from "@react-keycloak/web"
 import Keycloak from "keycloak-js"
 import React, { useState } from "react"
 import { Admin, Resource } from "react-admin"
-import { Box } from "@mui/material"
+import { Route } from "react-router-dom"
+import Ready from "./Admin/ready"
 import "./App.css"
-import { COLOURS } from "./Colours"
-import { ApplicationList } from "./Applications/ApplicationList"
 import { ApplicationCreate } from "./Applications/ApplicationCreate"
+import { ApplicationCreateForm } from "./Applications/ApplicationCreateForm"
+import { ApplicationList } from "./Applications/ApplicationList"
 import { ApplicationShow } from "./Applications/ApplicationShow"
 import useAuthProvider from "./Auth/authProvider"
-import { ClaimList } from "./Claims/ClaimList"
 import { ClaimCreate } from "./Claims/ClaimCreate"
 import { ClaimEdit } from "./Claims/ClaimEdit"
+import { ClaimList } from "./Claims/ClaimList"
+import { COLOURS } from "./Colours"
 import { dataProvider } from "./DataProvider/DataProvider"
-import Ready from "./Admin/ready"
-import Footer from "./footer"
 import Layout from "./Layout"
 import Logo from "./Logo"
 import Tag from "./Tag"
+import Footer from "./footer"
 
 const initOptions = {
     url: process.env.REACT_APP_KEYCLOAK_URL || "",
@@ -183,7 +185,16 @@ const CustomAdminWithKeycloak = () => {
                         list={ApplicationList}
                         create={ApplicationCreate}
                         show={ApplicationShow}
-                    />
+                    >
+                        <Route
+                            path="create/NeedEmployee"
+                            element={<ApplicationCreateForm formUrl={process.env.REACT_APP_TEST_FORM_URL} />}
+                        />
+                        <Route
+                            path="create/HaveEmployee"
+                            element={<ApplicationCreateForm formUrl={process.env.REACT_APP_TEST_FORM_URL} />}
+                        />
+                    </Resource>
                     <Resource name="claims" list={ClaimList} edit={ClaimEdit} create={ClaimCreate} />
                 </>
             )}
