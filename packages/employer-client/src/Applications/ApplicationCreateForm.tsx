@@ -11,19 +11,6 @@ export const ApplicationCreateForm = (props: any) => {
     }
 
     return !isLoading && !identityLoading && permissions ? (
-        // <Create {...props}>
-        //     <SimpleForm defaultValues={defaultValues}>
-        //         <SelectInput
-        //             source="formtype"
-        //             label="Application Type"
-        //             emptyValue={"Please select application"}
-        //             choices={[
-        //                 { id: "haveEmployee", name: "Have Employee" },
-        //                 { id: "needEmployee", name: "Need Employee" }
-        //             ]}
-        //         />
-        //     </SimpleForm>
-        // </Create>
         <Create {...props}>
             <div style={{ position: "relative", height: "700px" }}>
                 <div
@@ -35,7 +22,6 @@ export const ApplicationCreateForm = (props: any) => {
                     title="test-form"
                     id="support-form"
                     src={props.formUrl}
-                    // src="https://forms-dev.es.workbc.ca/app/form/submit?f=8e760934-87e7-4785-b3a2-11e8fe9027b4"
                     style={{ width: "100%", height: "700px" }}
                 ></iframe>
             </div>
