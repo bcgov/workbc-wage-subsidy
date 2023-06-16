@@ -17,15 +17,6 @@ import { ApplicationListAside } from "./ApplicationListAside"
 const ListActions = () => (
     <TopToolbar sx={{ paddingTop: "5vh" }}>
         <div>
-            {/* <Button
-                href={`${process.env.REACT_APP_NEED_EMPLOYEE_URL}&token=${record.internalid}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                variant="contained"
-                sx={{ textAlign: "center", backgroundColor: "#003366" }}
-            >
-                Fill Out Form
-            </Button> */}
             <CreateButton label="New Application" />
         </div>
     </TopToolbar>
@@ -104,6 +95,22 @@ export const ApplicationList = (props: any) => {
                             }
                         />
                     )}
+                />
+                <FunctionField
+                    label=""
+                    render={(record: any) => {
+                        return (
+                            <Button
+                                href={`${process.env.REACT_APP_NEED_EMPLOYEE_URL}&token=${record.internalid}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                variant="contained"
+                                sx={{ textAlign: "center", backgroundColor: "#000" }}
+                            >
+                                Fill Out Form
+                            </Button>
+                        )
+                    }}
                 />
             </Datagrid>
         </List>
