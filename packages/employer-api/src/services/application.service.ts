@@ -1,12 +1,9 @@
 /* eslint-disable import/prefer-default-export */
 import { knex } from "../config/db-config"
 
-export const getAllWage = async (perPage: number, currPage: number, filters: any, sort: any, user: string) => {
-    const claims = await knex("wage_subsidy_applications")
+export const getAllApplications = async (perPage: number, currPage: number, filters: any, sort: any, user: string) => {
+    const applications = await knex("applications")
         .modify((queryBuilder: any) => {
-            if (filters.applicationstatus) {
-                queryBuilder.where("applicationstatus", filters.applicationstatus)
-            }
             if (filters.status) {
                 queryBuilder.where("status", filters.status)
             }
@@ -14,22 +11,22 @@ export const getAllWage = async (perPage: number, currPage: number, filters: any
                 queryBuilder.where("catchmentno", Number(filters.catchmentno))
             }
             if (user) {
-                queryBuilder.whereLike("createdby", user).orWhereLike("sharedwith", `%${user}%`)
+                queryBuilder.whereLike("created_by", user) // .orWhereLike("shared_with", `%${user}%`)
             }
             if (sort) {
                 queryBuilder.orderBy(sort[0], sort[1])
             }
         })
         .paginate({ perPage, currentPage: currPage, isLengthAware: true })
-    return claims
+    return applications
 }
 
-export const getWageByCatchment = async (ca: number[]) => {
+export const getApplicationByCatchment = async (ca: number[]) => {
     const claims = await knex("wage_subsidy_applications").where((builder: any) => builder.whereIn("catchmentno", ca))
     return claims
 }
 
-export const getWageByID = async (id: string) => {
+export const getApplicationByID = async (id: string) => {
     const wages = await knex("wage_subsidy_applications").where((builder: any) => builder.where("id", id))
     return wages[0]
 }
@@ -48,7 +45,7 @@ export const insertWage = async (id: string, user: string, formType: string, use
     return result
 }
 
-export const updateWage = async (
+export const updateApplication = async (
     id: number,
     confirmationId: string,
     submissionId: string,
@@ -71,7 +68,7 @@ export const updateWage = async (
     return result
 }
 
-export const deleteWage = async (id: number) => {
+export const deleteApplication = async (id: number) => {
     const result = await knex("wage_subsidy_applications").where("id", id).del()
     return result
 }
