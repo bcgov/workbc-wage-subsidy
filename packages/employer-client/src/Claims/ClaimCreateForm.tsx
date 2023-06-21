@@ -17,8 +17,8 @@ const CustomToolbar = () => (
     </Toolbar>
 )
 
-export const ApplicationCreateForm = (props: any) => {
-    const { formType } = useParams()
+export const ClaimCreateForm = (props: any) => {
+    const { appId } = useParams()
     const { isLoading, permissions, error } = usePermissions()
     const { identity, isLoading: identityLoading } = useGetIdentity()
     const defaultValues = {
@@ -26,20 +26,16 @@ export const ApplicationCreateForm = (props: any) => {
         userName: identity?.username || "",
         guid: identity?.guid || ""
     }
-    // TODO: use current value of formType to obtain form URL.
 
     return !isLoading && !identityLoading && permissions ? (
         <Create {...props}>
             <SimpleForm defaultValues={defaultValues} toolbar={<CustomToolbar />}>
                 <SelectInput
-                    source="formtype"
-                    label="Application Type"
-                    choices={[
-                        { id: "haveEmployee", name: "Have Employee" },
-                        { id: "needEmployee", name: "Need Employee" }
-                    ]}
+                    source="applicationid"
+                    label="Assoc. App ID"
+                    choices={[{ id: appId?.toString(), name: appId?.toString() }]}
                     validate={required()}
-                    defaultValue={formType}
+                    defaultValue={appId}
                 />
             </SimpleForm>
         </Create>

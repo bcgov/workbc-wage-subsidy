@@ -7,6 +7,10 @@ import Card from "../components/common/Card/Card"
 export const ApplicationCreate = () => {
     const redirect = useRedirect()
 
+    const handleClick = (formType) => {
+        redirect("Form/" + formType, "wage")
+    }
+
     return (
         <Box paddingTop="6em" width="100%" display="flex" justifyContent="center">
             <Card>
@@ -45,7 +49,7 @@ export const ApplicationCreate = () => {
                                     <Box display="flex" justifyContent="right">
                                         <BCGovPrimaryButton
                                             text="I Have an Employee"
-                                            onClick={() => redirect("HaveEmployee", "wage")}
+                                            onClick={() => handleClick("haveEmployee")}
                                         />
                                     </Box>
                                 </Grid>
@@ -53,7 +57,7 @@ export const ApplicationCreate = () => {
                                     <Box display="flex" justifyContent="left">
                                         <BCGovPrimaryButton
                                             text="I Need an Employee"
-                                            onClick={() => redirect("NeedEmployee", "wage")}
+                                            onClick={() => handleClick("needEmployee")}
                                         />
                                     </Box>
                                 </Grid>

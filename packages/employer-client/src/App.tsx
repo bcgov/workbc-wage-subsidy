@@ -12,8 +12,10 @@ import { ApplicationList } from "./Applications/ApplicationList"
 import { ApplicationShow } from "./Applications/ApplicationShow"
 import useAuthProvider from "./Auth/authProvider"
 import { ClaimCreate } from "./Claims/ClaimCreate"
-import { ClaimEdit } from "./Claims/ClaimEdit"
+import { ClaimCreateForm } from "./Claims/ClaimCreateForm"
+import { ClaimCreateSelectApplication } from "./Claims/ClaimCreateSelectApplication"
 import { ClaimList } from "./Claims/ClaimList"
+import { ClaimShow } from "./Claims/ClaimShow"
 import { COLOURS } from "./Colours"
 import { dataProvider } from "./DataProvider/DataProvider"
 import Layout from "./Layout"
@@ -186,16 +188,18 @@ const CustomAdminWithKeycloak = () => {
                         create={ApplicationCreate}
                         show={ApplicationShow}
                     >
-                        <Route
-                            path="create/NeedEmployee"
-                            element={<ApplicationCreateForm formUrl={process.env.REACT_APP_TEST_FORM_URL} />}
-                        />
-                        <Route
-                            path="create/HaveEmployee"
-                            element={<ApplicationCreateForm formUrl={process.env.REACT_APP_TEST_FORM_URL} />}
-                        />
+                        <Route path="create/Form/:formType" element={<ApplicationCreateForm />} />
                     </Resource>
-                    <Resource name="claims" list={ClaimList} edit={ClaimEdit} create={ClaimCreate} />
+                    <Resource
+                        name="claims"
+                        options={{ label: "Claims" }}
+                        list={ClaimList}
+                        create={ClaimCreate}
+                        show={ClaimShow}
+                    >
+                        <Route path="create/SelectApplication" element={<ClaimCreateSelectApplication />} />
+                        <Route path="create/Form/:appId" element={<ClaimCreateForm />} />
+                    </Resource>
                 </>
             )}
         </Admin>

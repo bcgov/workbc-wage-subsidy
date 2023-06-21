@@ -1,6 +1,6 @@
 import { faHandshake } from "@fortawesome/pro-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { Chip } from "@mui/material"
+import { Box, Chip } from "@mui/material"
 import { CreateButton, Datagrid, FunctionField, List, TextField, TopToolbar, useStore } from "react-admin"
 import { ApplicationCreateRedirect } from "./ApplicationCreateRedirect"
 import { ApplicationListAside } from "./ApplicationListAside"
@@ -8,15 +8,6 @@ import { ApplicationListAside } from "./ApplicationListAside"
 const ListActions = () => (
     <TopToolbar sx={{ paddingTop: "5vh" }}>
         <div>
-            {/* <Button
-                href={`${process.env.REACT_APP_NEED_EMPLOYEE_URL}&token=${record.internalid}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                variant="contained"
-                sx={{ textAlign: "center", backgroundColor: "#003366" }}
-            >
-                Fill Out Form
-            </Button> */}
             <CreateButton label="New Application" />
         </div>
     </TopToolbar>
@@ -58,7 +49,8 @@ export const ApplicationList = (props: any) => {
                         "& svg": { verticalAlign: "middle" }
                     },
                     "& .RaDatagrid-rowCell": {
-                        textAlign: "left"
+                        textAlign: "left",
+                        padding: "0.9em 1.3em"
                     },
                     "& .RaDatagrid-headerCell": {
                         fontWeight: "bold",
@@ -67,7 +59,7 @@ export const ApplicationList = (props: any) => {
                 }}
                 rowClick="show"
             >
-                <TextField label="Submission ID" source="confirmationid" emptyText="-" />
+                <TextField label="Submission ID" source="id" emptyText="-" />
                 <TextField label="Position Title" source="title" emptyText="-" />
                 <TextField label="Number of Positions" source="numberofpositions0" emptyText="-" />{" "}
                 {/* TODO - once submitted date is implemented */}
@@ -76,31 +68,33 @@ export const ApplicationList = (props: any) => {
                 <FunctionField
                     label=""
                     render={(record: any) => (
-                        <Chip
-                            label={
-                                record.status === "submitted" && record.applicationstatus === "New"
-                                    ? "Submitted"
-                                    : record.status === "submitted" && record.applicationstatus === "In Progress"
-                                    ? "Processing"
-                                    : record.status === "submitted" && record.applicationstatus === "Completed"
-                                    ? "Completed"
-                                    : record.status === "cancelled"
-                                    ? "Cancelled"
-                                    : "Not Submitted"
-                            }
-                            size="small"
-                            color={
-                                record.status === "submitted" && record.applicationstatus === "New"
-                                    ? "primary"
-                                    : record.status === "submitted" && record.applicationstatus === "In Progress"
-                                    ? "warning"
-                                    : record.status === "submitted" && record.applicationstatus === "Completed"
-                                    ? "success"
-                                    : record.status === "cancelled"
-                                    ? "error"
-                                    : "info"
-                            }
-                        />
+                        <Box display="flex" width="100%" justifyContent="center">
+                            <Chip
+                                label={
+                                    record.status === "submitted" && record.applicationstatus === "New"
+                                        ? "Submitted"
+                                        : record.status === "submitted" && record.applicationstatus === "In Progress"
+                                        ? "Processing"
+                                        : record.status === "submitted" && record.applicationstatus === "Completed"
+                                        ? "Completed"
+                                        : record.status === "cancelled"
+                                        ? "Cancelled"
+                                        : "Not Submitted"
+                                }
+                                size="small"
+                                color={
+                                    record.status === "submitted" && record.applicationstatus === "New"
+                                        ? "primary"
+                                        : record.status === "submitted" && record.applicationstatus === "In Progress"
+                                        ? "warning"
+                                        : record.status === "submitted" && record.applicationstatus === "Completed"
+                                        ? "success"
+                                        : record.status === "cancelled"
+                                        ? "error"
+                                        : "info"
+                                }
+                            />
+                        </Box>
                     )}
                 />
             </Datagrid>
