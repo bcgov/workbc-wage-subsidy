@@ -28,7 +28,7 @@ const initOptions = {
 let keycloak = new Keycloak(initOptions)
 
 const onToken = () => {
-    console.log("Keycloak token: ", keycloak.token)
+    console.log("Keycloak tokenn: ", keycloak.token)
     if (keycloak.token && keycloak.refreshToken) {
         localStorage.setItem("token", keycloak.token)
         localStorage.setItem("refresh-token", keycloak.refreshToken)
@@ -178,13 +178,13 @@ const CustomAdminWithKeycloak = () => {
             {permissions && (
                 <>
                     <Resource
-                        name="wage"
+                        name="applications"
                         options={{ label: "Applications" }}
                         list={ApplicationList}
                         create={ApplicationCreate}
                         show={ApplicationShow}
                     />
-                    <Resource name="claims" list={ClaimList} edit={ClaimEdit} create={ClaimCreate} />
+                    <Resource name="claims" list={ClaimList} create={ClaimCreate} edit={ClaimEdit} />
                 </>
             )}
         </Admin>

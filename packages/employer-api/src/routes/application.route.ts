@@ -3,10 +3,10 @@ import * as applicationController from "../controllers/application.controller"
 
 const router = express.Router()
 
-router.get("/application", applicationController.getAllApplications)
-router.post("/application", applicationController.createApplication)
-router.get("/application/:id", applicationController.getOneApplication)
-router.put("/application/:id", applicationController.updateApplication)
-router.delete("/application/:id", applicationController.deleteApplication)
+router.get("/", applicationController.getAllApplications)
+router.post("/", applicationController.createApplication)
+router.get("/:id", applicationController.getOneApplication)
+router.put("/:id", applicationController.updateApplication)
+router.delete("/:id", applicationController.deleteApplication)
 
 export default router
