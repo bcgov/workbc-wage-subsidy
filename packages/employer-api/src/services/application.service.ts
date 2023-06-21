@@ -1,7 +1,13 @@
 /* eslint-disable import/prefer-default-export */
 import { knex } from "../config/db-config"
 
-export const getAllApplications = async (perPage: number, currPage: number, filters: any, sort: any, user: string) => {
+export const getAllApplications = async (
+    perPage: number,
+    currPage: number,
+    filters: any,
+    sort: string[],
+    user: string
+) => {
     const applications = await knex("applications")
         .modify((queryBuilder: any) => {
             if (filters.status) {

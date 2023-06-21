@@ -12,7 +12,8 @@ export const dataProvider = {
         params: { pagination: { page: any; perPage: any }; sort: { field: any; order: any }; filter: any }
     ) => {
         const { page, perPage } = params.pagination
-        const { field, order } = params.sort
+        let { field, order } = params.sort
+        field = field === "id" ? "application_id" : field
 
         const rangeStart = (page - 1) * perPage
         const rangeEnd = page * perPage - 1

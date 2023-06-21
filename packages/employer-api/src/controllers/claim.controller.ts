@@ -2,7 +2,7 @@
 /* eslint-disable import/prefer-default-export */
 import * as express from "express"
 
-import * as claimService from "../services/claims.service"
+import * as claimService from "../services/claim.service"
 import * as formService from "../services/submissions.service"
 
 // import type kAuthRequest from "../interfaces/kauth-request.d"

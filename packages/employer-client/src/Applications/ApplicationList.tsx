@@ -42,7 +42,14 @@ export const ApplicationList = (props: any) => {
     const [statusFilter] = useStore("resources.applications.list.statusFilter", applicationStatusFilters.All)
 
     return (
-        <List {...props} actions={<ListActions />} filter={statusFilter} filters={[]} aside={<ApplicationListAside />}>
+        <List
+            {...props}
+            actions={<ListActions />}
+            filter={statusFilter}
+            filters={[]}
+            sort={{ field: "application_id", order: "ASC" }}
+            aside={<ApplicationListAside />}
+        >
             <Datagrid
                 bulkActionButtons={<FormBulkActionButtons />}
                 sx={{

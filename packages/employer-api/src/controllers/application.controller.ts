@@ -10,7 +10,7 @@ export const getAllApplications = async (req: any, res: express.Response) => {
             return res.status(403).send("Not Authorized")
         }
         const filter = req.query.filter ? JSON.parse(req.query.filter) : {}
-        const sort = req.query.sort?.replace(/[^a-zA-Z0-9,]/g, "").split(",") ?? ["application_id", "ASC"]
+        const sort: string[] = JSON.parse(req.query.sort) ?? ["application_id", "ASC"]
         const page = req.query.page ?? 1
         const perPage = req.query.perPage ?? 1
 

@@ -13,7 +13,12 @@ export default (props: any) => {
                 maxWidth="xl"
                 menu={
                     <HorizontalMenu indicatorColor="secondary">
-                        <HorizontalMenu.Item label="Applications" to="/wage" value="wage" style={itemStyle} />
+                        <HorizontalMenu.Item
+                            label="Applications"
+                            to="/applications"
+                            value="applications"
+                            style={itemStyle}
+                        />
                         <HorizontalMenu.Item label="Claim Forms" to="/claims" value="claims" style={itemStyle} />
                     </HorizontalMenu>
                 }

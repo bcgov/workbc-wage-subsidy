@@ -35,8 +35,8 @@ app.set("trust proxy", "loopback, linklocal, uniquelocal")
 app.use(helmet())
 app.use(keycloak.middleware())
 
-app.use("/", keycloak.protect(), claimRoute)
-app.use("/", keycloak.protect(), applicationRoute)
+app.use("/applications", keycloak.protect(), applicationRoute)
+app.use("/claims", keycloak.protect(), claimRoute)
 
 const port = process.env.PORT || "8000"
 app.listen(port, () => {
