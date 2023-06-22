@@ -1,18 +1,11 @@
 import { Box, Chip } from "@mui/material"
 import { Datagrid, FunctionField, List, TextField } from "react-admin"
 import { applicationStatusFilters } from "../Applications/ApplicationList"
+import { DatagridStyles } from "../common/styles/DatagridStyles"
 import { CustomSearchInput } from "./ClaimCustomSearchInput"
 
-// Disable default list actions.
-const ListActions = () => <span />
-
 const applicationFilters = [
-    <CustomSearchInput
-        placeholder="Search for application..."
-        source="id"
-        alwaysOn
-        style={{ width: "18em", backgroundColor: "#F2F2F2" }}
-    />
+    <CustomSearchInput placeholder="Search for application..." source="id" alwaysOn style={{ width: "18em" }} />
 ]
 
 export const ClaimCreateSelectApplication = (props: any) => {
@@ -28,26 +21,13 @@ export const ClaimCreateSelectApplication = (props: any) => {
                     resource="wage"
                     filter={applicationStatusFilters["Completed"]}
                     filters={applicationFilters}
-                    actions={<ListActions />}
+                    actions={<span />} // Disable default list actions.
                     sx={{ "& .RaList-content": { padding: "0em 1em" } }}
                 >
                     <p>
                         <strong>Select the application you want to submit a claim for</strong>
                     </p>
-                    <Datagrid
-                        sx={{
-                            "& .RaDatagrid-rowCell": {
-                                textAlign: "left",
-                                padding: "0.9em 1.3em"
-                            },
-                            "& .RaDatagrid-headerCell": {
-                                fontWeight: "bold",
-                                textAlign: "left"
-                            }
-                        }}
-                        rowClick={handleClick}
-                        bulkActionButtons={false}
-                    >
+                    <Datagrid sx={DatagridStyles} rowClick={handleClick} bulkActionButtons={false}>
                         <TextField label="Submission ID" source="id" emptyText="-" />
                         <TextField label="Position Title" source="title" emptyText="-" />
                         <TextField label="Number of Positions" source="numberofpositions0" emptyText="-" />{" "}

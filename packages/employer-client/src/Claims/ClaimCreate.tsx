@@ -1,8 +1,8 @@
 import Box from "@mui/material/Box"
 import Grid from "@mui/material/Grid"
 import { useRedirect } from "react-admin"
-import BCGovPrimaryButton from "../components/common/BCGovPrimaryButton/BCGovPrimaryButton"
-import Card from "../components/common/Card/Card"
+import BCGovPrimaryButton from "../common/components/BCGovPrimaryButton/BCGovPrimaryButton"
+import Card from "../common/components/Card/Card"
 
 export const ClaimCreate = () => {
     const redirect = useRedirect()

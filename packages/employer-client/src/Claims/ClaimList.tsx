@@ -1,24 +1,10 @@
-import { faHandshake } from "@fortawesome/pro-solid-svg-icons"
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { Box, Chip } from "@mui/material"
-import { CreateButton, Datagrid, FunctionField, List, TextField, TopToolbar, useStore } from "react-admin"
+import { Datagrid, FunctionField, List, TextField, useStore } from "react-admin"
+import { FormBulkActionButtons } from "../common/components/FormBulkActionButtons/FormBulkActionButtons"
+import { ListActions } from "../common/components/ListActions/ListActions"
+import { DatagridStyles } from "../common/styles/DatagridStyles"
 import { ClaimCreateRedirect } from "./ClaimCreateRedirect"
 import { ClaimListAside } from "./ClaimListAside"
-
-const ListActions = () => (
-    <TopToolbar sx={{ paddingTop: "5vh" }}>
-        <div>
-            <CreateButton label="New Claim Form" />
-        </div>
-    </TopToolbar>
-)
-
-const FormBulkActionButtons = () => (
-    <div style={{ display: "flex", flexDirection: "row", alignItems: "center", cursor: "pointer" }}>
-        <FontAwesomeIcon icon={faHandshake} style={{ marginRight: 10 }} />
-        SHARE
-    </div>
-)
 
 export const claimStatusFilters = {
     All: { label: "All" },
@@ -33,30 +19,13 @@ export const ClaimList = (props: any) => {
     return (
         <List
             {...props}
-            actions={<ListActions />}
+            actions={<ListActions createButtonLabel="New Claim Form" />}
             filter={statusFilter}
             filters={[]}
             aside={<ClaimListAside />}
             empty={<ClaimCreateRedirect />}
         >
-            <Datagrid
-                bulkActionButtons={<FormBulkActionButtons />}
-                sx={{
-                    "& .column-lock": {
-                        padding: "6px 0",
-                        "& svg": { verticalAlign: "middle" }
-                    },
-                    "& .RaDatagrid-rowCell": {
-                        textAlign: "left",
-                        padding: "0.9em 1.3em"
-                    },
-                    "& .RaDatagrid-headerCell": {
-                        fontWeight: "bold",
-                        textAlign: "left"
-                    }
-                }}
-                rowClick="show"
-            >
+            <Datagrid bulkActionButtons={<FormBulkActionButtons />} sx={DatagridStyles} rowClick="show">
                 <TextField label="Submission ID" source="id" emptyText="-" />
                 <TextField label="Position Title" source="title" emptyText="-" />
                 <TextField label="Number of Positions" source="numberofpositions0" emptyText="-" />{" "}
