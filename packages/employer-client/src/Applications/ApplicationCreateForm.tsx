@@ -19,7 +19,7 @@ const CustomToolbar = () => (
 
 export const ApplicationCreateForm = (props: any) => {
     const { formType } = useParams()
-    const { isLoading, permissions, error } = usePermissions()
+    const { isLoading, permissions } = usePermissions()
     const { identity, isLoading: identityLoading } = useGetIdentity()
     const defaultValues = {
         formKey: uuidv4(),

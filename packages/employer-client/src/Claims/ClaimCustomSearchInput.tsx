@@ -2,6 +2,7 @@ import SearchIcon from "@mui/icons-material/Search"
 import { Box, InputAdornment } from "@mui/material"
 import { styled } from "@mui/material/styles"
 import { useTranslate } from "ra-core"
+import { COLOURS } from "../Colours"
 
 import { CommonInputProps, TextInput, TextInputProps } from "react-admin"
 
@@ -35,7 +36,8 @@ export const CustomSearchInput = (props: SearchInputProps) => {
                     borderRadius: "6px",
                     "& .MuiOutlinedInput-notchedOutline": {
                         borderColor: "transparent"
-                    }
+                    },
+                    backgroundColor: COLOURS.LIGHTGREY
                 }}
                 {...rest}
             />
