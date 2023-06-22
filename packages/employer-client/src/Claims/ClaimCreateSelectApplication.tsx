@@ -1,16 +1,17 @@
 import { Box, Chip } from "@mui/material"
-import { Datagrid, FunctionField, List, SearchInput, TextField } from "react-admin"
+import { Datagrid, FunctionField, List, TextField } from "react-admin"
 import { applicationStatusFilters } from "../Applications/ApplicationList"
+import { CustomSearchInput } from "./ClaimCustomSearchInput"
 
 // Disable default list actions.
 const ListActions = () => <span />
 
 const applicationFilters = [
-    <SearchInput
+    <CustomSearchInput
         placeholder="Search for application..."
         source="id"
         alwaysOn
-        style={{ width: "17em", backgroundColor: "#F2F2F2" }}
+        style={{ width: "18em", backgroundColor: "#F2F2F2" }}
     />
 ]
 
