@@ -6,7 +6,7 @@
   box-shadow: 0 0 15px 0 rgb(0 0 0 / 15%);
   margin: 0;
   background-color:#F2F8FF;
-  min-width: 60em;
+  width: 60em;
   max-width: 60em;
   min-height: 26.5em;
   /* max-height: 34em; */

@@ -8,7 +8,7 @@ export const ClaimCreate = () => {
     const redirect = useRedirect()
 
     return (
-        <Box paddingTop="6em" width="100%" display="flex" justifyContent="center">
+        <Box paddingTop="6em" paddingBottom="3em" width="100%" display="flex" justifyContent="center" minWidth="58em">
             <Card>
                 <Grid container direction="column" height="100%" spacing={4}>
                     <Grid item>

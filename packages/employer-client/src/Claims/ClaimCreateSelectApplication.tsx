@@ -14,8 +14,8 @@ export const ClaimCreateSelectApplication = (props: any) => {
     }
 
     return (
-        <Box display="flex" width="100%" justifyContent="center">
-            <Box minWidth="70em" maxWidth="70em">
+        <Box display="flex" width="100%" justifyContent="center" minWidth="70em">
+            <Box minWidth="70em" maxWidth="70em" minHeight="40em">
                 <List
                     {...props}
                     resource="wage"
