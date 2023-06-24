@@ -7,7 +7,9 @@ import {
     List,
     TextField,
     TopToolbar,
-    useStore
+    useStore,
+    RowClickFunction,
+    Identifier
 } from "react-admin"
 import { Button, Chip } from "@mui/material"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
@@ -31,28 +33,22 @@ const FormBulkActionButtons = () => (
 
 export const applicationStatusFilters = {
     All: { label: "All" },
-    NotSubmitted: { label: "Not Submitted", status: "not submitted" },
-    Submitted: { label: "Submitted", applicationstatus: "New", status: "submitted" },
-    Processing: { label: "Processing", applicationstatus: "In Progress", status: "submitted" },
-    Completed: { label: "Completed", applicationstatus: "Completed", status: "submitted" },
-    Cancelled: { label: "Cancelled", status: "cancelled" }
+    NotSubmitted: { label: "Draft", status: "Draft" },
+    Submitted: { label: "Submitted", status: "Submitted" },
+    Processing: { label: "Processing", status: "Processing" },
+    Completed: { label: "Completed", status: "Completed" },
+    Cancelled: { label: "Cancelled", status: "Cancelled" }
 } as { [key: string]: any }
 
 export const ApplicationList = (props: any) => {
     const [statusFilter] = useStore("resources.applications.list.statusFilter", applicationStatusFilters.All)
 
     return (
-        <List
-            {...props}
-            actions={<ListActions />}
-            filter={statusFilter}
-            filters={[]}
-            sort={{ field: "application_id", order: "ASC" }}
-            aside={<ApplicationListAside />}
-        >
+        <List {...props} actions={<ListActions />} filter={statusFilter} filters={[]} aside={<ApplicationListAside />}>
             <Datagrid
                 bulkActionButtons={<FormBulkActionButtons />}
                 sx={{
+                    cursor: "pointer",
                     "& .column-lock": {
                         padding: "6px 0",
                         "& svg": { verticalAlign: "middle" }
@@ -65,59 +61,54 @@ export const ApplicationList = (props: any) => {
                         textAlign: "left"
                     }
                 }}
-                rowClick="show"
+                rowClick={(id: Identifier, resource: string, record: any) => {
+                    if (record.status === "Submitted") {
+                        // submitted
+                        window.open(`${process.env.REACT_APP_VIEW_URL}${record.form_submission_id}`)
+                    } else if (record.status === "Draft" && record.form_submission_id) {
+                        // saved
+                        window.open(`${process.env.REACT_APP_DRAFT_URL}${record.form_submission_id}`)
+                    } else {
+                        // new
+                        if (record.form_type === "Have Employee")
+                            window.open(`${process.env.REACT_APP_HAVE_EMPLOYEE_URL}&token=${id}`)
+                        else if (record.form_type === "Need Employee")
+                            window.open(`${process.env.REACT_APP_NEED_EMPLOYEE_URL}&token=${id}`)
+                    }
+                    return "" // rowClick expects a path to be returned
+                }}
             >
-                <TextField label="Submission ID" source="confirmationid" emptyText="-" />
-                <TextField label="Position Title" source="title" emptyText="-" />
-                <TextField label="Number of Positions" source="numberofpositions0" emptyText="-" />{" "}
-                {/* TODO - once submitted date is implemented */}
-                <TextField label="Submitted Date" source="submitted" emptyText="-" /> {/* TODO */}
-                <TextField label="Shared With" source="sharedwith" emptyText="-" /> {/* TODO */}
+                <TextField label="Submission ID" source="form_confirmation_id" emptyText="-" />
+                <TextField label="Position Title" source="position_title" emptyText="-" />
+                <TextField label="Number of Positions" source="num_positions" emptyText="-" />{" "}
+                <FunctionField
+                    label="Submitted Date"
+                    render={(record: any) =>
+                        record.form_submitted_date ? record.form_submitted_date.split("T")[0] : "-" // remove timestamp
+                    }
+                />
+                <TextField label="Shared With" source="shared_with" emptyText="-" /> {/* TODO */}
                 <FunctionField
                     label=""
                     render={(record: any) => (
                         <Chip
-                            label={
-                                record.status === "submitted" && record.applicationstatus === "New"
-                                    ? "Submitted"
-                                    : record.status === "submitted" && record.applicationstatus === "In Progress"
-                                    ? "Processing"
-                                    : record.status === "submitted" && record.applicationstatus === "Completed"
-                                    ? "Completed"
-                                    : record.status === "cancelled"
-                                    ? "Cancelled"
-                                    : "Not Submitted"
-                            }
+                            label={record.status}
                             size="small"
                             color={
-                                record.status === "submitted" && record.applicationstatus === "New"
+                                record.status === "Draft"
+                                    ? "info"
+                                    : record.status === "Submitted"
                                     ? "primary"
-                                    : record.status === "submitted" && record.applicationstatus === "In Progress"
+                                    : record.status === "Processing"
                                     ? "warning"
-                                    : record.status === "submitted" && record.applicationstatus === "Completed"
+                                    : record.status === "Completed"
                                     ? "success"
-                                    : record.status === "cancelled"
+                                    : record.status === "Cancelled"
                                     ? "error"
                                     : "info"
                             }
                         />
                     )}
-                />
-                <FunctionField
-                    label=""
-                    render={(record: any) => {
-                        return (
-                            <Button
-                                href={`${process.env.REACT_APP_NEED_EMPLOYEE_URL}&token=${record.internalid}`}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                variant="contained"
-                                sx={{ textAlign: "center", backgroundColor: "#000" }}
-                            >
-                                Fill Out Form
-                            </Button>
-                        )
-                    }}
                 />
             </Datagrid>
         </List>
