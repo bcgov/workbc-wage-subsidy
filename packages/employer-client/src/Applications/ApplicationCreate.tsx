@@ -14,12 +14,12 @@ export const ApplicationCreate = (props: any) => {
         <Create {...props}>
             <SimpleForm defaultValues={defaultValues}>
                 <SelectInput
-                    source="formtype"
+                    source="formType"
                     label="Application Type"
                     emptyValue={"Please select application"}
                     choices={[
-                        { id: "haveEmployee", name: "Have Employee" },
-                        { id: "needEmployee", name: "Need Employee" }
+                        { id: "Have Employee", name: "Have Employee" },
+                        { id: "Need Employee", name: "Need Employee" }
                     ]}
                 />
             </SimpleForm>

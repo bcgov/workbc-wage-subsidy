@@ -1,7 +1,8 @@
 /* eslint-disable camelcase */
 /* eslint-disable import/prefer-default-export */
 import * as express from "express"
-import * as wageService from "../services/application.service"
+import * as applicationService from "../services/application.service"
+import * as formService from "../services/form.service"
 
 export const getAllApplications = async (req: any, res: express.Response) => {
     try {
@@ -10,12 +11,10 @@ export const getAllApplications = async (req: any, res: express.Response) => {
             return res.status(403).send("Not Authorized")
         }
         const filter = req.query.filter ? JSON.parse(req.query.filter) : {}
-        const sort: string[] = JSON.parse(req.query.sort) ?? ["application_id", "ASC"]
+        const sort: string[] = req.query.sort ? JSON.parse(req.query.sort) : ["id", "ASC"]
         const page = req.query.page ?? 1
         const perPage = req.query.perPage ?? 1
-
-        // get applications in the database //
-        const applications = await wageService.getAllApplications(
+        const applications = await applicationService.getAllApplications(
             Number(perPage),
             Number(page),
             filter,
@@ -23,59 +22,44 @@ export const getAllApplications = async (req: any, res: express.Response) => {
             bceid_username
         )
 
-        // const hasNeedEmployee = applications.data.some((a: any) => a.formtype === "needEmployee")
-        // const hasHaveEmployee = applications.data.some((a: any) => a.formtype === "haveEmployee")
-        // const hasNonComplete = applications.data.some((a: any) => a.status !== "complete")
-        // // get applications in chefs created by user
-        // const params = {
-        //     fields: `userInfo,internalId,applicationId,storefrontId,catchmentNo,formHandler,areYouCurrentlyWorkingWithAWorkBcCentre,catchmentNoStoreFront,operatingName,businessNumber,businessAddress,businessCity,businessProvince,businessPostal,validateAddress,businessPhone,businessFax,employerEmail,businessEmail,otherWorkAddress,container,sectorType,typeOfIndustry,organizationSize,CEWSAndOrCRHP,employeeDisplacement,labourDispute,unionConcurrence,liabilityCoverage,wageSubsidy,WSBCCoverage,orgEligibilityConsent,lawComplianceConsent,next2,addAnotherPosition,positionTitle0,numberOfPositions0,employeeEmail0,employeeEmail1,employeeEmail2,employeeEmail3,employeeEmail4,startDate0,wage0,hours0,applicationMERCs0,duties0,skills0,workExperience0,position2,previous,next4,signatoryTitle,signatory1,organizationConsent,previous1`,
-        //     // eslint-disable-next-line camelcase
-        //     // createdBy: bceid_username,
-        //     deleted: false
-        // }
-        // if (hasNeedEmployee && hasNonComplete) {
-        //     const hasNeedEmployeeApplications = await formService.getFormSubmissions(
-        //         process.env.NEED_EMPLOYEE_ID || "",
-        //         process.env.NEED_EMPLOYEE_PASS || "",
-        //         params
-        //     )
-        //     hasNeedEmployeeApplications.forEach(async (h: any) => {
-        //         const app = applications.data.find((a: any) => a.internalid === h.internalId) || null
-        //         if (app) {
-        //             // if form is complete
-        //             if (h.formSubmissionStatusCode === "SUBMITTED" && app.status !== "submitted") {
-        //                 // update ALL fields of content
-        //                 wageService.updateWageData(h, app.id)
-        //                 // else form is in draft
-        //             } else if (app.status === null) {
-        //                 // set status to draft
-        //                 await wageService.updateWage(app.id, h.confirmationId, h.submissionId, "draft", null)
-        //             }
-        //         }
-        //     })
-        // }
-        // if (hasHaveEmployee && hasNonComplete) {
-        //     const haveEmployeeApplications = await formService.getFormSubmissions(
-        //         process.env.HAVE_EMPLOYEE_ID || "",
-        //         process.env.HAVE_EMPLOYEE_PASS || "",
-        //         params
-        //     )
-        //     haveEmployeeApplications.forEach(async (h: any) => {
-        //         const app = applications.data.find((a: any) => a.internalid === h.internalId) || null
-        //         if (app) {
-        //             // if form is complete
-        //             if (h.formSubmissionStatusCode === "SUBMITTED" && app.status !== "submitted") {
-        //                 // update ALL fields of content
-        //                 wageService.updateWageData(h, app.id)
-        //                 // else form is in draft
-        //             } else if (app.status === null) {
-        //                 // set status to draft
-        //                 await wageService.updateWage(app.id, h.confirmationId, h.submissionId, "draft", null)
-        //             }
-        //         }
-        //     })
-        // }
-        // get applications in CHEFS
+        if (filter.status == null && perPage > 1) {
+            // only update applications once each call cycle
+            // update users applications as needed //
+            const containsNeedEmployee = applications.data.some((a: any) => a.form_type === "Need Employee")
+            const containsHaveEmployee = applications.data.some((a: any) => a.form_type === "Have Employee")
+            const containsNonComplete = applications.data.some((a: any) => a.status !== "Complete")
+            const params = {
+                fields: "userInfo,internalId,catchmentNo,positionTitle0,numberOfPositions0",
+                // eslint-disable-next-line camelcase
+                // createdBy: `${bceid_username}@bceid`, //TODO: use guid from applications object
+                deleted: false
+            }
+
+            if (containsNonComplete) {
+                // only query the forms service if we might need to update something
+                const updateApplications = async (formID: string | undefined, formPass: string | undefined) => {
+                    const forms = await formService.getFormSubmissions(formID ?? "", formPass ?? "", params)
+                    forms.forEach(async (form: any) => {
+                        const app = applications.data.find((application: any) => application.id === form.internalId)
+                        if (app) {
+                            if (form.formSubmissionStatusCode === "SUBMITTED") {
+                                // if form is complete
+                                if (app.status !== "Submitted") {
+                                    applicationService.updateApplication(app.id, "Submitted", form)
+                                }
+                            } else if (app.status === "Draft") {
+                                // else form is in draft
+                                await applicationService.updateApplication(app.id, "Draft", form)
+                            }
+                        }
+                    })
+                }
+                if (containsNeedEmployee)
+                    updateApplications(process.env.NEED_EMPLOYEE_ID, process.env.NEED_EMPLOYEE_PASS)
+                if (containsHaveEmployee)
+                    updateApplications(process.env.HAVE_EMPLOYEE_ID, process.env.HAVE_EMPLOYEE_PASS)
+            }
+        }
         res.set({
             "Access-Control-Expose-Headers": "Content-Range",
             "Content-Range": `0 - ${applications.pagination.to} / ${applications.pagination.total}`
@@ -93,10 +77,10 @@ export const createApplication = async (req: any, res: express.Response) => {
         if (bceid_username === undefined) {
             return res.status(403).send("Not Authorized")
         }
-        const created = await wageService.insertWage(
+        const created = await applicationService.insertApplication(
             req.body.formKey,
             req.body.userName,
-            req.body.formtype,
+            req.body.formType,
             req.body.guid
         )
         if (created) {
@@ -116,7 +100,7 @@ export const getOneApplication = async (req: any, res: express.Response) => {
             return res.status(403).send("Not Authorized")
         }
         const { id } = req.params
-        const applications = await wageService.getApplicationByID(id)
+        const applications = await applicationService.getApplicationByID(id)
         return res.status(200).send(applications)
     } catch (e: unknown) {
         console.log(e)
@@ -131,7 +115,7 @@ export const updateApplication = async (req: any, res: express.Response) => {
             return res.status(403).send("Not Authorized")
         }
         const { id } = req.params
-        const updated = await wageService.updateApplication(id, "", "", "", req.body)
+        const updated = await applicationService.updateApplication(id, null, req.body)
         if (updated !== 0) {
             // eslint-disable-next-line object-shorthand
             return res.status(200).send({ id: id })
@@ -150,13 +134,13 @@ export const deleteApplication = async (req: any, res: express.Response) => {
             return res.status(403).send("Not Authorized")
         }
         const { id } = req.params
-        const wage = await wageService.getApplicationByID(id)
+        const wage = await applicationService.getApplicationByID(id)
         /* Only applications created by the user who sent the request
         or if the status is Awaiting Submission can be deleted */
         if (wage.createdby !== bceid_username || wage.status !== null) {
             return res.status(401).send("Not Authorized")
         }
-        const deleted = await wageService.deleteApplication(id)
+        const deleted = await applicationService.deleteApplication(id)
         if (deleted) {
             return res.status(200).send({ id })
         }

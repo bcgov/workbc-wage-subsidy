@@ -28,153 +28,54 @@ export const getAllApplications = async (
 }
 
 export const getApplicationByCatchment = async (ca: number[]) => {
-    const claims = await knex("wage_subsidy_applications").where((builder: any) => builder.whereIn("catchmentno", ca))
+    const claims = await knex("applications").where((builder: any) => builder.whereIn("catchmentno", ca))
     return claims
 }
 
 export const getApplicationByID = async (id: string) => {
-    const wages = await knex("wage_subsidy_applications").where((builder: any) => builder.where("id", id))
+    const wages = await knex("applications").where((builder: any) => builder.where("application_id", id))
     return wages[0]
 }
 
-export const insertWage = async (id: string, user: string, formType: string, userGuid: string) => {
+export const insertApplication = async (id: string, user: string, formType: string, userGuid: string) => {
     const data = {
-        internalid: id,
-        created: new Date(),
-        formtype: formType,
-        createdby: user,
-        createdbyguid: userGuid,
-        sharedwith: "",
-        status: "not submitted"
+        id,
+        form_type: formType,
+        created_date: new Date(),
+        created_by: user,
+        created_by_guid: userGuid,
+        shared_with: [],
+        status: "Draft"
     }
-    const result = await knex("wage_subsidy_applications").insert(data)
+    const result = await knex("applications").insert(data)
     return result
 }
 
-export const updateApplication = async (
-    id: number,
-    confirmationId: string,
-    submissionId: string,
-    status: string,
-    data: any
-) => {
-    const wages = await knex("wage_subsidy_applications").where("id", id)
+export const updateApplication = async (id: number, status: string | null, form: any) => {
+    const wages = await knex("applications").where("id", id)
     if (wages.length === 0) {
         return 0
     }
-    if (data) {
-        const result = await knex("wage_subsidy_applications").where("id", id).update(data)
-        return result
+    let result
+    if (form && form.userInfo) {
+        result = await knex("applications")
+            .where("id", id)
+            .update({
+                form_confirmation_id: form.formSubmissionStatusCode === "SUBMITTED" ? form.confirmationId : null, // only store the confirmation ID when the form has been submitted
+                form_submission_id: form.submissionId,
+                form_submitted_date: form.formSubmissionStatusCode === "SUBMITTED" ? form.createdAt : null,
+                position_title: form.positionTitle0, // TODO: what to do in the case of multiple positions?
+                num_positions: Number(form.numberOfPositions0), // TODO: what to do in the case of multiple positions?
+                catchmentno: Number(form?.catchmentNo),
+                status,
+                updated_by: form.userInfo.username, // TODO: should match 'user' on insertion (uses a hash version of the users bceid instead of the actual username)
+                updated_date: new Date()
+            })
     }
-    const result = await knex("wage_subsidy_applications").where("id", id).update({
-        confirmationid: confirmationId,
-        applicationid: submissionId,
-        status
-    })
     return result
 }
 
 export const deleteApplication = async (id: number) => {
-    const result = await knex("wage_subsidy_applications").where("id", id).del()
+    const result = await knex("applications").where("id", id).del()
     return result
-}
-
-// Only gets called on submitted status
-export const updateWageData = async (body: any, id: number) => {
-    // Insert into wage table
-    const data = body
-    Object.keys(data).forEach((e) => {
-        if (data[e] === "") {
-            data[e] = null
-        } else if (e === "position2") {
-            Object.keys(data[e]).forEach((p) => {
-                if (data[e][p] === "") {
-                    data[e][p] = null
-                }
-            })
-        }
-    })
-    const wage = await knex("wage_subsidy_applications").where("id", id)
-    const insertData = {
-        title: `${data.operatingName} - ${data.confirmationId}`,
-        catchmentno: data.catchmentNo,
-        applicationid: data.submissionId,
-        confirmationid: data.confirmationId,
-        applicationstatus: "New",
-        operatingname: data.operatingName,
-        businessnumber: data.businessNumber,
-        businessaddress1: data.businessAddress,
-        businesscity: data.businessCity,
-        businessprovince: data.businessProvince,
-        businesspostal: data.businessPostal,
-        businessphone: data.businessPhone,
-        businessfax: data.businessFax,
-        businessemail: data.businessEmail,
-        otherworkaddress: data.otherWorkAddress,
-        sectortype: data.sectorType,
-        typeofindustry: data.typeOfIndustry,
-        organizationsize: data.organizationSize,
-        cewsandorcrhp: data.CEWSAndOrCRHP,
-        employeedisplacement: data.employeeDisplacement,
-        labourdispute: data.labourDispute,
-        unionconcurrence: data.unionConcurrence,
-        liabilitycoverage: data.liabilityCoverage,
-        wagesubsidy: data.wageSubsidy,
-        wsbccoverage: data.WSBCCoverage,
-        lawcomplianceconsent: data.lawComplianceConsent,
-        orgeligibilityconsent: data.orgEligibilityConsent,
-        wsbcnumber: data.WSBCNumber,
-        addressalt: data.addressAlt,
-        cityalt: data.cityAlt,
-        provincealt: data.provinceAlt,
-        postalalt: data.postalAlt,
-        participantemail0: `${data.employeeEmail0 ? data.employeeEmail0 : ""};${
-            data.position2.employeeEmail0 !== undefined ? data.position2.employeeEmail0 : ""
-        }`,
-        participantemail1: `${data.employeeEmail1 ? data.employeeEmail1 : ""};${
-            data.position2.employeeEmail1 !== undefined ? data.position2.employeeEmail1 : ""
-        }`,
-        participantemail2: `${data.employeeEmail2 ? data.employeeEmail2 : ""};${
-            data.position2.employeeEmail2 !== undefined ? data.position2.employeeEmail2 : ""
-        }`,
-        participantemail3: `${data.employeeEmail3 ? data.employeeEmail3 : ""};${
-            data.position2.employeeEmail3 !== undefined ? data.position2.employeeEmail3 : ""
-        }`,
-        participantemail4: `${data.employeeEmail4 ? data.employeeEmail4 : ""};${
-            data.position2.employeeEmail4 !== undefined ? data.position2.employeeEmail4 : ""
-        }`,
-        positiontitle0: data.positionTitle0,
-        numberofpositions0: data.numberOfPositions0,
-        startdate0: data.startDate0,
-        hours0: data.hours0,
-        wage0: Math.round(100 * parseFloat(data.wage0)),
-        applicationmercs0: data.applicationMERCs0,
-        duties0: data.duties0,
-        skills0: data.skills0,
-        workexperience0: data.workExperience0,
-        positiontitle1: data.position2.positionTitle1,
-        numberofpositions1: data.position2.numberOfPositions1,
-        startdate1: data.startDate1,
-        hours1: data.position2.hours1,
-        wage1: data.position2.wage1 ? Math.round(100 * parseFloat(data.position2.wage1)) : 0,
-        applicationmercs1: data.position2.applicationMERCs1,
-        duties1: data.position2.duties1,
-        skills1: data.position2.skills1,
-        workexperience1: data.position2.workExperience1,
-        signatorytitle: data.signatoryTitle,
-        signatory1: data.signatory1,
-        organizationconsent: data.organizationConsent,
-        // history:
-        sf: data.storefrontId,
-        centrename: "",
-        markedfordeletion: false,
-        status: "submitted",
-        history: {
-            history: [
-                { changes: { applicationstatus: "New" }, date: wage[0].created, by: `bceid:${wage[0].createdby}` }
-            ]
-        }
-    }
-    const insert = await knex("wage_subsidy_applications").where("id", id).update(insertData)
-    return insert
 }
