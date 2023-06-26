@@ -8,7 +8,7 @@ export const ApplicationCreateRedirect = () => {
 
     useEffect(() => {
         setStatusFilter(applicationStatusFilters["All"])
-        redirect("create", "wage")
+        redirect("create", "applications")
     }, [setStatusFilter, redirect])
 
     return <span />

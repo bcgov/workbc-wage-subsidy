@@ -8,7 +8,7 @@ export const ApplicationCreate = () => {
     const redirect = useRedirect()
 
     const handleClick = (formType) => {
-        redirect("Form/" + formType, "wage")
+        redirect("Form/" + formType, "applications")
     }
 
     return (
@@ -49,7 +49,7 @@ export const ApplicationCreate = () => {
                                     <Box display="flex" justifyContent="right">
                                         <BCGovPrimaryButton
                                             text="I Have an Employee"
-                                            onClick={() => handleClick("haveEmployee")}
+                                            onClick={() => handleClick("HaveEmployee")}
                                         />
                                     </Box>
                                 </Grid>
@@ -57,7 +57,7 @@ export const ApplicationCreate = () => {
                                     <Box display="flex" justifyContent="left">
                                         <BCGovPrimaryButton
                                             text="I Need an Employee"
-                                            onClick={() => handleClick("needEmployee")}
+                                            onClick={() => handleClick("NeedEmployee")}
                                         />
                                     </Box>
                                 </Grid>
