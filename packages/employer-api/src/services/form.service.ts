@@ -1,15 +1,12 @@
 import { chefsApi } from "../config/config"
 
-export const getFormSubmissions = async (formId: string, formPass: string, params: any) => {
+export const getFormSubmissions = async (formID: string, formPass: string, params: any) => {
     try {
-        const url = `forms/${formId}/submissions`
+        const url = `forms/${formID}/submissions`
         const p = new URLSearchParams(params)
-        // console.log(p)
-        // console.log(formId)
-        // console.log(formPass)
         const config = {
             auth: {
-                username: formId,
+                username: formID,
                 password: formPass
             },
             headers: {
@@ -25,15 +22,12 @@ export const getFormSubmissions = async (formId: string, formPass: string, param
     }
 }
 
-export const getSubmission = async (formId: string, formPass: string, submissionId: string) => {
+export const getSubmission = async (formID: string, formPass: string, submissionID: string) => {
     try {
-        const url = `submissions/${submissionId}`
-        // console.log(p)
-        // console.log(formId)
-        // console.log(formPass)
+        const url = `submissions/${submissionID}`
         const config = {
             auth: {
-                username: formId,
+                username: formID,
                 password: formPass
             },
             headers: {
@@ -48,4 +42,25 @@ export const getSubmission = async (formId: string, formPass: string, submission
     }
 }
 
-export const anotherFunction = async () => ({ ok: "ok" })
+export const createDraft = async (
+    token: string,
+    formID: string,
+    formPass: string,
+    formVersionID: string,
+    prefillFields: any
+) => {
+    try {
+        const url = `forms/${formID}/versions/${formVersionID}/submissions`
+        const config = {
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`
+            }
+        }
+        const formSubmissionResponse = await chefsApi.post(url, config)
+        return formSubmissionResponse.data
+    } catch (e: any) {
+        console.log(e)
+        throw new Error(e.response?.status)
+    }
+}
