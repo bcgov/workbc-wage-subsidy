@@ -8,9 +8,9 @@ import { ClaimListAside } from "./ClaimListAside"
 
 export const claimStatusFilters = {
     All: { label: "All" },
-    NotSubmitted: { label: "Not Submitted", status: "not submitted" },
-    Submitted: { label: "Submitted", status: "submitted" },
-    Cancelled: { label: "Cancelled", status: "cancelled" }
+    NotSubmitted: { label: "Draft", status: "Draft" },
+    Submitted: { label: "Submitted", status: "Submitted" },
+    Cancelled: { label: "Cancelled", status: "Cancelled" }
 } as { [key: string]: any }
 
 export const ClaimList = (props: any) => {
@@ -26,7 +26,7 @@ export const ClaimList = (props: any) => {
             empty={<ClaimCreateRedirect />}
         >
             <Datagrid bulkActionButtons={<FormBulkActionButtons />} sx={DatagridStyles} rowClick="show">
-                <TextField label="Submission ID" source="id" emptyText="-" />
+                <TextField label="Submission ID" source="confirmationid" emptyText="-" />
                 <TextField label="Position Title" source="title" emptyText="-" />
                 <TextField label="Number of Positions" source="numberofpositions0" emptyText="-" />{" "}
                 {/* TODO - once submitted date is implemented */}
@@ -38,18 +38,12 @@ export const ClaimList = (props: any) => {
                     render={(record: any) => (
                         <Box display="flex" width="100%" justifyContent="center">
                             <Chip
-                                label={
-                                    record.status === "submitted"
-                                        ? "Submitted"
-                                        : record.status === "cancelled"
-                                        ? "Cancelled"
-                                        : "Not Submitted"
-                                }
+                                label={record.status}
                                 size="small"
                                 color={
-                                    record.status === "submitted"
+                                    record.status === "Submitted"
                                         ? "primary"
-                                        : record.status === "cancelled"
+                                        : record.status === "Cancelled"
                                         ? "error"
                                         : "info"
                                 }
