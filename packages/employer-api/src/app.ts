@@ -5,7 +5,7 @@ import Keycloak, { KeycloakConfig } from "keycloak-connect"
 import morgan from "morgan"
 
 import claimRoute from "./routes/claim.route"
-import wageRoute from "./routes/wage.route"
+import applicationRoute from "./routes/application.route"
 
 const corsOptions = {
     origin: process.env.ORIGIN_URL || process.env.OPENSHIFT_NODEJS_ORIGIN_URL || "http://localhost:3000",
@@ -35,8 +35,8 @@ app.set("trust proxy", "loopback, linklocal, uniquelocal")
 app.use(helmet())
 app.use(keycloak.middleware())
 
-app.use("/", keycloak.protect(), claimRoute)
-app.use("/", keycloak.protect(), wageRoute)
+app.use("/applications", keycloak.protect(), applicationRoute)
+app.use("/claims", keycloak.protect(), claimRoute)
 
 const port = process.env.PORT || "8000"
 app.listen(port, () => {

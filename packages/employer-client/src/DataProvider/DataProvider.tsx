@@ -13,7 +13,6 @@ export const dataProvider = {
     ) => {
         const { page, perPage } = params.pagination
         const { field, order } = params.sort
-
         const rangeStart = (page - 1) * perPage
         const rangeEnd = page * perPage - 1
 

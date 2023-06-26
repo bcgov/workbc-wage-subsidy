@@ -98,9 +98,6 @@ export const updateClaimsData = async (body: any, id: number) => {
         }
     })
     const claim = await knex("wage_subsidy_claim_form").where("id", id)
-    // console.log("inside body", body)
-    // console.log("inside update claim data", data)
-    // console.log("supporting documents", data.supportingDocuments)
     const claimsData = {
         title: `Claim - ${data.employerName} - ${body.confirmationId}`,
         catchmentno: data.workbcCentre.split("-")[0],
@@ -152,37 +149,9 @@ export const updateClaimsData = async (body: any, id: number) => {
                 { changes: { applicationstatus: "New" }, date: claim[0].created, by: `bceid:${claim[0].createdby}` }
             ]
         },
-        // eligiblewages: data.eligiblewages,
-        // eligiblewages2: data.eligiblewages2,
         totalmercs1: data.totalMERCs,
-        // totalmercs2: data.totalmercs2,
-        // subsidyratepercent1: data.subsidyratepercent1,
-        // subsidyratepercent2: data.subsidyratepercent2,
-        // subsidyratedatefrom1: data.subsidyratedatefrom1,
-        // subsidyratedateto1: data.subsidyratedateto1,
-        // totalamountreimbursed1: data.totalamountreimbursed1,
-        // claimapprovedby1: data.claimapprovedby1,
-        // subsidyratedatefrom2: data.subsidyratedatefrom2,
-        // subsidyratedateto2: data.subsidyratedateto2,
-        // totalamountreimbursed2: data.totalamountreimbursed2,
-        // claimapprovedby2: data.claimapprovedby2,
-        // claimverifieddate: data.claimverifieddate,
-        // totalsubsidyclaimed: data.totalsubsidyclaimed,
-        // totalweeks1: data.totalweeks1,
-        // totalweeks2: data.totalweeks2,
-        // wagesreimbursed1: data.wagesreimbursed1,
-        // wagesreimbursed2: data.wagesreimbursed2,
-        // mercsreimbursed1: data.mercsreimbursed1,
-        // mercsreimbursed2: data.mercsreimbursed2,
-        // claimemployeeinfo: data.claimemployeeinfo,
-        // originalapplicationid: data.originalapplicationid,
-        // history: data.history,
-        // sf: data.sf,
-        // centrename: data.centrename,
         markedfordeletion: false,
         internalid: data.internalId
-        // modified,
-        // created
     }
     if (data.dateFrom2 === "") {
         claimsData.datefrom2 = null
