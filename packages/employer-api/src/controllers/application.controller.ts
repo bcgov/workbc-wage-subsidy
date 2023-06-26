@@ -77,7 +77,7 @@ export const createApplication = async (req: any, res: express.Response) => {
         if (bceid_username === undefined) {
             return res.status(403).send("Not Authorized")
         }
-        await applicationService.insertApplication(
+        const insertResult = await applicationService.insertApplication(
             req.body.formKey,
             req.body.userName,
             req.body.formType,
@@ -102,7 +102,7 @@ export const createApplication = async (req: any, res: express.Response) => {
         //     const createDraftResult = await formService.createDraft(req.kauth.grant.access_token.token, formID, formPass, formVersionID, {}) //**TODO: should probably try to create the draft before  */
         //     return res.status(200).send({ data: insertResult })
         // }
-        return res.status(500).send("Internal Server Error")
+        return res.status(200).send({ data: insertResult })
     } catch (e: unknown) {
         console.log(e)
         return res.status(500).send("Internal Server Error")
