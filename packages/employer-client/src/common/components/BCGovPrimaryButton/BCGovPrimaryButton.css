@@ -1,0 +1,31 @@
+.BC-Gov-PrimaryButton {
+  background-color: #002D72;
+  border: none;
+  border-radius: 4px;
+  color: white;
+  padding: 1em 2.5em;
+  text-align: center;
+  text-decoration: none;
+  display: block;
+  font-size: 18px;
+  font-family: 'BCSans', 'Noto Sans', Verdana, Arial, sans-serif;
+  font-weight: 700;
+  letter-spacing: 1px;
+  cursor: pointer;
+  margin-top: 0em;
+  margin-bottom: 5em;
+  transform: translate(0.0em, -0.5em);
+}
+  
+.BC-Gov-PrimaryButton:hover {
+  opacity: 0.80;
+}
+
+:focus {
+  outline: 4px solid #3B99FC;
+  outline-offset: 1px;
+}
+
+.BC-Gov-PrimaryButton:active {
+  opacity: 1;
+}

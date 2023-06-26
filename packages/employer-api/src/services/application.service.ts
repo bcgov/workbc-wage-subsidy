@@ -10,6 +10,9 @@ export const getAllApplications = async (
 ) => {
     const applications = await knex("applications")
         .modify((queryBuilder: any) => {
+            if (filters.id) {
+                queryBuilder.where("id", filters.id)
+            }
             if (filters.status) {
                 queryBuilder.where("status", filters.status)
             }

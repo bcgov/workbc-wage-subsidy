@@ -7,6 +7,9 @@ export const getAllClaims = async (perPage: number, currPage: number, filters: a
             if (filters.applicationstatus) {
                 queryBuilder.whereIn("applicationstatus", filters.applicationstatus)
             }
+            if (filters.status) {
+                queryBuilder.where("status", filters.status)
+            }
             if (filters.catchmentno) {
                 queryBuilder.where("catchmentno", Number(filters.catchmentno))
             }
@@ -26,7 +29,13 @@ export const getClaimsByCatchment = async (ca: number[]) => {
     return claims
 }
 
-export const insertClaim = async (id: string, user: string, formType: string, userGuid: string) => {
+export const insertClaim = async (
+    id: string,
+    user: string,
+    formType: string,
+    userGuid: string,
+    applicationId: string
+) => {
     const data = {
         internalid: id,
         // user: user
@@ -34,7 +43,8 @@ export const insertClaim = async (id: string, user: string, formType: string, us
         formtype: formType,
         createdby: user,
         createdbyguid: userGuid,
-        sharedwith: ""
+        sharedwith: "",
+        applicationid: applicationId
     }
     const result = await knex("wage_subsidy_claim_form").insert(data)
     return result

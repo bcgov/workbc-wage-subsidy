@@ -5,5 +5,6 @@ export const COLOURS = {
     BC_DARKBLUE: "#3974cb",
     WHITE: "#ffffff",
     LIGHTBLUE: "#4995ec",
-    DARKBLUE: "#003366"
+    DARKBLUE: "#003366",
+    LIGHTGREY: "#F2F2F2"
 }
