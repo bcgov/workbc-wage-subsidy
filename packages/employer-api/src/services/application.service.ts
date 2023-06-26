@@ -20,7 +20,7 @@ export const getAllApplications = async (
                 queryBuilder.where("catchmentno", Number(filters.catchmentno))
             }
             if (user) {
-                queryBuilder.whereLike("created_by", user) // .orWhereLike("shared_with", `%${user}%`)
+                queryBuilder.whereLike("created_by", user) // TODO .orWhereLike("shared_with", `%${user}%`)
             }
             if (sort) {
                 queryBuilder.orderBy(sort[0], sort[1])

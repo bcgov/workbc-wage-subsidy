@@ -32,14 +32,20 @@ export const ApplicationCreateForm = (props: any) => {
         <Create {...props}>
             <SimpleForm defaultValues={defaultValues} toolbar={<CustomToolbar />}>
                 <SelectInput
-                    source="formtype"
+                    source="formType"
                     label="Application Type"
                     choices={[
-                        { id: "haveEmployee", name: "Have Employee" },
-                        { id: "needEmployee", name: "Need Employee" }
+                        { id: "Have Employee", name: "Have Employee" },
+                        { id: "Need Employee", name: "Need Employee" }
                     ]}
                     validate={required()}
-                    defaultValue={formType}
+                    defaultValue={
+                        formType === "HaveEmployee"
+                            ? "Have Employee"
+                            : formType === "NeedEmployee"
+                            ? "Need Employee"
+                            : ""
+                    }
                 />
             </SimpleForm>
         </Create>
