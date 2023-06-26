@@ -1,6 +1,6 @@
-import { Count, useStore } from "react-admin"
-import { Box, MenuList, MenuItem, ListItemText } from "@mui/material"
+import { Box, ListItemText, MenuItem, MenuList } from "@mui/material"
 import isEqual from "lodash/isEqual"
+import { Count, useStore } from "react-admin"
 
 import { applicationStatusFilters } from "./ApplicationList"
 

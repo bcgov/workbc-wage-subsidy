@@ -16,11 +16,8 @@ export const getAllClaims = async (req: any, res: express.Response) => {
             return res.status(403).send("Not Authorized")
         }
         const filters = filter ? JSON.parse(filter) : {}
-        // console.log(filters.applicationstatus)
         const sorted = sort ? sort.replace(/[^a-zA-Z0-9,]/g, "").split(",") : ["id", "ASC"]
-        // console.log(sorted)
         const claims = await claimService.getAllClaims(Number(perPage), Number(page), filters, sorted, bceid_username)
-        // console.log(claims)
         const hasNonComplete = claims.data.some((a: any) => a.status !== "complete")
 
         const params = {
@@ -36,7 +33,6 @@ export const getAllClaims = async (req: any, res: express.Response) => {
                 process.env.CLAIM_FORM_PASS || "",
                 params
             )
-            // console.log(hasClaimApplications.reverse())
             hasClaimApplications.forEach(async (h: any) => {
                 const app = claims.data.find((a: any) => a.internalid === h.internalId) || null
                 if (app) {
@@ -49,7 +45,6 @@ export const getAllClaims = async (req: any, res: express.Response) => {
                         // set status to draft
                         await claimService.updateClaims(app.id, h.confirmationId, h.submissionId, "draft", null)
                     }
-                    // console.log("found app")
                     // update the DB
                 }
             })
@@ -75,7 +70,8 @@ export const createClaim = async (req: any, res: express.Response) => {
             req.body.formKey,
             req.body.userName,
             req.body.formtype,
-            req.body.guid
+            req.body.guid,
+            req.body.applicationid
         )
         // console.log("created is")
         // console.log(created)

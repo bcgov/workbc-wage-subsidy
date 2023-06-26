@@ -1,35 +1,10 @@
-import {
-    BulkDeleteButton,
-    CreateButton,
-    Datagrid,
-    FilterButton,
-    FunctionField,
-    List,
-    TextField,
-    TopToolbar,
-    useStore,
-    RowClickFunction,
-    Identifier
-} from "react-admin"
-import { Button, Chip } from "@mui/material"
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faHandshake } from "@fortawesome/pro-solid-svg-icons"
+import { useStore, Datagrid, FunctionField, List, TextField, Identifier } from "react-admin"
+import { Box, Chip } from "@mui/material"
 import { ApplicationListAside } from "./ApplicationListAside"
-
-const ListActions = () => (
-    <TopToolbar sx={{ paddingTop: "5vh" }}>
-        <div>
-            <CreateButton label="New Application" />
-        </div>
-    </TopToolbar>
-)
-
-const FormBulkActionButtons = () => (
-    <div style={{ display: "flex", flexDirection: "row", alignItems: "center", cursor: "pointer" }}>
-        <FontAwesomeIcon icon={faHandshake} style={{ marginRight: 10 }} />
-        SHARE
-    </div>
-)
+import { ApplicationCreateRedirect } from "./ApplicationCreateRedirect"
+import { FormBulkActionButtons } from "../common/components/FormBulkActionButtons/FormBulkActionButtons"
+import { DatagridStyles } from "../common/styles/DatagridStyles"
+import { ListActions } from "../common/components/ListActions/ListActions"
 
 export const applicationStatusFilters = {
     All: { label: "All" },
@@ -44,24 +19,19 @@ export const ApplicationList = (props: any) => {
     const [statusFilter] = useStore("resources.applications.list.statusFilter", applicationStatusFilters.All)
 
     return (
-        <List {...props} actions={<ListActions />} filter={statusFilter} filters={[]} aside={<ApplicationListAside />}>
+        <List
+            {...props}
+            actions={<ListActions createButtonLabel="New Application" />}
+            filter={statusFilter}
+            filters={[]}
+            aside={<ApplicationListAside />}
+            empty={<ApplicationCreateRedirect />}
+        >
             <Datagrid
                 bulkActionButtons={<FormBulkActionButtons />}
-                sx={{
-                    cursor: "pointer",
-                    "& .column-lock": {
-                        padding: "6px 0",
-                        "& svg": { verticalAlign: "middle" }
-                    },
-                    "& .RaDatagrid-rowCell": {
-                        textAlign: "left"
-                    },
-                    "& .RaDatagrid-headerCell": {
-                        fontWeight: "bold",
-                        textAlign: "left"
-                    }
-                }}
+                sx={DatagridStyles}
                 rowClick={(id: Identifier, resource: string, record: any) => {
+                    // Temporary click functionality (opens form in a new tab) (will get replaced by embed functionality eventually)
                     if (record.status === "Submitted") {
                         // submitted
                         window.open(`${process.env.REACT_APP_VIEW_URL}${record.form_submission_id}`)
@@ -83,31 +53,33 @@ export const ApplicationList = (props: any) => {
                 <TextField label="Number of Positions" source="num_positions" emptyText="-" />{" "}
                 <FunctionField
                     label="Submitted Date"
-                    render={(record: any) =>
-                        record.form_submitted_date ? record.form_submitted_date.split("T")[0] : "-" // remove timestamp
+                    render={
+                        (record: any) => (record.form_submitted_date ? record.form_submitted_date.split("T")[0] : "-") // remove timestamp
                     }
                 />
-                <TextField label="Shared With" source="shared_with" emptyText="-" /> {/* TODO */}
+                <TextField label="Shared With" source="shared_with" emptyText="-" />
                 <FunctionField
                     label=""
                     render={(record: any) => (
-                        <Chip
-                            label={record.status}
-                            size="small"
-                            color={
-                                record.status === "Draft"
-                                    ? "info"
-                                    : record.status === "Submitted"
-                                    ? "primary"
-                                    : record.status === "Processing"
-                                    ? "warning"
-                                    : record.status === "Completed"
-                                    ? "success"
-                                    : record.status === "Cancelled"
-                                    ? "error"
-                                    : "info"
-                            }
-                        />
+                        <Box display="flex" width="100%" justifyContent="center">
+                            <Chip
+                                label={record.status}
+                                size="small"
+                                color={
+                                    record.status === "Draft"
+                                        ? "info"
+                                        : record.status === "Submitted"
+                                        ? "primary"
+                                        : record.status === "Processing"
+                                        ? "warning"
+                                        : record.status === "Completed"
+                                        ? "success"
+                                        : record.status === "Cancelled"
+                                        ? "error"
+                                        : "info"
+                                }
+                            />
+                        </Box>
                     )}
                 />
             </Datagrid>
