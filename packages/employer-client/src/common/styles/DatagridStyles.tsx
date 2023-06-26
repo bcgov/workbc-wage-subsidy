@@ -5,7 +5,6 @@ export const DatagridStyles = {
     },
     "& .RaDatagrid-rowCell": {
         textAlign: "left"
-        //padding: "0.9em 1.3em"
     },
     "& .RaDatagrid-headerCell": {
         fontWeight: "bold",
