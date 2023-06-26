@@ -13,6 +13,9 @@ export const getAllWage = async (perPage: number, currPage: number, filters: any
             if (filters.catchmentno) {
                 queryBuilder.where("catchmentno", Number(filters.catchmentno))
             }
+            if (filters.id) {
+                queryBuilder.where("id", Number(filters.id))
+            }
             if (user) {
                 queryBuilder.whereLike("createdby", user).orWhereLike("sharedwith", `%${user}%`)
             }

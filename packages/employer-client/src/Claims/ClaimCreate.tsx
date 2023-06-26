@@ -1,140 +1,50 @@
-import { Create, ReferenceInput, SelectInput, SimpleForm, useGetIdentity, usePermissions } from "react-admin"
-import { useWatch } from "react-hook-form"
-import { v4 as uuidv4 } from "uuid"
-import ClaimPreview from "./Preview"
+import Box from "@mui/material/Box"
+import Grid from "@mui/material/Grid"
+import { useRedirect } from "react-admin"
+import BCGovPrimaryButton from "../common/components/BCGovPrimaryButton/BCGovPrimaryButton"
+import Card from "../common/components/Card/Card"
 
-const FormReferenceInput = (props: any) => {
-    const wageId: any = useWatch({ name: "confirmationid" })
-    console.log(wageId)
+export const ClaimCreate = () => {
+    const redirect = useRedirect()
+
     return (
-        <>
-            <ReferenceInput {...props}>
-                <SelectInput label={"Form"} optionText="confirmationid" />
-            </ReferenceInput>
-            {console.log(wageId)}
-            {wageId && <ClaimPreview id={wageId} resource={"wage"} />}
-        </>
-    )
-}
-
-export const ClaimCreate = (props: any) => {
-    const { isLoading, permissions, error } = usePermissions()
-    const { identity, isLoading: identityLoading } = useGetIdentity()
-    //const [storeFronts, setStoreFronts] = useState<Array<any>>([])
-    //const [catchments, setCatchments] = useState<Array<any>>([])
-    //const {token} = ("token")
-    console.log(error)
-    console.log(permissions)
-
-    /*
-    const getCatchments = (ca) => {
-        console.log(ca)
-        let choices: any[] = []
-        ca.forEach((c, i) => {
-            choices.push({
-                id: i + 1,
-                name: c
-            })
-        })
-        return choices
-    }
-
-    /*
-  const getStoreFront = (ca) => {
-    console.log(ca)
-    console.log(catchments)
-    const info = catchments.find(c => c.CatchmentNo === String(ca))
-    console.log(info)
-    return info.Storefronts
-  }
-  */
-    /*
-    const getDisplayInfo = (ca, sf) => {
-        const caInfo = catchments.find((c) => c.CatchmentNo === String(ca))
-        console.log(caInfo)
-        const sfInfo = caInfo.Storefronts.find((s) => s.id === sf)
-        return (
-            <>
-                <p>Catchment Name: {caInfo.Title}</p>
-                <p>WorkBC Centre: {sfInfo.name}</p>
-                <p>WorkBC Centre Address: {sfInfo.Address}</p>
-                <p>WorkBC Centre Phone: {sfInfo.Phone}</p>
-            </>
-        )
-    }
-    */
-    /*
-  React.useEffect(() => {
-    
-    async function getCatchments() {
-      const getCatchmentInfoRequest = new Request(
-        `http://localhost:8000/Common/Catchments`,
-        {
-          method: "GET",
-          headers: new Headers({
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          })
-        }
-      )
-      try {
-        const ca = await fetch(getCatchmentInfoRequest)
-          .then(response => {
-            if (response.status < 200 || response.status >= 300) {
-              throw new Error(response.statusText);
-            }
-            return response.json();
-          })
-          .then(c => {
-            console.log(c)
-            return c
-          })
-          setCatchments(ca)
-      } catch (error: any) {
-        console.log(error)
-      }
-    }
-    getCatchments()
-
-  }, [])
-  */
-
-    const defaultValues = {
-        formKey: uuidv4(),
-        userName: identity?.username || "",
-        guid: identity?.guid || ""
-    }
-    return !isLoading && !identityLoading && permissions ? (
-        <Create {...props}>
-            {console.log(identity)}
-            <SimpleForm defaultValues={defaultValues}>
-                <FormReferenceInput
-                    label="Application"
-                    source="confirmationid"
-                    reference="wage"
-                    filter={{ status: ["submitted", "inProgress"] }}
-                />
-                {/*
-        <SelectInput source="catchment" choices={getCatchments(permissions.catchments)} />
-        <FormDataConsumer>
-          {({ formData, ...rest }) => (
-            (formData.catchment >= 1) &&
-            <SelectInput label="WorkBC Centre" source="storefront" emptyValue={"Please select catchment"} choices={getStoreFront(formData.catchment)} {...rest} />
-          )}
-        </FormDataConsumer>
-        
-        <FormDataConsumer>
-        {({ formData, ...rest }) => ( 
-          (formData.catchment >= 1 && formData.storefront >= 1) &&
-          <>
-            <p>The following information will be set on the form (if applicable)</p>
-            {getDisplayInfo(formData.catchment, formData.storefront)}
-          </>
-        )}
-        </FormDataConsumer>
-        {/*<FormReferenceInput label="Form" source="code" reference="formTemplates" /*/}
-            </SimpleForm>
-        </Create>
-    ) : (
-        <div>Loading</div>
+        <Box paddingTop="6em" paddingBottom="3em" width="100%" display="flex" justifyContent="center" minWidth="58em">
+            <Card>
+                <Grid container direction="column" height="100%" spacing={4}>
+                    <Grid item>
+                        <Grid container direction="row">
+                            <Grid item xs={7}>
+                                <h2>Submit a Claim for Wage Subsidy</h2>
+                                <Box paddingLeft="0.75em">
+                                    <p>
+                                        In order to receive your wage subsidy reimbursement, you must{<br />}
+                                        submit a claim for which is associated to a previously{<br />}
+                                        completed application
+                                    </p>
+                                </Box>
+                            </Grid>
+                            <Grid item xs={5}>
+                                <Box display="flex" height="100%" justifyContent="center" alignItems="center">
+                                    <img
+                                        width="200em"
+                                        src="/employer-claim-form.svg"
+                                        alt=""
+                                        style={{ transform: "translate(-1.0em, 2.0em)" }}
+                                    />
+                                </Box>
+                            </Grid>
+                        </Grid>
+                    </Grid>
+                    <Grid item xs>
+                        <Box display="flex" height="100%" justifyContent="center" alignItems="end" sx={{ flexGrow: 1 }}>
+                            <BCGovPrimaryButton
+                                text="Submit a Claim Form"
+                                onClick={() => redirect("SelectApplication", "claims")}
+                            />
+                        </Box>
+                    </Grid>
+                </Grid>
+            </Card>
+        </Box>
     )
 }

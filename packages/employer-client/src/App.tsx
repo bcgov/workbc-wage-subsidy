@@ -1,23 +1,27 @@
+import { Box } from "@mui/material"
 import { ReactKeycloakProvider } from "@react-keycloak/web"
 import Keycloak from "keycloak-js"
 import React, { useState } from "react"
 import { Admin, Resource } from "react-admin"
-import { Box } from "@mui/material"
+import { Route } from "react-router-dom"
+import Ready from "./Admin/ready"
 import "./App.css"
-import { COLOURS } from "./Colours"
-import { ApplicationList } from "./Applications/ApplicationList"
 import { ApplicationCreate } from "./Applications/ApplicationCreate"
+import { ApplicationCreateForm } from "./Applications/ApplicationCreateForm"
+import { ApplicationList } from "./Applications/ApplicationList"
 import { ApplicationShow } from "./Applications/ApplicationShow"
 import useAuthProvider from "./Auth/authProvider"
-import { ClaimList } from "./Claims/ClaimList"
 import { ClaimCreate } from "./Claims/ClaimCreate"
-import { ClaimEdit } from "./Claims/ClaimEdit"
+import { ClaimCreateForm } from "./Claims/ClaimCreateForm"
+import { ClaimCreateSelectApplication } from "./Claims/ClaimCreateSelectApplication"
+import { ClaimList } from "./Claims/ClaimList"
+import { ClaimShow } from "./Claims/ClaimShow"
+import { COLOURS } from "./Colours"
 import { dataProvider } from "./DataProvider/DataProvider"
-import Ready from "./Admin/ready"
-import Footer from "./footer"
 import Layout from "./Layout"
 import Logo from "./Logo"
 import Tag from "./Tag"
+import Footer from "./footer"
 
 const initOptions = {
     url: process.env.REACT_APP_KEYCLOAK_URL || "",
@@ -168,7 +172,7 @@ const CustomAdminWithKeycloak = () => {
             requireAuth
             ready={Ready}
             title={
-                <Box display="flex" gap={1} alignItems="center">
+                <Box display="flex" gap={1} alignItems="center" minWidth="25em">
                     <Logo />
                     <Tag />
                     <b>WorkBC Wage Subsidy</b>
@@ -183,8 +187,19 @@ const CustomAdminWithKeycloak = () => {
                         list={ApplicationList}
                         create={ApplicationCreate}
                         show={ApplicationShow}
-                    />
-                    <Resource name="claims" list={ClaimList} edit={ClaimEdit} create={ClaimCreate} />
+                    >
+                        <Route path="create/Form/:formType" element={<ApplicationCreateForm />} />
+                    </Resource>
+                    <Resource
+                        name="claims"
+                        options={{ label: "Claims" }}
+                        list={ClaimList}
+                        create={ClaimCreate}
+                        show={ClaimShow}
+                    >
+                        <Route path="create/SelectApplication" element={<ClaimCreateSelectApplication />} />
+                        <Route path="create/Form/:appId" element={<ClaimCreateForm />} />
+                    </Resource>
                 </>
             )}
         </Admin>
