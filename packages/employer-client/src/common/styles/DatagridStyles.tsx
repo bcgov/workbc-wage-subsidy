@@ -4,8 +4,7 @@ export const DatagridStyles = {
         "& svg": { verticalAlign: "middle" }
     },
     "& .RaDatagrid-rowCell": {
-        textAlign: "left",
-        padding: "0.9em 1.3em"
+        textAlign: "left"
     },
     "& .RaDatagrid-headerCell": {
         fontWeight: "bold",

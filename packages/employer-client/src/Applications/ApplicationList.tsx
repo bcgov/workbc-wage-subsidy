@@ -1,18 +1,18 @@
+import { useStore, Datagrid, FunctionField, List, TextField, Identifier } from "react-admin"
 import { Box, Chip } from "@mui/material"
-import { Datagrid, FunctionField, List, TextField, useStore } from "react-admin"
-import { FormBulkActionButtons } from "../common/components/FormBulkActionButtons/FormBulkActionButtons"
-import { ListActions } from "../common/components/ListActions/ListActions"
-import { DatagridStyles } from "../common/styles/DatagridStyles"
-import { ApplicationCreateRedirect } from "./ApplicationCreateRedirect"
 import { ApplicationListAside } from "./ApplicationListAside"
+import { ApplicationCreateRedirect } from "./ApplicationCreateRedirect"
+import { FormBulkActionButtons } from "../common/components/FormBulkActionButtons/FormBulkActionButtons"
+import { DatagridStyles } from "../common/styles/DatagridStyles"
+import { ListActions } from "../common/components/ListActions/ListActions"
 
 export const applicationStatusFilters = {
     All: { label: "All" },
-    NotSubmitted: { label: "Not Submitted", status: "not submitted" },
-    Submitted: { label: "Submitted", applicationstatus: "New", status: "submitted" },
-    Processing: { label: "Processing", applicationstatus: "In Progress", status: "submitted" },
-    Completed: { label: "Completed", applicationstatus: "Completed", status: "submitted" },
-    Cancelled: { label: "Cancelled", status: "cancelled" }
+    NotSubmitted: { label: "Draft", status: "Draft" },
+    Submitted: { label: "Submitted", status: "Submitted" },
+    Processing: { label: "Processing", status: "Processing" },
+    Completed: { label: "Completed", status: "Completed" },
+    Cancelled: { label: "Cancelled", status: "Cancelled" }
 } as { [key: string]: any }
 
 export const ApplicationList = (props: any) => {
@@ -27,38 +27,54 @@ export const ApplicationList = (props: any) => {
             aside={<ApplicationListAside />}
             empty={<ApplicationCreateRedirect />}
         >
-            <Datagrid bulkActionButtons={<FormBulkActionButtons />} sx={DatagridStyles} rowClick="show">
-                <TextField label="Submission ID" source="id" emptyText="-" />
-                <TextField label="Position Title" source="title" emptyText="-" />
-                <TextField label="Number of Positions" source="numberofpositions0" emptyText="-" />{" "}
-                {/* TODO - once submitted date is implemented */}
-                <TextField label="Submitted Date" source="submitted" emptyText="-" /> {/* TODO */}
-                <TextField label="Shared With" source="sharedwith" emptyText="-" /> {/* TODO */}
+            <Datagrid
+                bulkActionButtons={<FormBulkActionButtons />}
+                sx={DatagridStyles}
+                rowClick={(id: Identifier, resource: string, record: any) => {
+                    // Temporary click functionality (opens form in a new tab) (will get replaced by embed functionality eventually)
+                    if (record.status === "Submitted") {
+                        // submitted
+                        window.open(`${process.env.REACT_APP_VIEW_URL}${record.form_submission_id}`)
+                    } else if (record.status === "Draft" && record.form_submission_id) {
+                        // saved
+                        window.open(`${process.env.REACT_APP_DRAFT_URL}${record.form_submission_id}`)
+                    } else {
+                        // new
+                        if (record.form_type === "Have Employee")
+                            window.open(`${process.env.REACT_APP_HAVE_EMPLOYEE_URL}&token=${id}`)
+                        else if (record.form_type === "Need Employee")
+                            window.open(`${process.env.REACT_APP_NEED_EMPLOYEE_URL}&token=${id}`)
+                    }
+                    return "" // rowClick expects a path to be returned
+                }}
+            >
+                <TextField label="Submission ID" source="form_confirmation_id" emptyText="-" />
+                <TextField label="Position Title" source="position_title" emptyText="-" />
+                <TextField label="Number of Positions" source="num_positions" emptyText="-" />{" "}
+                <FunctionField
+                    label="Submitted Date"
+                    render={
+                        (record: any) => (record.form_submitted_date ? record.form_submitted_date.split("T")[0] : "-") // remove timestamp
+                    }
+                />
+                <TextField label="Shared With" source="shared_with" emptyText="-" />
                 <FunctionField
                     label=""
                     render={(record: any) => (
                         <Box display="flex" width="100%" justifyContent="center">
                             <Chip
-                                label={
-                                    record.status === "submitted" && record.applicationstatus === "New"
-                                        ? "Submitted"
-                                        : record.status === "submitted" && record.applicationstatus === "In Progress"
-                                        ? "Processing"
-                                        : record.status === "submitted" && record.applicationstatus === "Completed"
-                                        ? "Completed"
-                                        : record.status === "cancelled"
-                                        ? "Cancelled"
-                                        : "Not Submitted"
-                                }
+                                label={record.status}
                                 size="small"
                                 color={
-                                    record.status === "submitted" && record.applicationstatus === "New"
+                                    record.status === "Draft"
+                                        ? "info"
+                                        : record.status === "Submitted"
                                         ? "primary"
-                                        : record.status === "submitted" && record.applicationstatus === "In Progress"
+                                        : record.status === "Processing"
                                         ? "warning"
-                                        : record.status === "submitted" && record.applicationstatus === "Completed"
+                                        : record.status === "Completed"
                                         ? "success"
-                                        : record.status === "cancelled"
+                                        : record.status === "Cancelled"
                                         ? "error"
                                         : "info"
                                 }
