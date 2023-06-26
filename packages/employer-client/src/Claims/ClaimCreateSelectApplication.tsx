@@ -5,12 +5,17 @@ import { DatagridStyles } from "../common/styles/DatagridStyles"
 import { CustomSearchInput } from "./ClaimCustomSearchInput"
 
 const applicationFilters = [
-    <CustomSearchInput placeholder="Search for application..." source="id" alwaysOn style={{ width: "18em" }} />
+    <CustomSearchInput
+        placeholder="Search for application..."
+        source="form_confirmation_id"
+        alwaysOn
+        style={{ width: "18em" }}
+    />
 ]
 
 export const ClaimCreateSelectApplication = (props: any) => {
     const handleClick = (id, resource, record) => {
-        return "/claims/create/Form/" + record.id
+        return "/claims/create/Form/" + record.form_confirmation_id
     }
 
     return (
@@ -18,7 +23,7 @@ export const ClaimCreateSelectApplication = (props: any) => {
             <Box minWidth="70em" maxWidth="70em" minHeight="40em">
                 <List
                     {...props}
-                    resource="wage"
+                    resource="applications"
                     filter={applicationStatusFilters["Completed"]}
                     filters={applicationFilters}
                     actions={<span />} // Disable default list actions.
@@ -28,7 +33,7 @@ export const ClaimCreateSelectApplication = (props: any) => {
                         <strong>Select the application you want to submit a claim for</strong>
                     </p>
                     <Datagrid sx={DatagridStyles} rowClick={handleClick} bulkActionButtons={false}>
-                        <TextField label="Submission ID" source="id" emptyText="-" />
+                        <TextField label="Submission ID" source="form_confirmation_id" emptyText="-" />
                         <TextField label="Position Title" source="title" emptyText="-" />
                         <TextField label="Number of Positions" source="numberofpositions0" emptyText="-" />{" "}
                         {/* TODO - once submitted date is implemented */}
@@ -39,17 +44,9 @@ export const ClaimCreateSelectApplication = (props: any) => {
                             render={(record: any) => (
                                 <Box display="flex" width="100%" justifyContent="center">
                                     <Chip
-                                        label={
-                                            record.status === "submitted" && record.applicationstatus === "Completed"
-                                                ? "Completed"
-                                                : "Error"
-                                        }
+                                        label={record.status}
                                         size="small"
-                                        color={
-                                            record.status === "submitted" && record.applicationstatus === "Completed"
-                                                ? "success"
-                                                : "error"
-                                        }
+                                        color={record.status === "Completed" ? "success" : "error"}
                                     />
                                 </Box>
                             )}

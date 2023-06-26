@@ -44,7 +44,8 @@ export const insertClaim = async (
         createdby: user,
         createdbyguid: userGuid,
         sharedwith: "",
-        applicationid: applicationId
+        applicationid: applicationId,
+        status: "Draft"
     }
     const result = await knex("wage_subsidy_claim_form").insert(data)
     return result
