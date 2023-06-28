@@ -16,6 +16,9 @@ export const getAllApplications = async (
             if (filters.status) {
                 queryBuilder.where("status", filters.status)
             }
+            if (filters.form_confirmation_id) {
+                queryBuilder.where("form_confirmation_id", filters.form_confirmation_id)
+            }
             if (filters.catchmentno) {
                 queryBuilder.where("catchmentno", Number(filters.catchmentno))
             }
