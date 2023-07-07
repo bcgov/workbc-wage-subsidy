@@ -18,7 +18,7 @@ const CustomToolbar = () => (
 )
 
 export const ClaimCreateForm = (props: any) => {
-    const { appId } = useParams()
+    const { appID } = useParams()
     const { isLoading, permissions } = usePermissions()
     const { identity, isLoading: identityLoading } = useGetIdentity()
     const defaultValues = {
@@ -31,11 +31,11 @@ export const ClaimCreateForm = (props: any) => {
         <Create {...props}>
             <SimpleForm defaultValues={defaultValues} toolbar={<CustomToolbar />}>
                 <SelectInput
-                    source="applicationid"
+                    source="application_id"
                     label="Assoc. App ID"
-                    choices={[{ id: appId?.toString(), name: appId?.toString() }]}
+                    choices={[{ id: appID?.toString(), name: appID?.toString() }]}
                     validate={required()}
-                    defaultValue={appId}
+                    defaultValue={appID}
                 />
             </SimpleForm>
         </Create>

@@ -9,45 +9,46 @@ import * as formService from "../services/form.service"
 
 export const getAllClaims = async (req: any, res: express.Response) => {
     try {
-        const { sort, filter, page, perPage } = req.query
-        // eslint-disable-next-line camelcase
         const { bceid_username } = req.kauth.grant.access_token.content
         if (bceid_username === undefined) {
             return res.status(403).send("Not Authorized")
         }
-        const filters = filter ? JSON.parse(filter) : {}
-        const sorted = sort ? sort.replace(/[^a-zA-Z0-9,]/g, "").split(",") : ["id", "ASC"]
-        const claims = await claimService.getAllClaims(Number(perPage), Number(page), filters, sorted, bceid_username)
-        const hasNonComplete = claims.data.some((a: any) => a.status !== "complete")
+        const filter = req.query.filter ? JSON.parse(req.query.filter) : {}
+        const sort: string[] = req.query.sort ? JSON.parse(req.query.sort) : ["id", "ASC"]
+        const page = req.query.page ?? 1
+        const perPage = req.query.perPage ?? 1
+        const claims = await claimService.getAllClaims(Number(perPage), Number(page), filter, sort, bceid_username)
 
-        const params = {
-            fields: `formHandler, storefrontId, catchmentNo, userInfo, applicationId, internalId, container`,
-            // eslint-disable-next-line camelcase
-            // createdBy: bceid_username,
-            deleted: false
-        }
-
-        if (hasNonComplete) {
-            const hasClaimApplications = await formService.getFormSubmissions(
-                process.env.CLAIM_FORM_ID || "",
-                process.env.CLAIM_FORM_PASS || "",
-                params
-            )
-            hasClaimApplications.forEach(async (h: any) => {
-                const app = claims.data.find((a: any) => a.internalid === h.internalId) || null
-                if (app) {
-                    // if form is complete
-                    if (h.formSubmissionStatusCode === "SUBMITTED" && app.status !== "submitted") {
-                        // update ALL fields of content
-                        claimService.updateClaimsData(h, app.id)
-                        // else form is in draft
-                    } else if (app.status === null) {
-                        // set status to draft
-                        await claimService.updateClaims(app.id, h.confirmationId, h.submissionId, "draft", null)
+        if (filter.status == null && perPage > 1) {
+            // only update applications once each call cycle
+            // update users claims as needed //
+            const containsNonComplete = claims.data.some((a: any) => a.status !== "Completed")
+            const params = {
+                fields: `formHandler, storefrontId, catchmentNo, userInfo, applicationId, internalId, container`,
+                // eslint-disable-next-line camelcase
+                // createdBy: bceid_username,
+                deleted: false
+            }
+            if (containsNonComplete) {
+                // only query the forms service if we might need to update something
+                const submissions = await formService.getFormSubmissions(
+                    process.env.CLAIM_FORM_ID || "",
+                    process.env.CLAIM_FORM_PASS || "",
+                    params
+                )
+                submissions.forEach(async (submission: any) => {
+                    const claim = claims.data.find((c: any) => c.id === submission.internalId)
+                    if (claim) {
+                        if (submission.formSubmissionStatusCode === "SUBMITTED") {
+                            if (claim.status !== "Submitted" && claim.status !== "Completed") {
+                                claimService.updateClaim(claim.id, "Submitted", submission)
+                            }
+                        } else if (claim.status === "Draft") {
+                            await claimService.updateClaim(claim.id, "Draft", submission)
+                        }
                     }
-                    // update the DB
-                }
-            })
+                })
+            }
         }
         res.set({
             "Access-Control-Expose-Headers": "Content-Range",
@@ -71,10 +72,8 @@ export const createClaim = async (req: any, res: express.Response) => {
             req.body.userName,
             req.body.formtype,
             req.body.guid,
-            req.body.applicationid
+            req.body.application_id
         )
-        // console.log("created is")
-        // console.log(created)
         if (created) {
             return res.status(200).send({ data: created })
         }
@@ -107,7 +106,7 @@ export const updateClaim = async (req: any, res: express.Response) => {
             return res.status(403).send("Not Authorized")
         }
         const { id } = req.params
-        const updated = await claimService.updateClaims(id, "", "", "", req.body)
+        const updated = await claimService.updateClaim(id, "Draft", req.body)
         if (updated !== 0) {
             // eslint-disable-next-line object-shorthand
             return res.status(200).send({ id: id })
