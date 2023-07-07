@@ -5,8 +5,6 @@ import * as express from "express"
 import * as claimService from "../services/claim.service"
 import * as formService from "../services/form.service"
 
-// import type kAuthRequest from "../interfaces/kauth-request.d"
-
 export const getAllClaims = async (req: any, res: express.Response) => {
     try {
         const { bceid_username } = req.kauth.grant.access_token.content
@@ -126,7 +124,6 @@ export const deleteClaim = async (req: any, res: express.Response) => {
         }
         const { id } = req.params
         const claim = await claimService.getClaimByID(id)
-        // console.log(claim)
         /* Only applications created by the user who sent the request
         or if the status is Awaiting Submission can be deleted */
         if (claim.createdby !== bceid_username || claim.status !== null) {
