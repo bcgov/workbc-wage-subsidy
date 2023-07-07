@@ -5,7 +5,7 @@ import { Count, useStore } from "react-admin"
 import { claimStatusFilters } from "./ClaimList"
 
 export const ClaimListAside = () => {
-    const [statusFilter, setStatusFilter] = useStore<any>("resources.claim.list.statusFilter", claimStatusFilters.All)
+    const [statusFilter, setStatusFilter] = useStore<any>("resources.claims.list.statusFilter", claimStatusFilters.All)
     return (
         <Box width={200} mr={1} mt={7} flexShrink={0} order={-1}>
             <MenuList>
