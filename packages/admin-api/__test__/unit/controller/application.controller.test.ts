@@ -1,12 +1,16 @@
 import express from "express"
-import { getAllWage, updateWage, deleteWage } from "../../../src/controllers/wage.controller"
+import {
+    deleteApplication,
+    getAllApplications,
+    updateApplication
+} from "../../../src/controllers/application.controller"
 import { getCatchment } from "../../../src/lib/catchment"
-import * as wageService from "../../../src/services/wage.service"
+import * as applicationService from "../../../src/services/application.service"
 
-jest.mock("../../../src/services/wage.service")
+jest.mock("../../../src/services/application.service")
 jest.mock("../../../src/lib/catchment")
 
-describe("getAllWage", () => {
+describe("getAllApplications", () => {
     let req: any
     let res: express.Response
 
@@ -45,9 +49,9 @@ describe("getAllWage", () => {
                 total: 100
             }
         }
-        ;(wageService.getAllWage as jest.Mock).mockResolvedValue(wages)
+        ;(applicationService.getAllApplications as jest.Mock).mockResolvedValue(wages)
 
-        await getAllWage(req, res)
+        await getAllApplications(req, res)
 
         expect(res.status).toHaveBeenCalledWith(200)
         expect(res.send).toHaveBeenCalledWith(wages.data)
@@ -59,7 +63,7 @@ describe("getAllWage", () => {
 
     it("returns 401 when getCatchment throws an error", async () => {
         ;(getCatchment as jest.Mock).mockRejectedValue(new Error("Access denied"))
-        await getAllWage(req, res)
+        await getAllApplications(req, res)
         expect(res.status).toHaveBeenCalledWith(401)
         expect(res.send).toHaveBeenCalledWith("Not Authorized")
     })
@@ -67,16 +71,16 @@ describe("getAllWage", () => {
     it("returns 500 when an error occurs", async () => {
         const catchment = ["test_catchment"]
         ;(getCatchment as jest.Mock).mockResolvedValue(catchment)
-        ;(wageService.getAllWage as jest.Mock).mockRejectedValue(new Error("Server Error"))
+        ;(applicationService.getAllApplications as jest.Mock).mockRejectedValue(new Error("Server Error"))
 
-        await getAllWage(req, res)
+        await getAllApplications(req, res)
 
         expect(res.status).toHaveBeenCalledWith(500)
         expect(res.send).toHaveBeenCalledWith("Server Error")
     })
 })
 
-describe("updateWage", () => {
+describe("updateApplication", () => {
     let req: any
     let res: express.Response
 
@@ -116,36 +120,36 @@ describe("updateWage", () => {
         }
         const catchment = ["test_catchment"]
         ;(getCatchment as jest.Mock).mockResolvedValue(catchment)
-        ;(wageService.updateWage as jest.Mock).mockResolvedValue({ id: 1, name: "John Doe" })
-        await updateWage(req, res)
+        ;(applicationService.updateApplication as jest.Mock).mockResolvedValue({ id: 1, name: "John Doe" })
+        await updateApplication(req, res)
         expect(res.status).toHaveBeenCalledWith(200)
         expect(res.send).toHaveBeenCalledWith({ id: req.params.id })
     })
     it("returns 401 when getCatchment throws an error", async () => {
         ;(getCatchment as jest.Mock).mockRejectedValue(new Error("Access denied"))
-        await updateWage(req, res)
+        await updateApplication(req, res)
         expect(res.status).toHaveBeenCalledWith(401)
         expect(res.send).toHaveBeenCalledWith("Not Authorized")
     })
     it("returns 404 when the item is not found and service returns a 0", async () => {
         const catchment = ["test_catchment"]
         ;(getCatchment as jest.Mock).mockResolvedValue(catchment)
-        ;(wageService.updateWage as jest.Mock).mockResolvedValue(0)
-        await updateWage(req, res)
+        ;(applicationService.updateApplication as jest.Mock).mockResolvedValue(0)
+        await updateApplication(req, res)
         expect(res.status).toHaveBeenCalledWith(404)
         expect(res.send).toHaveBeenCalledWith("Not Found or Not Authorized")
     })
     it("returns 500 when an error occurs", async () => {
         const catchment = ["test_catchment"]
         ;(getCatchment as jest.Mock).mockResolvedValue(catchment)
-        ;(wageService.updateWage as jest.Mock).mockRejectedValue(new Error("Server Error"))
-        await updateWage(req, res)
+        ;(applicationService.updateApplication as jest.Mock).mockRejectedValue(new Error("Server Error"))
+        await updateApplication(req, res)
         expect(res.status).toHaveBeenCalledWith(500)
         expect(res.send).toHaveBeenCalledWith("Server Error")
     })
 })
 
-describe("deleteWage", () => {
+describe("deleteApplication", () => {
     let req: any
     let res: express.Response
 
@@ -176,36 +180,36 @@ describe("deleteWage", () => {
     it("returns 200 with wages data", async () => {
         const catchment = ["test_catchment"]
         ;(getCatchment as jest.Mock).mockResolvedValue(catchment)
-        ;(wageService.deleteWage as jest.Mock).mockResolvedValue({ id: 1 })
-        await deleteWage(req, res)
+        ;(applicationService.deleteApplication as jest.Mock).mockResolvedValue({ id: 1 })
+        await deleteApplication(req, res)
         expect(res.status).toHaveBeenCalledWith(200)
         expect(res.send).toHaveBeenCalledWith({ id: req.params.id })
     })
     it("returns 401 with Access Denied for bceid users", async () => {
         req.kauth.grant.access_token.content.identity_provider = "bceid"
-        await deleteWage(req, res)
+        await deleteApplication(req, res)
         expect(res.status).toHaveBeenCalledWith(401)
         expect(res.send).toHaveBeenCalledWith("Access denied")
     })
     it("returns 401 when getCatchment throws an error", async () => {
         ;(getCatchment as jest.Mock).mockRejectedValue(new Error("Access denied"))
-        await deleteWage(req, res)
+        await deleteApplication(req, res)
         expect(res.status).toHaveBeenCalledWith(401)
         expect(res.send).toHaveBeenCalledWith("Not Authorized")
     })
     it("returns 404 when the item does not exist or the delete fails", async () => {
         const catchment = ["test_catchment"]
         ;(getCatchment as jest.Mock).mockResolvedValue(catchment)
-        ;(wageService.deleteWage as jest.Mock).mockResolvedValue(null)
-        await deleteWage(req, res)
+        ;(applicationService.deleteApplication as jest.Mock).mockResolvedValue(null)
+        await deleteApplication(req, res)
         expect(res.status).toHaveBeenCalledWith(404)
         expect(res.send).toHaveBeenCalledWith("Not Found or Not Authorized")
     })
     it("returns 500 when an error occurs", async () => {
         const catchment = ["test_catchment"]
         ;(getCatchment as jest.Mock).mockResolvedValue(catchment)
-        ;(wageService.deleteWage as jest.Mock).mockRejectedValue(new Error("Server Error"))
-        await deleteWage(req, res)
+        ;(applicationService.deleteApplication as jest.Mock).mockRejectedValue(new Error("Server Error"))
+        await deleteApplication(req, res)
         expect(res.status).toHaveBeenCalledWith(500)
         expect(res.send).toHaveBeenCalledWith("Server Error")
     })

@@ -4,8 +4,8 @@ import express from "express"
 import helmet from "helmet"
 import Keycloak, { KeycloakConfig } from "keycloak-connect"
 import morgan from "morgan"
+import applicationRoute from "./routes/application.route"
 import claimRoute from "./routes/claim.route"
-import wageRoute from "./routes/wage.route"
 import permissionRoute from "./routes/permission.route"
 
 // const app = createServer()
@@ -37,7 +37,7 @@ app.use(helmet())
 app.use(keycloak.middleware())
 
 app.use("/", keycloak.protect(), claimRoute)
-app.use("/", keycloak.protect(), wageRoute)
+app.use("/applications", keycloak.protect(), applicationRoute)
 app.use("/", keycloak.protect(), permissionRoute)
 
 const port = process.env.PORT || "8002"
