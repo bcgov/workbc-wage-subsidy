@@ -76,7 +76,11 @@ jobs:
         with:
           path: "./packages/admin-api/.dockerignore"
       - run: npm install
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
       - run: npm test
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
       - name: Install oc v3
         uses: redhat-actions/openshift-tools-installer@v1
         with:
