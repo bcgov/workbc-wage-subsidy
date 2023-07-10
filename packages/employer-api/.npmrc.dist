@@ -1,4 +1,4 @@
-//registry.marmelab.com/:_authToken=${NPM_TOKEN}
+//registry.marmelab.com/:_authToken=${REACT_ADMIN_TOKEN}
 @react-admin:registry=https://registry.marmelab.com
 //npm.fontawesome.com/:_authToken=${FONT_AWESOME_TOKEN}
 @fortawesome:registry=https://npm.fontawesome.com/
