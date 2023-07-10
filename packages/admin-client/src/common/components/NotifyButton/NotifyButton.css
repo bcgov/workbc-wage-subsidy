@@ -1,8 +1,12 @@
 .notify-button {
-    color: #307FE2;
-    padding: 0.77em 2em 0.77em 2em;
+    padding: 0.77em 1em 0.77em 1em;
     background-color: transparent;
     font-size: 1rem;
     border: none;
-    margin-bottom: 4px
+    margin-bottom: 4px;
+    cursor: pointer;
+}
+
+:focus {
+    outline: none;
 }

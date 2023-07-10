@@ -8,5 +8,6 @@ export const COLOURS = {
     DARKBLUE: "#003366",
     LIGHTGREY: "#F2F2F2",
     LIGHTBLUE_TRANSLUCENT: "rgba(48, 127, 226, 0.25)",
-    LIGHTBLUE_TEXT: "#307FE2"
+    LIGHTBLUE_TEXT: "#307FE2",
+    MEDIUMGREY: "rgba(0, 0, 0, 0.38)"
 }
