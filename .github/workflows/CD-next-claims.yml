@@ -78,10 +78,12 @@ jobs:
       - run: cp -n ./packages/admin-client/.npmrc.dist ./.npmrc
       - run: npm install
         env:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          REACT_ADMIN_TOKEN: ${{ secrets.REACT_ADMIN_TOKEN }}
+          FONT_AWESOME_TOKEN: ${{ secrets.FONT_AWESOME_TOKEN }}
       - run: npm test
         env:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          REACT_ADMIN_TOKEN: ${{ secrets.REACT_ADMIN_TOKEN }}
+          FONT_AWESOME_TOKEN: ${{ secrets.FONT_AWESOME_TOKEN }}
       - name: Install oc v3
         uses: redhat-actions/openshift-tools-installer@v1
         with:
