@@ -3,8 +3,8 @@ import express from "express"
 import helmet from "helmet"
 import Keycloak, { KeycloakConfig } from "keycloak-connect"
 import morgan from "morgan"
+import wageRoute from "../routes/application.route"
 import claimRoute from "../routes/claim.route"
-import wageRoute from "../routes/wage.route"
 import permissionRoute from "../routes/permission.route"
 
 const createServer = () => {
