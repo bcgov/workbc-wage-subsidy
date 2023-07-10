@@ -7,6 +7,7 @@ import { useContext, useState } from "react"
 import CatchmentLabel from "../common/components/CatchmentLabel/CatchmentLabel"
 import NotifyButton from "../common/components/NotifyButton/NotifyButton"
 import { CatchmentContext } from "../common/contexts/CatchmentContext/CatchmentContext"
+import PdfButton from "../common/components/PdfButton/PdfButton"
 
 export const applicationStatusFilters = {
     All: { label: "All" },
@@ -94,6 +95,7 @@ export const ApplicationList = (props: any) => {
                         return "" // rowClick expects a path to be returned
                     }}
                 >
+                    <PdfButton />
                     <TextField label="Submission ID" source="form_confirmation_id" emptyText="-" />
                     <TextField label="Organization" source="created_by" emptyText="-" />
                     <TextField label="Position Title" source="position_title" emptyText="-" />
