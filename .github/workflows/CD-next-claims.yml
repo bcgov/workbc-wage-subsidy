@@ -75,7 +75,7 @@ jobs:
         uses: andstor/file-reader-action@v1
         with:
           path: "./packages/admin-api/.dockerignore"
-      - run: cp -n ./.npmrc.dist ./.npmrc
+      - run: cp -n ./packages/admin-client/.npmrc.dist ./.npmrc
       - run: npm install
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
