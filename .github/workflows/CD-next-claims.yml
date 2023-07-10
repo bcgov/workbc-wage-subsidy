@@ -75,8 +75,13 @@ jobs:
         uses: andstor/file-reader-action@v1
         with:
           path: "./packages/admin-api/.dockerignore"
+      - run: cp -n ./.npmrc.dist ./.npmrc
       - run: npm install
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
       - run: npm test
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
       - name: Install oc v3
         uses: redhat-actions/openshift-tools-installer@v1
         with:
