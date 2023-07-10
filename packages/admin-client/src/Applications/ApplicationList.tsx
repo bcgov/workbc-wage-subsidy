@@ -23,6 +23,7 @@ export const ApplicationList = (props: any) => {
         ...applicationStatusFilters["All"],
         ...{ catchmentno: cc.catchment.id }
     })
+    const [notificationsOn, setNotificationsOn] = useState(true)
 
     const handleCatchmentSelect = (event) => {
         const catchmentNo = event.target.value
@@ -39,6 +40,10 @@ export const ApplicationList = (props: any) => {
         setCatchmentName(selection.name)
     }
 
+    const handleNotifyButton = (event) => {
+        setNotificationsOn(notificationsOn ? false : true)
+    }
+
     const catchmentSelector = [
         <CustomSelectInput
             source="catchmentno"
@@ -53,8 +58,8 @@ export const ApplicationList = (props: any) => {
     const ListActions = () => (
         <TopToolbar>
             <Box display="flex" alignItems="end">
+                <NotifyButton notificationsOn={notificationsOn} onClick={handleNotifyButton} />
                 <CatchmentLabel catchment={catchmentName} />
-                <NotifyButton onClick={() => console.log("notify button clicked")} />
             </Box>
         </TopToolbar>
     )
