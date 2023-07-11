@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faFilePdf } from "@fortawesome/pro-solid-svg-icons"
 import { COLOURS } from "../../../Colours"
 
-const PdfButton: React.FC = () => {
+const PdfButtonField: React.FC = () => {
     return (
         <FunctionField
             label=""
@@ -23,4 +23,4 @@ const PdfButton: React.FC = () => {
     )
 }
 
-export default PdfButton
+export default PdfButtonField
