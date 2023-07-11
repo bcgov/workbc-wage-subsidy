@@ -1,12 +1,17 @@
 .notify-button {
-    padding: 0.77em 1em 0.77em 1em;
+    padding: 0.70em 1em;
     background-color: transparent;
     font-size: 1rem;
     border: none;
     margin-bottom: 4px;
     cursor: pointer;
+    border-radius: 6px;
 }
 
-:focus {
+.notify-button:hover {
+    background-color: rgba(0, 0, 0, 0.04);
+}
+
+.notify-button:focus {
     outline: none;
 }

@@ -1,5 +1,5 @@
 import { Box, Chip } from "@mui/material"
-import { Datagrid, FunctionField, Identifier, List, TextField, TopToolbar, required, useStore } from "react-admin"
+import { FunctionField, Identifier, List, TextField, TopToolbar, required, useStore } from "react-admin"
 import { CustomSelectInput } from "../common/components/CustomSelectInput/CustomSelectInput"
 import { DatagridStyles } from "../common/styles/DatagridStyles"
 import { ApplicationListAside } from "./ApplicationListAside"
@@ -7,7 +7,8 @@ import { useContext, useState } from "react"
 import CatchmentLabel from "../common/components/CatchmentLabel/CatchmentLabel"
 import NotifyButton from "../common/components/NotifyButton/NotifyButton"
 import { CatchmentContext } from "../common/contexts/CatchmentContext/CatchmentContext"
-import PdfButton from "../common/components/PdfButton/PdfButton"
+import React from "react"
+import { CustomDatagrid } from "../common/components/CustomDatagrid/CustomDatagrid"
 
 export const applicationStatusFilters = {
     All: { label: "All" },
@@ -60,7 +61,7 @@ export const ApplicationList = (props: any) => {
         <TopToolbar>
             <Box display="flex" alignItems="end">
                 <NotifyButton notificationsOn={notificationsOn} onClick={handleNotifyButton} />
-                <CatchmentLabel catchment={catchmentName} />
+                {/* <CatchmentLabel catchment={catchmentName} /> */}
             </Box>
         </TopToolbar>
     )
@@ -75,7 +76,7 @@ export const ApplicationList = (props: any) => {
                 filterDefaultValues={{ catchmentno: cc.catchment.id }}
                 aside={<ApplicationListAside />}
             >
-                <Datagrid
+                <CustomDatagrid
                     sx={DatagridStyles}
                     rowClick={(id: Identifier, resource: string, record: any) => {
                         // Temporary click functionality (opens form in a new tab) (will get replaced by embed functionality eventually)
@@ -95,7 +96,6 @@ export const ApplicationList = (props: any) => {
                         return "" // rowClick expects a path to be returned
                     }}
                 >
-                    <PdfButton />
                     <TextField label="Submission ID" source="form_confirmation_id" emptyText="-" />
                     <TextField label="Organization" source="created_by" emptyText="-" />
                     <TextField label="Position Title" source="position_title" emptyText="-" />
@@ -139,7 +139,7 @@ export const ApplicationList = (props: any) => {
                             </Box>
                         )}
                     />
-                </Datagrid>
+                </CustomDatagrid>
             </List>
         </>
     )
