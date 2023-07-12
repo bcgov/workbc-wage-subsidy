@@ -194,7 +194,7 @@ const CustomAdminWithKeycloak = () => {
             requireAuth
             ready={Ready}
             title={
-                <Box display="flex" gap={1} alignItems="center" minWidth="25em">
+                <Box display="flex" gap={1} alignItems="center" minWidth="30em">
                     <Logo />
                     <Tag />
                     <b>WorkBC Wage Subsidy</b>

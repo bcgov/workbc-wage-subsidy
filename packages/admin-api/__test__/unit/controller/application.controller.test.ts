@@ -38,26 +38,26 @@ describe("getAllApplications", () => {
         jest.clearAllMocks()
     })
 
-    it("returns 200 with wages data", async () => {
+    it("returns 200 with applicationss data", async () => {
         const catchment = ["test_catchment"]
         ;(getCatchment as jest.Mock).mockResolvedValue(catchment)
 
-        const wages = {
+        const applications = {
             data: [{ id: 1, name: "John Doe" }],
             pagination: {
                 to: 10,
                 total: 100
             }
         }
-        ;(applicationService.getAllApplications as jest.Mock).mockResolvedValue(wages)
+        ;(applicationService.getAllApplications as jest.Mock).mockResolvedValue(applications)
 
         await getAllApplications(req, res)
 
         expect(res.status).toHaveBeenCalledWith(200)
-        expect(res.send).toHaveBeenCalledWith(wages.data)
+        expect(res.send).toHaveBeenCalledWith(applications.data)
         expect(res.set).toHaveBeenCalledWith({
             "Access-Control-Expose-Headers": "Content-Range",
-            "Content-Range": `0 - ${wages.pagination.to} / ${wages.pagination.total}`
+            "Content-Range": `0 - ${applications.pagination.to} / ${applications.pagination.total}`
         })
     })
 
@@ -111,7 +111,7 @@ describe("updateApplication", () => {
     afterEach(() => {
         jest.clearAllMocks()
     })
-    it("returns 200 with wages data", async () => {
+    it("returns 200 with applications data", async () => {
         req.kauth.grant.access_token.content = {
             identity_provider: "idir"
         }
@@ -177,7 +177,7 @@ describe("deleteApplication", () => {
     afterEach(() => {
         jest.clearAllMocks()
     })
-    it("returns 200 with wages data", async () => {
+    it("returns 200 with applications data", async () => {
         const catchment = ["test_catchment"]
         ;(getCatchment as jest.Mock).mockResolvedValue(catchment)
         ;(applicationService.deleteApplication as jest.Mock).mockResolvedValue({ id: 1 })

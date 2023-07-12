@@ -7,7 +7,6 @@ import { useContext, useState } from "react"
 import CatchmentLabel from "../common/components/CatchmentLabel/CatchmentLabel"
 import NotifyButton from "../common/components/NotifyButton/NotifyButton"
 import { CatchmentContext } from "../common/contexts/CatchmentContext/CatchmentContext"
-import React from "react"
 import { CustomDatagrid } from "../common/components/CustomDatagrid/CustomDatagrid"
 
 export const applicationStatusFilters = {
@@ -51,7 +50,7 @@ export const ApplicationList = (props: any) => {
             source="catchmentno"
             choices={cc.catchments}
             alwaysOn
-            label="Select Catchment"
+            label={false}
             onChange={handleCatchmentSelect}
             validate={required()}
         />

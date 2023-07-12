@@ -59,17 +59,19 @@ export const getAllApplications = async (
  * @returns {Promise<any[]>} A promise that resolves to the wage subsidy application, or an empty array if the user doesn't have permission to view the wage subsidy application.
  */
 export const getApplicationByID = async (id: number, permission: any[]) => {
+    let localPermission = permission
+
     // Check if the user has the '*' permission, which allows them to access all wage subsidy applications
-    if (permission[0] !== "*") {
+    if (localPermission[0] !== "*") {
         // Convert the permission values to numbers
-        permission.map((p: any) => Number(p))
+        localPermission = localPermission.map((p: any) => Number(p))
     }
     // Get the wage subsidy application based on the id
-    const wage = await knex("applications").where("id", id)
-    // Check if the user has permission to view this wage subsidy application
-    if (wage[0].catchmentno in permission || permission[0] === "*") {
+    const application = await knex("applications").where("id", id)
+    // Check if the user has permission to view this application subsidy application
+    if (application[0].catchmentno in localPermission || localPermission[0] === "*") {
         // If the user has permission, return the wage subsidy application
-        return wage
+        return application
     }
     // If the user doesn't have permission, return an empty array
     return []
@@ -84,14 +86,16 @@ export const getApplicationByID = async (id: number, permission: any[]) => {
 // The function returns 0 if the user does not have permission to edit the application
 // The function returns the number of applications that were updated if the user has permission to edit the application
 export const updateApplication = async (id: number, data: any, permission: any[], user: string) => {
+    let localPermission = permission
+
     // Check if the user has permission to edit this application
-    if (permission[0] !== "*") {
-        permission.map((p: any) => Number(p))
+    if (localPermission[0] !== "*") {
+        localPermission = localPermission.map((p: any) => Number(p))
     }
     // Get the application from the database
-    const wages = await knex("applications").where("id", id)
+    const applications = await knex("applications").where("id", id)
     // If the application does not exist, return 0
-    if (wages.length === 0) {
+    if (applications.length === 0) {
         return 0
     }
     // This helper function takes the old data and the new data and returns the difference
@@ -99,12 +103,12 @@ export const updateApplication = async (id: number, data: any, permission: any[]
     const getDifference = (a: any, b: any) =>
         Object.fromEntries(Object.entries(b).filter(([key, val]) => key in a && a[key] !== val))
     // Check if the user has permission to edit this application
-    if (wages[0].catchmentno in permission || permission[0] === "*") {
+    if (applications[0].catchmentno in localPermission || localPermission[0] === "*") {
         // Update the application
         const result = await knex("applications")
             .where("id", id)
             .update(
-                wages[0].history
+                applications[0].history
                     ? {
                           ...data,
                           history: {
@@ -112,9 +116,9 @@ export const updateApplication = async (id: number, data: any, permission: any[]
                                   {
                                       by: user,
                                       date: new Date(),
-                                      changes: getDifference(wages[0], data)
+                                      changes: getDifference(applications[0], data)
                                   },
-                                  ...wages[0].history.history
+                                  ...applications[0].history.history
                               ]
                           }
                       }
@@ -137,8 +141,8 @@ export const updateApplication = async (id: number, data: any, permission: any[]
 // The function returns an error if the id doesn't match any wage subsidy applications.
 
 export const deleteApplication = async (id: number, permission: string[]) => {
-    const wages = await knex("applications").where("id", id)
-    if (wages.length === 0) {
+    const applications = await knex("applications").where("id", id)
+    if (applications.length === 0) {
         return 0
     }
     if (permission[0] === "*") {
@@ -153,6 +157,6 @@ export const deleteApplication = async (id: number, permission: string[]) => {
  * @param id of the wage subsidy application
  */
 export const getApplicationByIdPDF = async (id: number) => {
-    const wage = await knex("applications").where("id", id)
-    return wage
+    const application = await knex("applications").where("id", id)
+    return application
 }

@@ -317,15 +317,22 @@ export const CustomSelectInput = (props: SelectInputProps) => {
                     backgroundColor: COLOURS.LIGHTBLUE_TRANSLUCENT,
                     borderTopLeftRadius: "6px",
                     borderTopRightRadius: "6px",
-                    "& .MuiOutlinedInput-notchedOutline": {
-                        borderColor: "transparent",
-                        borderTopLeftRadius: "6px",
-                        borderTopRightRadius: "6px",
-                        borderBottomLeftRadius: "0px",
-                        borderBottomRightRadius: "0px"
+                    borderBottomLeftRadius: "0px",
+                    borderBottomRightRadius: "0px",
+                    borderTop: "2px solid transparent",
+                    borderLeft: "2px solid transparent",
+                    borderRight: "2px solid transparent",
+                    borderBottom: "3px solid #313132",
+                    marginLeft: "auto",
+                    ":hover": {
+                        borderTop: "2px solid #313132",
+                        borderLeft: "2px solid #313132",
+                        borderRight: "2px solid #313132"
                     },
-                    borderBottom: "2px solid #313132",
-                    marginLeft: "auto"
+                    // Disable default 'notched' outline.
+                    "& .MuiOutlinedInput-notchedOutline": {
+                        border: "none"
+                    }
                 }}
                 {...sanitizeRestProps(rest)}
             >
