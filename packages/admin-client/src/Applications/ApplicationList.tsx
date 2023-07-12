@@ -45,17 +45,6 @@ export const ApplicationList = (props: any) => {
         setNotificationsOn(notificationsOn ? false : true)
     }
 
-    const catchmentSelector = [
-        <CustomSelectInput
-            source="catchmentno"
-            choices={cc.catchments}
-            alwaysOn
-            label={false}
-            onChange={handleCatchmentSelect}
-            validate={required()}
-        />
-    ]
-
     const ListActions = () => (
         <TopToolbar>
             <Box display="flex" alignItems="end">
@@ -71,7 +60,16 @@ export const ApplicationList = (props: any) => {
                 {...props}
                 actions={<ListActions />}
                 filter={listFilter}
-                filters={catchmentSelector}
+                filters={[
+                    <CustomSelectInput
+                        source="catchmentno"
+                        choices={cc.catchments}
+                        alwaysOn
+                        label={false}
+                        onChange={handleCatchmentSelect}
+                        validate={required()}
+                    />
+                ]}
                 filterDefaultValues={{ catchmentno: cc.catchment.id }}
                 aside={<ApplicationListAside />}
             >
