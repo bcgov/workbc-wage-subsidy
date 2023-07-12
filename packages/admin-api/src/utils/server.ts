@@ -3,7 +3,7 @@ import express from "express"
 import helmet from "helmet"
 import Keycloak, { KeycloakConfig } from "keycloak-connect"
 import morgan from "morgan"
-import wageRoute from "../routes/application.route"
+import applicationRoute from "../routes/application.route"
 import claimRoute from "../routes/claim.route"
 import permissionRoute from "../routes/permission.route"
 
@@ -36,7 +36,7 @@ const createServer = () => {
     app.use(keycloak.middleware())
 
     app.use("/", keycloak.protect(), claimRoute)
-    app.use("/", keycloak.protect(), wageRoute)
+    app.use("/", keycloak.protect(), applicationRoute)
     app.use("/", keycloak.protect(), permissionRoute)
     return app
 }

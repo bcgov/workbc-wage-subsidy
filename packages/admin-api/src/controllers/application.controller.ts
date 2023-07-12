@@ -46,11 +46,11 @@ export const getOneApplication = async (req: any, res: express.Response) => {
             return res.status(403).send("Not Authorized")
         }
         const { id } = req.params
-        const wages = await applicationService.getApplicationByID(id, catchment)
-        if (wages.length === 0) {
+        const applications = await applicationService.getApplicationByID(id, catchment)
+        if (applications.length === 0) {
             return res.status(404).send("Not found or Not Authorized")
         }
-        return res.status(200).send(wages[0])
+        return res.status(200).send(applications[0])
     } catch (e: unknown) {
         return res.status(500).send("Server Error")
     }
@@ -113,8 +113,8 @@ export const deleteApplication = async (req: any, res: express.Response) => {
 export const generatePDF = async (req: any, res: express.Response) => {
     try {
         const { id } = req.params
-        const wage = await applicationService.getApplicationByIdPDF(id)
-        const data = wage[0].data ? wage[0].data : wage[0]
+        const application = await applicationService.getApplicationByIdPDF(id)
+        const data = application[0].data ? application[0].data : application[0]
         if (
             data.participantemail0 &&
             data.participantemail0.includes(";") &&
@@ -148,7 +148,7 @@ export const generatePDF = async (req: any, res: express.Response) => {
             }
         }
         const templateHash =
-            wage[0].participantemail0 && wage[0].participantemail0 !== (";" || null)
+            application[0].participantemail0 !== null && application[0].participantemail0 !== ";"
                 ? haveEmployeeHash
                 : needEmployeeHash
         const pdf = await generateDocumentTemplate(templateHash, templateConfig)
