@@ -11,12 +11,17 @@ ARG REACT_APP_ADMIN_API_URL
 ENV REACT_APP_ADMIN_API_URL=$REACT_APP_ADMIN_API_URL
 ARG REACT_APP_ENVIRONMENT
 ENV REACT_APP_ENVIRONMENT=$REACT_APP_ENVIRONMENT
+ARG REACT_ADMIN_TOKEN
+ENV REACT_ADMIN_TOKEN=$REACT_ADMIN_TOKEN
+ARG FONT_AWESOME_TOKEN
+ENV FONT_AWESOME_TOKEN=$FONT_AWESOME_TOKEN
 
 # Set the working directory to /app inside the container
 WORKDIR /app
 # Copy app files
 COPY . .
 # Install dependencies (npm ci makes sure the exact versions in the lockfile gets installed)
+COPY ./.npmrc.dist ./.npmrc
 RUN npm install
 # Build the app
 RUN npm run build

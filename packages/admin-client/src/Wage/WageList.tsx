@@ -275,7 +275,7 @@ export const WageList = (props: any) => {
     }
     const handleClose = () => setOpen(false)
     return (
-        <List {...props} actions={<ListActions />} filters={formFilters} pagination={<PostPagination />}>
+        <List empty={false} {...props} actions={<ListActions />} filters={formFilters} pagination={<PostPagination />}>
             {/* Code for the PDF-saving modal */}
             <Modal
                 open={open}
