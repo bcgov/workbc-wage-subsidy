@@ -1,5 +1,4 @@
-import React, { useEffect } from "react"
-import { createContext, useState } from "react"
+import { createContext, useState, useEffect, useMemo } from "react"
 
 const createCatchmentName = (catchmentNo: number, location: string) => {
     let catchmentName = catchmentNo < 10 ? "0" : ""
@@ -64,11 +63,10 @@ const CatchmentProvider: React.FC<{ children: React.ReactNode }> = ({ children }
         }
     }, [catchments, catchment])
 
-    return (
-        <CatchmentContext.Provider value={{ catchments, catchment, changeCatchment }}>
-            {children}
-        </CatchmentContext.Provider>
-    )
+    // Use memoization to prevent unnecessary re-renders.
+    const valueProp = useMemo(() => ({ catchments, catchment, changeCatchment }), [catchments, catchment])
+
+    return <CatchmentContext.Provider value={valueProp}>{children}</CatchmentContext.Provider>
 }
 
 export { CatchmentContext, CatchmentProvider }
