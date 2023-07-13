@@ -17,6 +17,15 @@ export const applicationStatusFilters = {
     Cancelled: { label: "Cancelled", status: "Cancelled" }
 } as { [key: string]: any }
 
+const ListActions = ({ notificationsOn, handleNotifyButton }) => (
+    <TopToolbar>
+        <Box display="flex" alignItems="end">
+            <NotifyButton notificationsOn={notificationsOn} onClick={handleNotifyButton} />
+            {/* <CatchmentLabel catchment={catchmentName} /> */}
+        </Box>
+    </TopToolbar>
+)
+
 export const ApplicationList = (props: any) => {
     const cc = useContext(CatchmentContext)
     const [catchmentName, setCatchmentName] = useState(cc.catchment.name)
@@ -45,20 +54,11 @@ export const ApplicationList = (props: any) => {
         setNotificationsOn(notificationsOn ? false : true)
     }
 
-    const ListActions = () => (
-        <TopToolbar>
-            <Box display="flex" alignItems="end">
-                <NotifyButton notificationsOn={notificationsOn} onClick={handleNotifyButton} />
-                {/* <CatchmentLabel catchment={catchmentName} /> */}
-            </Box>
-        </TopToolbar>
-    )
-
     return (
         <>
             <List
                 {...props}
-                actions={<ListActions />}
+                actions={<ListActions notificationsOn={notificationsOn} handleNotifyButton={handleNotifyButton} />}
                 filter={listFilter}
                 filters={[
                     <CustomSelectInput
