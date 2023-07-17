@@ -2,7 +2,7 @@ import { Box } from "@mui/material"
 import { ReactKeycloakProvider } from "@react-keycloak/web"
 import axios from "axios"
 import Keycloak from "keycloak-js"
-import { useContext, useEffect, useState } from "react"
+import { useEffect, useState } from "react"
 import { Admin, Resource } from "react-admin"
 import Ready from "./Admin/ready"
 import "./App.css"
@@ -16,7 +16,7 @@ import Footer from "./Footer"
 import Layout from "./Layout"
 import Logo from "./Logo"
 import Tag from "./Tag"
-import { CatchmentContext, CatchmentProvider } from "./common/contexts/CatchmentContext/CatchmentContext"
+import { CatchmentProvider } from "./common/contexts/CatchmentContext/CatchmentContext"
 
 const initOptions = {
     url: process.env.REACT_APP_KEYCLOAK_URL || "",
@@ -174,7 +174,6 @@ export const lightTheme = {
 
 const CustomAdminWithKeycloak = () => {
     const [access, setAccess] = useState(localStorage.getItem("access") === "true")
-    const catchmentContext = useContext(CatchmentContext)
     const customAuthProvider = useAuthProvider()
 
     useEffect(() => {
@@ -201,7 +200,7 @@ const CustomAdminWithKeycloak = () => {
                 </Box>
             }
         >
-            {access && catchmentContext.catchments.length > 0 && (
+            {access && (
                 <>
                     <Resource name="applications" options={{ label: "Applications" }} list={ApplicationList} />
                     <Resource name="claims" list={ClaimsList} edit={ClaimsEdit} />

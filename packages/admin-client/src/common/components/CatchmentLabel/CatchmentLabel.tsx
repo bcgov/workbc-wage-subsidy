@@ -1,3 +1,4 @@
+import { Box } from "@mui/material"
 import "./CatchmentLabel.css"
 
 interface CatchmentLabelProps {
@@ -5,7 +6,9 @@ interface CatchmentLabelProps {
 }
 
 const CatchmentLabel: React.FC<CatchmentLabelProps> = ({ catchment }) => (
-    <span className="catchment-label">{catchment}</span>
+    <Box style={{ transform: "translate(13em, 3em)" }}>
+        <span className="catchment-label">{catchment}</span>
+    </Box>
 )
 
 export default CatchmentLabel

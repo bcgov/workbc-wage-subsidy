@@ -1,13 +1,13 @@
 import { Box, Chip } from "@mui/material"
-import { FunctionField, Identifier, List, TextField, TopToolbar, required, useStore } from "react-admin"
-import { CustomSelectInput } from "../common/components/CustomSelectInput/CustomSelectInput"
+import { FunctionField, Identifier, List, TextField, TopToolbar } from "react-admin"
 import { DatagridStyles } from "../common/styles/DatagridStyles"
 import { ApplicationListAside } from "./ApplicationListAside"
-import { useContext, useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import CatchmentLabel from "../common/components/CatchmentLabel/CatchmentLabel"
 import NotifyButton from "../common/components/NotifyButton/NotifyButton"
 import { CatchmentContext } from "../common/contexts/CatchmentContext/CatchmentContext"
 import { CustomDatagrid } from "../common/components/CustomDatagrid/CustomDatagrid"
+import CatchmentDropdown from "../common/components/CatchmentDropdown/CatchmentDropdown"
 
 export const applicationStatusFilters = {
     All: { label: "All" },
@@ -17,59 +17,58 @@ export const applicationStatusFilters = {
     Cancelled: { label: "Cancelled", status: "Cancelled" }
 } as { [key: string]: any }
 
-const ListActions = ({ notificationsOn, handleNotifyButton }) => (
+const ListActions = ({ notificationsOn, handleNotifyButton, catchmentDropdown }) => (
     <TopToolbar>
         <Box display="flex" alignItems="end">
             <NotifyButton notificationsOn={notificationsOn} onClick={handleNotifyButton} />
-            {/* <CatchmentLabel catchment={catchmentName} /> */}
+            {catchmentDropdown}
         </Box>
     </TopToolbar>
 )
 
 export const ApplicationList = (props: any) => {
     const cc = useContext(CatchmentContext)
-    const [catchmentName, setCatchmentName] = useState(cc.catchment.name)
-    const [listFilter, setListFilter] = useStore("resources.applications.list.listFilter", {
+    const [listFilter, setListFilter] = useState({
         ...applicationStatusFilters["All"],
         ...{ catchmentno: cc.catchment.id }
     })
     const [notificationsOn, setNotificationsOn] = useState(true)
 
     const handleCatchmentSelect = (event) => {
-        const catchmentNo = event.target.value
-
-        // Update state in catchment context.
-        cc.changeCatchment(catchmentNo)
-
-        // Update list filter with new catchment.
-        const statusFilter = applicationStatusFilters[listFilter.label]
-        setListFilter({ ...statusFilter, ...{ catchmentno: catchmentNo } })
-
-        // Update catchment label.
-        const selection = cc.catchments.find((catchment) => catchment.id === catchmentNo)
-        setCatchmentName(selection.name)
+        // Update global catchment state in catchment context.
+        cc.changeCatchment(event.target.value)
     }
 
     const handleNotifyButton = (event) => {
         setNotificationsOn(notificationsOn ? false : true)
     }
 
+    useEffect(() => {
+        // When catchment is changed, update list filter.
+        const statusFilter =
+            applicationStatusFilters[listFilter.label === "In Progress" ? "InProgress" : listFilter.label]
+        setListFilter({ ...statusFilter, ...{ catchmentno: cc.catchment.id } })
+    }, [cc.catchment])
+
     return (
         <>
+            <CatchmentLabel catchment={cc.catchment.name} />
             <List
                 {...props}
-                actions={<ListActions notificationsOn={notificationsOn} handleNotifyButton={handleNotifyButton} />}
-                filter={listFilter}
-                filters={[
-                    <CustomSelectInput
-                        source="catchmentno"
-                        choices={cc.catchments}
-                        alwaysOn
-                        label={false}
-                        onChange={handleCatchmentSelect}
-                        validate={required()}
+                actions={
+                    <ListActions
+                        notificationsOn={notificationsOn}
+                        handleNotifyButton={handleNotifyButton}
+                        catchmentDropdown={
+                            <CatchmentDropdown
+                                catchments={cc.catchments}
+                                value={cc.catchment.id}
+                                onChange={handleCatchmentSelect}
+                            />
+                        }
                     />
-                ]}
+                }
+                filter={listFilter}
                 filterDefaultValues={{ catchmentno: cc.catchment.id }}
                 aside={<ApplicationListAside />}
             >
