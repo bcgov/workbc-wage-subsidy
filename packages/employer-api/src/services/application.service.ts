@@ -39,7 +39,7 @@ export const getApplicationByCatchment = async (ca: number[]) => {
 }
 
 export const getApplicationByID = async (id: string) => {
-    const wages = await knex("applications").where((builder: any) => builder.where("application_id", id))
+    const wages = await knex("applications").where((builder: any) => builder.where("id", id))
     return wages[0]
 }
 
@@ -72,7 +72,7 @@ export const updateApplication = async (id: number, status: string | null, form:
                 form_submitted_date: form.formSubmissionStatusCode === "SUBMITTED" ? form.createdAt : null,
                 position_title: form.positionTitle0, // TODO: what to do in the case of multiple positions?
                 num_positions: Number(form.numberOfPositions0), // TODO: what to do in the case of multiple positions?
-                catchmentno: Number(form?.catchmentNo),
+                catchmentno: Number(form.catchmentNo),
                 status,
                 updated_by: form.userInfo.username, // TODO: should match 'user' on insertion (uses a hash version of the users bceid instead of the actual username)
                 updated_date: new Date()
