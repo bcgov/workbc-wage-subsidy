@@ -75,8 +75,15 @@ jobs:
         uses: andstor/file-reader-action@v1
         with:
           path: "./packages/admin-api/.dockerignore"
+      - run: cp -n ./packages/admin-client/.npmrc.dist ./.npmrc
       - run: npm install
+        env:
+          REACT_ADMIN_TOKEN: ${{ secrets.REACT_ADMIN_TOKEN }}
+          FONT_AWESOME_TOKEN: ${{ secrets.FONT_AWESOME_TOKEN }}
       - run: npm test
+        env:
+          REACT_ADMIN_TOKEN: ${{ secrets.REACT_ADMIN_TOKEN }}
+          FONT_AWESOME_TOKEN: ${{ secrets.FONT_AWESOME_TOKEN }}
       - name: Install oc v3
         uses: redhat-actions/openshift-tools-installer@v1
         with:
@@ -127,6 +134,8 @@ jobs:
           tls-verify: false
           build-args: |
             VITE_REACT_ENVIRONMENT=Dev
+            REACT_ADMIN_TOKEN=${{ secrets.REACT_ADMIN_TOKEN }}
+            FONT_AWESOME_TOKEN=${{ secrets.FONT_AWESOME_TOKEN }}
             REACT_APP_DATA_PROVIDER_URL=${{ secrets.REACT_APP_DATA_PROVIDER_URL_DEV }}
             REACT_APP_ADMIN_API_URL=${{ secrets.REACT_APP_ADMIN_API_URL_DEV }}
             REACT_APP_KEYCLOAK_REALM=${{ secrets.REACT_APP_KEYCLOAK_REALM_DEV }}
@@ -149,6 +158,8 @@ jobs:
           tls-verify: false
           build-args: |
             VITE_REACT_ENVIRONMENT=Dev
+            REACT_ADMIN_TOKEN=${{ secrets.REACT_ADMIN_TOKEN }}
+            FONT_AWESOME_TOKEN=${{ secrets.FONT_AWESOME_TOKEN }}
             REACT_APP_DATA_PROVIDER_URL=${{ secrets.REACT_APP_DATA_PROVIDER_URL_DEV }}
             REACT_APP_ADMIN_API_URL=${{ secrets.REACT_APP_ADMIN_API_URL_DEV }}
             REACT_APP_KEYCLOAK_REALM=${{ secrets.REACT_APP_KEYCLOAK_REALM_DEV }}
