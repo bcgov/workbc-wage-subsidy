@@ -38,18 +38,18 @@ export const getAllApplications = async (req: any, res: express.Response) => {
             if (containsNonComplete) {
                 // only query the forms service if we might need to update something
                 const updateApplications = async (formID: string | undefined, formPass: string | undefined) => {
-                    const forms = await formService.getFormSubmissions(formID ?? "", formPass ?? "", params)
-                    forms.forEach(async (form: any) => {
-                        const app = applications.data.find((application: any) => application.id === form.internalId)
+                    const submissions = await formService.getFormSubmissions(formID ?? "", formPass ?? "", params)
+                    submissions.forEach(async (submission: any) => {
+                        const app = applications.data.find(
+                            (application: any) => application.id === submission.internalId
+                        )
                         if (app) {
-                            if (form.formSubmissionStatusCode === "SUBMITTED") {
-                                // if form is complete
-                                if (app.status !== "Submitted") {
-                                    applicationService.updateApplication(app.id, "Submitted", form)
+                            if (submission.formSubmissionStatusCode === "SUBMITTED") {
+                                if (app.status !== "Submitted" && app.status !== "Completed") {
+                                    applicationService.updateApplication(app.id, "Submitted", submission)
                                 }
                             } else if (app.status === "Draft") {
-                                // else form is in draft
-                                await applicationService.updateApplication(app.id, "Draft", form)
+                                await applicationService.updateApplication(app.id, "Draft", submission)
                             }
                         }
                     })
