@@ -34,11 +34,16 @@ export const ClaimCreateSelectApplication = (props: any) => {
                     </p>
                     <Datagrid sx={DatagridStyles} rowClick={handleClick} bulkActionButtons={false}>
                         <TextField label="Submission ID" source="form_confirmation_id" emptyText="-" />
-                        <TextField label="Position Title" source="title" emptyText="-" />
-                        <TextField label="Number of Positions" source="numberofpositions0" emptyText="-" />{" "}
-                        {/* TODO - once submitted date is implemented */}
-                        <TextField label="Submitted Date" source="submitted" emptyText="-" /> {/* TODO */}
-                        <TextField label="Shared With" source="sharedwith" emptyText="-" /> {/* TODO */}
+                        <TextField label="Position Title" source="position_title" emptyText="-" />
+                        <TextField label="Number of Positions" source="num_positions" emptyText="-" />{" "}
+                        <FunctionField
+                            label="Submitted Date"
+                            render={
+                                (record: any) =>
+                                    record.form_submitted_date ? record.form_submitted_date.split("T")[0] : "-" // remove timestamp
+                            }
+                        />
+                        <TextField label="Shared With" source="shared_with" emptyText="-" />
                         <FunctionField
                             label=""
                             render={(record: any) => (
