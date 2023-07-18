@@ -198,7 +198,7 @@ const CustomAdminWithKeycloak = () => {
                         show={ClaimShow}
                     >
                         <Route path="create/SelectApplication" element={<ClaimCreateSelectApplication />} />
-                        <Route path="create/Form/:appId" element={<ClaimCreateForm />} />
+                        <Route path="create/Form/:appID" element={<ClaimCreateForm />} />
                     </Resource>
                 </>
             )}
