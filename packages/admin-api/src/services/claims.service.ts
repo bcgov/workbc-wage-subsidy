@@ -13,47 +13,20 @@ import { getCHEFSToken } from "./common.service"
  */
 
 export const getAllClaims = async (perPage: number, currPage: number, filters: any, sort: any, permission: any[]) => {
-    // console.log(filters)
-    const claims = await knex("wage_subsidy_claim_form")
-        .whereNotNull("applicationstatus")
+    const claims = await knex("claims")
+        .whereNot("status", "Draft")
         .modify((queryBuilder: any) => {
-            // If the user has entered a claim ID then we filter by that
             if (filters.id) {
-                queryBuilder.where("id", Number(filters.id))
+                queryBuilder.where("id", `%${filters.id}%`)
             }
-            // If the user has entered an application ID then we filter by that
-            if (filters.applicationid) {
-                queryBuilder.whereLike("applicationid", `%${filters.applicationid}%`)
-            }
-            // If the user has entered a title then we filter by that
-            if (filters.title) {
-                queryBuilder.whereLike("title", `%${filters.title}%`)
-            }
-            // If the user has entered a catchment number then we filter by that
             if (filters.catchmentno) {
                 queryBuilder.where("catchmentno", Number(filters.catchmentno))
-            } else if (permission.length > 0 && permission[0] !== "*") {
-                // If the user has no catchment numbers then we have to filter by a catchment number that does not exist
-                queryBuilder.whereIn("catchmentno", permission)
-            } else if (permission.length === 0) {
-                queryBuilder.whereIn("catchmentno", [0])
             }
-            // If there are no status filters or the status filter is not marked for deletion we do not show the ones marked for deletion
-            if (!filters.applicationstatus) {
-                queryBuilder.whereIn("applicationstatus", ["NULL", "New", "In Progress"])
-            } else if (filters.applicationstatus) {
-                if (filters.applicationstatus.includes("NULL")) {
-                    filters.applicationstatus.push("New")
-                }
-                queryBuilder.whereIn("applicationstatus", filters.applicationstatus)
+            if (filters.status) {
+                queryBuilder.where("status", filters.status)
             }
-            // If the user has sorted the table by a specific column then we sort by that column
             if (sort) {
                 queryBuilder.orderBy(sort[0], sort[1])
-            }
-            // guard clause for legacy applications, can be changed to sharepoint later if needed
-            if (!filters.status) {
-                queryBuilder.whereNotNull("status")
             }
         })
         .paginate({ perPage, currentPage: currPage, isLengthAware: true })
@@ -68,7 +41,7 @@ export const getClaimByID = async (id: number, permission: any[]) => {
         permission.map((p: any) => Number(p))
     }
     // Get the claim from the database
-    const claims = await knex("wage_subsidy_claim_form").where("id", id)
+    const claims = await knex("claims").where("id", id)
     // Check if the claim is in the user's catchment area
     if (claims[0].catchmentno in permission || permission[0] === "*") {
         // Return the claim
@@ -98,7 +71,7 @@ export const updateClaim = async (id: number, data: any, permission: any[], user
         permission.map((p: any) => Number(p))
     }
     // 1. Check if the claim exists
-    const claims = await knex("wage_subsidy_claim_form").where("id", id)
+    const claims = await knex("claims").where("id", id)
     if (claims.length === 0) {
         return 0
     }
@@ -106,7 +79,7 @@ export const updateClaim = async (id: number, data: any, permission: any[], user
     // 2. Check if the user has permission to edit this claim
     if (claims[0].catchmentno in permission || permission[0] === "*") {
         // 3. Update the claim
-        const result = await knex("wage_subsidy_claim_form")
+        const result = await knex("claims")
             .where("id", id)
             .update(
                 claims[0].history
@@ -132,10 +105,9 @@ export const updateClaim = async (id: number, data: any, permission: any[], user
 
 export const deleteClaim = async (id: number, permission: string[]) => {
     if (permission[0] === "*") {
-        const result = await knex("wage_subsidy_claim_form").where("id", id).del()
+        const result = await knex("claims").where("id", id).del()
         return result
     }
-    // console.log(result)
     return 0
 }
 
@@ -164,10 +136,8 @@ export const getFile = async (url: string) => {
                 Connection: "keep-alive"
             }
         })
-        // console.log(res)
         return res.data
     } catch (error: any) {
-        // console.log(error)
         throw new Error(error.message)
     }
 }

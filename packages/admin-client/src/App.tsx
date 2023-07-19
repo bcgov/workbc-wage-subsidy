@@ -8,8 +8,7 @@ import Ready from "./Admin/ready"
 import "./App.css"
 import { ApplicationList } from "./Applications/ApplicationList"
 import useAuthProvider from "./Auth/authProvider"
-import { ClaimsEdit } from "./Claims/ClaimsEdit"
-import { ClaimsList } from "./Claims/ClaimsList"
+import { ClaimList } from "./Claims/ClaimList"
 import { COLOURS } from "./Colours"
 import { dataProvider } from "./DataProvider/DataProvider"
 import Footer from "./Footer"
@@ -203,7 +202,7 @@ const CustomAdminWithKeycloak = () => {
             {access && (
                 <>
                     <Resource name="applications" options={{ label: "Applications" }} list={ApplicationList} />
-                    <Resource name="claims" list={ClaimsList} edit={ClaimsEdit} />
+                    <Resource name="claims" options={{ label: "Claims" }} list={ClaimList} />
                 </>
             )}
         </Admin>
