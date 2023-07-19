@@ -8,7 +8,7 @@ export const getAllClaims = async (perPage: number, currPage: number, filters: a
                 queryBuilder.where("id", filters.id)
             }
             if (filters.status) {
-                queryBuilder.where("status", filters.status)
+                queryBuilder.whereIn("status", filters.status)
             }
             if (filters.catchmentno) {
                 queryBuilder.where("catchmentno", Number(filters.catchmentno))

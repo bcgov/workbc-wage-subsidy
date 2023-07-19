@@ -8,9 +8,9 @@ import { ClaimListAside } from "./ClaimListAside"
 
 export const claimStatusFilters = {
     All: { label: "All" },
-    NotSubmitted: { label: "Draft", status: "Draft" },
-    Submitted: { label: "Submitted", status: "Submitted" },
-    Cancelled: { label: "Cancelled", status: "Cancelled" }
+    NotSubmitted: { label: "Draft", status: ["Draft"] },
+    Submitted: { label: "Submitted", status: ["Submitted", "Processing", "Completed"] },
+    Cancelled: { label: "Cancelled", status: ["Cancelled"] }
 } as { [key: string]: any }
 
 export const ClaimList = (props: any) => {
@@ -65,11 +65,19 @@ export const ClaimList = (props: any) => {
                     render={(record: any) => (
                         <Box display="flex" width="100%" justifyContent="center">
                             <Chip
-                                label={record.status}
+                                label={
+                                    record.status === "Submitted" ||
+                                    record.status === "Processing" ||
+                                    record.status === "Completed"
+                                        ? "Submitted"
+                                        : record.status
+                                }
                                 size="small"
                                 color={
-                                    record.status === "Submitted"
-                                        ? "warning"
+                                    record.status === "Submitted" ||
+                                    record.status === "Processing" ||
+                                    record.status === "Completed"
+                                        ? "primary"
                                         : record.status === "Cancelled"
                                         ? "error"
                                         : "info"

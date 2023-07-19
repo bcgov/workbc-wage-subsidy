@@ -9,7 +9,7 @@ const CalculatorButtonField: React.FC = () => {
         <FunctionField
             label=""
             render={(record: any) =>
-                record.status === "In Progress" && (
+                record.status === "Processing" && (
                     <Button
                         onClick={(event) => {
                             // Prevent rowClick() from also triggering.
