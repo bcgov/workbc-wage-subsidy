@@ -2,7 +2,6 @@
 import * as express from "express"
 
 import memoryStreams from "memory-streams"
-// import muhammara from "muhammara"
 import * as claimService from "../services/claims.service"
 import { getCatchment } from "../lib/catchment"
 import { generateDocumentTemplate } from "../services/cdogs.service"
