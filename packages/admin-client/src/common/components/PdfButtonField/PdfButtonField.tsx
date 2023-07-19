@@ -15,6 +15,7 @@ const PdfButtonField: React.FC = () => {
                         event?.stopPropagation()
                         console.log(record)
                     }}
+                    sx={{ minWidth: "3em" }}
                 >
                     <FontAwesomeIcon icon={faFilePdf} size="xl" style={{ color: COLOURS.LIGHTBLUE_TEXT }} />
                 </Button>
