@@ -6,7 +6,7 @@ import { useContext, useEffect, useState } from "react"
 import CatchmentLabel from "../common/components/CatchmentLabel/CatchmentLabel"
 import NotifyButton from "../common/components/NotifyButton/NotifyButton"
 import { CatchmentContext } from "../common/contexts/CatchmentContext/CatchmentContext"
-import { CustomDatagrid } from "../common/components/CustomDatagrid/CustomDatagrid"
+import CustomDatagrid from "../common/components/CustomDatagrid/CustomDatagrid"
 import CatchmentDropdown from "../common/components/CatchmentDropdown/CatchmentDropdown"
 
 export const applicationStatusFilters = {
