@@ -27,7 +27,7 @@ export const ClaimCreateSelectApplication = (props: any) => {
                     filter={applicationStatusFilters["Completed"]}
                     filters={applicationFilters}
                     filterDefaultValues={{ dummyUserFilter: -1 }} // TODO: filter by current user.
-                    actions={<span />} // Disable default list actions.
+                    actions={false} // Disable default list actions.
                     sx={{ "& .RaList-content": { padding: "0em 1em" } }}
                 >
                     <p>
