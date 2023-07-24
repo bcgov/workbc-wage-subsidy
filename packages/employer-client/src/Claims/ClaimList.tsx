@@ -3,7 +3,6 @@ import { Datagrid, FunctionField, List, TextField, useStore, Identifier } from "
 import { FormBulkActionButtons } from "../common/components/FormBulkActionButtons/FormBulkActionButtons"
 import { ListActions } from "../common/components/ListActions/ListActions"
 import { DatagridStyles } from "../common/styles/DatagridStyles"
-import { ClaimCreateRedirect } from "./ClaimCreateRedirect"
 import { ClaimListAside } from "./ClaimListAside"
 
 export const claimStatusFilters = {
@@ -21,9 +20,8 @@ export const ClaimList = (props: any) => {
             {...props}
             actions={<ListActions createButtonLabel="New Claim Form" />}
             filter={statusFilter}
-            filters={[]}
+            filterDefaultValues={{ dummyUserFilter: -1 }} // TODO: filter by current user.
             aside={<ClaimListAside />}
-            empty={<ClaimCreateRedirect />}
         >
             <Datagrid
                 bulkActionButtons={<FormBulkActionButtons />}
