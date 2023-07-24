@@ -1,7 +1,6 @@
 import { useStore, Datagrid, FunctionField, List, TextField, Identifier } from "react-admin"
 import { Box, Chip } from "@mui/material"
 import { ApplicationListAside } from "./ApplicationListAside"
-import { ApplicationCreateRedirect } from "./ApplicationCreateRedirect"
 import { FormBulkActionButtons } from "../common/components/FormBulkActionButtons/FormBulkActionButtons"
 import { DatagridStyles } from "../common/styles/DatagridStyles"
 import { ListActions } from "../common/components/ListActions/ListActions"
@@ -23,9 +22,8 @@ export const ApplicationList = (props: any) => {
             {...props}
             actions={<ListActions createButtonLabel="New Application" />}
             filter={statusFilter}
-            filters={[]}
+            filterDefaultValues={{ dummyUserFilter: -1 }} // TODO: filter by current user.
             aside={<ApplicationListAside />}
-            empty={<ApplicationCreateRedirect />}
         >
             <Datagrid
                 bulkActionButtons={<FormBulkActionButtons />}
