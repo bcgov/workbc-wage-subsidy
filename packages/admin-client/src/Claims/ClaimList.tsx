@@ -8,6 +8,7 @@ import NotifyButton from "../common/components/NotifyButton/NotifyButton"
 import { CatchmentContext } from "../common/contexts/CatchmentContext/CatchmentContext"
 import CustomDatagrid from "../common/components/CustomDatagrid/CustomDatagrid"
 import CatchmentDropdown from "../common/components/CatchmentDropdown/CatchmentDropdown"
+import { FormBulkActionButtons } from "../common/components/FormBulkActionButtons/FormBulkActionButtons"
 
 export const claimStatusFilters = {
     All: { label: "All" },
@@ -72,6 +73,7 @@ export const ClaimList = (props: any) => {
                 aside={<ClaimListAside />}
             >
                 <CustomDatagrid
+                    bulkActionButtons={<FormBulkActionButtons />}
                     calculatorButton={true}
                     sx={DatagridStyles}
                     rowClick={(id: Identifier, resource: string, record: any) => {
