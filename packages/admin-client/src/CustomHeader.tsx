@@ -6,23 +6,30 @@ import { HorizontalMenu, useContainerLayout } from "@react-admin/ra-navigation"
 import React from "react"
 import { LoadingIndicator, LocalesMenuButton, TitleComponent, UserMenu, useLocales } from "react-admin"
 import { Link as RouterLink } from "react-router-dom"
+import Logo from "./Logo"
+import Tag from "./Tag"
 
 export const Header = (props: HeaderProps) => {
-    const {
-        title = "React-admin",
-        menu = defaultMenu,
-        toolbar = defaultToolbar,
-        userMenu = defaultUserMenu
-    } = useContainerLayout(props)
+    const { menu = defaultMenu, toolbar = defaultToolbar, userMenu = defaultUserMenu } = useContainerLayout(props)
 
     return (
         <>
             <Root1 position="static" color="primary" className={HeaderClasses.root} {...sanitizeRestProps(props)}>
                 <Toolbar variant="dense" className={HeaderClasses.toolbar}>
                     <Box display="flex" alignItems="center">
-                        <Link component={RouterLink} to="/" variant="h6" color="primary.contrastText" underline="none">
-                            {title}
-                        </Link>
+                        <Box display="flex" gap={1} alignItems="center" minWidth="30em">
+                            <Logo />
+                            <Tag />
+                            <Link
+                                component={RouterLink}
+                                to="/"
+                                variant="h6"
+                                color="primary.contrastText"
+                                underline="none"
+                            >
+                                <b>WorkBC Wage Subsidy</b>
+                            </Link>
+                        </Box>
                     </Box>
                     <Box display="flex">
                         {toolbar}
