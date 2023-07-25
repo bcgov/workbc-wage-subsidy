@@ -8,6 +8,7 @@ import NotifyButton from "../common/components/NotifyButton/NotifyButton"
 import { CatchmentContext } from "../common/contexts/CatchmentContext/CatchmentContext"
 import CustomDatagrid from "../common/components/CustomDatagrid/CustomDatagrid"
 import CatchmentDropdown from "../common/components/CatchmentDropdown/CatchmentDropdown"
+import { FormBulkActionButtons } from "../common/components/FormBulkActionButtons/FormBulkActionButtons"
 
 export const applicationStatusFilters = {
     All: { label: "All" },
@@ -73,6 +74,7 @@ export const ApplicationList = (props: any) => {
                 aside={<ApplicationListAside />}
             >
                 <CustomDatagrid
+                    bulkActionButtons={<FormBulkActionButtons />}
                     sx={DatagridStyles}
                     rowClick={(id: Identifier, resource: string, record: any) => {
                         // Temporary click functionality (opens form in a new tab) (will get replaced by embed functionality eventually)
