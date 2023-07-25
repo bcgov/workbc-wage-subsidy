@@ -93,8 +93,15 @@ export const ClaimList = (props: any) => {
                     }}
                 >
                     <TextField label="Submission ID" source="form_confirmation_id" emptyText="-" />
-                    <TextField label="Organization" source="created_by" emptyText="-" />
                     <TextField label="Position Title" source="position_title" emptyText="-" />
+                    <FunctionField
+                        label="Employee Name"
+                        render={(record: any) =>
+                            record.employee_first_name || record.employee_last_name
+                                ? `${record.employee_first_name ?? ""} ${record.employee_last_name ?? ""}`
+                                : "-"
+                        }
+                    />
                     <FunctionField
                         label="Submitted Date"
                         render={
@@ -102,7 +109,7 @@ export const ClaimList = (props: any) => {
                                 record.form_submitted_date ? record.form_submitted_date.split("T")[0] : "-" // remove timestamp
                         }
                     />
-                    <TextField label="Form Type" source="form_type" emptyText="-" />
+                    <TextField label="Associated Application ID" source="associated_application_id" emptyText="-" />
                     <FunctionField
                         label=""
                         render={(record: any) => (
