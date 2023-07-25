@@ -17,9 +17,13 @@ const CatchmentDropdown: React.FC<CatchmentDropdownProps> = ({ catchments, value
         onChange(event)
     }
 
+    const valueExists = () => {
+        return catchments.some((item) => item.id === value)
+    }
+
     return (
         <Select
-            value={value}
+            value={valueExists() ? value : ""}
             onChange={handleChange}
             displayEmpty
             renderValue={() => "Select Catchment"}

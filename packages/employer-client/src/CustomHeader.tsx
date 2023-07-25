@@ -1,28 +1,35 @@
 import React from "react"
 import { Link as RouterLink } from "react-router-dom"
-import { Toolbar, AppBar, AppBarProps, Box, Link, IconButton } from "@mui/material"
+import { Toolbar, AppBar, AppBarProps, Box, Link } from "@mui/material"
 import { styled } from "@mui/material/styles"
 import { UserMenu, LoadingIndicator, LocalesMenuButton, TitleComponent, useLocales } from "react-admin"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faBookOpenReader } from "@fortawesome/pro-solid-svg-icons"
 import { useContainerLayout, HorizontalMenu } from "@react-admin/ra-navigation"
+import Logo from "./Logo"
+import Tag from "./Tag"
 
 export const Header = (props: HeaderProps) => {
-    const {
-        title = "React-admin",
-        menu = defaultMenu,
-        toolbar = defaultToolbar,
-        userMenu = defaultUserMenu
-    } = useContainerLayout(props)
+    const { menu = defaultMenu, toolbar = defaultToolbar, userMenu = defaultUserMenu } = useContainerLayout(props)
 
     return (
         <>
             <Root1 position="static" color="primary" className={HeaderClasses.root} {...sanitizeRestProps(props)}>
                 <Toolbar variant="dense" className={HeaderClasses.toolbar}>
                     <Box display="flex" alignItems="center">
-                        <Link component={RouterLink} to="/" variant="h6" color="primary.contrastText" underline="none">
-                            {title}
-                        </Link>
+                        <Box display="flex" gap={1} alignItems="center" minWidth="30em">
+                            <Logo />
+                            <Tag />
+                            <Link
+                                component={RouterLink}
+                                to="/"
+                                variant="h6"
+                                color="primary.contrastText"
+                                underline="none"
+                            >
+                                <b>WorkBC Wage Subsidy</b>
+                            </Link>
+                        </Box>
                     </Box>
                     <Box display="flex">
                         {toolbar}

@@ -1,4 +1,3 @@
-import { Box } from "@mui/material"
 import { ReactKeycloakProvider } from "@react-keycloak/web"
 import axios from "axios"
 import Keycloak from "keycloak-js"
@@ -13,8 +12,6 @@ import { COLOURS } from "./Colours"
 import { dataProvider } from "./DataProvider/DataProvider"
 import Footer from "./Footer"
 import Layout from "./Layout"
-import Logo from "./Logo"
-import Tag from "./Tag"
 import { CatchmentProvider } from "./common/contexts/CatchmentContext/CatchmentContext"
 
 const initOptions = {
@@ -191,13 +188,6 @@ const CustomAdminWithKeycloak = () => {
             disableTelemetry
             requireAuth
             ready={Ready}
-            title={
-                <Box display="flex" gap={1} alignItems="center" minWidth="30em">
-                    <Logo />
-                    <Tag />
-                    <b>WorkBC Wage Subsidy</b>
-                </Box>
-            }
         >
             {access && (
                 <>
