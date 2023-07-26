@@ -19,7 +19,7 @@ export const getAllApplications = async (req: any, res: express.Response) => {
         }
         const { sort, filter, page, perPage } = req.query
         const filters = filter ? JSON.parse(filter) : {}
-        const sorted = sort ? sort.replace(/[^a-zA-Z0-9,]/g, "").split(",") : ["id", "ASC"]
+        const sorted = sort ? JSON.parse(req.query.sort) : ["id", "ASC"]
         const claims = await applicationService.getAllApplications(
             Number(perPage),
             Number(page),
