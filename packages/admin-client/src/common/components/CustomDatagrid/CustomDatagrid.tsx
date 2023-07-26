@@ -1,51 +1,18 @@
-import { Box, Checkbox, TableCell, TableRow } from "@mui/material"
-import { Datagrid, DatagridBody, RecordContextProvider } from "react-admin"
-import PdfButtonField from "../PdfButtonField/PdfButtonField"
-import React from "react"
-import CalculatorButtonField from "../CalculatorButtonField/CalculatorButtonField"
+import { Datagrid, DatagridBody } from "react-admin"
+import CustomDatagridRow from "../CustomDatagridRow/CustomDatagridRow"
 
-const CustomDatagridRow = ({ record, id, onToggleItem, children, selected, selectable, calculatorButton }) => (
-    <RecordContextProvider value={record}>
-        <TableRow>
-            {/* first column: selection checkbox and custom buttons */}
-            <TableCell padding="none">
-                <Box display="flex" padding="0em 0em 0em 0.53em">
-                    {selectable && <Checkbox checked={selected} onClick={(event) => onToggleItem(id, event)} />}
-                    <Box width="100%" justifyContent="center" alignSelf="center">
-                        <Box display="flex">
-                            <PdfButtonField />
-                            {calculatorButton === true && <CalculatorButtonField />}
-                        </Box>
-                    </Box>
-                </Box>
-            </TableCell>
-            {/* data columns based on children */}
-            {React.Children.map(children, (field) => (
-                <TableCell key={`${id}-${field.props.source}`}>{field}</TableCell>
-            ))}
-        </TableRow>
-    </RecordContextProvider>
-)
+// CustomDatagrid:
+// - Each row includes a PDF button.
+// - Each row can include a calculator button.
+// - Rows are keyboard navigable and keyboard selectable.
 
+// Props: {calculatorButton, ...T}, where T becomes the built-in props.
 type CustomDatagridProps<T> = T & {
     calculatorButton?: boolean
 }
 
 const CustomDatagridBody = <T,>({ calculatorButton, ...props }: CustomDatagridProps<T>) => (
-    <DatagridBody
-        {...props}
-        row={
-            <CustomDatagridRow
-                record={undefined}
-                id={undefined}
-                onToggleItem={undefined}
-                children={undefined}
-                selected={undefined}
-                selectable={undefined}
-                calculatorButton={calculatorButton}
-            />
-        }
-    />
+    <DatagridBody {...props} row={<CustomDatagridRow calculatorButton={calculatorButton} />} />
 )
 
 const CustomDatagrid = <T,>({ calculatorButton, ...props }: CustomDatagridProps<T>) => (

@@ -22,7 +22,6 @@ describe("getAllApplications", () => {
                 }
             },
             query: {
-                sort: "id,ASC",
                 filter: '{"name": "John Doe"}',
                 page: "1",
                 perPage: "10"
@@ -43,7 +42,7 @@ describe("getAllApplications", () => {
         ;(getCatchment as jest.Mock).mockResolvedValue(catchment)
 
         const applications = {
-            data: [{ id: 1, name: "John Doe" }],
+            data: [{ id: "1" }],
             pagination: {
                 to: 10,
                 total: 100
