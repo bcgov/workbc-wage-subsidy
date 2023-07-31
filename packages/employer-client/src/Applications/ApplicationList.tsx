@@ -28,22 +28,26 @@ export const ApplicationList = (props: any) => {
             <Datagrid
                 bulkActionButtons={<FormBulkActionButtons />}
                 sx={DatagridStyles}
+                // rowClick={(id: Identifier, resource: string, record: any) => {
+                //     // Temporary click functionality (opens form in a new tab) (will get replaced by embed functionality eventually)
+                //     if (record.status === "Submitted") {
+                //         // submitted
+                //         window.open(`${process.env.REACT_APP_VIEW_URL}${record.form_submission_id}`)
+                //     } else if (record.status === "Draft" && record.form_submission_id) {
+                //         // saved
+                //         window.open(`${process.env.REACT_APP_DRAFT_URL}${record.form_submission_id}`)
+                //     } else {
+                //         // new
+                //         if (record.form_type === "Have Employee")
+                //             window.open(`${process.env.REACT_APP_HAVE_EMPLOYEE_URL}&token=${id}`)
+                //         else if (record.form_type === "Need Employee")
+                //             window.open(`${process.env.REACT_APP_NEED_EMPLOYEE_URL}&token=${id}`)
+                //     }
+                //     return "" // rowClick expects a path to be returned
+                // }}
                 rowClick={(id: Identifier, resource: string, record: any) => {
-                    // Temporary click functionality (opens form in a new tab) (will get replaced by embed functionality eventually)
-                    if (record.status === "Submitted") {
-                        // submitted
-                        window.open(`${process.env.REACT_APP_VIEW_URL}${record.form_submission_id}`)
-                    } else if (record.status === "Draft" && record.form_submission_id) {
-                        // saved
-                        window.open(`${process.env.REACT_APP_DRAFT_URL}${record.form_submission_id}`)
-                    } else {
-                        // new
-                        if (record.form_type === "Have Employee")
-                            window.open(`${process.env.REACT_APP_HAVE_EMPLOYEE_URL}&token=${id}`)
-                        else if (record.form_type === "Need Employee")
-                            window.open(`${process.env.REACT_APP_NEED_EMPLOYEE_URL}&token=${id}`)
-                    }
-                    return "" // rowClick expects a path to be returned
+                    console.log("rowclick")
+                    return ""
                 }}
             >
                 <TextField label="Submission ID" source="form_confirmation_id" emptyText="-" />

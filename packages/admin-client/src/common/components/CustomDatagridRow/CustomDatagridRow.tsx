@@ -110,7 +110,9 @@ const DatagridRow: FC<CustomDatagridRowProps> = React.forwardRef((props, ref) =>
         [rowClick, id, resource, record, navigate, createPath, handleToggleExpand, handleToggleSelection]
     )
     const handleKeyDown = (event: any) => {
-        event.key === "Enter" && handleClick(event)
+        if (event.target === event.currentTarget) {
+            event.key === "Enter" && handleClick(event)
+        }
     }
 
     return (
@@ -137,7 +139,7 @@ const DatagridRow: FC<CustomDatagridRowProps> = React.forwardRef((props, ref) =>
                 onKeyDown={handleKeyDown}
                 {...rest}
             >
-                {/* first column: selection checkbox and custom buttons */}
+                {/* First column: checkbox, PDF button, and optional calculator button */}
                 <TableCell padding="none">
                     <Box display="flex" padding="0em 0em 0em 0.53em">
                         {hasBulkActions && (

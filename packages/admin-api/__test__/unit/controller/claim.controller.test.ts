@@ -23,7 +23,6 @@ describe("getAllClaims", () => {
                 }
             },
             query: {
-                sort: "id,ASC",
                 filter: '{"name": "John Doe","catchmentno": "0"}',
                 page: "1",
                 perPage: "10"

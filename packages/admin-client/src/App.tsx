@@ -141,6 +141,9 @@ export const lightTheme = {
                     "& .RaBulkActionsToolbar-toolbar": {
                         backgroundColor: "#d7f0fa",
                         color: "#3a86e3"
+                    },
+                    "& .MuiButton-root": {
+                        color: "#3a86e3"
                     }
                 }
             }

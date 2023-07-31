@@ -11,9 +11,9 @@ const PdfButtonField: React.FC = () => {
             render={(record: any) => (
                 <Button
                     onClick={(event) => {
-                        // Prevent rowClick() from also triggering.
                         event?.stopPropagation()
-                        console.log(record)
+                        // console.log(record)
+                        console.log("pdf button")
                     }}
                     sx={{ minWidth: "3em" }}
                 >
