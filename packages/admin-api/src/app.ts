@@ -40,7 +40,7 @@ app.use("/", keycloak.protect(), claimRoute)
 app.use("/applications", keycloak.protect(), applicationRoute)
 app.use("/", keycloak.protect(), permissionRoute)
 
-const port = process.env.PORT || "8002"
+const port = process.env.PORT || "8000"
 app.listen(port, () => {
     console.log(`server started at :${port}`)
 })

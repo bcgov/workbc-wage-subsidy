@@ -12,9 +12,9 @@ const CalculatorButtonField: React.FC = () => {
                 record.status === "Processing" && (
                     <Button
                         onClick={(event) => {
-                            // Prevent rowClick() from also triggering.
                             event?.stopPropagation()
-                            console.log(record)
+                            // console.log(record)
+                            console.log("calculator button")
                         }}
                         sx={{ minWidth: "2.5em" }}
                     >

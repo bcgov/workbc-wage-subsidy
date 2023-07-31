@@ -30,7 +30,7 @@ export const getAllClaims = async (req: any, res: express.Response) => {
                 return res.status(403).send("Not Authorized")
             }
         }
-        const sorted = sort ? sort.replace(/[^a-zA-Z0-9,]/g, "").split(",") : ["id", "ASC"]
+        const sorted = sort ? JSON.parse(req.query.sort) : ["id", "ASC"]
         // console.log(sorted)
         const claims = await claimService.getAllClaims(Number(perPage), Number(page), filters, sorted, catchment)
         // console.log(claims)
