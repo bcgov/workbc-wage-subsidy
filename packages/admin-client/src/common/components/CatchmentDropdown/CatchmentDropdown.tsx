@@ -1,7 +1,8 @@
 import { MenuItem, Select } from "@mui/material"
 import { COLOURS } from "../../../Colours"
-import { useContext, useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import { CatchmentContext } from "../../contexts/CatchmentContext/CatchmentContext"
+import { ScreenReaderOnly } from "../../styles/ScreenReaderOnly"
 
 const outlineStyles = {
     noOutline: {
@@ -41,12 +42,18 @@ const CatchmentDropdown: React.FC = () => {
     }
 
     const valueExists = () => {
-        return cc.catchments.some((item) => item.id === cc.catchment)
+        return cc.catchments.some((item) => item.id === cc.catchment.id)
     }
+
+    // For MUI Select component, "" is the value for no selection.
+    const [value, setValue] = useState("" as number | "")
+    useEffect(() => {
+        setValue(valueExists() ? cc.catchment.id : "")
+    }, [cc.catchment])
 
     return (
         <Select
-            value={valueExists() ? cc.catchment : ""}
+            value={value}
             onChange={handleChange}
             displayEmpty
             renderValue={() => "Select Catchment"}
@@ -57,8 +64,9 @@ const CatchmentDropdown: React.FC = () => {
             sx={{ ...styles, ...outline }}
         >
             {cc.catchments.map((catchment) => (
-                <MenuItem key={catchment.id} value={catchment.id}>
-                    {catchment.name}
+                <MenuItem key={catchment.id} value={catchment.id} selected={value === catchment.id}>
+                    <span style={ScreenReaderOnly}>{"Catchment " + catchment.name}</span>
+                    <span aria-hidden={true}>{catchment.name}</span>
                 </MenuItem>
             ))}
         </Select>

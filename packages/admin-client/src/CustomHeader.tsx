@@ -1,5 +1,3 @@
-import { faBookOpenReader } from "@fortawesome/pro-solid-svg-icons"
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { AppBar, AppBarProps, Box, Link, Toolbar } from "@mui/material"
 import { styled } from "@mui/material/styles"
 import { HorizontalMenu, useContainerLayout } from "@react-admin/ra-navigation"
@@ -26,6 +24,7 @@ export const Header = (props: HeaderProps) => {
                                 variant="h6"
                                 color="primary.contrastText"
                                 underline="none"
+                                aria-label="WorkBC Wage Subsidy Application"
                             >
                                 <b>WorkBC Wage Subsidy</b>
                             </Link>
@@ -47,15 +46,17 @@ export const Header = (props: HeaderProps) => {
                 }}
                 {...sanitizeRestProps(props)}
             >
-                <Toolbar variant="dense" className={HeaderClasses.toolbar}>
+                <Toolbar
+                    variant="dense"
+                    className={HeaderClasses.toolbar}
+                    sx={{
+                        "& .MuiTab-root": {
+                            // Do not default to all uppercase.
+                            textTransform: "none"
+                        }
+                    }}
+                >
                     <Box>{menu}</Box>
-                    <div
-                        style={{ display: "flex", flexDirection: "row", alignItems: "center", cursor: "pointer" }}
-                        onClick={() => console.log("TODO!")}
-                    >
-                        <FontAwesomeIcon icon={faBookOpenReader} size="2x" style={{ marginRight: 15 }} />
-                        Employer Handbook
-                    </div>
                 </Toolbar>
             </Root2>
         </>

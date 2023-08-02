@@ -1,7 +1,7 @@
 import { Box, Chip } from "@mui/material"
-import { FunctionField, Identifier, List, TextField } from "react-admin"
+import { FunctionField, Identifier, List, TextField, useUnselectAll } from "react-admin"
 import { DatagridStyles } from "../common/styles/DatagridStyles"
-import { useContext } from "react"
+import { useContext, useEffect } from "react"
 import CatchmentLabel from "../common/components/CatchmentLabel/CatchmentLabel"
 import { CatchmentContext } from "../common/contexts/CatchmentContext/CatchmentContext"
 import CustomDatagrid from "../common/components/CustomDatagrid/CustomDatagrid"
@@ -19,9 +19,15 @@ export const applicationStatusFilters = {
 
 export const ApplicationList = (props: any) => {
     const cc = useContext(CatchmentContext)
+    const unselectAll = useUnselectAll("applications")
+
+    useEffect(() => {
+        unselectAll()
+    }, [cc.catchment])
 
     const handleRowClick = (id: Identifier, resource: string, record: any) => {
         console.log("row click")
+        console.log(record)
         return ""
 
         // // Temporary click functionality (opens form in a new tab) (will get replaced by embed functionality eventually)

@@ -1,26 +1,24 @@
 import { Button } from "@mui/material"
-import { FunctionField } from "react-admin"
+import { useRecordContext } from "react-admin"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faFilePdf } from "@fortawesome/pro-solid-svg-icons"
 import { COLOURS } from "../../../Colours"
 
 const PdfButtonField: React.FC = () => {
+    const record = useRecordContext()
+
     return (
-        <FunctionField
-            label=""
-            render={(record: any) => (
-                <Button
-                    onClick={(event) => {
-                        event?.stopPropagation()
-                        // console.log(record)
-                        console.log("pdf button")
-                    }}
-                    sx={{ minWidth: "3em" }}
-                >
-                    <FontAwesomeIcon icon={faFilePdf} size="xl" style={{ color: COLOURS.LIGHTBLUE_TEXT }} />
-                </Button>
-            )}
-        />
+        <Button
+            onClick={(event) => {
+                event?.stopPropagation()
+                console.log("pdf button")
+                console.log(record)
+            }}
+            sx={{ minWidth: "3em" }}
+            aria-label="Generate PDF"
+        >
+            <FontAwesomeIcon icon={faFilePdf} size="xl" style={{ color: COLOURS.LIGHTBLUE_TEXT }} />
+        </Button>
     )
 }
 

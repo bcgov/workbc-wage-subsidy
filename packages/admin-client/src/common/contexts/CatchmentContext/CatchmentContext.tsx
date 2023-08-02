@@ -40,7 +40,7 @@ const CatchmentContext = createContext<CatchmentContextState>({
 })
 
 const CatchmentProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-    const [catchments, setCatchments] = useState<any[]>(getCatchments())
+    const [catchments, setCatchments] = useState<any[]>(() => getCatchments())
     const [catchment, setCatchment] = useState<{ id: number; name: string }>(
         // Initialize catchment number to -1, so no records are obtained until catchments are known.
         catchments.length === 0 ? { id: -1, name: "" } : catchments[0]

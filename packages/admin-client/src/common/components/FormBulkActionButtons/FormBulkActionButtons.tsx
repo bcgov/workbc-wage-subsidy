@@ -7,22 +7,34 @@ import { useListContext } from "react-admin"
 export const FormBulkActionButtons = () => {
     const { selectedIds } = useListContext()
     const [tabIndex, setTabIndex] = useState(-1)
+    const [ariaHidden, setAriaHidden] = useState(true)
 
-    // When bulk actions toolbar is hidden, prevent buttons from receiving keyboard focus.
+    // When bulk actions toolbar is hidden:
+    // - Prevent buttons from receiving keyboard focus.
+    // - Hide contents from screen reader.
     useEffect(() => {
         setTabIndex(selectedIds.length > 0 ? 0 : -1)
+        setAriaHidden(selectedIds.length > 0 ? false : true)
     }, [selectedIds])
 
     useEffect(() => {
         const unselectButton = document.querySelector('button[title="Unselect"]') as any
         if (unselectButton) {
             unselectButton.tabIndex = tabIndex
+            unselectButton.ariaHidden = { ariaHidden }
+        }
+
+        const itemsSelectedLabel = document.querySelector(".MuiTypography-subtitle1") as any
+        if (itemsSelectedLabel) {
+            itemsSelectedLabel.ariaHidden = { ariaHidden }
         }
     }, [tabIndex])
 
     return (
+        // 'MOVE' button
         <Button
             tabIndex={tabIndex}
+            aria-hidden={ariaHidden}
             style={{
                 display: "flex",
                 flexDirection: "row",
@@ -31,6 +43,7 @@ export const FormBulkActionButtons = () => {
                 fontSize: "inherit"
             }}
             onClick={() => console.log("Move button")}
+            aria-label="Move selection to another catchment"
         >
             <FontAwesomeIcon icon={faArrowsRotate} style={{ marginRight: 10 }} size="xl" />
             MOVE
