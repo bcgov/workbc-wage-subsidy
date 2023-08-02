@@ -1,7 +1,7 @@
 import { Box, Chip } from "@mui/material"
-import { FunctionField, Identifier, List, TextField } from "react-admin"
+import { FunctionField, Identifier, List, TextField, useUnselectAll } from "react-admin"
 import { DatagridStyles } from "../common/styles/DatagridStyles"
-import { useContext } from "react"
+import { useContext, useEffect } from "react"
 import CatchmentLabel from "../common/components/CatchmentLabel/CatchmentLabel"
 import { CatchmentContext } from "../common/contexts/CatchmentContext/CatchmentContext"
 import CustomDatagrid from "../common/components/CustomDatagrid/CustomDatagrid"
@@ -19,6 +19,11 @@ export const claimStatusFilters = {
 
 export const ClaimList = (props: any) => {
     const cc = useContext(CatchmentContext)
+    const unselectAll = useUnselectAll("claims")
+
+    useEffect(() => {
+        unselectAll()
+    }, [cc.catchment])
 
     const handleRowClick = (id: Identifier, resource: string, record: any) => {
         console.log("row click")
@@ -53,7 +58,7 @@ export const ClaimList = (props: any) => {
             >
                 <CustomDatagrid
                     bulkActionButtons={<FormBulkActionButtons />}
-                    calculatorButton={true}
+                    showCalculatorButton={true}
                     sx={DatagridStyles}
                     rowClick={handleRowClick}
                 >

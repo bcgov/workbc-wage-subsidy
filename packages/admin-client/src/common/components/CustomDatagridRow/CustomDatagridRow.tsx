@@ -1,7 +1,7 @@
 import React, { isValidElement, useState, useEffect, useCallback, memo, FC, ReactElement } from "react"
 import PropTypes from "prop-types"
 import clsx from "clsx"
-import { TableCell, TableRow, TableRowProps, Checkbox, Box } from "@mui/material"
+import { TableCell, TableRow, TableRowProps, Checkbox, Box, Button } from "@mui/material"
 import {
     Identifier,
     RaRecord,
@@ -29,13 +29,13 @@ const computeNbColumns = (expand, children, hasBulkActions) =>
         : 0 // we don't need to compute columns if there is no expand panel;
 
 type CustomDatagridRowProps = DatagridRowProps & {
-    calculatorButton?: boolean
+    showCalculatorButton?: boolean
 }
 
 const DatagridRow: FC<CustomDatagridRowProps> = React.forwardRef((props, ref) => {
     // const DatagridRow: FC<DatagridRowProps> = React.forwardRef((props, ref) => {
     const {
-        calculatorButton,
+        showCalculatorButton,
         children,
         className,
         expand,
@@ -109,18 +109,10 @@ const DatagridRow: FC<CustomDatagridRowProps> = React.forwardRef((props, ref) =>
         },
         [rowClick, id, resource, record, navigate, createPath, handleToggleExpand, handleToggleSelection]
     )
-    const handleKeyDown = (event: any) => {
-        if (event.target === event.currentTarget) {
-            event.key === "Enter" && handleClick(event)
-        }
-    }
 
     return (
         <RecordContextProvider value={record}>
             <TableRow
-                tabIndex={0} // Make row keyboard selectable.
-                aria-label={"Custom table row"}
-                role="button"
                 sx={{
                     ":focus": {
                         backgroundColor: "rgba(0, 0, 0, 0.04)"
@@ -135,13 +127,21 @@ const DatagridRow: FC<CustomDatagridRowProps> = React.forwardRef((props, ref) =>
                 key={id}
                 style={style}
                 hover={hover}
-                onClick={handleClick}
-                onKeyDown={handleKeyDown}
                 {...rest}
             >
-                {/* First column: checkbox, PDF button, and optional calculator button */}
+                {/* First column: row button, checkbox, PDF button, and optional calculator button */}
                 <TableCell padding="none">
                     <Box display="flex" padding="0em 0em 0em 0.53em">
+                        <Button
+                            sx={{
+                                position: "absolute",
+                                width: "99%",
+                                height: "3em",
+                                backgroundColor: "transparent"
+                            }}
+                            onClick={handleClick}
+                            aria-label="View or edit form"
+                        />
                         {hasBulkActions && (
                             <Checkbox
                                 aria-label={translate("ra.action.select_row", {
@@ -157,7 +157,7 @@ const DatagridRow: FC<CustomDatagridRowProps> = React.forwardRef((props, ref) =>
                         <Box width="100%" justifyContent="center" alignSelf="center">
                             <Box display="flex">
                                 <PdfButtonField />
-                                {calculatorButton && <CalculatorButtonField />}
+                                {showCalculatorButton && <CalculatorButtonField />}
                             </Box>
                         </Box>
                     </Box>

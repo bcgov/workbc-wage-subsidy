@@ -25,7 +25,9 @@ const labelStyle = {
 }
 
 // Wrap divider, discarding received props. Prevent error raised when props applied to DOM elements.
-const WrappedDivider = (props: any) => <Divider orientation="vertical" variant="middle" color="grey" flexItem />
+const WrappedDivider = (props: any) => (
+    <Divider orientation="vertical" variant="middle" color="grey" flexItem aria-hidden={true} />
+)
 
 function Footer() {
     // const classes = useStyles()
