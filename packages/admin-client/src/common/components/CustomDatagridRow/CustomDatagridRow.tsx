@@ -137,7 +137,10 @@ const DatagridRow: FC<CustomDatagridRowProps> = React.forwardRef((props, ref) =>
                                 position: "absolute",
                                 width: "99%",
                                 height: "3em",
-                                backgroundColor: "transparent"
+                                backgroundColor: "transparent",
+                                "&:hover": {
+                                    backgroundColor: "transparent"
+                                }
                             }}
                             onClick={handleClick}
                             aria-label="View or edit form"

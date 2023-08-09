@@ -19,6 +19,7 @@ import { COLOURS } from "./Colours"
 import { dataProvider } from "./DataProvider/DataProvider"
 import Layout from "./Layout"
 import Footer from "./footer"
+import "@bcgov/bc-sans/css/BCSans.css"
 
 const initOptions = {
     url: process.env.REACT_APP_KEYCLOAK_URL || "",
@@ -99,7 +100,8 @@ export const lightTheme = {
                         backgroundColor: COLOURS.LIGHTBLUE
                     },
                     borderRadius: 20,
-                    minWidth: 180
+                    minWidth: 180,
+                    fontSize: "14px"
                 }
             }
         },
@@ -147,6 +149,9 @@ export const lightTheme = {
         error: {
             main: "#e5e8ef"
         }
+    },
+    typography: {
+        fontFamily: ['"BCSans"', '"Noto Sans"', "Verdana", "Arial", "sans-serif"].join(",")
     }
 }
 

@@ -13,6 +13,7 @@ import { dataProvider } from "./DataProvider/DataProvider"
 import Footer from "./Footer"
 import Layout from "./Layout"
 import { CatchmentProvider } from "./common/contexts/CatchmentContext/CatchmentContext"
+import "@bcgov/bc-sans/css/BCSans.css"
 
 const initOptions = {
     url: process.env.REACT_APP_KEYCLOAK_URL || "",
@@ -50,7 +51,7 @@ const onToken = async () => {
         localStorage.setItem("token", keycloak.token)
         localStorage.setItem("refresh-token", keycloak.refreshToken)
     }
-    const res = await axios.get(`${process.env.REACT_APP_ADMIN_API_URL || "http://localhost:8002"}/permission`, {
+    const res = await axios.get(`${process.env.REACT_APP_ADMIN_API_URL || "http://localhost:8000"}/permission`, {
         headers: {
             Accept: "application/json",
             Authorization: `Bearer ${localStorage.getItem("token")}`
@@ -90,12 +91,62 @@ export const lightTheme = {
                 }
             }
         },
+        RaLoadingIndicator: {
+            styleOverrides: {
+                root: {
+                    "& .RaLoadingIndicator-loadedIcon": {
+                        height: "100%",
+                        border: "2px solid transparent",
+                        "&:hover": {
+                            border: "2px solid white",
+                            backgroundColor: "transparent"
+                        }
+                    }
+                }
+            }
+        },
+        RaUserMenu: {
+            styleOverrides: {
+                root: {
+                    "& .RaUserMenu-userButton": {
+                        height: "100%",
+                        border: "2px solid transparent",
+                        "&:hover": {
+                            border: "2px solid white",
+                            backgroundColor: "transparent"
+                        }
+                    }
+                }
+            }
+        },
+        RaContainerLayout: {
+            styleOverrides: {
+                root: {
+                    "& .MuiContainer-root": {
+                        overflowX: "auto",
+                        overflowY: "visible",
+                        display: "block"
+                    }
+                }
+            }
+        },
         MuiChip: {
             textAlign: "center",
             styleOverrides: {
                 textAlign: "center",
                 colorSuccess: {
                     color: COLOURS.WHITE
+                }
+            }
+        },
+        MuiToolbar: {
+            styleOverrides: {
+                root: {
+                    "& .MuiTab-root": {
+                        "&:hover": {
+                            textDecoration: "underline"
+                        }
+                    }
                 }
             }
         },
@@ -128,6 +179,11 @@ export const lightTheme = {
                         color: COLOURS.DARKBLUE
                     },
                     "& .RaDatagrid-headerCell": {
+                        "& .MuiCheckbox-root": {
+                            color: COLOURS.DARKBLUE
+                        }
+                    },
+                    "& .RaDatagrid-tableCell": {
                         "& .MuiCheckbox-root": {
                             color: COLOURS.DARKBLUE
                         }
@@ -168,6 +224,9 @@ export const lightTheme = {
         error: {
             main: "#e5e8ef"
         }
+    },
+    typography: {
+        fontFamily: ['"BCSans"', '"Noto Sans"', "Verdana", "Arial", "sans-serif"].join(",")
     }
 }
 
