@@ -46,8 +46,22 @@ const CatchmentProvider: React.FC<{ children: React.ReactNode }> = ({ children }
         catchments.length === 0 ? { id: -1, name: "" } : catchments[0]
     )
 
+    const catchmentExists = (catchmentNo: number) => {
+        return catchments.some((item) => item.id === catchmentNo)
+    }
+
+    const setLocalCatchment = (catchmentNo: number) => {
+        localStorage.setItem("cc.catchmentNo", catchmentNo.toString())
+    }
+
+    const getLocalCatchment = () => {
+        const localCatchment = Number(localStorage.getItem("cc.catchmentNo"))
+        return localCatchment ? localCatchment : -1
+    }
+
     const changeCatchment = (catchmentNo: number) => {
         setCatchment(catchments[catchments.findIndex((item) => item.id === catchmentNo)])
+        setLocalCatchment(catchmentNo)
     }
 
     useEffect(() => {
@@ -58,11 +72,18 @@ const CatchmentProvider: React.FC<{ children: React.ReactNode }> = ({ children }
     }, [])
 
     useEffect(() => {
-        // If catchment list changes, maintain current selection if it exists. Otherwise set to first in list.
-        if (catchments.length > 0 && !catchments.some((item) => item.id === catchment.id)) {
-            setCatchment(catchments[0])
+        // If session catchment exists, use it.
+        const sessionCatchment = getLocalCatchment()
+        if (catchmentExists(sessionCatchment)) {
+            changeCatchment(sessionCatchment)
+            return
         }
-    }, [catchments, catchment])
+
+        // If catchment list changes, maintain current selection if it exists. Otherwise set to first in list.
+        if (catchments.length > 0 && !catchmentExists(catchment.id)) {
+            changeCatchment(catchments[0].id)
+        }
+    }, [catchments])
 
     // Use memoization to prevent unnecessary re-renders.
     const valueProp = useMemo(() => ({ catchments, catchment, changeCatchment }), [catchments, catchment])

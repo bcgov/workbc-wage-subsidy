@@ -47,10 +47,25 @@ export const Header = (props: HeaderProps) => {
                 }}
                 {...sanitizeRestProps(props)}
             >
-                <Toolbar variant="dense" className={HeaderClasses.toolbar}>
+                <Toolbar
+                    variant="dense"
+                    className={HeaderClasses.toolbar}
+                    sx={{
+                        "& .MuiTab-root": {
+                            // Do not default to all uppercase.
+                            textTransform: "none"
+                        }
+                    }}
+                >
                     <Box>{menu}</Box>
                     <div
-                        style={{ display: "flex", flexDirection: "row", alignItems: "center", cursor: "pointer" }}
+                        style={{
+                            display: "flex",
+                            flexDirection: "row",
+                            alignItems: "center",
+                            cursor: "pointer",
+                            fontSize: "14px"
+                        }}
                         onClick={() => console.log("TODO!")}
                     >
                         <FontAwesomeIcon icon={faBookOpenReader} size="2x" style={{ marginRight: 15 }} />

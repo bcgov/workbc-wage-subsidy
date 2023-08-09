@@ -27,6 +27,7 @@ export const ClaimList = (props: any) => {
 
     const handleRowClick = (id: Identifier, resource: string, record: any) => {
         console.log("row click")
+        console.log(record)
         return ""
 
         // // Temporary click functionality (opens form in a new tab) (will get replaced by embed functionality eventually)
@@ -48,72 +49,74 @@ export const ClaimList = (props: any) => {
 
     return (
         <>
-            <CatchmentLabel catchment={cc.catchment.name} />
-            <List
-                {...props}
-                actions={<ListActions />}
-                filter={{ ...claimStatusFilters["All"], catchmentno: cc.catchment.id }}
-                filterDefaultValues={{ catchmentno: cc.catchment.id }}
-                aside={<ListAside statusFilters={claimStatusFilters} />}
-            >
-                <CustomDatagrid
-                    bulkActionButtons={<FormBulkActionButtons />}
-                    showCalculatorButton={true}
-                    sx={DatagridStyles}
-                    rowClick={handleRowClick}
+            <Box id="main-content-custom" tabIndex={0} aria-label="main content">
+                <CatchmentLabel catchment={cc.catchment.name} />
+                <List
+                    {...props}
+                    actions={<ListActions />}
+                    filterDefaultValues={{ ...claimStatusFilters["All"], catchmentno: cc.catchment.id }}
+                    aside={<ListAside statusFilters={claimStatusFilters} />}
                 >
-                    <TextField label="Submission ID" source="form_confirmation_id" emptyText="-" />
-                    <TextField label="Position Title" source="position_title" emptyText="-" />
-                    <FunctionField
-                        label="Employee Name"
-                        render={(record: any) =>
-                            record.employee_first_name || record.employee_last_name
-                                ? `${record.employee_first_name ?? ""} ${record.employee_last_name ?? ""}`
-                                : "-"
-                        }
-                    />
-                    <FunctionField
-                        label="Submitted Date"
-                        render={
-                            (record: any) =>
-                                record.form_submitted_date ? record.form_submitted_date.split("T")[0] : "-" // remove timestamp
-                        }
-                    />
-                    <TextField label="Associated Application ID" source="associated_application_id" emptyText="-" />
-                    <FunctionField
-                        label=""
-                        render={(record: any) => (
-                            <Box display="flex" width="100%" justifyContent="center">
-                                <Chip
-                                    label={
-                                        record.status === "Processing"
-                                            ? "In Progress"
-                                            : record.status === "Completed"
-                                            ? "Completed"
-                                            : record.status === "Cancelled"
-                                            ? "Cancelled"
-                                            : "New"
-                                    }
-                                    size="small"
-                                    color={
-                                        record.status === "Draft"
-                                            ? "info"
-                                            : record.status === "Submitted"
-                                            ? "primary"
-                                            : record.status === "Processing"
-                                            ? "warning"
-                                            : record.status === "Completed"
-                                            ? "success"
-                                            : record.status === "Cancelled"
-                                            ? "error"
-                                            : "info"
-                                    }
-                                />
-                            </Box>
-                        )}
-                    />
-                </CustomDatagrid>
-            </List>
+                    <CustomDatagrid
+                        bulkActionButtons={<FormBulkActionButtons />}
+                        showCalculatorButton={true}
+                        sx={DatagridStyles}
+                        rowClick={handleRowClick}
+                        ariaLabel="claims list"
+                    >
+                        <TextField label="Submission ID" source="form_confirmation_id" emptyText="-" />
+                        <TextField label="Position Title" source="position_title" emptyText="-" />
+                        <FunctionField
+                            label="Employee Name"
+                            render={(record: any) =>
+                                record.employee_first_name || record.employee_last_name
+                                    ? `${record.employee_first_name ?? ""} ${record.employee_last_name ?? ""}`
+                                    : "-"
+                            }
+                        />
+                        <FunctionField
+                            label="Submitted Date"
+                            render={
+                                (record: any) =>
+                                    record.form_submitted_date ? record.form_submitted_date.split("T")[0] : "-" // remove timestamp
+                            }
+                        />
+                        <TextField label="Associated Application ID" source="associated_application_id" emptyText="-" />
+                        <FunctionField
+                            label=""
+                            render={(record: any) => (
+                                <Box display="flex" width="100%" justifyContent="center">
+                                    <Chip
+                                        label={
+                                            record.status === "Processing"
+                                                ? "In Progress"
+                                                : record.status === "Completed"
+                                                ? "Completed"
+                                                : record.status === "Cancelled"
+                                                ? "Cancelled"
+                                                : "New"
+                                        }
+                                        size="small"
+                                        color={
+                                            record.status === "Draft"
+                                                ? "info"
+                                                : record.status === "Submitted"
+                                                ? "primary"
+                                                : record.status === "Processing"
+                                                ? "warning"
+                                                : record.status === "Completed"
+                                                ? "success"
+                                                : record.status === "Cancelled"
+                                                ? "error"
+                                                : "info"
+                                        }
+                                    />
+                                </Box>
+                            )}
+                        />
+                    </CustomDatagrid>
+                </List>
+            </Box>
         </>
     )
 }
