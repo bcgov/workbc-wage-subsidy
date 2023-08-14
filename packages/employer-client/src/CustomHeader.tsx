@@ -1,6 +1,6 @@
 import React from "react"
 import { Link as RouterLink } from "react-router-dom"
-import { Toolbar, AppBar, AppBarProps, Box, Link } from "@mui/material"
+import { Toolbar, AppBar, AppBarProps, Box, Link, Button } from "@mui/material"
 import { styled } from "@mui/material/styles"
 import { UserMenu, LoadingIndicator, LocalesMenuButton, TitleComponent, useLocales } from "react-admin"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
@@ -26,6 +26,7 @@ export const Header = (props: HeaderProps) => {
                                 variant="h6"
                                 color="primary.contrastText"
                                 underline="none"
+                                aria-label="WorkBC Wage Subsidy Application"
                             >
                                 <b>WorkBC Wage Subsidy</b>
                             </Link>
@@ -58,19 +59,24 @@ export const Header = (props: HeaderProps) => {
                     }}
                 >
                     <Box>{menu}</Box>
-                    <div
-                        style={{
+                    <Button
+                        sx={{
                             display: "flex",
                             flexDirection: "row",
                             alignItems: "center",
                             cursor: "pointer",
-                            fontSize: "14px"
+                            fontSize: "14px",
+                            color: "rgb(255, 255, 255)",
+                            textTransform: "none",
+                            ":hover": {
+                                textDecoration: "underline"
+                            }
                         }}
                         onClick={() => console.log("TODO!")}
                     >
                         <FontAwesomeIcon icon={faBookOpenReader} size="2x" style={{ marginRight: 15 }} />
                         Employer Handbook
-                    </div>
+                    </Button>
                 </Toolbar>
             </Root2>
         </>

@@ -172,25 +172,6 @@ export const lightTheme = {
                 }
             }
         },
-        RaDatagrid: {
-            styleOverrides: {
-                root: {
-                    "& .RaDatagrid-checkbox": {
-                        color: COLOURS.DARKBLUE
-                    },
-                    "& .RaDatagrid-headerCell": {
-                        "& .MuiCheckbox-root": {
-                            color: COLOURS.DARKBLUE
-                        }
-                    },
-                    "& .RaDatagrid-tableCell": {
-                        "& .MuiCheckbox-root": {
-                            color: COLOURS.DARKBLUE
-                        }
-                    }
-                }
-            }
-        },
         RaBulkActionsToolbar: {
             styleOverrides: {
                 root: {

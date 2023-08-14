@@ -72,10 +72,10 @@ const CatchmentProvider: React.FC<{ children: React.ReactNode }> = ({ children }
     }, [])
 
     useEffect(() => {
-        // If session catchment exists, use it.
-        const sessionCatchment = getLocalCatchment()
-        if (catchmentExists(sessionCatchment)) {
-            changeCatchment(sessionCatchment)
+        // If local catchment exists, use it.
+        const localCatchment = getLocalCatchment()
+        if (catchmentExists(localCatchment)) {
+            changeCatchment(localCatchment)
             return
         }
 
