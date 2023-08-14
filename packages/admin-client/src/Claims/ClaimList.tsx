@@ -1,11 +1,9 @@
 import { Box, Chip } from "@mui/material"
 import { FunctionField, Identifier, List, TextField, useUnselectAll } from "react-admin"
-import { DatagridStyles } from "../common/styles/DatagridStyles"
-import { useContext, useEffect } from "react"
+import { useContext, useEffect, useState } from "react"
 import CatchmentLabel from "../common/components/CatchmentLabel/CatchmentLabel"
 import { CatchmentContext } from "../common/contexts/CatchmentContext/CatchmentContext"
 import CustomDatagrid from "../common/components/CustomDatagrid/CustomDatagrid"
-import { FormBulkActionButtons } from "../common/components/FormBulkActionButtons/FormBulkActionButtons"
 import { ListActions } from "../common/components/ListActions/ListActions"
 import { ListAside } from "../common/components/ListAside/ListAside"
 
@@ -20,6 +18,7 @@ export const claimStatusFilters = {
 export const ClaimList = (props: any) => {
     const cc = useContext(CatchmentContext)
     const unselectAll = useUnselectAll("claims")
+    const [statusFilter, setStatusFilter] = useState(claimStatusFilters["All"])
 
     useEffect(() => {
         unselectAll()
@@ -54,16 +53,17 @@ export const ClaimList = (props: any) => {
                 <List
                     {...props}
                     actions={<ListActions />}
-                    filterDefaultValues={{ ...claimStatusFilters["All"], catchmentno: cc.catchment.id }}
-                    aside={<ListAside statusFilters={claimStatusFilters} />}
+                    filter={{ ...statusFilter, catchmentno: cc.catchment.id }}
+                    filterDefaultValues={{ ...statusFilter, catchmentno: cc.catchment.id }}
+                    aside={
+                        <ListAside
+                            statusFilters={claimStatusFilters}
+                            statusFilter={statusFilter}
+                            setStatusFilter={setStatusFilter}
+                        />
+                    }
                 >
-                    <CustomDatagrid
-                        bulkActionButtons={<FormBulkActionButtons />}
-                        showCalculatorButton={true}
-                        sx={DatagridStyles}
-                        rowClick={handleRowClick}
-                        ariaLabel="claims list"
-                    >
+                    <CustomDatagrid showCalculatorButton={true} rowClick={handleRowClick} ariaLabel="claims list">
                         <TextField label="Submission ID" source="form_confirmation_id" emptyText="-" />
                         <TextField label="Position Title" source="position_title" emptyText="-" />
                         <FunctionField

@@ -1,8 +1,9 @@
 import { Box, Chip } from "@mui/material"
-import { Datagrid, FunctionField, List, TextField } from "react-admin"
+import { FunctionField, List, TextField } from "react-admin"
 import { applicationStatusFilters } from "../Applications/ApplicationList"
 import { DatagridStyles } from "../common/styles/DatagridStyles"
 import { CustomSearchInput } from "./ClaimCustomSearchInput"
+import CustomDatagrid from "../common/components/CustomDatagrid/CustomDatagrid"
 
 const applicationFilters = [
     <CustomSearchInput
@@ -42,7 +43,12 @@ export const ClaimCreateSelectApplication = (props: any) => {
                 <p>
                     <strong>Select the application you want to submit a claim for</strong>
                 </p>
-                <Datagrid sx={DatagridStyles} rowClick={handleClick} bulkActionButtons={false}>
+                <CustomDatagrid
+                    sx={DatagridStyles}
+                    rowClick={handleClick}
+                    bulkActionButtons={false}
+                    ariaLabel="list of completed applications"
+                >
                     <TextField label="Submission ID" source="form_confirmation_id" emptyText="-" />
                     <TextField label="Position Title" source="position_title" emptyText="-" />
                     <TextField label="Number of Positions" source="num_positions" emptyText="-" />{" "}
@@ -66,7 +72,7 @@ export const ClaimCreateSelectApplication = (props: any) => {
                             </Box>
                         )}
                     />
-                </Datagrid>
+                </CustomDatagrid>
             </List>
             <Box display="flex" justifyContent="right">
                 <img width="110em" src="/woman-checkmark.svg" alt="" style={{ transform: "translate(-2em, 2.5em)" }} />

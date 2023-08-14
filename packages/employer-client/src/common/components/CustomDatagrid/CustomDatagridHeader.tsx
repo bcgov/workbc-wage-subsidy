@@ -7,7 +7,7 @@ import clsx from "clsx"
 
 import { DatagridClasses } from "react-admin"
 import { useDatagridContext } from "react-admin"
-import CustomDatagridHeaderCell from "../CustomDatagridHeaderCell/CustomDatagridHeaderCell"
+import CustomDatagridHeaderCell from "./CustomDatagridHeaderCell"
 
 /**
  * The default Datagrid Header component.
@@ -86,6 +86,7 @@ export const CustomDatagridHeader = (props: DatagridHeaderProps) => {
                             key={(field.props as any).source || index}
                             resource={resource}
                             updateSort={updateSort}
+                            aria-label="TEST LABEL"
                         />
                     ) : null
                 )}

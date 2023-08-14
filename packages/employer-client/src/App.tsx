@@ -30,7 +30,6 @@ const initOptions = {
 let keycloak = new Keycloak(initOptions)
 
 const onToken = () => {
-    console.log("Keycloak tokenn: ", keycloak.token)
     if (keycloak.token && keycloak.refreshToken) {
         localStorage.setItem("token", keycloak.token)
         localStorage.setItem("refresh-token", keycloak.refreshToken)
@@ -43,7 +42,6 @@ const onTokenExpired = () => {
     keycloak
         .updateToken(30)
         .then(() => {
-            console.log("successfully got a new token", keycloak.token)
             if (keycloak.token && keycloak.refreshToken) {
                 localStorage.setItem("token", keycloak.token)
                 localStorage.setItem("refresh-token", keycloak.refreshToken)
@@ -70,6 +68,55 @@ export const lightTheme = {
                     indicatorColor: COLOURS.BC_GOLD,
                     backgroundColor: COLOURS.BC_BLUE,
                     borderBottom: `3px solid ${COLOURS.BC_GOLD}`
+                }
+            }
+        },
+        RaLoadingIndicator: {
+            styleOverrides: {
+                root: {
+                    "& .RaLoadingIndicator-loadedIcon": {
+                        height: "100%",
+                        border: "2px solid transparent",
+                        "&:hover": {
+                            border: "2px solid white",
+                            backgroundColor: "transparent"
+                        }
+                    }
+                }
+            }
+        },
+        RaUserMenu: {
+            styleOverrides: {
+                root: {
+                    "& .RaUserMenu-userButton": {
+                        height: "100%",
+                        border: "2px solid transparent",
+                        "&:hover": {
+                            border: "2px solid white",
+                            backgroundColor: "transparent"
+                        }
+                    }
+                }
+            }
+        },
+        MuiToolbar: {
+            styleOverrides: {
+                root: {
+                    "& .MuiTab-root": {
+                        "&:hover": {
+                            textDecoration: "underline"
+                        }
+                    }
+                }
+            }
+        },
+        RaContainerLayout: {
+            styleOverrides: {
+                root: {
+                    "& .MuiContainer-root": {
+                        overflowX: "auto",
+                        overflowY: "visible"
+                    }
                 }
             }
         },
@@ -105,25 +152,14 @@ export const lightTheme = {
                 }
             }
         },
-        RaDatagrid: {
-            styleOverrides: {
-                root: {
-                    "& .RaDatagrid-checkbox": {
-                        color: COLOURS.DARKBLUE
-                    },
-                    "& .RaDatagrid-headerCell": {
-                        "& .MuiCheckbox-root": {
-                            color: COLOURS.DARKBLUE
-                        }
-                    }
-                }
-            }
-        },
         RaBulkActionsToolbar: {
             styleOverrides: {
                 root: {
                     "& .RaBulkActionsToolbar-toolbar": {
                         backgroundColor: "#d7f0fa",
+                        color: "#3a86e3"
+                    },
+                    "& .MuiButton-root": {
                         color: "#3a86e3"
                     }
                 }
