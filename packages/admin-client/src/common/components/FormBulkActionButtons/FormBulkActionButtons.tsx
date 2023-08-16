@@ -1,4 +1,4 @@
-import { faArrowsRotate } from "@fortawesome/pro-solid-svg-icons"
+import { faSwapArrows } from "@fortawesome/pro-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { Button } from "@mui/material"
 import { useEffect, useState } from "react"
@@ -45,7 +45,7 @@ export const FormBulkActionButtons = () => {
             onClick={() => console.log("Move button")}
             aria-label="Move selection to another catchment"
         >
-            <FontAwesomeIcon icon={faArrowsRotate} style={{ marginRight: 10 }} size="xl" />
+            <FontAwesomeIcon icon={faSwapArrows} style={{ marginRight: 10 }} size="xl" />
             MOVE
         </Button>
     )

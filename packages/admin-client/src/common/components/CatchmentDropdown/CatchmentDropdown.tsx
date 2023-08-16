@@ -5,16 +5,8 @@ import { CatchmentContext } from "../../contexts/CatchmentContext/CatchmentConte
 import { ScreenReaderOnly } from "../../styles/ScreenReaderOnly"
 
 const outlineStyles = {
-    noOutline: {
-        borderTop: "2px solid transparent",
-        borderLeft: "2px solid transparent",
-        borderRight: "2px solid transparent"
-    },
-    solidOutline: {
-        borderTop: "2px solid #313132",
-        borderLeft: "2px solid #313132",
-        borderRight: "2px solid #313132"
-    }
+    noOutline: { border: "2px solid transparent" },
+    solidOutline: { border: "2px solid #313132" }
 }
 
 const styles = {
@@ -24,11 +16,8 @@ const styles = {
     width: "14em",
     height: "3em",
     backgroundColor: COLOURS.LIGHTBLUE_TRANSLUCENT,
-    borderTopLeftRadius: "6px",
-    borderTopRightRadius: "6px",
-    borderBottomLeftRadius: "0px",
-    borderBottomRightRadius: "0px",
-    borderBottom: "3px solid #313132",
+    borderRadius: "6px",
+    border: outlineStyles.noOutline,
     ":hover": outlineStyles.solidOutline
 }
 

@@ -18,8 +18,6 @@ import { useNavigate } from "react-router-dom"
 import { DatagridCell } from "react-admin"
 import { DatagridClasses } from "react-admin"
 import { useDatagridContext } from "react-admin"
-import PdfButtonField from "../PdfButtonField/PdfButtonField"
-import CalculatorButtonField from "../CalculatorButtonField/CalculatorButtonField"
 
 const computeNbColumns = (expand, children, hasBulkActions) =>
     expand
@@ -129,7 +127,7 @@ const DatagridRow: FC<CustomDatagridRowProps> = React.forwardRef((props, ref) =>
                 hover={hover}
                 {...rest}
             >
-                {/* First column: row button, checkbox, PDF button, and optional calculator button */}
+                {/* First column: row button, checkbox */}
                 <TableCell padding="none">
                     <Box display="flex" padding="0em 0em 0em 0.53em" minHeight="2.6em">
                         <Button
@@ -157,12 +155,6 @@ const DatagridRow: FC<CustomDatagridRowProps> = React.forwardRef((props, ref) =>
                                 disabled={!selectable}
                             />
                         )}
-                        <Box width="100%" justifyContent="center" alignSelf="center">
-                            <Box display="flex">
-                                <PdfButtonField />
-                                {showCalculatorButton && <CalculatorButtonField />}
-                            </Box>
-                        </Box>
                     </Box>
                 </TableCell>
                 {React.Children.map(children, (field, index) =>
