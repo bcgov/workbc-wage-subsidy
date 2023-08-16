@@ -18,7 +18,8 @@ export const CustomSearchInput = (props: SearchInputProps) => {
     }
 
     return (
-        <Box paddingLeft="50.78em" zIndex="1" sx={{ transform: "translate(0em, 3.4em)" }}>
+        // Position search bar in upper portion of list, not above list.
+        <Box zIndex="1" sx={{ transform: "translate(0em, 3.4em)" }}>
             <StyledTextInput
                 hiddenLabel
                 label=""

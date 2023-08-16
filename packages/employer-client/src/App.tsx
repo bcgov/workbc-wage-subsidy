@@ -19,6 +19,7 @@ import { COLOURS } from "./Colours"
 import { dataProvider } from "./DataProvider/DataProvider"
 import Layout from "./Layout"
 import Footer from "./footer"
+import "@bcgov/bc-sans/css/BCSans.css"
 
 const initOptions = {
     url: process.env.REACT_APP_KEYCLOAK_URL || "",
@@ -29,7 +30,6 @@ const initOptions = {
 let keycloak = new Keycloak(initOptions)
 
 const onToken = () => {
-    console.log("Keycloak tokenn: ", keycloak.token)
     if (keycloak.token && keycloak.refreshToken) {
         localStorage.setItem("token", keycloak.token)
         localStorage.setItem("refresh-token", keycloak.refreshToken)
@@ -42,7 +42,6 @@ const onTokenExpired = () => {
     keycloak
         .updateToken(30)
         .then(() => {
-            console.log("successfully got a new token", keycloak.token)
             if (keycloak.token && keycloak.refreshToken) {
                 localStorage.setItem("token", keycloak.token)
                 localStorage.setItem("refresh-token", keycloak.refreshToken)
@@ -69,6 +68,55 @@ export const lightTheme = {
                     indicatorColor: COLOURS.BC_GOLD,
                     backgroundColor: COLOURS.BC_BLUE,
                     borderBottom: `3px solid ${COLOURS.BC_GOLD}`
+                }
+            }
+        },
+        RaLoadingIndicator: {
+            styleOverrides: {
+                root: {
+                    "& .RaLoadingIndicator-loadedIcon": {
+                        height: "100%",
+                        border: "2px solid transparent",
+                        "&:hover": {
+                            border: "2px solid white",
+                            backgroundColor: "transparent"
+                        }
+                    }
+                }
+            }
+        },
+        RaUserMenu: {
+            styleOverrides: {
+                root: {
+                    "& .RaUserMenu-userButton": {
+                        height: "100%",
+                        border: "2px solid transparent",
+                        "&:hover": {
+                            border: "2px solid white",
+                            backgroundColor: "transparent"
+                        }
+                    }
+                }
+            }
+        },
+        MuiToolbar: {
+            styleOverrides: {
+                root: {
+                    "& .MuiTab-root": {
+                        "&:hover": {
+                            textDecoration: "underline"
+                        }
+                    }
+                }
+            }
+        },
+        RaContainerLayout: {
+            styleOverrides: {
+                root: {
+                    "& .MuiContainer-root": {
+                        overflowX: "auto",
+                        overflowY: "visible"
+                    }
                 }
             }
         },
@@ -99,21 +147,8 @@ export const lightTheme = {
                         backgroundColor: COLOURS.LIGHTBLUE
                     },
                     borderRadius: 20,
-                    minWidth: 180
-                }
-            }
-        },
-        RaDatagrid: {
-            styleOverrides: {
-                root: {
-                    "& .RaDatagrid-checkbox": {
-                        color: COLOURS.DARKBLUE
-                    },
-                    "& .RaDatagrid-headerCell": {
-                        "& .MuiCheckbox-root": {
-                            color: COLOURS.DARKBLUE
-                        }
-                    }
+                    minWidth: 180,
+                    fontSize: "14px"
                 }
             }
         },
@@ -122,6 +157,9 @@ export const lightTheme = {
                 root: {
                     "& .RaBulkActionsToolbar-toolbar": {
                         backgroundColor: "#d7f0fa",
+                        color: "#3a86e3"
+                    },
+                    "& .MuiButton-root": {
                         color: "#3a86e3"
                     }
                 }
@@ -147,6 +185,9 @@ export const lightTheme = {
         error: {
             main: "#e5e8ef"
         }
+    },
+    typography: {
+        fontFamily: ['"BCSans"', '"Noto Sans"', "Verdana", "Arial", "sans-serif"].join(",")
     }
 }
 

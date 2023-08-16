@@ -14,6 +14,7 @@ import {
     //Inspector,
 } from "react-admin"
 import { Header } from "./CustomHeader"
+import { CustomSkipNavigationButton } from "./CustomSkipNavigationButton"
 
 export const CustomContainerLayout = (props: LayoutProps) => {
     const {
@@ -49,7 +50,7 @@ export const CustomContainerLayout = (props: LayoutProps) => {
                 }}
             >
                 <StyledLayout className={clsx("layout", ContainerLayoutClasses.root, className)} sx={sx}>
-                    <SkipNavigationButton />
+                    <CustomSkipNavigationButton />
                     {appBar}
                     <Container
                         id="main-content"
