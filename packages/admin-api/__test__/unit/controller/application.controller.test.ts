@@ -37,7 +37,7 @@ describe("getAllApplications", () => {
         jest.clearAllMocks()
     })
 
-    it("returns 200 with applicationss data", async () => {
+    it("returns 200 with applications data", async () => {
         const catchment = ["test_catchment"]
         ;(getCatchment as jest.Mock).mockResolvedValue(catchment)
 

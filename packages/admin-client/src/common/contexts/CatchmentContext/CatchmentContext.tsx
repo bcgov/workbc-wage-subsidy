@@ -1,5 +1,7 @@
 import { createContext, useState, useEffect, useMemo } from "react"
 
+const NUM_CATCHMENTS = 45
+
 const createCatchmentName = (catchmentNo: number, location: string) => {
     let catchmentName = catchmentNo < 10 ? "0" : ""
     return catchmentName + catchmentNo.toString() + " - " + location
@@ -7,20 +9,20 @@ const createCatchmentName = (catchmentNo: number, location: string) => {
 
 const getCatchments = () => {
     // eslint-disable-next-line prefer-const
-    let result: any[] | undefined = []
+    let result: any[] = []
     const provider = localStorage.getItem("provider")
     const permissions = localStorage.getItem("permissions")
     const access = localStorage.getItem("true")
     if (provider === "BCEID" && permissions !== null) {
         JSON.parse(permissions).forEach((item: { catchmentNo: number; location: string }) => {
-            result?.push({
+            result.push({
                 id: item.catchmentNo,
                 name: createCatchmentName(item.catchmentNo, item.location)
             })
         })
     } else if (provider === "IDIR" && access === "true") {
-        for (let i = 1; i <= 45; i += 1) {
-            result?.push({ id: i, name: `${i}` })
+        for (let i = 1; i <= NUM_CATCHMENTS; i += 1) {
+            result.push({ id: i, name: `${i}` })
         }
     }
     return result

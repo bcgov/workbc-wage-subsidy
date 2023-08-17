@@ -11,8 +11,7 @@ const PdfButtonField: React.FC = () => {
         <Button
             onClick={(event) => {
                 event?.stopPropagation()
-                console.log("pdf button")
-                console.log(record)
+                // TODO: implement PDF generation
             }}
             sx={{ minWidth: "3em" }}
             aria-label="Generate PDF"
