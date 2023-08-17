@@ -3,7 +3,7 @@ import axios from "axios"
 import Keycloak from "keycloak-js"
 import { useEffect, useState } from "react"
 import { Admin, Resource } from "react-admin"
-import Ready from "./Admin/ready"
+import Ready from "./admin/ready"
 import "./App.css"
 import { ApplicationList } from "./Applications/ApplicationList"
 import useAuthProvider from "./Auth/authProvider"
@@ -51,7 +51,7 @@ const onToken = async () => {
         localStorage.setItem("token", keycloak.token)
         localStorage.setItem("refresh-token", keycloak.refreshToken)
     }
-    const res = await axios.get(`${process.env.REACT_APP_ADMIN_API_URL || "http://localhost:8000"}/permission`, {
+    const res = await axios.get(`${process.env.REACT_APP_ADMIN_API_URL || "http://localhost:8002"}/permission`, {
         headers: {
             Accept: "application/json",
             Authorization: `Bearer ${localStorage.getItem("token")}`

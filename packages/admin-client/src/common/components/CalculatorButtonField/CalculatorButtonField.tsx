@@ -11,8 +11,7 @@ const CalculatorButtonField: React.FC = () => {
         <Button
             onClick={(event) => {
                 event?.stopPropagation()
-                console.log("calculator button")
-                console.log(record)
+                // TODO: navigate to calculator
             }}
             sx={{ minWidth: "2.5em" }}
             aria-label="Open calculator"

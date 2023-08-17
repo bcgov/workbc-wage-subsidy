@@ -1,5 +1,5 @@
 import { Box, Chip } from "@mui/material"
-import { Datagrid, FunctionField, List, TextField, useStore, Identifier } from "react-admin"
+import { FunctionField, List, TextField, useStore, Identifier } from "react-admin"
 import { FormBulkActionButtons } from "../common/components/FormBulkActionButtons/FormBulkActionButtons"
 import { ListActions } from "../common/components/ListActions/ListActions"
 import { DatagridStyles } from "../common/styles/DatagridStyles"
@@ -17,21 +17,17 @@ export const ClaimList = (props: any) => {
     const [statusFilter] = useStore("resources.claims.list.statusFilter", claimStatusFilters.All)
 
     const handleRowClick = (id: Identifier, resource: string, record: any) => {
-        console.log("row click")
-        console.log(record)
-        return ""
-
-        // // Temporary click functionality (opens form in a new tab) (will get replaced by embed functionality eventually)
-        // if (record.status === "Submitted") {
-        //     // submitted
-        //     window.open(`${process.env.REACT_APP_VIEW_URL}${record.form_submission_id}`)
-        // } else if (record.status === "Draft" && record.form_submission_id) {
-        //     // saved
-        //     window.open(`${process.env.REACT_APP_DRAFT_URL}${record.form_submission_id}`)
-        // } else {
-        //     window.open(`${process.env.REACT_APP_CLAIM_URL}&token=${id}`)
-        // }
-        // return "" // rowClick expects a path to be returned
+        // Temporary click functionality (opens form in a new tab) (will get replaced by embed functionality eventually)
+        if (record.status === "Submitted") {
+            // submitted
+            window.open(`${process.env.REACT_APP_VIEW_URL}${record.form_submission_id}`)
+        } else if (record.status === "Draft" && record.form_submission_id) {
+            // saved
+            window.open(`${process.env.REACT_APP_DRAFT_URL}${record.form_submission_id}`)
+        } else {
+            window.open(`${process.env.REACT_APP_CLAIM_URL}&token=${id}`)
+        }
+        return "" // rowClick expects a path to be returned
     }
 
     return (

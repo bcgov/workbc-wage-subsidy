@@ -7,7 +7,6 @@ import { useEffect } from "react"
 import { ScreenReaderOnly } from "../common/styles/ScreenReaderOnly"
 
 export const ApplicationListAside = () => {
-    console.log("application list aside")
     const [statusFilter, setStatusFilter] = useStore<any>(
         "resources.applications.list.statusFilter",
         applicationStatusFilters.All

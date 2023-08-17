@@ -42,7 +42,7 @@ export const FormBulkActionButtons = () => {
                 cursor: "pointer",
                 fontSize: "inherit"
             }}
-            onClick={() => console.log("Share button")}
+            onClick={() => console.log("TODO!")}
             aria-label="Share form with another user"
         >
             <FontAwesomeIcon icon={faHandshake} style={{ marginRight: 10 }} size="xl" />
