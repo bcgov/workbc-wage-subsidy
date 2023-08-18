@@ -269,6 +269,23 @@ describe("updateApplication", () => {
         expect(res.status).toHaveBeenCalledWith(200)
         expect(res.send).toHaveBeenCalledWith(applicationID)
     })
+    it("returns 200 with application id when idir user updates catchment", async () => {
+        req.kauth.grant.access_token.content = {
+            bceid_username: undefined,
+            idir_username: "idir"
+        }
+        req.body.catchmentNo = 2
+        const catchments = [1, 2]
+        const application = { id: "1", catchmentno: 1, status: "Processing" }
+        const applicationID = { id: "1" }
+        const numUpdated = 1
+        ;(getCatchments as jest.Mock).mockResolvedValue(catchments)
+        ;(applicationService.getApplicationByID as jest.Mock).mockResolvedValue(application)
+        ;(applicationService.updateApplication as jest.Mock).mockResolvedValue(numUpdated)
+        await updateApplication(req, res)
+        expect(res.status).toHaveBeenCalledWith(200)
+        expect(res.send).toHaveBeenCalledWith(applicationID)
+    })
     it("returns 401 when username undefined", async () => {
         req.kauth.grant.access_token.content = {
             bceid_username: undefined,
@@ -289,6 +306,30 @@ describe("updateApplication", () => {
     })
     it("returns 403 when user lacks catchment permission", async () => {
         const catchments = [2]
+        const application = { id: "1", catchmentno: 1, status: "Processing" }
+        ;(getCatchments as jest.Mock).mockResolvedValue(catchments)
+        ;(applicationService.getApplicationByID as jest.Mock).mockResolvedValue(application)
+        await updateApplication(req, res)
+        expect(res.status).toHaveBeenCalledWith(403)
+        expect(res.send).toHaveBeenCalledWith("Forbidden")
+    })
+    it("returns 403 when bceid user attempts to update catchment", async () => {
+        req.body.catchmentNo = 2
+        const catchments = [1]
+        const application = { id: "1", catchmentno: 1, status: "Processing" }
+        ;(getCatchments as jest.Mock).mockResolvedValue(catchments)
+        ;(applicationService.getApplicationByID as jest.Mock).mockResolvedValue(application)
+        await updateApplication(req, res)
+        expect(res.status).toHaveBeenCalledWith(403)
+        expect(res.send).toHaveBeenCalledWith("Forbidden")
+    })
+    it("returns 403 when idir user attempts to set nonexistent catchment", async () => {
+        req.kauth.grant.access_token.content = {
+            bceid_username: undefined,
+            idir_username: "idir"
+        }
+        req.body.catchmentNo = 2
+        const catchments = [1]
         const application = { id: "1", catchmentno: 1, status: "Processing" }
         ;(getCatchments as jest.Mock).mockResolvedValue(catchments)
         ;(applicationService.getApplicationByID as jest.Mock).mockResolvedValue(application)

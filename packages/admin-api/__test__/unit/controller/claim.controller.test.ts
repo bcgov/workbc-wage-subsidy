@@ -227,6 +227,23 @@ describe("updateClaim", () => {
         expect(res.status).toHaveBeenCalledWith(200)
         expect(res.send).toHaveBeenCalledWith(claimID)
     })
+    it("returns 200 with claim id when idir user updates catchment", async () => {
+        req.kauth.grant.access_token.content = {
+            bceid_username: undefined,
+            idir_username: "idir"
+        }
+        req.body.catchmentNo = 2
+        const catchments = [1, 2]
+        const claim = { id: "1", catchmentno: 1, status: "Processing" }
+        const claimID = { id: "1" }
+        const numUpdated = 1
+        ;(getCatchments as jest.Mock).mockResolvedValue(catchments)
+        ;(claimService.getClaimByID as jest.Mock).mockResolvedValue(claim)
+        ;(claimService.updateClaim as jest.Mock).mockResolvedValue(numUpdated)
+        await updateClaim(req, res)
+        expect(res.status).toHaveBeenCalledWith(200)
+        expect(res.send).toHaveBeenCalledWith(claimID)
+    })
     it("returns 401 when username undefined", async () => {
         req.kauth.grant.access_token.content = {
             bceid_username: undefined,
@@ -247,6 +264,30 @@ describe("updateClaim", () => {
     })
     it("returns 403 when user lacks catchment permission", async () => {
         const catchments = [2]
+        const claim = { id: "1", catchmentno: 1, status: "Processing" }
+        ;(getCatchments as jest.Mock).mockResolvedValue(catchments)
+        ;(claimService.getClaimByID as jest.Mock).mockResolvedValue(claim)
+        await updateClaim(req, res)
+        expect(res.status).toHaveBeenCalledWith(403)
+        expect(res.send).toHaveBeenCalledWith("Forbidden")
+    })
+    it("returns 403 when bceid user attempts to update catchment", async () => {
+        req.body.catchmentNo = 2
+        const catchments = [1]
+        const claim = { id: "1", catchmentno: 1, status: "Processing" }
+        ;(getCatchments as jest.Mock).mockResolvedValue(catchments)
+        ;(claimService.getClaimByID as jest.Mock).mockResolvedValue(claim)
+        await updateClaim(req, res)
+        expect(res.status).toHaveBeenCalledWith(403)
+        expect(res.send).toHaveBeenCalledWith("Forbidden")
+    })
+    it("returns 403 when idir user attempts to set nonexistent catchment", async () => {
+        req.kauth.grant.access_token.content = {
+            bceid_username: undefined,
+            idir_username: "idir"
+        }
+        req.body.catchmentNo = 2
+        const catchments = [1]
         const claim = { id: "1", catchmentno: 1, status: "Processing" }
         ;(getCatchments as jest.Mock).mockResolvedValue(catchments)
         ;(claimService.getClaimByID as jest.Mock).mockResolvedValue(claim)
