@@ -1,4 +1,3 @@
-// import createServer from "./utils/server"
 import cors from "cors"
 import express from "express"
 import helmet from "helmet"
@@ -8,9 +7,8 @@ import applicationRoute from "./routes/application.route"
 import claimRoute from "./routes/claim.route"
 import permissionRoute from "./routes/permission.route"
 
-// const app = createServer()
 const corsOptions = {
-    origin: process.env.ORIGIN_URL || process.env.OPENSHIFT_NODEJS_ORIGIN_URL || "http://localhost:3001",
+    origin: process.env.ORIGIN_URL || process.env.OPENSHIFT_NODEJS_ORIGIN_URL || "http://localhost:3006",
     credentials: true,
     optionsSuccessStatus: 200
 }
@@ -24,9 +22,10 @@ const kcConfig: KeycloakConfig = {
     realm: process.env.AUTH_KEYCLOAK_REALM || ""
 }
 
-const app = express()
-
+console.log(kcConfig)
 const keycloak = new Keycloak({}, kcConfig)
+
+const app = express()
 
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
@@ -36,9 +35,9 @@ app.use(cors(corsOptions))
 app.use(helmet())
 app.use(keycloak.middleware())
 
-app.use("/", keycloak.protect(), claimRoute)
+app.use("/permission", keycloak.protect(), permissionRoute)
 app.use("/applications", keycloak.protect(), applicationRoute)
-app.use("/", keycloak.protect(), permissionRoute)
+app.use("/claims", keycloak.protect(), claimRoute)
 
 const port = process.env.PORT || "8002"
 app.listen(port, () => {
