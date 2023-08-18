@@ -3,16 +3,7 @@ import axios from "axios"
 import { knex } from "../config/db-config"
 import { getCHEFSToken } from "./common.service"
 
-/**
- * Get all claims, filtered by the given parameters
- * @param perPage The number of items to return on each page
- * @param currPage The current page number
- * @param filters The filters to apply to the query
- * @param sort The sort to apply to the query
- * @param permission The permissions of the user
- */
-
-export const getAllClaims = async (perPage: number, currPage: number, filters: any, sort: any, permission: any[]) => {
+export const getAllClaims = async (perPage: number, currPage: number, filters: any, sort: any) => {
     const claims = await knex("claims")
         .whereNot("status", "Draft")
         .modify((queryBuilder: any) => {
@@ -33,93 +24,34 @@ export const getAllClaims = async (perPage: number, currPage: number, filters: a
     return claims
 }
 
-// This function gets a claim by ID
-export const getClaimByID = async (id: number, permission: any[]) => {
-    // Check if the user has permission to access all claims
-    if (permission[0] !== "*") {
-        // Convert the permission array to an array of numbers
-        permission.map((p: any) => Number(p))
-    }
-    // Get the claim from the database
-    const claims = await knex("claims").where("id", id)
-    // Check if the claim is in the user's catchment area
-    if (claims[0].catchmentno in permission || permission[0] === "*") {
-        // Return the claim
-        return claims
-    }
-    // If the claim is not in the user's catchment area, return an empty array
-    return []
+export const getClaimByID = async (id: string) => {
+    const claim = await knex("claims").where((builder: any) => builder.where("id", id))
+    return claim.length > 0 ? claim[0] : null
 }
 
-/**
- * This function is used to update a claim
- * @param {number} id - The id of the claim to be updated
- * @param {object} data - The new data for the claim
- * @param {array} permission - An array of catchment numbers that the user has permission to edit
- * @param {string} user - The username of the user who is editing the claim
- * @returns {number} Returns the number of rows that were updated
- */
-
-export const updateClaim = async (id: number, data: any, permission: any[], user: string) => {
-    // This helper function takes the old data and the new data and returns the difference
-    // Source: https://stackoverflow.com/questions/57669696/getting-difference-object-from-two-objects-using-es6
-    const getDifference = (a: any, b: any) =>
-        Object.fromEntries(Object.entries(b).filter(([key, val]) => key in a && a[key] !== val))
-
-    if (permission[0] !== "*") {
-        // Convert the permission array to an array of numbers
-        permission.map((p: any) => Number(p))
-    }
-    // 1. Check if the claim exists
-    const claims = await knex("claims").where("id", id)
-    if (claims.length === 0) {
-        return 0
-    }
-
-    // 2. Check if the user has permission to edit this claim
-    if (claims[0].catchmentno in permission || permission[0] === "*") {
-        // 3. Update the claim
-        const result = await knex("claims")
+export const updateClaim = async (id: number, status: string | null, form: any) => {
+    let numUpdated = 0
+    if (form && form.userInfo) {
+        numUpdated = await knex("claims")
             .where("id", id)
-            .update(
-                claims[0].history
-                    ? {
-                          ...data,
-                          history: {
-                              history: [
-                                  { by: user, date: new Date(), changes: getDifference(claims[0], data) },
-                                  ...claims[0].history.history
-                              ]
-                          }
-                      }
-                    : {
-                          data
-                      }
-            )
-        return result
+            .update({
+                status,
+                catchmentno: Number(form.catchmentNo),
+                updated_by: form.userInfo.username,
+                updated_date: new Date()
+                // TODO: update references to service provider CHEFS forms.
+            })
     }
-
-    // 4. User does not have permission to edit this claim
-    return 0
+    return numUpdated
 }
 
-export const deleteClaim = async (id: number, permission: string[]) => {
-    if (permission[0] === "*") {
-        const result = await knex("claims").where("id", id).del()
-        return result
-    }
-    return 0
+export const deleteClaim = async (id: string) => {
+    const numDeleted = await knex("claims").where("id", id).del()
+    return numDeleted
 }
-
-// This function gets the file from the CHEFS API using the URL provided
-// It uses the getCHEFSToken function to get the token from the local storage
-// It then uses axios to make the GET request to the API
-// The responseType and responseEncoding are set to "arraybuffer" and "binary" respectively
-// This is because otherwise the file will be corrupted
-// The headers are also set to get the file
-// It then returns the data from the response
 
 export const getFile = async (url: string) => {
+    // TODO: rework when we implement attachments.
     try {
         const token = await getCHEFSToken()
         const res = await axios({

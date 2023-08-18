@@ -90,7 +90,11 @@ const CatchmentProvider: React.FC<{ children: React.ReactNode }> = ({ children }
     // Use memoization to prevent unnecessary re-renders.
     const valueProp = useMemo(() => ({ catchments, catchment, changeCatchment }), [catchments, catchment])
 
-    return <CatchmentContext.Provider value={valueProp}>{children}</CatchmentContext.Provider>
+    return (
+        <CatchmentContext.Provider value={valueProp}>
+            {catchments.length > 0 && catchment.id > 0 && <>{children}</>}
+        </CatchmentContext.Provider>
+    )
 }
 
 export { CatchmentContext, CatchmentProvider }

@@ -1,9 +1,10 @@
 /* eslint-disable import/prefer-default-export */
+/* eslint-disable camelcase */
 import * as express from "express"
 
 import memoryStreams from "memory-streams"
 import * as claimService from "../services/claims.service"
-import { getCatchment } from "../lib/catchment"
+import { getCatchments } from "../lib/catchment"
 import { generateDocumentTemplate } from "../services/cdogs.service"
 
 // eslint-disable-next-line @typescript-eslint/no-require-imports, @typescript-eslint/no-var-requires
@@ -13,167 +14,155 @@ const claimHash = process.env.CLAIM_HASH || ""
 
 export const getAllClaims = async (req: any, res: express.Response) => {
     try {
-        let catchment
-        try {
-            catchment = await getCatchment(req.kauth.grant.access_token)
-        } catch (e: unknown) {
-            return res.status(403).send("Not Authorized")
+        const { bceid_username, idir_username } = req.kauth.grant.access_token.content
+        if (bceid_username === undefined && idir_username === undefined) {
+            return res.status(401).send("Not Authorized")
         }
-        const { filter, sort, page, perPage } = req.query
-        const filters = filter ? JSON.parse(filter) : {}
-        if (req.kauth.grant.access_token.content.bceid_user_guid && filters.catchmentno) {
-            // console.log("bceid", typeof filters.catchmentno, filters.catchmentno)
-            if (
-                catchment.length === 0 ||
-                !catchment.map((e: string) => Number(e)).includes(Number(filters.catchmentno))
-            ) {
-                return res.status(403).send("Not Authorized")
-            }
+        const filter = req.query.filter ? JSON.parse(req.query.filter) : {}
+        const catchments = await getCatchments(req.kauth.grant.access_token)
+        if (
+            catchments.length === 0 ||
+            !filter.catchmentno ||
+            (filter.catchmentno !== -1 && !catchments.includes(filter.catchmentno))
+        ) {
+            return res.status(403).send("Forbidden")
         }
-        const sorted = sort ? JSON.parse(req.query.sort) : ["id", "ASC"]
-        // console.log(sorted)
-        const claims = await claimService.getAllClaims(Number(perPage), Number(page), filters, sorted, catchment)
-        // console.log(claims)
+        const sort: string[] = req.query.sort ? JSON.parse(req.query.sort) : ["id", "ASC"]
+        const page = req.query.page ?? 1
+        const perPage = req.query.perPage ?? 1
+        const claims = await claimService.getAllClaims(Number(perPage), Number(page), filter, sort)
         res.set({
             "Access-Control-Expose-Headers": "Content-Range",
             "Content-Range": `0 - ${claims.pagination.to} / ${claims.pagination.total}`
         })
+
+        // TODO: synchronize DB with CHEFS forms as necessary.
+        // TODO: create service provider CHEFS forms as necessary.
+
         return res.status(200).send(claims.data)
     } catch (e: unknown) {
-        // console.log(e)
-        return res.status(500).send("Server Error")
+        return res.status(500).send("Internal Server Error")
     }
 }
 
-export const getClaim = async (req: any, res: express.Response) => {
+export const getOneClaim = async (req: any, res: express.Response) => {
     try {
-        let catchment
-        try {
-            catchment = await getCatchment(req.kauth.grant.access_token)
-        } catch (e: unknown) {
-            // console.log(e)
-            return res.status(403).send("Not Authorized")
+        const { bceid_username, idir_username } = req.kauth.grant.access_token.content
+        if (bceid_username === undefined && idir_username === undefined) {
+            return res.status(401).send("Not Authorized")
         }
-        // console.log(catchment)
-        // console.log(req.params.id)
-        // console.log(req.params)
         const { id } = req.params
-        const claims = await claimService.getClaimByID(id, catchment)
-        if (claims.length === 0) {
-            return res.status(404).send("Not found or Not Authorized")
+        const claim = await claimService.getClaimByID(id)
+        const catchments = await getCatchments(req.kauth.grant.access_token)
+        if (catchments.length === 0 || (claim && !catchments.includes(claim.catchmentno))) {
+            return res.status(403).send("Forbidden")
         }
-        return res.status(200).send(claims[0])
+        if (!claim) {
+            return res.status(404).send("Not Found")
+        }
+
+        // TODO: synchronize DB with CHEFS form as necessary.
+        // TODO: create service provider CHEFS form as necessary.
+
+        return res.status(200).send(claim)
     } catch (e: unknown) {
-        // console.log(e)
-        return res.status(500).send("Server Error")
+        return res.status(500).send("Internal Server Error")
     }
 }
 
 export const updateClaim = async (req: any, res: express.Response) => {
     try {
-        let catchment
-        try {
-            catchment = await getCatchment(req.kauth.grant.access_token)
-        } catch (e: unknown) {
-            // console.log(e)
-            return res.status(403).send("Not Authorized")
+        const { bceid_username, idir_username } = req.kauth.grant.access_token.content
+        if (bceid_username === undefined && idir_username === undefined) {
+            return res.status(401).send("Not Authorized")
         }
-        // console.log(catchment)
         const { id } = req.params
-        // console.log(req.body, id)
-        if (
-            req.body.applicationstatus &&
-            req.body.applicationstatus === "Marked for Deletion" &&
-            req.kauth.grant.access_token.content.identity_provider !== "idir"
-        ) {
-            return res.status(403).send("Access denied")
+        const claim = await claimService.getClaimByID(id)
+        const catchments = await getCatchments(req.kauth.grant.access_token)
+        if (catchments.length === 0 || (claim && !catchments.includes(claim.catchmentno))) {
+            return res.status(403).send("Forbidden")
         }
-        console.log(req.kauth.grant.access_token.content)
-        const user =
-            req.kauth.grant.access_token.content.identity_provider === "idir"
-                ? `idir:${req.kauth.grant.access_token.content.idir_username}`
-                : `bceid:${req.kauth.grant.access_token.content.bceid_username}`
-        const updated = await claimService.updateClaim(id, req.body, catchment, user)
-
-        if (updated !== 0) {
-            // eslint-disable-next-line object-shorthand
-            return res.status(200).send({ id: id })
+        if (!claim) {
+            return res.status(404).send("Not Found")
         }
-        return res.status(404).send("Not Found or Not Authorized")
+        const numUpdated = await claimService.updateClaim(id, null, req.body)
+        if (numUpdated === 1) {
+            // TODO: update CHEFS form.
+            // TODO: if catchment changed, also change catchment on associated application and all associated claims.
+        } else {
+            throw new Error("Update failed")
+        }
+        return res.status(200).send({ id })
     } catch (e: unknown) {
-        console.log(e)
-        return res.status(500).send("Server Error")
+        return res.status(500).send("Internal Server Error")
     }
 }
 
 export const deleteClaim = async (req: any, res: express.Response) => {
     try {
-        let catchment
-        if (req.kauth.grant.access_token.content.identity_provider !== "idir") {
-            return res.status(403).send("Access denied")
-        }
-        try {
-            catchment = await getCatchment(req.kauth.grant.access_token)
-        } catch (e: unknown) {
-            // console.log(e)
-            return res.status(403).send("Not Authorized")
+        const { bceid_username, idir_username } = req.kauth.grant.access_token.content
+        if (bceid_username === undefined && idir_username === undefined) {
+            return res.status(401).send("Not Authorized")
         }
         const { id } = req.params
-        // console.log(req.body, id)
-        const deleted = await claimService.deleteClaim(id, catchment)
-
-        if (deleted !== 0) {
-            // eslint-disable-next-line object-shorthand
-            return res.status(200).send({ id: id })
+        const claim = await claimService.getClaimByID(id)
+        const catchments = await getCatchments(req.kauth.grant.access_token)
+        if (
+            idir_username === undefined ||
+            catchments.length === 0 ||
+            (claim && !catchments.includes(claim.catchmentno))
+        ) {
+            return res.status(403).send("Forbidden")
         }
-        return res.status(404).send("Not Found or Not Authorized")
+        if (!claim) {
+            return res.status(404).send("Not Found")
+        }
+        const numDeleted = await claimService.deleteClaim(id)
+        if (numDeleted === 1) {
+            // TODO: delete CHEFS form.
+        } else {
+            throw new Error("Delete failed")
+        }
+        return res.status(200).send({ id })
     } catch (e: unknown) {
-        console.log(e)
-        return res.status(500).send("Server Error")
+        return res.status(500).send("Internal Server Error")
     }
 }
 
 export const getFile = async (req: any, res: express.Response) => {
+    // TODO: rework when we implement attachments.
     try {
-        let catchment
         try {
-            catchment = await getCatchment(req.kauth.grant.access_token)
+            await getCatchments(req.kauth.grant.access_token)
         } catch (e: unknown) {
-            // console.log(e)
             return res.status(403).send("Not Authorized")
         }
         const { id, fileid } = req.params
-        const claim = await claimService.getClaimByID(id, catchment)
-        // console.log(claim)
+        const claim = await claimService.getClaimByID(id)
         if (claim.length === 0) {
             return res.status(404).send("Not found")
         }
         const file = claim[0].files.files.find((f: any) => f.data.id === fileid)
-        // console.log(file)
         const fileres = await claimService.getFile(file.url)
         res.setHeader("Content-Disposition", `attachment; filename=pdf.pdf`)
         return res.status(200).send(fileres)
     } catch (e: unknown) {
-        // console.log(e)
         return res.status(500).send("Server Error")
     }
 }
 
 export const generatePDF = async (req: any, res: express.Response) => {
+    // TODO: rework when we implement PDF generation.
     try {
         let mergedPDF: Buffer | undefined
-        let catchment
         try {
-            catchment = await getCatchment(req.kauth.grant.access_token)
+            await getCatchments(req.kauth.grant.access_token)
         } catch (e: unknown) {
-            // console.log(e)
             return res.status(403).send("Not Authorized")
         }
         const { id } = req.params
-        const claim = await claimService.getClaimByID(id, catchment)
-        // console.log(claim[0])
+        const claim = await claimService.getClaimByID(id)
         const data = claim[0].data ? claim[0].data : claim[0]
-        // console.log(data)
         const templateConfig = {
             // eslint-disable-next-line object-shorthand
             data: data,
@@ -201,7 +190,6 @@ export const generatePDF = async (req: any, res: express.Response) => {
         res.setHeader("Content-Disposition", `attachment; filename=pdf.pdf`)
         return res.status(200).send(mergedPDF)
     } catch (e: unknown) {
-        // console.log(e)
         return res.status(500).send("Internal Server Error")
     }
 }

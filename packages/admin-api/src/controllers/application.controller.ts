@@ -2,7 +2,7 @@
 /* eslint-disable import/prefer-default-export */
 import * as express from "express"
 
-import { getCatchment } from "../lib/catchment"
+import { getCatchments } from "../lib/catchment"
 import * as applicationService from "../services/application.service"
 import { generateDocumentTemplate } from "../services/cdogs.service"
 
@@ -11,106 +11,122 @@ const haveEmployeeHash = process.env.HAVE_EMPLOYEE_HASH || ""
 
 export const getAllApplications = async (req: any, res: express.Response) => {
     try {
-        let catchment
-        try {
-            catchment = await getCatchment(req.kauth.grant.access_token)
-        } catch (e: unknown) {
+        const { bceid_username, idir_username } = req.kauth.grant.access_token.content
+        if (bceid_username === undefined && idir_username === undefined) {
             return res.status(401).send("Not Authorized")
         }
-        const { sort, filter, page, perPage } = req.query
-        const filters = filter ? JSON.parse(filter) : {}
-        const sorted = sort ? JSON.parse(req.query.sort) : ["id", "ASC"]
-        const claims = await applicationService.getAllApplications(
-            Number(perPage),
-            Number(page),
-            filters,
-            sorted,
-            catchment
-        )
+        const filter = req.query.filter ? JSON.parse(req.query.filter) : {}
+        const catchments = await getCatchments(req.kauth.grant.access_token)
+        if (
+            catchments.length === 0 ||
+            !filter.catchmentno ||
+            (filter.catchmentno !== -1 && !catchments.includes(filter.catchmentno))
+        ) {
+            return res.status(403).send("Forbidden")
+        }
+        const sort: string[] = req.query.sort ? JSON.parse(req.query.sort) : ["id", "ASC"]
+        const page = req.query.page ?? 1
+        const perPage = req.query.perPage ?? 1
+        const applications = await applicationService.getAllApplications(Number(perPage), Number(page), filter, sort)
+
+        // TODO: synchronize DB with CHEFS forms as necessary.
+
         res.set({
             "Access-Control-Expose-Headers": "Content-Range",
-            "Content-Range": `0 - ${claims.pagination.to} / ${claims.pagination.total}`
+            "Content-Range": `0 - ${applications.pagination.to} / ${applications.pagination.total}`
         })
-        return res.status(200).send(claims.data)
+        return res.status(200).send(applications.data)
     } catch (e: unknown) {
-        return res.status(500).send("Server Error")
+        return res.status(500).send("Internal Server Error")
     }
 }
 
 export const getOneApplication = async (req: any, res: express.Response) => {
     try {
-        let catchment
-        try {
-            catchment = await getCatchment(req.kauth.grant.access_token)
-        } catch (e: unknown) {
-            return res.status(403).send("Not Authorized")
+        const { bceid_username, idir_username } = req.kauth.grant.access_token.content
+        if (bceid_username === undefined && idir_username === undefined) {
+            return res.status(401).send("Not Authorized")
         }
         const { id } = req.params
-        const applications = await applicationService.getApplicationByID(id, catchment)
-        if (applications.length === 0) {
-            return res.status(404).send("Not found or Not Authorized")
+        const application = await applicationService.getApplicationByID(id)
+        const catchments = await getCatchments(req.kauth.grant.access_token)
+        if (catchments.length === 0 || (application && !catchments.includes(application.catchmentno))) {
+            return res.status(403).send("Forbidden")
         }
-        return res.status(200).send(applications[0])
+        if (!application) {
+            return res.status(404).send("Not Found")
+        }
+
+        // TODO: synchronize DB with CHEFS form as necessary.
+
+        return res.status(200).send(application)
     } catch (e: unknown) {
-        return res.status(500).send("Server Error")
+        return res.status(500).send("Internal Server Error")
     }
 }
 
 export const updateApplication = async (req: any, res: express.Response) => {
     try {
-        let catchment
-        try {
-            catchment = await getCatchment(req.kauth.grant.access_token)
-        } catch (e: unknown) {
+        const { bceid_username, idir_username } = req.kauth.grant.access_token.content
+        if (bceid_username === undefined && idir_username === undefined) {
             return res.status(401).send("Not Authorized")
         }
         const { id } = req.params
-        if (
-            req.body.applicationstatus === "Marked for Deletion" &&
-            req.kauth.grant.access_token.content.identity_provider !== "idir"
-        ) {
-            return res.status(403).send("Access denied")
+        const application = await applicationService.getApplicationByID(id)
+        const catchments = await getCatchments(req.kauth.grant.access_token)
+        if (catchments.length === 0 || (application && !catchments.includes(application.catchmentno))) {
+            return res.status(403).send("Forbidden")
         }
-        const user =
-            req.kauth.grant.access_token.content.identity_provider === "idir"
-                ? `idir:${req.kauth.grant.access_token.content.idir_username}`
-                : `bceid:${req.kauth.grant.access_token.content.bceid_username}`
-        const updated = await applicationService.updateApplication(id, req.body, catchment, user)
-        if (updated !== 0) {
-            // eslint-disable-next-line object-shorthand
-            return res.status(200).send({ id: id })
+        if (!application) {
+            return res.status(404).send("Not Found")
         }
-        return res.status(404).send("Not Found or Not Authorized")
+        const numUpdated = await applicationService.updateApplication(id, null, req.body)
+        if (numUpdated > 0) {
+            // TODO: update CHEFS form.
+            // TODO: if catchment changed, also change catchment on all associated claims.
+        } else {
+            throw new Error("Update failed")
+        }
+        return res.status(200).send({ id })
     } catch (e: unknown) {
-        return res.status(500).send("Server Error")
+        return res.status(500).send("Internal Server Error")
     }
 }
 
 export const deleteApplication = async (req: any, res: express.Response) => {
     try {
-        let catchment
-        if (req.kauth.grant.access_token.content.identity_provider !== "idir") {
-            return res.status(401).send("Access denied")
-        }
-        try {
-            catchment = await getCatchment(req.kauth.grant.access_token)
-        } catch (e: unknown) {
+        const { bceid_username, idir_username } = req.kauth.grant.access_token.content
+        if (bceid_username === undefined && idir_username === undefined) {
             return res.status(401).send("Not Authorized")
         }
         const { id } = req.params
-        const deleted = await applicationService.deleteApplication(id, catchment)
-
-        if (deleted) {
-            // eslint-disable-next-line object-shorthand
-            return res.status(200).send({ id: id })
+        const application = await applicationService.getApplicationByID(id)
+        const catchments = await getCatchments(req.kauth.grant.access_token)
+        if (
+            idir_username === undefined ||
+            catchments.length === 0 ||
+            (application && !catchments.includes(application.catchmentno))
+        ) {
+            return res.status(403).send("Forbidden")
         }
-        return res.status(404).send("Not Found or Not Authorized")
+        if (!application) {
+            return res.status(404).send("Not Found")
+        }
+        const numDeleted = await applicationService.deleteApplication(id)
+        if (numDeleted === 1) {
+            // TODO: delete CHEFS form.
+            // TODO: delete associated claims.
+        } else {
+            throw new Error("Delete failed")
+        }
+        return res.status(200).send({ id })
     } catch (e: unknown) {
-        return res.status(500).send("Server Error")
+        return res.status(500).send("Internal Server Error")
     }
 }
 
 export const generatePDF = async (req: any, res: express.Response) => {
+    // TODO: rework when we implement PDF generation.
     try {
         const { id } = req.params
         const application = await applicationService.getApplicationByIdPDF(id)

@@ -3,6 +3,6 @@ import * as permissionController from "../controllers/permission.controller"
 
 const router = express.Router()
 
-router.get("/permission", permissionController.getPermission)
+router.get("/", permissionController.getPermission)
 
 export default router
