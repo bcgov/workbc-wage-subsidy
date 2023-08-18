@@ -74,7 +74,15 @@ export const updateApplication = async (req: any, res: express.Response) => {
         const { id } = req.params
         const application = await applicationService.getApplicationByID(id)
         const catchments = await getCatchments(req.kauth.grant.access_token)
-        if (catchments.length === 0 || (application && !catchments.includes(application.catchmentno))) {
+        if (
+            catchments.length === 0 ||
+            (application && !catchments.includes(application.catchmentno)) ||
+            (req.body.catchmentNo && !catchments.includes(req.body.catchmentNo)) ||
+            (application &&
+                req.body.catchmentNo &&
+                application.catchmentno !== req.body.catchmentNo &&
+                idir_username === undefined)
+        ) {
             return res.status(403).send("Forbidden")
         }
         if (!application) {

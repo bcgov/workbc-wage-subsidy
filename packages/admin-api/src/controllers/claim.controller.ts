@@ -79,7 +79,12 @@ export const updateClaim = async (req: any, res: express.Response) => {
         const { id } = req.params
         const claim = await claimService.getClaimByID(id)
         const catchments = await getCatchments(req.kauth.grant.access_token)
-        if (catchments.length === 0 || (claim && !catchments.includes(claim.catchmentno))) {
+        if (
+            catchments.length === 0 ||
+            (claim && !catchments.includes(claim.catchmentno)) ||
+            (req.body.catchmentNo && !catchments.includes(req.body.catchmentNo)) ||
+            (claim && req.body.catchmentNo && claim.catchmentno !== req.body.catchmentNo && idir_username === undefined)
+        ) {
             return res.status(403).send("Forbidden")
         }
         if (!claim) {
