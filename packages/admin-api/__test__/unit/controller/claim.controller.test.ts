@@ -1,10 +1,12 @@
 import express from "express"
 import * as claimService from "../../../src/services/claims.service"
 import { getCatchments } from "../../../src/lib/catchment"
+import { updateClaimWithSideEffects } from "../../../src/lib/transactions"
 import { getAllClaims, getOneClaim, updateClaim, deleteClaim } from "../../../src/controllers/claim.controller"
 
 jest.mock("../../../src/services/claims.service")
 jest.mock("../../../src/lib/catchment")
+jest.mock("../../../src/lib/transactions")
 
 describe("getAllClaims", () => {
     let req: any
@@ -222,7 +224,7 @@ describe("updateClaim", () => {
         const numUpdated = 1
         ;(getCatchments as jest.Mock).mockResolvedValue(catchments)
         ;(claimService.getClaimByID as jest.Mock).mockResolvedValue(claim)
-        ;(claimService.updateClaim as jest.Mock).mockResolvedValue(numUpdated)
+        ;(updateClaimWithSideEffects as jest.Mock).mockResolvedValue(numUpdated)
         await updateClaim(req, res)
         expect(res.status).toHaveBeenCalledWith(200)
         expect(res.send).toHaveBeenCalledWith(claimID)
@@ -239,7 +241,7 @@ describe("updateClaim", () => {
         const numUpdated = 1
         ;(getCatchments as jest.Mock).mockResolvedValue(catchments)
         ;(claimService.getClaimByID as jest.Mock).mockResolvedValue(claim)
-        ;(claimService.updateClaim as jest.Mock).mockResolvedValue(numUpdated)
+        ;(updateClaimWithSideEffects as jest.Mock).mockResolvedValue(numUpdated)
         await updateClaim(req, res)
         expect(res.status).toHaveBeenCalledWith(200)
         expect(res.send).toHaveBeenCalledWith(claimID)
@@ -273,7 +275,7 @@ describe("updateClaim", () => {
     })
     it("returns 403 when bceid user attempts to update catchment", async () => {
         req.body.catchmentNo = 2
-        const catchments = [1]
+        const catchments = [1, 2]
         const claim = { id: "1", catchmentno: 1, status: "Processing" }
         ;(getCatchments as jest.Mock).mockResolvedValue(catchments)
         ;(claimService.getClaimByID as jest.Mock).mockResolvedValue(claim)
@@ -310,7 +312,7 @@ describe("updateClaim", () => {
         const numUpdated = 0
         ;(getCatchments as jest.Mock).mockResolvedValue(catchments)
         ;(claimService.getClaimByID as jest.Mock).mockResolvedValue(claim)
-        ;(claimService.updateClaim as jest.Mock).mockResolvedValue(numUpdated)
+        ;(updateClaimWithSideEffects as jest.Mock).mockResolvedValue(numUpdated)
         await updateClaim(req, res)
         expect(res.status).toHaveBeenCalledWith(500)
         expect(res.send).toHaveBeenCalledWith("Internal Server Error")

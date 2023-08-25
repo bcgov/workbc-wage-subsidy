@@ -1,13 +1,21 @@
-import { faHandshake } from "@fortawesome/pro-solid-svg-icons"
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { Button } from "@mui/material"
-import { useEffect, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 import { useListContext } from "react-admin"
+import ShareButton from "./ShareButton"
+import ShareModal from "./ShareModal"
 
 export const FormBulkActionButtons = () => {
     const { selectedIds } = useListContext()
     const [tabIndex, setTabIndex] = useState(-1)
     const [ariaHidden, setAriaHidden] = useState(true)
+    const [modalIsOpen, setModalIsOpen] = useState(false)
+
+    const openModal = useCallback(() => {
+        setModalIsOpen(true)
+    }, [])
+
+    const closeModal = useCallback(() => {
+        setModalIsOpen(false)
+    }, [])
 
     // When bulk actions toolbar is hidden:
     // - Prevent buttons from receiving keyboard focus.
@@ -23,7 +31,6 @@ export const FormBulkActionButtons = () => {
             unselectButton.tabIndex = tabIndex
             unselectButton.ariaHidden = { ariaHidden }
         }
-
         const itemsSelectedLabel = document.querySelector(".MuiTypography-subtitle1") as any
         if (itemsSelectedLabel) {
             itemsSelectedLabel.ariaHidden = { ariaHidden }
@@ -31,22 +38,14 @@ export const FormBulkActionButtons = () => {
     }, [tabIndex])
 
     return (
-        // 'SHARE' button
-        <Button
-            tabIndex={tabIndex}
-            aria-hidden={ariaHidden}
-            style={{
-                display: "flex",
-                flexDirection: "row",
-                alignItems: "center",
-                cursor: "pointer",
-                fontSize: "inherit"
-            }}
-            onClick={() => console.log("TODO!")}
-            aria-label="Share form with another user"
-        >
-            <FontAwesomeIcon icon={faHandshake} style={{ marginRight: 10 }} size="xl" />
-            SHARE
-        </Button>
+        <>
+            <ShareButton tabIndex={tabIndex} ariaHidden={ariaHidden} onClick={openModal} />
+            <ShareModal
+                isOpen={modalIsOpen}
+                onRequestClose={closeModal}
+                contentLabel="Share selection with other users"
+                selectedIds={selectedIds}
+            />
+        </>
     )
 }

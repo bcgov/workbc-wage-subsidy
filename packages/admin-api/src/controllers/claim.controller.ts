@@ -6,6 +6,7 @@ import memoryStreams from "memory-streams"
 import * as claimService from "../services/claims.service"
 import { getCatchments } from "../lib/catchment"
 import { generateDocumentTemplate } from "../services/cdogs.service"
+import { updateClaimWithSideEffects } from "../lib/transactions"
 
 // eslint-disable-next-line @typescript-eslint/no-require-imports, @typescript-eslint/no-var-requires
 const muhammara = require("muhammara")
@@ -90,11 +91,8 @@ export const updateClaim = async (req: any, res: express.Response) => {
         if (!claim) {
             return res.status(404).send("Not Found")
         }
-        const numUpdated = await claimService.updateClaim(id, null, req.body)
-        if (numUpdated === 1) {
-            // TODO: update CHEFS form.
-            // TODO: if catchment changed, also change catchment on associated application and all associated claims.
-        } else {
+        const numUpdated = await updateClaimWithSideEffects(claim, bceid_username || idir_username, req.body)
+        if (numUpdated === 0) {
             throw new Error("Update failed")
         }
         return res.status(200).send({ id })

@@ -57,7 +57,6 @@ const onToken = async () => {
             Authorization: `Bearer ${localStorage.getItem("token")}`
         }
     })
-    console.log(res)
     localStorage.setItem("provider", res.data.provider)
     localStorage.setItem("permissions", JSON.stringify(parseCatchments(res.data.permissions)))
     localStorage.setItem("access", res.data.access)

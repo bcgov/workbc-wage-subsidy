@@ -40,6 +40,9 @@ export const ListAside: React.FC<ListAsideProps> = ({ statusFilters, statusFilte
                         <ListItemText aria-hidden={true}>{statusFilters[key].label}</ListItemText>
                         <span style={ScreenReaderOnly}>{"status: " + statusFilters[key].label + ", count: "}</span>
                         <Count filter={{ ...statusFilters[key], catchmentno: cc.catchment.id }} color="text.disabled" />
+                        <span style={ScreenReaderOnly}>
+                            {isEqual(statusFilter, statusFilters[key]) ? ", selected" : ", unselected"}
+                        </span>
                     </MenuItem>
                 ))}
             </MenuList>
