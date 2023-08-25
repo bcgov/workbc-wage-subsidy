@@ -30,7 +30,6 @@ const CustomDatagrid = <T,>({ ariaLabel, showCalculatorButton, ...props }: Custo
     useEffect(() => {
         const provider = localStorage.getItem("provider")
         setHasBulkActions(provider !== null && provider === "IDIR")
-        setHasBulkActions(true)
     }, [])
 
     const skipToListAside = (event: any) => {

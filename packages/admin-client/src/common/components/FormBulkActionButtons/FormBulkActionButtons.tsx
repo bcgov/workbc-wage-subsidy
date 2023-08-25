@@ -1,13 +1,21 @@
-import { faSwapArrows } from "@fortawesome/pro-solid-svg-icons"
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { Button } from "@mui/material"
-import { useEffect, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 import { useListContext } from "react-admin"
+import MoveButton from "./MoveButton"
+import MoveModal from "./MoveModal"
 
 export const FormBulkActionButtons = () => {
     const { selectedIds } = useListContext()
     const [tabIndex, setTabIndex] = useState(-1)
     const [ariaHidden, setAriaHidden] = useState(true)
+    const [modalIsOpen, setModalIsOpen] = useState(false)
+
+    const openModal = useCallback(() => {
+        setModalIsOpen(true)
+    }, [])
+
+    const closeModal = useCallback(() => {
+        setModalIsOpen(false)
+    }, [])
 
     // When bulk actions toolbar is hidden:
     // - Prevent buttons from receiving keyboard focus.
@@ -31,22 +39,14 @@ export const FormBulkActionButtons = () => {
     }, [tabIndex])
 
     return (
-        // 'MOVE' button
-        <Button
-            tabIndex={tabIndex}
-            aria-hidden={ariaHidden}
-            style={{
-                display: "flex",
-                flexDirection: "row",
-                alignItems: "center",
-                cursor: "pointer",
-                fontSize: "inherit"
-            }}
-            onClick={() => console.log("Move button")}
-            aria-label="Move selection to another catchment"
-        >
-            <FontAwesomeIcon icon={faSwapArrows} style={{ marginRight: 10 }} size="xl" />
-            MOVE
-        </Button>
+        <>
+            <MoveButton tabIndex={tabIndex} ariaHidden={ariaHidden} onClick={openModal} />
+            <MoveModal
+                isOpen={modalIsOpen}
+                onRequestClose={closeModal}
+                contentLabel="Move selection to another catchment"
+                selectedIds={selectedIds}
+            />
+        </>
     )
 }

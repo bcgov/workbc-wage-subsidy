@@ -5,6 +5,7 @@ import * as express from "express"
 import { getCatchments } from "../lib/catchment"
 import * as applicationService from "../services/application.service"
 import { generateDocumentTemplate } from "../services/cdogs.service"
+import { updateApplicationWithSideEffects } from "../lib/transactions"
 
 const needEmployeeHash = process.env.NEED_EMPLOYEE_HASH || ""
 const haveEmployeeHash = process.env.HAVE_EMPLOYEE_HASH || ""
@@ -88,11 +89,12 @@ export const updateApplication = async (req: any, res: express.Response) => {
         if (!application) {
             return res.status(404).send("Not Found")
         }
-        const numUpdated = await applicationService.updateApplication(id, null, req.body)
-        if (numUpdated > 0) {
-            // TODO: update CHEFS form.
-            // TODO: if catchment changed, also change catchment on all associated claims.
-        } else {
+        const numUpdated = await updateApplicationWithSideEffects(
+            application,
+            bceid_username || idir_username,
+            req.body
+        )
+        if (numUpdated === 0) {
             throw new Error("Update failed")
         }
         return res.status(200).send({ id })

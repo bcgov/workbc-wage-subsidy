@@ -6,10 +6,12 @@ import {
     getOneApplication
 } from "../../../src/controllers/application.controller"
 import { getCatchments } from "../../../src/lib/catchment"
+import { updateApplicationWithSideEffects } from "../../../src/lib/transactions"
 import * as applicationService from "../../../src/services/application.service"
 
 jest.mock("../../../src/services/application.service")
 jest.mock("../../../src/lib/catchment")
+jest.mock("../../../src/lib/transactions")
 
 describe("getAllApplications", () => {
     let req: any
@@ -264,7 +266,7 @@ describe("updateApplication", () => {
         const numUpdated = 1
         ;(getCatchments as jest.Mock).mockResolvedValue(catchments)
         ;(applicationService.getApplicationByID as jest.Mock).mockResolvedValue(application)
-        ;(applicationService.updateApplication as jest.Mock).mockResolvedValue(numUpdated)
+        ;(updateApplicationWithSideEffects as jest.Mock).mockResolvedValue(numUpdated)
         await updateApplication(req, res)
         expect(res.status).toHaveBeenCalledWith(200)
         expect(res.send).toHaveBeenCalledWith(applicationID)
@@ -281,7 +283,7 @@ describe("updateApplication", () => {
         const numUpdated = 1
         ;(getCatchments as jest.Mock).mockResolvedValue(catchments)
         ;(applicationService.getApplicationByID as jest.Mock).mockResolvedValue(application)
-        ;(applicationService.updateApplication as jest.Mock).mockResolvedValue(numUpdated)
+        ;(updateApplicationWithSideEffects as jest.Mock).mockResolvedValue(numUpdated)
         await updateApplication(req, res)
         expect(res.status).toHaveBeenCalledWith(200)
         expect(res.send).toHaveBeenCalledWith(applicationID)
@@ -315,7 +317,7 @@ describe("updateApplication", () => {
     })
     it("returns 403 when bceid user attempts to update catchment", async () => {
         req.body.catchmentNo = 2
-        const catchments = [1]
+        const catchments = [1, 2]
         const application = { id: "1", catchmentno: 1, status: "Processing" }
         ;(getCatchments as jest.Mock).mockResolvedValue(catchments)
         ;(applicationService.getApplicationByID as jest.Mock).mockResolvedValue(application)
@@ -352,7 +354,7 @@ describe("updateApplication", () => {
         const numUpdated = 0
         ;(getCatchments as jest.Mock).mockResolvedValue(catchments)
         ;(applicationService.getApplicationByID as jest.Mock).mockResolvedValue(application)
-        ;(applicationService.updateApplication as jest.Mock).mockResolvedValue(numUpdated)
+        ;(updateApplicationWithSideEffects as jest.Mock).mockResolvedValue(numUpdated)
         await updateApplication(req, res)
         expect(res.status).toHaveBeenCalledWith(500)
         expect(res.send).toHaveBeenCalledWith("Internal Server Error")

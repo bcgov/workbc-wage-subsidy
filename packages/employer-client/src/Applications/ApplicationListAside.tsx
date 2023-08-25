@@ -42,6 +42,9 @@ export const ApplicationListAside = () => {
                             {"status: " + applicationStatusFilters[key].label + ", count: "}
                         </span>
                         <Count filter={applicationStatusFilters[key]} color="text.disabled" />
+                        <span style={ScreenReaderOnly}>
+                            {isEqual(statusFilter, applicationStatusFilters[key]) ? ", selected" : ", unselected"}
+                        </span>
                     </MenuItem>
                 ))}
             </MenuList>

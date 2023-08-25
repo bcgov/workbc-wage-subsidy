@@ -37,6 +37,9 @@ export const ClaimListAside = () => {
                         <ListItemText aria-hidden={true}>{claimStatusFilters[key].label}</ListItemText>
                         <span style={ScreenReaderOnly}>{"status: " + claimStatusFilters[key].label + ", count: "}</span>
                         <Count filter={claimStatusFilters[key]} color="text.disabled" />
+                        <span style={ScreenReaderOnly}>
+                            {isEqual(statusFilter, claimStatusFilters[key]) ? ", selected" : ", unselected"}
+                        </span>
                     </MenuItem>
                 ))}
             </MenuList>

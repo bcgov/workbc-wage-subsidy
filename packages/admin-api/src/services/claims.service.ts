@@ -3,10 +3,19 @@ import axios from "axios"
 import { knex } from "../config/db-config"
 import { getCHEFSToken } from "./common.service"
 
-export const getAllClaims = async (perPage: number, currPage: number, filters: any, sort: any) => {
+export const getAllClaims = async (
+    perPage: number,
+    currPage: number,
+    filters: any,
+    sort: any,
+    getDrafts?: boolean,
+    trx?: any
+) => {
     const claims = await knex("claims")
-        .whereNot("status", "Draft")
         .modify((queryBuilder: any) => {
+            if (!getDrafts) {
+                queryBuilder.whereNot("status", "Draft")
+            }
             if (filters.id) {
                 queryBuilder.where("id", `%${filters.id}%`)
             }
@@ -16,8 +25,14 @@ export const getAllClaims = async (perPage: number, currPage: number, filters: a
             if (filters.status) {
                 queryBuilder.where("status", filters.status)
             }
+            if (filters.associated_application_id) {
+                queryBuilder.where("associated_application_id", filters.associated_application_id)
+            }
             if (sort) {
                 queryBuilder.orderBy(sort[0], sort[1])
+            }
+            if (trx) {
+                queryBuilder.transacting(trx)
             }
         })
         .paginate({ perPage, currentPage: currPage, isLengthAware: true })
@@ -29,17 +44,23 @@ export const getClaimByID = async (id: string) => {
     return claim.length > 0 ? claim[0] : null
 }
 
-export const updateClaim = async (id: number, status: string | null, form: any) => {
+export const updateClaim = async (id: string, username: string, data: any, trx?: any) => {
     let numUpdated = 0
-    if (form && form.userInfo) {
+    if (Object.keys(data).length > 0) {
         numUpdated = await knex("claims")
             .where("id", id)
-            .update({
-                status,
-                catchmentno: Number(form.catchmentNo),
-                updated_by: form.userInfo.username,
-                updated_date: new Date()
-                // TODO: update references to service provider CHEFS forms.
+            .modify((queryBuilder: any) => {
+                queryBuilder.update("updated_by", username)
+                queryBuilder.update("updated_date", new Date())
+                if (data.status) {
+                    queryBuilder.update("status", data.status)
+                }
+                if (data.catchmentNo) {
+                    queryBuilder.update("catchmentno", data.catchmentNo)
+                }
+                if (trx) {
+                    queryBuilder.transacting(trx)
+                }
             })
     }
     return numUpdated
