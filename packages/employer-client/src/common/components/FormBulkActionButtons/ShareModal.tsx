@@ -106,22 +106,22 @@ const ShareModal: React.FC<ShareModalProps> = ({ isOpen, onRequestClose, content
     }
 
     const addSelectedUsers = (users: any) => {
-        setSelectedUsers([...selectedUsers, ...users].sort())
+        setSelectedUsers([...selectedUsers, ...users].sort((a, b) => a.localeCompare(b)))
         setSelectedUsersSelection([...selectedUsersSelection, ...users])
     }
 
     const addAvailableUsers = (users: any) => {
-        setAvailableUsers([...availableUsers, ...users].sort())
+        setAvailableUsers([...availableUsers, ...users].sort((a, b) => a.localeCompare(b)))
         setAvailableUsersSelection([...availableUsersSelection, ...users])
     }
 
     const removeSelectedUsers = (users: any) => {
-        setSelectedUsers(selectedUsers.filter((item) => !users.includes(item)).sort())
+        setSelectedUsers(selectedUsers.filter((item) => !users.includes(item)).sort((a, b) => a.localeCompare(b)))
         setSelectedUsersSelection([])
     }
 
     const removeAvailableUsers = (users: any) => {
-        setAvailableUsers(availableUsers.filter((item) => !users.includes(item)).sort())
+        setAvailableUsers(availableUsers.filter((item) => !users.includes(item)).sort((a, b) => a.localeCompare(b)))
         setAvailableUsersSelection([])
     }
 
