@@ -29,13 +29,7 @@ interface BCGovModalProps {
 }
 
 const BCGovModal: React.FC<BCGovModalProps> = ({ isOpen, onRequestClose, contentLabel, children }) => (
-    <Modal
-        isOpen={isOpen}
-        onRequestClose={onRequestClose}
-        style={modalStyles}
-        contentLabel={contentLabel}
-        ariaHideApp={false}
-    >
+    <Modal isOpen={isOpen} onRequestClose={onRequestClose} style={modalStyles} contentLabel={contentLabel}>
         <Box padding="0em 1em">{children}</Box>
     </Modal>
 )

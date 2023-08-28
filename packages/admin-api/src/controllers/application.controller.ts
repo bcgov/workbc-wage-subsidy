@@ -89,14 +89,7 @@ export const updateApplication = async (req: any, res: express.Response) => {
         if (!application) {
             return res.status(404).send("Not Found")
         }
-        const numUpdated = await updateApplicationWithSideEffects(
-            application,
-            bceid_username || idir_username,
-            req.body
-        )
-        if (numUpdated === 0) {
-            throw new Error("Update failed")
-        }
+        await updateApplicationWithSideEffects(application, bceid_username || idir_username, req.body)
         return res.status(200).send({ id })
     } catch (e: unknown) {
         return res.status(500).send("Internal Server Error")

@@ -288,6 +288,18 @@ describe("updateApplication", () => {
         expect(res.status).toHaveBeenCalledWith(200)
         expect(res.send).toHaveBeenCalledWith(applicationID)
     })
+    it("returns 200 when no records are updated but no error occurs", async () => {
+        const catchments = [1]
+        const application = { id: "1", catchmentno: 1, status: "Processing" }
+        const applicationID = { id: "1" }
+        const numUpdated = 0
+        ;(getCatchments as jest.Mock).mockResolvedValue(catchments)
+        ;(applicationService.getApplicationByID as jest.Mock).mockResolvedValue(application)
+        ;(updateApplicationWithSideEffects as jest.Mock).mockResolvedValue(numUpdated)
+        await updateApplication(req, res)
+        expect(res.status).toHaveBeenCalledWith(200)
+        expect(res.send).toHaveBeenCalledWith(applicationID)
+    })
     it("returns 401 when username undefined", async () => {
         req.kauth.grant.access_token.content = {
             bceid_username: undefined,
@@ -347,17 +359,6 @@ describe("updateApplication", () => {
         await updateApplication(req, res)
         expect(res.status).toHaveBeenCalledWith(404)
         expect(res.send).toHaveBeenCalledWith("Not Found")
-    })
-    it("returns 500 when no records are updated", async () => {
-        const catchments = [1]
-        const application = { id: "1", catchmentno: 1, status: "Processing" }
-        const numUpdated = 0
-        ;(getCatchments as jest.Mock).mockResolvedValue(catchments)
-        ;(applicationService.getApplicationByID as jest.Mock).mockResolvedValue(application)
-        ;(updateApplicationWithSideEffects as jest.Mock).mockResolvedValue(numUpdated)
-        await updateApplication(req, res)
-        expect(res.status).toHaveBeenCalledWith(500)
-        expect(res.send).toHaveBeenCalledWith("Internal Server Error")
     })
     it("returns 500 when an error occurs", async () => {
         ;(applicationService.getApplicationByID as jest.Mock).mockRejectedValue(new Error("Server Error"))
