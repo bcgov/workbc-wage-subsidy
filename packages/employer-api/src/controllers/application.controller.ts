@@ -6,7 +6,7 @@ import * as formService from "../services/form.service"
 
 export const getAllApplications = async (req: any, res: express.Response) => {
     try {
-        const { bceid_username } = req.kauth.grant.access_token.content
+        const bceid_username = req.kauth.grant.access_token.content?.preferred_username
         if (bceid_username === undefined) {
             return res.status(403).send("Not Authorized")
         }
@@ -72,7 +72,8 @@ export const getAllApplications = async (req: any, res: express.Response) => {
 
 export const createApplication = async (req: any, res: express.Response) => {
     try {
-        const { bceid_username } = req.kauth.grant.access_token.content // **TODO: Can't use standard realm token to create a form for the user, this needs to wait till CHEFS & Wage Sub are on the same realm
+        const bceid_username = req.kauth.grant.access_token.content?.preferred_username
+        // **TODO: Can't use standard realm token to create a form for the user, this needs to wait till CHEFS & Wage Sub are on the same realm
         if (bceid_username === undefined) {
             return res.status(403).send("Not Authorized")
         }
@@ -109,7 +110,7 @@ export const createApplication = async (req: any, res: express.Response) => {
 
 export const getOneApplication = async (req: any, res: express.Response) => {
     try {
-        const { bceid_username } = req.kauth.grant.access_token.content
+        const bceid_username = req.kauth.grant.access_token.content?.preferred_username
         if (bceid_username === undefined) {
             return res.status(403).send("Not Authorized")
         }
@@ -123,7 +124,7 @@ export const getOneApplication = async (req: any, res: express.Response) => {
 
 export const updateApplication = async (req: any, res: express.Response) => {
     try {
-        const { bceid_username } = req.kauth.grant.access_token.content
+        const bceid_username = req.kauth.grant.access_token.content?.preferred_username
         if (bceid_username === undefined) {
             return res.status(403).send("Not Authorized")
         }
@@ -141,7 +142,7 @@ export const updateApplication = async (req: any, res: express.Response) => {
 
 export const deleteApplication = async (req: any, res: express.Response) => {
     try {
-        const { bceid_username } = req.kauth.grant.access_token.content
+        const bceid_username = req.kauth.grant.access_token.content?.preferred_username
         if (bceid_username === undefined) {
             return res.status(403).send("Not Authorized")
         }
