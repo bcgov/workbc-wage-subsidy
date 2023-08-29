@@ -1,10 +1,11 @@
-import { useStore, Datagrid, FunctionField, List, TextField, Identifier } from "react-admin"
+import { FunctionField, List, TextField, Identifier, useGetIdentity } from "react-admin"
 import { Box, Chip } from "@mui/material"
-import { ApplicationListAside } from "./ApplicationListAside"
 import { FormBulkActionButtons } from "../common/components/FormBulkActionButtons/FormBulkActionButtons"
 import { DatagridStyles } from "../common/styles/DatagridStyles"
 import { ListActions } from "../common/components/ListActions/ListActions"
 import CustomDatagrid from "../common/components/CustomDatagrid/CustomDatagrid"
+import { useState } from "react"
+import { ListAside } from "../common/components/ListAside/ListAside"
 
 export const applicationStatusFilters = {
     All: { label: "All" },
@@ -16,7 +17,8 @@ export const applicationStatusFilters = {
 } as { [key: string]: any }
 
 export const ApplicationList = (props: any) => {
-    const [statusFilter] = useStore("resources.applications.list.statusFilter", applicationStatusFilters.All)
+    const [statusFilter, setStatusFilter] = useState(applicationStatusFilters["All"])
+    const { identity } = useGetIdentity()
 
     const handleRowClick = (id: Identifier, resource: string, record: any) => {
         // Temporary click functionality (opens form in a new tab) (will get replaced by embed functionality eventually)
@@ -38,58 +40,67 @@ export const ApplicationList = (props: any) => {
 
     return (
         <>
-            <Box id="main-content-custom" tabIndex={0} aria-label="main content">
-                <List
-                    {...props}
-                    actions={<ListActions createButtonLabel="New Application" />}
-                    filter={statusFilter}
-                    filterDefaultValues={{ dummyUserFilter: -1 }} // TODO: filter by current user.
-                    aside={<ApplicationListAside />}
-                >
-                    <CustomDatagrid
-                        bulkActionButtons={<FormBulkActionButtons />}
-                        sx={DatagridStyles}
-                        rowClick={handleRowClick}
-                        ariaLabel="applications list"
+            {identity !== undefined && (
+                <Box id="main-content-custom" tabIndex={0} aria-label="main content">
+                    <List
+                        {...props}
+                        actions={<ListActions createButtonLabel="New Application" />}
+                        filter={{ ...statusFilter, user: identity.username }}
+                        filterDefaultValues={{ ...statusFilter, user: identity.username }}
+                        aside={
+                            <ListAside
+                                statusFilters={applicationStatusFilters}
+                                statusFilter={statusFilter}
+                                setStatusFilter={setStatusFilter}
+                                user={identity.username}
+                            />
+                        }
                     >
-                        <TextField label="Submission ID" source="form_confirmation_id" emptyText="-" />
-                        <TextField label="Position Title" source="position_title" emptyText="-" />
-                        <TextField label="Number of Positions" source="num_positions" emptyText="-" />{" "}
-                        <FunctionField
-                            label="Submitted Date"
-                            render={
-                                (record: any) =>
-                                    record.form_submitted_date ? record.form_submitted_date.split("T")[0] : "-" // remove timestamp
-                            }
-                        />
-                        <TextField label="Shared With" source="shared_with" emptyText="-" />
-                        <FunctionField
-                            label=""
-                            render={(record: any) => (
-                                <Box display="flex" width="100%" justifyContent="center">
-                                    <Chip
-                                        label={record.status}
-                                        size="small"
-                                        color={
-                                            record.status === "Draft"
-                                                ? "info"
-                                                : record.status === "Submitted"
-                                                ? "primary"
-                                                : record.status === "Processing"
-                                                ? "warning"
-                                                : record.status === "Completed"
-                                                ? "success"
-                                                : record.status === "Cancelled"
-                                                ? "error"
-                                                : "info"
-                                        }
-                                    />
-                                </Box>
-                            )}
-                        />
-                    </CustomDatagrid>
-                </List>
-            </Box>
+                        <CustomDatagrid
+                            bulkActionButtons={<FormBulkActionButtons />}
+                            sx={DatagridStyles}
+                            rowClick={handleRowClick}
+                            ariaLabel="applications list"
+                        >
+                            <TextField label="Submission ID" source="form_confirmation_id" emptyText="-" />
+                            <TextField label="Position Title" source="position_title" emptyText="-" />
+                            <TextField label="Number of Positions" source="num_positions" emptyText="-" />{" "}
+                            <FunctionField
+                                label="Submitted Date"
+                                render={
+                                    (record: any) =>
+                                        record.form_submitted_date ? record.form_submitted_date.split("T")[0] : "-" // remove timestamp
+                                }
+                            />
+                            <TextField label="Shared With" source="shared_with" emptyText="-" />
+                            <FunctionField
+                                label=""
+                                render={(record: any) => (
+                                    <Box display="flex" width="100%" justifyContent="center">
+                                        <Chip
+                                            label={record.status}
+                                            size="small"
+                                            color={
+                                                record.status === "Draft"
+                                                    ? "info"
+                                                    : record.status === "Submitted"
+                                                    ? "primary"
+                                                    : record.status === "Processing"
+                                                    ? "warning"
+                                                    : record.status === "Completed"
+                                                    ? "success"
+                                                    : record.status === "Cancelled"
+                                                    ? "error"
+                                                    : "info"
+                                            }
+                                        />
+                                    </Box>
+                                )}
+                            />
+                        </CustomDatagrid>
+                    </List>
+                </Box>
+            )}
         </>
     )
 }
