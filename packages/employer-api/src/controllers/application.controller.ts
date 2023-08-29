@@ -66,7 +66,6 @@ export const getAllApplications = async (req: any, res: express.Response) => {
         })
         return res.status(200).send(applications.data)
     } catch (e: unknown) {
-        console.log(e)
         return res.status(500).send("Server Error")
     }
 }
@@ -104,7 +103,6 @@ export const createApplication = async (req: any, res: express.Response) => {
         // }
         return res.status(200).send({ data: insertResult })
     } catch (e: unknown) {
-        console.log(e)
         return res.status(500).send("Internal Server Error")
     }
 }
@@ -119,7 +117,6 @@ export const getOneApplication = async (req: any, res: express.Response) => {
         const applications = await applicationService.getApplicationByID(id)
         return res.status(200).send(applications)
     } catch (e: unknown) {
-        console.log(e)
         return res.status(500).send("Internal Server Error")
     }
 }
@@ -138,7 +135,6 @@ export const updateApplication = async (req: any, res: express.Response) => {
         }
         return res.status(401).send("Not Found or Not Authorized")
     } catch (e: unknown) {
-        console.log(e)
         return res.status(500).send("Internal Server Error")
     }
 }
@@ -162,7 +158,6 @@ export const deleteApplication = async (req: any, res: express.Response) => {
         }
         return res.status(401).send("Not Found or Not Authorized")
     } catch (e: unknown) {
-        console.log(e)
         return res.status(500).send("Internal Server Error")
     }
 }

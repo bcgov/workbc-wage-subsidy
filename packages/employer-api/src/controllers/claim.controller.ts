@@ -54,7 +54,6 @@ export const getAllClaims = async (req: any, res: express.Response) => {
         })
         return res.status(200).send(claims.data)
     } catch (e: unknown) {
-        console.error(e)
         return res.status(500).send("Server Error")
     }
 }
@@ -77,7 +76,6 @@ export const createClaim = async (req: any, res: express.Response) => {
         }
         return res.status(500).send("Internal Server Error")
     } catch (e: unknown) {
-        console.log(e)
         return res.status(500).send("Internal Server Error")
     }
 }
@@ -92,7 +90,6 @@ export const getOneClaim = async (req: any, res: express.Response) => {
         const claims = await claimService.getClaimByID(id)
         return res.status(200).send(claims)
     } catch (e: unknown) {
-        console.log(e)
         return res.status(500).send("Internal Server Error")
     }
 }
@@ -111,7 +108,6 @@ export const updateClaim = async (req: any, res: express.Response) => {
         }
         return res.status(401).send("Not Found or Not Authorized")
     } catch (e: unknown) {
-        console.log(e)
         return res.status(500).send("Internal Server Error")
     }
 }
@@ -135,7 +131,6 @@ export const deleteClaim = async (req: any, res: express.Response) => {
         }
         return res.status(401).send("Not Found or Not Authorized")
     } catch (e: unknown) {
-        console.log(e)
         return res.status(500).send("Internal Server Error")
     }
 }

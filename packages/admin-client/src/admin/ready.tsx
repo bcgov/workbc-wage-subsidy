@@ -12,7 +12,6 @@ const Ready = () => {
         // checking storage for events when storage is changed
         window.addEventListener("storage", () => {
             const storageAccess = localStorage.getItem("access") === "true"
-            console.log(storageAccess)
             setAccess(storageAccess)
             setLoading(false)
         })
