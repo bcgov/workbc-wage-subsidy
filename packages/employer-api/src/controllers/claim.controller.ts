@@ -7,7 +7,7 @@ import * as formService from "../services/form.service"
 
 export const getAllClaims = async (req: any, res: express.Response) => {
     try {
-        const { bceid_username } = req.kauth.grant.access_token.content
+        const bceid_username = req.kauth.grant.access_token.content?.preferred_username
         if (bceid_username === undefined) {
             return res.status(403).send("Not Authorized")
         }
@@ -60,7 +60,7 @@ export const getAllClaims = async (req: any, res: express.Response) => {
 
 export const createClaim = async (req: any, res: express.Response) => {
     try {
-        const { bceid_username } = req.kauth.grant.access_token.content
+        const bceid_username = req.kauth.grant.access_token.content?.preferred_username
         if (bceid_username === undefined) {
             return res.status(403).send("Not Authorized")
         }
@@ -82,7 +82,7 @@ export const createClaim = async (req: any, res: express.Response) => {
 
 export const getOneClaim = async (req: any, res: express.Response) => {
     try {
-        const { bceid_username } = req.kauth.grant.access_token.content
+        const bceid_username = req.kauth.grant.access_token.content?.preferred_username
         if (bceid_username === undefined) {
             return res.status(403).send("Not Authorized")
         }
@@ -96,7 +96,7 @@ export const getOneClaim = async (req: any, res: express.Response) => {
 
 export const updateClaim = async (req: any, res: express.Response) => {
     try {
-        const { bceid_username } = req.kauth.grant.access_token.content
+        const bceid_username = req.kauth.grant.access_token.content?.preferred_username
         if (bceid_username === undefined) {
             return res.status(403).send("Not Authorized")
         }
@@ -114,7 +114,7 @@ export const updateClaim = async (req: any, res: express.Response) => {
 
 export const deleteClaim = async (req: any, res: express.Response) => {
     try {
-        const { bceid_username } = req.kauth.grant.access_token.content
+        const bceid_username = req.kauth.grant.access_token.content?.preferred_username
         if (bceid_username === undefined) {
             return res.status(403).send("Not Authorized")
         }
