@@ -1,7 +1,7 @@
 import cors from "cors"
 import express from "express"
 import helmet from "helmet"
-import Keycloak, { KeycloakConfig } from "keycloak-connect"
+import Keycloak from "keycloak-connect"
 import morgan from "morgan"
 
 import claimRoute from "./routes/claim.route"
@@ -13,16 +13,16 @@ const corsOptions = {
     optionsSuccessStatus: 200
 }
 
-const kcConfig: KeycloakConfig = {
+const kcConfig = {
     "confidential-port": process.env.AUTH_KEYCLOAK_CONFIDENTIAL_PORT || 0,
     "auth-server-url": process.env.AUTH_KEYCLOAK_SERVER_URL || "",
     resource: process.env.AUTH_KEYCLOAK_CLIENT || "",
     "ssl-required": process.env.AUTH_KEYCLOAK_SSL_REQUIRED || "",
     "bearer-only": false,
-    realm: process.env.AUTH_KEYCLOAK_REALM || ""
+    realm: process.env.AUTH_KEYCLOAK_REALM || "",
+    secret: process.env.AUTH_KEYCLOAK_CLIENT_SECRET || ""
 }
 
-console.log(kcConfig)
 const keycloak = new Keycloak({}, kcConfig)
 
 const app = express()

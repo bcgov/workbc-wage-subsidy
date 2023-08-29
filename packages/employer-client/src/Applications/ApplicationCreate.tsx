@@ -8,7 +8,7 @@ export const ApplicationCreate = () => {
     const redirect = useRedirect()
 
     const handleClick = (formType) => {
-        redirect("Form/" + formType, "applications")
+        redirect(`/ViewForm`, "")
     }
 
     return (
