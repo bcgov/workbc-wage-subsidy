@@ -24,6 +24,9 @@ const labelStyle = {
     }
 }
 
+// Wrap divider, discarding received props. Prevent error raised when props applied to DOM elements.
+const WrappedDivider = (props: any) => <Divider orientation="vertical" variant="middle" color="grey" flexItem />
+
 function Footer() {
     // const classes = useStyles()
     return (
@@ -46,25 +49,25 @@ function Footer() {
                     label="BC Government"
                     href="https://www2.gov.bc.ca/gov/content/home"
                 />
-                <Divider orientation="vertical" variant="middle" color="grey" flexItem />
+                <WrappedDivider />
                 <BottomNavigationAction
                     sx={labelStyle}
                     label="Disclaimer"
                     href="https://www2.gov.bc.ca/gov/content/home/disclaimer"
                 />
-                <Divider orientation="vertical" variant="middle" color="grey" flexItem />
+                <WrappedDivider />
                 <BottomNavigationAction
                     sx={labelStyle}
                     label="Privacy"
                     href="https://www2.gov.bc.ca/gov/content/home/privacy"
                 />
-                <Divider orientation="vertical" variant="middle" color="grey" flexItem />
+                <WrappedDivider />
                 <BottomNavigationAction
                     sx={labelStyle}
                     label="Accessibility"
                     href="https://www2.gov.bc.ca/gov/content/home/accessibility"
                 />
-                <Divider orientation="vertical" variant="middle" color="grey" flexItem />
+                <WrappedDivider />
                 <BottomNavigationAction
                     sx={labelStyle}
                     label="Copyright"

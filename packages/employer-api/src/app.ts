@@ -22,7 +22,6 @@ const kcConfig: KeycloakConfig = {
     realm: process.env.AUTH_KEYCLOAK_REALM || ""
 }
 
-console.log(kcConfig)
 const keycloak = new Keycloak({}, kcConfig)
 
 const app = express()
