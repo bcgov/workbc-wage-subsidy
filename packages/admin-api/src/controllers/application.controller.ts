@@ -12,8 +12,8 @@ const haveEmployeeHash = process.env.HAVE_EMPLOYEE_HASH || ""
 
 export const getAllApplications = async (req: any, res: express.Response) => {
     try {
-        const { bceid_username, idir_username } = req.kauth.grant.access_token.content
-        if (bceid_username === undefined && idir_username === undefined) {
+        const { bceid_user_guid, idir_user_guid } = req.kauth.grant.access_token.content
+        if (bceid_user_guid === undefined && idir_user_guid === undefined) {
             return res.status(401).send("Not Authorized")
         }
         const filter = req.query.filter ? JSON.parse(req.query.filter) : {}
@@ -44,8 +44,8 @@ export const getAllApplications = async (req: any, res: express.Response) => {
 
 export const getOneApplication = async (req: any, res: express.Response) => {
     try {
-        const { bceid_username, idir_username } = req.kauth.grant.access_token.content
-        if (bceid_username === undefined && idir_username === undefined) {
+        const { bceid_user_guid, idir_user_guid } = req.kauth.grant.access_token.content
+        if (bceid_user_guid === undefined && idir_user_guid === undefined) {
             return res.status(401).send("Not Authorized")
         }
         const { id } = req.params
@@ -68,8 +68,8 @@ export const getOneApplication = async (req: any, res: express.Response) => {
 
 export const updateApplication = async (req: any, res: express.Response) => {
     try {
-        const { bceid_username, idir_username } = req.kauth.grant.access_token.content
-        if (bceid_username === undefined && idir_username === undefined) {
+        const { bceid_user_guid, idir_user_guid } = req.kauth.grant.access_token.content
+        if (bceid_user_guid === undefined && idir_user_guid === undefined) {
             return res.status(401).send("Not Authorized")
         }
         const { id } = req.params
@@ -82,14 +82,14 @@ export const updateApplication = async (req: any, res: express.Response) => {
             (application &&
                 req.body.catchmentNo &&
                 application.catchmentno !== req.body.catchmentNo &&
-                idir_username === undefined)
+                idir_user_guid === undefined)
         ) {
             return res.status(403).send("Forbidden")
         }
         if (!application) {
             return res.status(404).send("Not Found")
         }
-        await updateApplicationWithSideEffects(application, bceid_username || idir_username, req.body)
+        await updateApplicationWithSideEffects(application, bceid_user_guid || idir_user_guid, req.body)
         return res.status(200).send({ id })
     } catch (e: unknown) {
         return res.status(500).send("Internal Server Error")
@@ -98,15 +98,15 @@ export const updateApplication = async (req: any, res: express.Response) => {
 
 export const deleteApplication = async (req: any, res: express.Response) => {
     try {
-        const { bceid_username, idir_username } = req.kauth.grant.access_token.content
-        if (bceid_username === undefined && idir_username === undefined) {
+        const { bceid_user_guid, idir_user_guid } = req.kauth.grant.access_token.content
+        if (bceid_user_guid === undefined && idir_user_guid === undefined) {
             return res.status(401).send("Not Authorized")
         }
         const { id } = req.params
         const application = await applicationService.getApplicationByID(id)
         const catchments = await getCatchments(req.kauth.grant.access_token)
         if (
-            idir_username === undefined ||
+            idir_user_guid === undefined ||
             catchments.length === 0 ||
             (application && !catchments.includes(application.catchmentno))
         ) {

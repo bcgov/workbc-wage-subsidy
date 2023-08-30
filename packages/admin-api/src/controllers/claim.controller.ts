@@ -15,8 +15,8 @@ const claimHash = process.env.CLAIM_HASH || ""
 
 export const getAllClaims = async (req: any, res: express.Response) => {
     try {
-        const { bceid_username, idir_username } = req.kauth.grant.access_token.content
-        if (bceid_username === undefined && idir_username === undefined) {
+        const { bceid_user_guid, idir_username } = req.kauth.grant.access_token.content
+        if (bceid_user_guid === undefined && idir_username === undefined) {
             return res.status(401).send("Not Authorized")
         }
         const filter = req.query.filter ? JSON.parse(req.query.filter) : {}
@@ -48,8 +48,8 @@ export const getAllClaims = async (req: any, res: express.Response) => {
 
 export const getOneClaim = async (req: any, res: express.Response) => {
     try {
-        const { bceid_username, idir_username } = req.kauth.grant.access_token.content
-        if (bceid_username === undefined && idir_username === undefined) {
+        const { bceid_user_guid, idir_username } = req.kauth.grant.access_token.content
+        if (bceid_user_guid === undefined && idir_username === undefined) {
             return res.status(401).send("Not Authorized")
         }
         const { id } = req.params
@@ -73,8 +73,8 @@ export const getOneClaim = async (req: any, res: express.Response) => {
 
 export const updateClaim = async (req: any, res: express.Response) => {
     try {
-        const { bceid_username, idir_username } = req.kauth.grant.access_token.content
-        if (bceid_username === undefined && idir_username === undefined) {
+        const { bceid_user_guid, idir_username } = req.kauth.grant.access_token.content
+        if (bceid_user_guid === undefined && idir_username === undefined) {
             return res.status(401).send("Not Authorized")
         }
         const { id } = req.params
@@ -91,7 +91,7 @@ export const updateClaim = async (req: any, res: express.Response) => {
         if (!claim) {
             return res.status(404).send("Not Found")
         }
-        await updateClaimWithSideEffects(claim, bceid_username || idir_username, req.body)
+        await updateClaimWithSideEffects(claim, bceid_user_guid || idir_username, req.body)
         return res.status(200).send({ id })
     } catch (e: unknown) {
         return res.status(500).send("Internal Server Error")
@@ -100,8 +100,8 @@ export const updateClaim = async (req: any, res: express.Response) => {
 
 export const deleteClaim = async (req: any, res: express.Response) => {
     try {
-        const { bceid_username, idir_username } = req.kauth.grant.access_token.content
-        if (bceid_username === undefined && idir_username === undefined) {
+        const { bceid_user_guid, idir_username } = req.kauth.grant.access_token.content
+        if (bceid_user_guid === undefined && idir_username === undefined) {
             return res.status(401).send("Not Authorized")
         }
         const { id } = req.params

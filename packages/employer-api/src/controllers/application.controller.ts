@@ -6,8 +6,8 @@ import * as formService from "../services/form.service"
 
 export const getAllApplications = async (req: any, res: express.Response) => {
     try {
-        const bceid_username = req.kauth.grant.access_token.content?.preferred_username
-        if (bceid_username === undefined) {
+        const bceid_guid = req.kauth.grant.access_token.content?.bceid_user_guid
+        if (bceid_guid === undefined) {
             return res.status(403).send("Not Authorized")
         }
         const filter = req.query.filter ? JSON.parse(req.query.filter) : {}
@@ -19,7 +19,7 @@ export const getAllApplications = async (req: any, res: express.Response) => {
             Number(page),
             filter,
             sort,
-            bceid_username
+            bceid_guid
         )
 
         if (filter.status == null && perPage > 1) {
@@ -31,7 +31,7 @@ export const getAllApplications = async (req: any, res: express.Response) => {
             const params = {
                 fields: "userInfo,internalId,catchmentNo,positionTitle0,numberOfPositions0",
                 // eslint-disable-next-line camelcase
-                // createdBy: `${bceid_username}@bceid`, //TODO: use guid from applications object
+                // createdBy: `${bceid_guid}@bceid`, //TODO: use guid from applications object
                 deleted: false
             }
 
@@ -72,16 +72,15 @@ export const getAllApplications = async (req: any, res: express.Response) => {
 
 export const createApplication = async (req: any, res: express.Response) => {
     try {
-        const bceid_username = req.kauth.grant.access_token.content?.preferred_username
+        const bceid_guid = req.kauth.grant.access_token.content?.bceid_user_guid
         // **TODO: Can't use standard realm token to create a form for the user, this needs to wait till CHEFS & Wage Sub are on the same realm
-        if (bceid_username === undefined) {
+        if (bceid_guid === undefined) {
             return res.status(403).send("Not Authorized")
         }
         const insertResult = await applicationService.insertApplication(
             req.body.formKey,
-            req.body.userName,
-            req.body.formType,
-            req.body.guid
+            req.body.guid,
+            req.body.formType
         )
         // TODO: create a new draft version of the form with pre-filled fields //
         // if (insertResult?.rowCount === 1) { // successful insertion
@@ -110,8 +109,8 @@ export const createApplication = async (req: any, res: express.Response) => {
 
 export const getOneApplication = async (req: any, res: express.Response) => {
     try {
-        const bceid_username = req.kauth.grant.access_token.content?.preferred_username
-        if (bceid_username === undefined) {
+        const bceid_guid = req.kauth.grant.access_token.content?.bceid_user_guid
+        if (bceid_guid === undefined) {
             return res.status(403).send("Not Authorized")
         }
         const { id } = req.params
@@ -124,8 +123,8 @@ export const getOneApplication = async (req: any, res: express.Response) => {
 
 export const updateApplication = async (req: any, res: express.Response) => {
     try {
-        const bceid_username = req.kauth.grant.access_token.content?.preferred_username
-        if (bceid_username === undefined) {
+        const bceid_guid = req.kauth.grant.access_token.content?.bceid_user_guid
+        if (bceid_guid === undefined) {
             return res.status(403).send("Not Authorized")
         }
         const { id } = req.params
@@ -142,15 +141,15 @@ export const updateApplication = async (req: any, res: express.Response) => {
 
 export const deleteApplication = async (req: any, res: express.Response) => {
     try {
-        const bceid_username = req.kauth.grant.access_token.content?.preferred_username
-        if (bceid_username === undefined) {
+        const bceid_guid = req.kauth.grant.access_token.content?.bceid_user_guid
+        if (bceid_guid === undefined) {
             return res.status(403).send("Not Authorized")
         }
         const { id } = req.params
         const wage = await applicationService.getApplicationByID(id)
         /* Only applications created by the user who sent the request
         or if the status is Awaiting Submission can be deleted */
-        if (wage.createdby !== bceid_username || wage.status !== null) {
+        if (wage.createdby !== bceid_guid || wage.status !== null) {
             return res.status(401).send("Not Authorized")
         }
         const deleted = await applicationService.deleteApplication(id)

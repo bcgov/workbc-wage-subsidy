@@ -29,13 +29,7 @@ export const getClaimsByCatchment = async (ca: number[]) => {
     return claims
 }
 
-export const insertClaim = async (
-    id: string,
-    user: string,
-    formType: string,
-    userGuid: string,
-    applicationID: string
-) => {
+export const insertClaim = async (id: string, user: string, formType: string, applicationID: string) => {
     const application = await knex("applications").where("form_confirmation_id", applicationID)
     if (application && application.length > 0) {
         const data = {
@@ -45,7 +39,6 @@ export const insertClaim = async (
             associated_application_id: applicationID,
             created_date: new Date(),
             created_by: user,
-            created_by_guid: userGuid,
             shared_with: [],
             status: "Draft",
             catchmentno: application[0].catchmentno
