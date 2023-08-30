@@ -1,6 +1,5 @@
 import express from "express"
 import {
-    deleteApplication,
     getAllApplications,
     updateApplication,
     getOneApplication
@@ -23,8 +22,9 @@ describe("getAllApplications", () => {
                 grant: {
                     access_token: {
                         content: {
-                            bceid_username: "bceid",
-                            idir_username: undefined
+                            bceid_user_guid: "bceid_guid",
+                            idir_user_guid: undefined,
+                            identity_provider: "bceid"
                         }
                     }
                 }
@@ -92,8 +92,8 @@ describe("getAllApplications", () => {
 
     it("returns 401 when username undefined", async () => {
         req.kauth.grant.access_token.content = {
-            bceid_username: undefined,
-            idir_username: undefined
+            bceid_user_guid: undefined,
+            idir_user_guid: undefined
         }
         await getAllApplications(req, res)
         expect(res.status).toHaveBeenCalledWith(401)
@@ -147,8 +147,9 @@ describe("getOneApplication", () => {
                 grant: {
                     access_token: {
                         content: {
-                            bceid_username: "bceid",
-                            idir_username: undefined
+                            bceid_user_guid: "bceid_guid",
+                            idir_user_guid: undefined,
+                            identity_provider: "bceid"
                         }
                     }
                 }
@@ -179,8 +180,8 @@ describe("getOneApplication", () => {
 
     it("returns 401 when username undefined", async () => {
         req.kauth.grant.access_token.content = {
-            bceid_username: undefined,
-            idir_username: undefined
+            bceid_user_guid: undefined,
+            idir_user_guid: undefined
         }
         await getOneApplication(req, res)
         expect(res.status).toHaveBeenCalledWith(401)
@@ -237,8 +238,9 @@ describe("updateApplication", () => {
                 grant: {
                     access_token: {
                         content: {
-                            bceid_username: "bceid",
-                            idir_username: undefined
+                            bceid_user_guid: "bceid_guid",
+                            idir_user_guid: undefined,
+                            identity_provider: "bceid"
                         }
                     }
                 }
@@ -273,8 +275,9 @@ describe("updateApplication", () => {
     })
     it("returns 200 with application id when idir user updates catchment", async () => {
         req.kauth.grant.access_token.content = {
-            bceid_username: undefined,
-            idir_username: "idir"
+            bceid_user_guid: undefined,
+            idir_user_guid: "idir_guid",
+            identity_provider: "idir"
         }
         req.body.catchmentNo = 2
         const catchments = [1, 2]
@@ -302,8 +305,8 @@ describe("updateApplication", () => {
     })
     it("returns 401 when username undefined", async () => {
         req.kauth.grant.access_token.content = {
-            bceid_username: undefined,
-            idir_username: undefined
+            bceid_user_guid: undefined,
+            idir_user_guid: undefined
         }
         await updateApplication(req, res)
         expect(res.status).toHaveBeenCalledWith(401)
@@ -339,8 +342,9 @@ describe("updateApplication", () => {
     })
     it("returns 403 when idir user attempts to set nonexistent catchment", async () => {
         req.kauth.grant.access_token.content = {
-            bceid_username: undefined,
-            idir_username: "idir"
+            bceid_user_guid: undefined,
+            idir_user_guid: "idir_guid",
+            identity_provider: "idir"
         }
         req.body.catchmentNo = 2
         const catchments = [1]
@@ -363,115 +367,6 @@ describe("updateApplication", () => {
     it("returns 500 when an error occurs", async () => {
         ;(applicationService.getApplicationByID as jest.Mock).mockRejectedValue(new Error("Server Error"))
         await updateApplication(req, res)
-        expect(res.status).toHaveBeenCalledWith(500)
-        expect(res.send).toHaveBeenCalledWith("Internal Server Error")
-    })
-})
-
-describe("deleteApplication", () => {
-    let req: any
-    let res: express.Response
-
-    beforeEach(() => {
-        req = {
-            kauth: {
-                grant: {
-                    access_token: {
-                        content: {
-                            bceid_username: undefined,
-                            idir_username: "idir"
-                        }
-                    }
-                }
-            },
-            query: {},
-            params: {
-                id: "1"
-            }
-        }
-        res = express.response
-        res.status = jest.fn().mockReturnValue(res)
-        res.send = jest.fn()
-        res.set = jest.fn()
-    })
-    afterEach(() => {
-        jest.clearAllMocks()
-    })
-    it("returns 200 with application id when idir username defined", async () => {
-        const catchments = [1]
-        const application = { id: "1", catchmentno: 1 }
-        const applicationID = { id: "1" }
-        const numDeleted = 1
-        ;(getCatchments as jest.Mock).mockResolvedValue(catchments)
-        ;(applicationService.getApplicationByID as jest.Mock).mockResolvedValue(application)
-        ;(applicationService.deleteApplication as jest.Mock).mockResolvedValue(numDeleted)
-        await deleteApplication(req, res)
-        expect(res.status).toHaveBeenCalledWith(200)
-        expect(res.send).toHaveBeenCalledWith(applicationID)
-    })
-    it("returns 401 when username undefined", async () => {
-        req.kauth.grant.access_token.content = {
-            bceid_username: undefined,
-            idir_username: undefined
-        }
-        await deleteApplication(req, res)
-        expect(res.status).toHaveBeenCalledWith(401)
-        expect(res.send).toHaveBeenCalledWith("Not Authorized")
-    })
-    it("returns 403 when idir username undefined", async () => {
-        req.kauth.grant.access_token.content = {
-            bceid_username: "bceid",
-            idir_username: undefined
-        }
-        const catchments = [1]
-        const application = { id: "1", catchmentno: 1 }
-        ;(getCatchments as jest.Mock).mockResolvedValue(catchments)
-        ;(applicationService.getApplicationByID as jest.Mock).mockResolvedValue(application)
-        await deleteApplication(req, res)
-        expect(res.status).toHaveBeenCalledWith(403)
-        expect(res.send).toHaveBeenCalledWith("Forbidden")
-    })
-    it("returns 403 when no catchments obtained", async () => {
-        const catchments: never[] = []
-        const application = { id: "1", catchmentno: 1 }
-        ;(getCatchments as jest.Mock).mockResolvedValue(catchments)
-        ;(applicationService.getApplicationByID as jest.Mock).mockResolvedValue(application)
-        await deleteApplication(req, res)
-        expect(res.status).toHaveBeenCalledWith(403)
-        expect(res.send).toHaveBeenCalledWith("Forbidden")
-    })
-    it("returns 403 when user lacks catchment permission", async () => {
-        const catchments = [2]
-        const application = { id: "1", catchmentno: 1 }
-        ;(getCatchments as jest.Mock).mockResolvedValue(catchments)
-        ;(applicationService.getApplicationByID as jest.Mock).mockResolvedValue(application)
-        await deleteApplication(req, res)
-        expect(res.status).toHaveBeenCalledWith(403)
-        expect(res.send).toHaveBeenCalledWith("Forbidden")
-    })
-    it("returns 404 when the item is not found", async () => {
-        const catchments = [1]
-        const application = null
-        ;(getCatchments as jest.Mock).mockResolvedValue(catchments)
-        ;(applicationService.getApplicationByID as jest.Mock).mockResolvedValue(application)
-        await deleteApplication(req, res)
-        expect(res.status).toHaveBeenCalledWith(404)
-        expect(res.send).toHaveBeenCalledWith("Not Found")
-    })
-    it("returns 500 when no records are updated", async () => {
-        const catchments = [1]
-        const application = { id: "1", catchmentno: 1, status: "Processing" }
-        const numDeleted = 0
-        ;(getCatchments as jest.Mock).mockResolvedValue(catchments)
-        ;(applicationService.getApplicationByID as jest.Mock).mockResolvedValue(application)
-        ;(applicationService.deleteApplication as jest.Mock).mockResolvedValue(numDeleted)
-        await deleteApplication(req, res)
-        expect(res.status).toHaveBeenCalledWith(500)
-        expect(res.send).toHaveBeenCalledWith("Internal Server Error")
-    })
-    it("returns 500 when an error occurs", async () => {
-        ;(applicationService.getApplicationByID as jest.Mock).mockRejectedValue(new Error("Server Error"))
-        await deleteApplication(req, res)
         expect(res.status).toHaveBeenCalledWith(500)
         expect(res.send).toHaveBeenCalledWith("Internal Server Error")
     })

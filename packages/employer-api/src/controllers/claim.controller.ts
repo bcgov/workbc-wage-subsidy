@@ -7,15 +7,15 @@ import * as formService from "../services/form.service"
 
 export const getAllClaims = async (req: any, res: express.Response) => {
     try {
-        const bceid_username = req.kauth.grant.access_token.content?.preferred_username
-        if (bceid_username === undefined) {
+        const bceid_guid = req.kauth.grant.access_token.content?.bceid_user_guid
+        if (bceid_guid === undefined) {
             return res.status(403).send("Not Authorized")
         }
         const filter = req.query.filter ? JSON.parse(req.query.filter) : {}
         const sort: string[] = req.query.sort ? JSON.parse(req.query.sort) : ["id", "ASC"]
         const page = req.query.page ?? 1
         const perPage = req.query.perPage ?? 1
-        const claims = await claimService.getAllClaims(Number(perPage), Number(page), filter, sort, bceid_username)
+        const claims = await claimService.getAllClaims(Number(perPage), Number(page), filter, sort, bceid_guid)
 
         if (filter.status == null && perPage > 1) {
             // only update applications once each call cycle
@@ -24,7 +24,7 @@ export const getAllClaims = async (req: any, res: express.Response) => {
             const params = {
                 fields: `formHandler, storefrontId, catchmentNo, userInfo, applicationId, internalId, container`,
                 // eslint-disable-next-line camelcase
-                // createdBy: bceid_username,
+                // createdBy: bceid_guid,
                 deleted: false
             }
             if (containsNonComplete) {
@@ -60,15 +60,14 @@ export const getAllClaims = async (req: any, res: express.Response) => {
 
 export const createClaim = async (req: any, res: express.Response) => {
     try {
-        const bceid_username = req.kauth.grant.access_token.content?.preferred_username
-        if (bceid_username === undefined) {
+        const bceid_guid = req.kauth.grant.access_token.content?.bceid_user_guid
+        if (bceid_guid === undefined) {
             return res.status(403).send("Not Authorized")
         }
         const created = await claimService.insertClaim(
             req.body.formKey,
-            req.body.userName,
-            req.body.formtype,
             req.body.guid,
+            req.body.formtype,
             req.body.application_id
         )
         if (created) {
@@ -82,8 +81,8 @@ export const createClaim = async (req: any, res: express.Response) => {
 
 export const getOneClaim = async (req: any, res: express.Response) => {
     try {
-        const bceid_username = req.kauth.grant.access_token.content?.preferred_username
-        if (bceid_username === undefined) {
+        const bceid_guid = req.kauth.grant.access_token.content?.bceid_user_guid
+        if (bceid_guid === undefined) {
             return res.status(403).send("Not Authorized")
         }
         const { id } = req.params
@@ -96,8 +95,8 @@ export const getOneClaim = async (req: any, res: express.Response) => {
 
 export const updateClaim = async (req: any, res: express.Response) => {
     try {
-        const bceid_username = req.kauth.grant.access_token.content?.preferred_username
-        if (bceid_username === undefined) {
+        const bceid_guid = req.kauth.grant.access_token.content?.bceid_user_guid
+        if (bceid_guid === undefined) {
             return res.status(403).send("Not Authorized")
         }
         const { id } = req.params
@@ -114,15 +113,15 @@ export const updateClaim = async (req: any, res: express.Response) => {
 
 export const deleteClaim = async (req: any, res: express.Response) => {
     try {
-        const bceid_username = req.kauth.grant.access_token.content?.preferred_username
-        if (bceid_username === undefined) {
+        const bceid_guid = req.kauth.grant.access_token.content?.bceid_user_guid
+        if (bceid_guid === undefined) {
             return res.status(403).send("Not Authorized")
         }
         const { id } = req.params
         const claim = await claimService.getClaimByID(id)
         /* Only applications created by the user who sent the request
         or if the status is Awaiting Submission can be deleted */
-        if (claim.createdby !== bceid_username || claim.status !== null) {
+        if (claim.createdby !== bceid_guid || claim.status !== null) {
             return res.status(401).send("Not Authorized")
         }
         const deleted = await claimService.deleteClaim(id)
