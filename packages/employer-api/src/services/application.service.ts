@@ -23,7 +23,7 @@ export const getAllApplications = async (
                 queryBuilder.where("catchmentno", Number(filters.catchmentno))
             }
             if (user) {
-                queryBuilder.whereLike("created_by", user) // TODO .orWhereLike("shared_with", `%${user}%`)
+                queryBuilder.where("created_by", user) // TODO .orWhereLike("shared_with", `%${user}%`)
             }
             if (sort) {
                 queryBuilder.orderBy(sort[0], sort[1])
@@ -43,13 +43,12 @@ export const getApplicationByID = async (id: string) => {
     return wages[0]
 }
 
-export const insertApplication = async (id: string, user: string, formType: string, userGuid: string) => {
+export const insertApplication = async (id: string, user: string, formType: string) => {
     const data = {
         id,
         form_type: formType,
         created_date: new Date(),
         created_by: user,
-        created_by_guid: userGuid,
         shared_with: [],
         status: "Draft"
     }

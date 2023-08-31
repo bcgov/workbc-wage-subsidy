@@ -6,9 +6,9 @@ export const getPermission = async (req: any, res: express.Response) => {
     try {
         let guid
         let isIDIR = false
-        if (req.kauth.grant.access_token.content.bceid_user_guid) {
+        if (req.kauth.grant.access_token.content.identity_provider === "bceid") {
             guid = req.kauth.grant.access_token.content.bceid_user_guid
-        } else if (req.kauth.grant.access_token.content.idir_user_guid) {
+        } else if (req.kauth.grant.access_token.content.identity_provider === "idir") {
             guid = req.kauth.grant.access_token.content.idir_user_guid
             isIDIR = true
         }

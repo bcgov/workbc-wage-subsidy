@@ -38,43 +38,7 @@ const useAuthProvider = () => {
                     Authorization: `Bearer ${localStorage.getItem("token")}`
                 }
             })
-            console.log(res)
             return res.data.access
-
-            // const request = new Request(`${apiUrl}/permission`, {
-            //     method: "GET",
-            //     headers: new Headers({
-            //         Accept: "application/json",
-            //         Authorization: `Bearer ${localStorage.getItem("token")}`
-            //     })
-            // })
-            // return fetch(request)
-            //     .then((response: any) => {
-            //         if (response.status < 200 || response.status >= 300) {
-            //             throw new Error(response.statusText)
-            //         }
-            //         console.log(response)
-            //         return response.data.permissions
-            //     })
-            //     .then((res) => {
-            //         localStorage.setItem("permissions", res)
-            //     })
-
-            /*
-            if (keycloak.token) {
-                const decoded : any = jwt_decode(keycloak.token);
-                decoded.resource_access[clientID].roles.forEach((el: string) => {
-                    if (el === "admin") {
-                        hasRole = true;
-                        return
-                    }
-                });
-            }
-            if (hasRole) {
-                return Promise.resolve(true);
-            }
-            return Promise.resolve(false);
-            */
         }
     }
 }
