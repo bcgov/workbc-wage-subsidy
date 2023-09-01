@@ -7,9 +7,10 @@ import { COLOURS } from "../../../Colours"
 import ModalButton from "../BCGovModal/BCGovModalButton"
 import React, { useEffect, useState } from "react"
 import { ScreenReaderOnly } from "../../styles/ScreenReaderOnly"
+import { useDataProvider, useGetIdentity } from "react-admin"
 
 interface UsersListProps {
-    users: string[]
+    users: any[]
     selection: string[]
     setSelection: React.Dispatch<React.SetStateAction<string[]>>
     ariaLabel: string
@@ -38,16 +39,16 @@ const UsersList: React.FC<UsersListProps> = ({ users, selection, setSelection, a
         >
             {users.map((user) => (
                 <MenuItem
-                    key={user}
-                    value={user}
+                    key={user.id}
+                    value={user.name}
                     selected={selection.includes(user)}
                     onClick={() => handleItemClick(user)}
                 >
                     {/* Manually indicate selection, since aria-selected having no effect for unknown reasons. */}
                     <span style={ScreenReaderOnly}>
-                        {user + (selection.includes(user) ? ", selected" : ", unselected")}
+                        {user.name + (selection.includes(user) ? ", selected" : ", unselected")}
                     </span>
-                    <span aria-hidden={true}>{user}</span>
+                    <span aria-hidden={true}>{user.name}</span>
                 </MenuItem>
             ))}
         </MenuList>
@@ -81,14 +82,33 @@ interface ShareModalProps {
 }
 
 const ShareModal: React.FC<ShareModalProps> = ({ isOpen, onRequestClose, contentLabel, selectedIds }) => {
-    const [availableUsers, setAvailableUsers] = useState<string[]>([])
-    const [selectedUsers, setSelectedUsers] = useState<string[]>([])
-    const [availableUsersSelection, setAvailableUsersSelection] = useState<string[]>([])
-    const [selectedUsersSelection, setSelectedUsersSelection] = useState<string[]>([])
+    const { identity } = useGetIdentity()
+    const dataProvider = useDataProvider()
+    const [availableUsers, setAvailableUsers] = useState<any[]>([])
+    const [selectedUsers, setSelectedUsers] = useState<any[]>([])
+    const [availableUsersSelection, setAvailableUsersSelection] = useState<any[]>([])
+    const [selectedUsersSelection, setSelectedUsersSelection] = useState<any[]>([])
+
+    const sortUsers = (users: any) => {
+        return users.sort((a, b) => a.name.localeCompare(b.name))
+    }
 
     const getAvailableUsers = () => {
-        // TODO: fetch actual users.
-        return ["test user 1", "test user 2"]
+        return dataProvider
+            .getList("employers", {
+                pagination: { page: 1, perPage: 100 },
+                sort: { field: "id", order: "ASC" },
+                filter: {}
+            })
+            .then(({ data }) => {
+                setAvailableUsers(
+                    sortUsers(
+                        data
+                            .filter((user) => identity?.guid !== user.id)
+                            .map((user) => ({ id: user.id, name: user.contact_name }))
+                    )
+                )
+            })
     }
 
     const shareWithSelectedUsers = (event: any) => {
@@ -106,22 +126,22 @@ const ShareModal: React.FC<ShareModalProps> = ({ isOpen, onRequestClose, content
     }
 
     const addSelectedUsers = (users: any) => {
-        setSelectedUsers([...selectedUsers, ...users].sort((a, b) => a.localeCompare(b)))
+        setSelectedUsers(sortUsers([...selectedUsers, ...users]))
         setSelectedUsersSelection([...selectedUsersSelection, ...users])
     }
 
     const addAvailableUsers = (users: any) => {
-        setAvailableUsers([...availableUsers, ...users].sort((a, b) => a.localeCompare(b)))
+        setAvailableUsers(sortUsers([...availableUsers, ...users]))
         setAvailableUsersSelection([...availableUsersSelection, ...users])
     }
 
     const removeSelectedUsers = (users: any) => {
-        setSelectedUsers(selectedUsers.filter((item) => !users.includes(item)).sort((a, b) => a.localeCompare(b)))
+        setSelectedUsers(sortUsers(selectedUsers.filter((item) => !users.includes(item))))
         setSelectedUsersSelection([])
     }
 
     const removeAvailableUsers = (users: any) => {
-        setAvailableUsers(availableUsers.filter((item) => !users.includes(item)).sort((a, b) => a.localeCompare(b)))
+        setAvailableUsers(sortUsers(availableUsers.filter((item) => !users.includes(item))))
         setAvailableUsersSelection([])
     }
 
@@ -137,7 +157,7 @@ const ShareModal: React.FC<ShareModalProps> = ({ isOpen, onRequestClose, content
 
     useEffect(() => {
         if (isOpen) {
-            setAvailableUsers(getAvailableUsers())
+            getAvailableUsers()
         } else {
             clearUsersLists()
         }
