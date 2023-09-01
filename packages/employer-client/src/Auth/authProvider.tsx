@@ -22,7 +22,10 @@ const useAuthProvider = (clientID: string) => {
                 const idp = decoded.identity_provider
                 const guid = decoded.bceid_user_guid || decoded.idir_guid || ""
                 const fullName = decoded.name
-                return Promise.resolve({ id, idp, fullName, guid })
+                const email = decoded.email
+                const businessGuid = decoded?.bceid_business_guid || null
+                const businessName = decoded?.bceid_business_name || null
+                return Promise.resolve({ id, idp, fullName, guid, email, businessGuid, businessName })
             }
             return Promise.reject("Failed to get identity")
         },

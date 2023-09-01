@@ -134,6 +134,15 @@ export const dataProvider = {
         }).then(({ json }) => ({
             data: { ...params.data, id: json.id }
         })),
+    createOrUpdate: (resource: any, params: { id: any; data: any }) =>
+        httpClient(`${apiUrl}/${resource}/${params.id}`, {
+            method: "PATCH",
+            body: JSON.stringify(params.data),
+            headers: new Headers({
+                Accept: "application/json",
+                Authorization: `Bearer ${localStorage.getItem("token")}`
+            })
+        }).then(({ json }) => ({ data: json })),
     update: (resource: any, params: { id: any; data: any }) =>
         httpClient(`${apiUrl}/${resource}/${params.id}`, {
             method: "PUT",

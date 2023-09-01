@@ -51,3 +51,35 @@ TABLESPACE pg_default;
 
 ALTER TABLE IF EXISTS public.claims
     OWNER to postgres;
+
+CREATE TABLE IF NOT EXISTS public.employers
+(
+    -- 'id': bceid guid
+    id character varying(255) COLLATE pg_catalog."default" NOT NULL,
+    bceid_business_guid character varying(255) COLLATE pg_catalog."default",
+    bceid_business_name character varying(255) COLLATE pg_catalog."default",
+    contact_name character varying(255) COLLATE pg_catalog."default",
+    contact_email character varying(255) COLLATE pg_catalog."default",
+    phone_number character(12) COLLATE pg_catalog."default",
+    fax_number character(12) COLLATE pg_catalog."default",
+    cra_business_number character varying(255) COLLATE pg_catalog."default",
+    street_address character varying(255) COLLATE pg_catalog."default",
+    city character varying(255) COLLATE pg_catalog."default",
+    province character varying(255) COLLATE pg_catalog."default",
+    postal_code character varying(255) COLLATE pg_catalog."default",
+    workplace_street_address character varying(255) COLLATE pg_catalog."default",
+    workplace_city character varying(255) COLLATE pg_catalog."default",
+    workplace_province character varying(255) COLLATE pg_catalog."default",
+    workplace_postal_code character varying(255) COLLATE pg_catalog."default",
+    workbc_center character varying(255) COLLATE pg_catalog."default",
+    created_by character varying(255) COLLATE pg_catalog."default",
+    created_date date,
+    updated_by character varying(255) COLLATE pg_catalog."default",
+    updated_date date,
+    CONSTRAINT employers_pkey PRIMARY KEY (id)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public.employers
+    OWNER to postgres;
