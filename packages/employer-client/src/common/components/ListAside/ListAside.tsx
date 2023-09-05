@@ -1,7 +1,8 @@
 import { Box, ListItemText, MenuItem, MenuList } from "@mui/material"
-import { Count } from "react-admin"
+import { Count, useListContext, useRedirect } from "react-admin"
 import isEqual from "lodash/isEqual"
 import { ScreenReaderOnly } from "../../styles/ScreenReaderOnly"
+import { useEffect } from "react"
 
 interface ListAsideProps {
     statusFilters: { [key: string]: any }
@@ -11,12 +12,22 @@ interface ListAsideProps {
 }
 
 export const ListAside: React.FC<ListAsideProps> = ({ statusFilters, statusFilter, setStatusFilter, user }) => {
+    const { resource, total, isLoading } = useListContext()
+    const redirect = useRedirect()
+
     const skipToDatagrid = (event: any) => {
         if (event.key === "ArrowLeft" || event.key === "ArrowRight") {
             const element = document.getElementById("datagrid")
             element?.focus()
         }
     }
+
+    useEffect(() => {
+        if (statusFilter.label === "All" && total === 0) {
+            setStatusFilter(statusFilters["All"])
+            redirect("create", resource)
+        }
+    }, [isLoading])
 
     return (
         <Box width={200} mr={1} mt={7} flexShrink={0} order={-1}>
