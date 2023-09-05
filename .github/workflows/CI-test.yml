@@ -120,6 +120,8 @@ jobs:
             REACT_APP_DRAFT_URL=${{ secrets.REACT_APP_DRAFT_URL_TEST }}
             REACT_APP_VIEW_URL=${{ secrets.REACT_APP_VIEW_URL_TEST }}
             REACT_APP_ENVIRONMENT=TEST
+            REACT_ADMIN_TOKEN=${{ secrets.REACT_ADMIN_TOKEN }}
+            FONT_AWESOME_TOKEN=${{ secrets.FONT_AWESOME_TOKEN }}
       - name: Build for pushing static image to Docker hub
         id: build-static-image-docker
         uses: redhat-actions/buildah-build@v2
@@ -142,6 +144,8 @@ jobs:
             REACT_APP_DRAFT_URL=${{ secrets.REACT_APP_DRAFT_URL_TEST }}
             REACT_APP_VIEW_URL=${{ secrets.REACT_APP_VIEW_URL_TEST }}
             REACT_APP_ENVIRONMENT=TEST
+            REACT_ADMIN_TOKEN=${{ secrets.REACT_ADMIN_TOKEN }}
+            FONT_AWESOME_TOKEN=${{ secrets.FONT_AWESOME_TOKEN }}
       - name: Push Static To OpenShift Image repo
         id: push-to-os-static
         uses: redhat-actions/push-to-registry@v2
