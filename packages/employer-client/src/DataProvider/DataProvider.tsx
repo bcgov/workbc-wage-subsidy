@@ -13,7 +13,6 @@ export const dataProvider = {
     ) => {
         const { page, perPage } = params.pagination
         const { field, order } = params.sort
-
         const rangeStart = (page - 1) * perPage
         const rangeEnd = page * perPage - 1
 
@@ -45,7 +44,6 @@ export const dataProvider = {
             }
             const range = headers.get(countHeader.toLowerCase()) || "0"
             const total = range.split("/").pop() || "0"
-            console.log(total)
             return {
                 data: json,
                 total: parseInt(total, 10)

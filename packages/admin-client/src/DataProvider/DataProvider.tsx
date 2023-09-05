@@ -16,7 +16,6 @@ export const dataProvider = {
 
         const rangeStart = (page - 1) * perPage
         const rangeEnd = page * perPage - 1
-        console.log("rangeStart", rangeStart)
         const query = {
             sort: JSON.stringify([field, order]),
             page,

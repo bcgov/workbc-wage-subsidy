@@ -3,114 +3,76 @@ import axios from "axios"
 import { knex } from "../config/db-config"
 import { getCHEFSToken } from "./common.service"
 
-export const getAllClaims = async (perPage: number, currPage: number, filters: any, sort: any, permission: any[]) => {
-    // console.log(filters)
-    const claims = await knex("wage_subsidy_claim_form")
-        .whereNotNull("applicationstatus")
+export const getAllClaims = async (
+    perPage: number,
+    currPage: number,
+    filters: any,
+    sort: any,
+    getDrafts?: boolean,
+    trx?: any
+) => {
+    const claims = await knex("claims")
         .modify((queryBuilder: any) => {
+            if (!getDrafts) {
+                queryBuilder.whereNot("status", "Draft")
+            }
             if (filters.id) {
-                queryBuilder.where("id", Number(filters.id))
-            }
-            if (filters.applicationid) {
-                queryBuilder.whereLike("applicationid", `%${filters.applicationid}%`)
-            }
-            if (filters.title) {
-                queryBuilder.whereLike("title", `%${filters.title}%`)
+                queryBuilder.where("id", `%${filters.id}%`)
             }
             if (filters.catchmentno) {
                 queryBuilder.where("catchmentno", Number(filters.catchmentno))
-            } else if (permission.length > 0 && permission[0] !== "*") {
-                queryBuilder.whereIn("catchmentno", permission)
-            } else if (permission.length === 0) {
-                queryBuilder.whereIn("catchmentno", [0])
             }
-            // If there are no status filters or the status filter is not marked for deletion we do not show the ones marked for deletion
-            if (!filters.applicationstatus) {
-                queryBuilder.whereIn("applicationstatus", ["NULL", "New", "In Progress"])
-            } else if (filters.applicationstatus) {
-                if (filters.applicationstatus.includes("NULL")) {
-                    filters.applicationstatus.push("New")
-                }
-                queryBuilder.whereIn("applicationstatus", filters.applicationstatus)
+            if (filters.status) {
+                queryBuilder.where("status", filters.status)
+            }
+            if (filters.associated_application_id) {
+                queryBuilder.where("associated_application_id", filters.associated_application_id)
             }
             if (sort) {
                 queryBuilder.orderBy(sort[0], sort[1])
             }
-            // guard clause for legacy applications, can be changed to sharepoint later if needed
-            if (!filters.status) {
-                queryBuilder.whereNotNull("status")
+            if (trx) {
+                queryBuilder.transacting(trx)
             }
         })
         .paginate({ perPage, currentPage: currPage, isLengthAware: true })
     return claims
 }
 
-// export const getClaimsByCatchment = async (ca: number[]) => {
-//     const claims = await knex("wage_subsidy_claim_form").where((builder: any) => builder.whereIn("catchmentno", ca))
-//     return claims
-// }
-
-export const getClaimByID = async (id: number, permission: any[]) => {
-    // console.log(id)
-    if (permission[0] !== "*") {
-        permission.map((p: any) => Number(p))
-    }
-    const claims = await knex("wage_subsidy_claim_form").where("id", id)
-    if (claims[0].catchmentno in permission || permission[0] === "*") {
-        // console.log("yes")
-        return claims
-    }
-    return []
+export const getClaimByID = async (id: string) => {
+    const claim = await knex("claims").where((builder: any) => builder.where("id", id))
+    return claim.length > 0 ? claim[0] : null
 }
 
-export const updateClaim = async (id: number, data: any, permission: any[], user: string) => {
-    // console.log(data, id)
-    if (permission[0] !== "*") {
-        permission.map((p: any) => Number(p))
-    }
-    const claims = await knex("wage_subsidy_claim_form").where("id", id)
-    if (claims.length === 0) {
-        return 0
-    }
-    // This helper function takes the old data and the new data and returns the difference
-    // Source: https://stackoverflow.com/questions/57669696/getting-difference-object-from-two-objects-using-es6
-    const getDifference = (a: any, b: any) =>
-        Object.fromEntries(Object.entries(b).filter(([key, val]) => key in a && a[key] !== val))
-    if (claims[0].catchmentno in permission || permission[0] === "*") {
-        // console.log([{ by: user, date: new Date(), changes: data }, ...claims[0].history.history])
-        const result = await knex("wage_subsidy_claim_form")
+export const updateClaim = async (id: string, username: string, data: any, trx?: any) => {
+    let numUpdated = 0
+    if (Object.keys(data).length > 0) {
+        numUpdated = await knex("claims")
             .where("id", id)
-            .update(
-                claims[0].history
-                    ? {
-                          ...data,
-                          history: {
-                              history: [
-                                  { by: user, date: new Date(), changes: getDifference(claims[0], data) },
-                                  ...claims[0].history.history
-                              ]
-                          }
-                      }
-                    : {
-                          data
-                      }
-            )
-        return result
+            .modify((queryBuilder: any) => {
+                queryBuilder.update("updated_by", username)
+                queryBuilder.update("updated_date", new Date())
+                if (data.status) {
+                    queryBuilder.update("status", data.status)
+                }
+                if (data.catchmentNo) {
+                    queryBuilder.update("catchmentno", data.catchmentNo)
+                }
+                if (trx) {
+                    queryBuilder.transacting(trx)
+                }
+            })
     }
-    // console.log(result)
-    return 0
+    return numUpdated
 }
 
-export const deleteClaim = async (id: number, permission: string[]) => {
-    if (permission[0] === "*") {
-        const result = await knex("wage_subsidy_claim_form").where("id", id).del()
-        return result
-    }
-    // console.log(result)
-    return 0
+export const deleteClaim = async (id: string) => {
+    const numDeleted = await knex("claims").where("id", id).del()
+    return numDeleted
 }
 
 export const getFile = async (url: string) => {
+    // TODO: rework when we implement attachments.
     try {
         const token = await getCHEFSToken()
         const res = await axios({
@@ -127,10 +89,8 @@ export const getFile = async (url: string) => {
                 Connection: "keep-alive"
             }
         })
-        // console.log(res)
         return res.data
     } catch (error: any) {
-        // console.log(error)
         throw new Error(error.message)
     }
 }

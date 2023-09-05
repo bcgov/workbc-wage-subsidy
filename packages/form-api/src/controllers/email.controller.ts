@@ -71,10 +71,7 @@ const createEmail = (data: any) => {
 
 export const sendEmail = async (req: any, res: express.Response) => {
     try {
-        // console.log(req.body.data)
         const { data } = req.body
-        // const token = await getToken()
-        // console.log(data)
         let recipients: string[] = []
         if (data.employeeEmail0 && data.employeeEmail0 !== null) {
             recipients = Object.keys(data)
@@ -97,7 +94,7 @@ export const sendEmail = async (req: any, res: express.Response) => {
                 .filter((email: string) => email !== null)
                 .filter((v: string, i: number, a: string[]) => a.indexOf(v) === i)
         }
-        if (data.container.workbcCentre && data.employeeEmail0 === undefined) {
+        if (data.container?.workbcCentre && data.employeeEmail0 === undefined) {
             const email = await knex("wage_subsidy_catchment_emails")
                 .where("catchmentno", Number(data.container.workbcCentre.split("-")[0]))
                 .first()
