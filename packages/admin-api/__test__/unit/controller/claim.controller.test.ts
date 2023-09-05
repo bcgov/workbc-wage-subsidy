@@ -234,8 +234,8 @@ describe("updateClaim", () => {
     })
     it("returns 200 with claim id when idir user updates catchment", async () => {
         req.kauth.grant.access_token.content = {
-            bceid_username: undefined,
-            idir_username: "idir"
+            bceid_user_guid: undefined,
+            idir_user_guid: "idir"
         }
         req.body.catchmentNo = 2
         const catchments = [1, 2]
@@ -300,8 +300,8 @@ describe("updateClaim", () => {
     })
     it("returns 403 when idir user attempts to set nonexistent catchment", async () => {
         req.kauth.grant.access_token.content = {
-            bceid_username: undefined,
-            idir_username: "idir"
+            bceid_user_guid: undefined,
+            idir_user_guid: "idir"
         }
         req.body.catchmentNo = 2
         const catchments = [1]

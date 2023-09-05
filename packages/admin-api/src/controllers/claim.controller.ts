@@ -73,8 +73,8 @@ export const getOneClaim = async (req: any, res: express.Response) => {
 
 export const updateClaim = async (req: any, res: express.Response) => {
     try {
-        const { bceid_user_guid, idir_username } = req.kauth.grant.access_token.content
-        if (bceid_user_guid === undefined && idir_username === undefined) {
+        const { bceid_user_guid, idir_user_guid } = req.kauth.grant.access_token.content
+        if (bceid_user_guid === undefined && idir_user_guid === undefined) {
             return res.status(401).send("Not Authorized")
         }
         const { id } = req.params
@@ -84,14 +84,17 @@ export const updateClaim = async (req: any, res: express.Response) => {
             catchments.length === 0 ||
             (claim && !catchments.includes(claim.catchmentno)) ||
             (req.body.catchmentNo && !catchments.includes(req.body.catchmentNo)) ||
-            (claim && req.body.catchmentNo && claim.catchmentno !== req.body.catchmentNo && idir_username === undefined)
+            (claim &&
+                req.body.catchmentNo &&
+                claim.catchmentno !== req.body.catchmentNo &&
+                idir_user_guid === undefined)
         ) {
             return res.status(403).send("Forbidden")
         }
         if (!claim) {
             return res.status(404).send("Not Found")
         }
-        await updateClaimWithSideEffects(claim, bceid_user_guid || idir_username, req.body)
+        await updateClaimWithSideEffects(claim, bceid_user_guid || idir_user_guid, req.body)
         return res.status(200).send({ id })
     } catch (e: unknown) {
         return res.status(500).send("Internal Server Error")
