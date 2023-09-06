@@ -17,10 +17,10 @@ import { ClaimList } from "./Claims/ClaimList"
 import { ClaimShow } from "./Claims/ClaimShow"
 import { COLOURS } from "./Colours"
 import { dataProvider } from "./DataProvider/DataProvider"
+import { ViewForm } from "./Form/ViewForm"
 import Layout from "./Layout"
 import Footer from "./footer"
 import "@bcgov/bc-sans/css/BCSans.css"
-import { ViewForm } from "./Form/ViewForm"
 
 const initOptions = {
     url: process.env.REACT_APP_KEYCLOAK_URL || "",
@@ -37,6 +37,7 @@ keycloak.login = (options) => {
 
 const onToken = () => {
     if (keycloak.token && keycloak.refreshToken) {
+        console.log(keycloak.token)
         localStorage.setItem("token", keycloak.token)
         localStorage.setItem("refresh-token", keycloak.refreshToken)
         localStorage.setItem("provider", keycloak.idTokenParsed?.identity_provider)
