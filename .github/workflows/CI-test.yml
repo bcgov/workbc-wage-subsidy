@@ -77,7 +77,7 @@ jobs:
           path: "./packages/admin-api/.dockerignore"
       - name: "Set env"
         run: echo "REACT_ADMIN_TOKEN=$(echo $secrets.REACT_ADMIN_TOKEN | cut -c 1-6)" >> $env.REACT_ADMIN_TOKEN
-      - run: npm install
+      - run: npm install --no-package-lock
       - run: npm test
       - name: Install oc v3
         uses: redhat-actions/openshift-tools-installer@v1
