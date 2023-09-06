@@ -71,14 +71,6 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: '18.x'
-      - name: "Read dockerignore admin api contents"
-        uses: andstor/file-reader-action@v1
-        with:
-          path: "./packages/admin-api/.dockerignore"
-      - name: "Set env"
-        run: echo "REACT_ADMIN_TOKEN=$(echo $secrets.REACT_ADMIN_TOKEN | cut -c 1-6)" >> $env.REACT_ADMIN_TOKEN
-      - run: npm install --no-package-lock
-      - run: npm test
       - name: Install oc v3
         uses: redhat-actions/openshift-tools-installer@v1
         with:
