@@ -143,6 +143,9 @@ jobs:
             REACT_APP_ENVIRONMENT=TEST
             REACT_ADMIN_TOKEN=${{ secrets.REACT_ADMIN_TOKEN }}
             FONT_AWESOME_TOKEN=${{ secrets.FONT_AWESOME_TOKEN }}
+            VITE_EMPLOYER_URL=${{ secrets.VITE_EMPLOYER_URL_TEST }}
+            VITE_SERVICE_PROVIDER_URL=${{ secrets.VITE_SERVICE_PROVIDER_URL_TEST }}
+            VITE_MINISTRY_URL=${{ secrets.VITE_MINISTRY_URL_TEST }}
       - name: Push Static To OpenShift Image repo
         id: push-to-os-static
         uses: redhat-actions/push-to-registry@v2
