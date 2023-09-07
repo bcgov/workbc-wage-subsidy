@@ -2,7 +2,14 @@
 import { knex } from "../config/db-config"
 
 export const getAllClaims = async (perPage: number, currPage: number, filters: any, sort: any, user: string) => {
-    const claims = await knex("claims")
+    const claimIds = knex("employers_claims").select("claim_id").where("employer_id", user)
+    const claimsAndSharedUsers = await knex("claims as c")
+        .join("employers_claims as ec", "c.id", "=", "ec.claim_id")
+        .join("employers as e", "ec.employer_id", "=", "e.id")
+        .whereIn("c.id", claimIds)
+        .select("c.*")
+        .groupBy("c.id")
+        .select(knex.raw("ARRAY_AGG(e.contact_name) as shared_with_dynamic"))
         .modify((queryBuilder: any) => {
             if (filters.id) {
                 queryBuilder.where("id", filters.id)
@@ -16,20 +23,17 @@ export const getAllClaims = async (perPage: number, currPage: number, filters: a
             if (sort) {
                 queryBuilder.orderBy(sort[0], sort[1])
             }
-            if (user) {
-                queryBuilder.whereLike("created_by", user) // TODO .orWhereLike("shared_with", `%${user}%`)
-            }
         })
         .paginate({ perPage, currentPage: currPage, isLengthAware: true })
-    return claims
+    return claimsAndSharedUsers
 }
 
-export const getClaimsByCatchment = async (ca: number[]) => {
-    const claims = await knex("claims").where((builder: any) => builder.whereIn("catchmentno", ca))
-    return claims
+export const getClaimByID = async (id: string) => {
+    const claim = await knex("claims").where("id", id)
+    return claim.length > 0 ? claim[0] : null
 }
 
-export const insertClaim = async (id: string, user: string, formType: string, applicationID: string) => {
+export const insertClaim = async (id: string, userGuid: string, formType: string, applicationID: string) => {
     const application = await knex("applications").where("form_confirmation_id", applicationID)
     if (application && application.length > 0) {
         const data = {
@@ -38,20 +42,16 @@ export const insertClaim = async (id: string, user: string, formType: string, ap
             position_title: application[0].position_title,
             associated_application_id: applicationID,
             created_date: new Date(),
-            created_by: user,
+            created_by: userGuid,
             shared_with: [],
             status: "Draft",
             catchmentno: application[0].catchmentno
         }
         const result = await knex("claims").insert(data)
+        await knex("employers_claims").insert({ employer_id: userGuid, claim_id: id })
         return result
     }
     return false
-}
-
-export const getClaimByID = async (id: number) => {
-    const claims = await knex("claims").where((builder: any) => builder.where("id", id))
-    return claims[0]
 }
 
 export const updateClaim = async (id: number, status: string | null, form: any) => {
@@ -75,6 +75,17 @@ export const updateClaim = async (id: number, status: string | null, form: any) 
             })
     }
     return result
+}
+
+export const shareClaim = async (id: string, userGuids: string[]) => {
+    const data = userGuids.map((guid) => ({ employer_id: guid, claim_id: id }))
+    const result = await knex("employers_claims").insert(data).onConflict(["employer_id", "claim_id"]).ignore()
+    return result
+}
+
+export const getEmployerClaimRecord = async (employerId: string, claimId: string) => {
+    const result = await knex("employers_claims").where("employer_id", employerId).where("claim_id", claimId)
+    return result.length > 0 ? result[0] : null
 }
 
 export const deleteClaim = async (id: number) => {

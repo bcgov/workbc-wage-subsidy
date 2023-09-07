@@ -100,7 +100,7 @@ export const ClaimList = (props: any) => {
                                             size="small"
                                             color={
                                                 record.status === "Draft"
-                                                    ? "info"
+                                                    ? "secondary"
                                                     : record.status === "Submitted"
                                                     ? "primary"
                                                     : record.status === "Processing"

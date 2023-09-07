@@ -4,7 +4,7 @@ import ShareButton from "./ShareButton"
 import ShareModal from "./ShareModal"
 
 export const FormBulkActionButtons = () => {
-    const { selectedIds } = useListContext()
+    const { resource, selectedIds, onUnselectItems } = useListContext()
     const [tabIndex, setTabIndex] = useState(-1)
     const [ariaHidden, setAriaHidden] = useState(true)
     const [modalIsOpen, setModalIsOpen] = useState(false)
@@ -14,6 +14,7 @@ export const FormBulkActionButtons = () => {
     }, [])
 
     const closeModal = useCallback(() => {
+        onUnselectItems()
         setModalIsOpen(false)
     }, [])
 
@@ -45,6 +46,7 @@ export const FormBulkActionButtons = () => {
                 onRequestClose={closeModal}
                 contentLabel="Share selection with other users"
                 selectedIds={selectedIds}
+                resource={resource}
             />
         </>
     )

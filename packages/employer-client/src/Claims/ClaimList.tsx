@@ -73,7 +73,16 @@ export const ClaimList = (props: any) => {
                                         record.form_submitted_date ? record.form_submitted_date.split("T")[0] : "-" // remove timestamp
                                 }
                             />
-                            <TextField label="Shared With" source="shared_with" emptyText="-" /> {/* TODO */}
+                            <FunctionField
+                                label="Shared With"
+                                render={(record: any) => {
+                                    return record["shared_with_dynamic"].length > 1
+                                        ? record["shared_with_dynamic"].filter(
+                                              (fullName) => fullName !== identity?.fullName
+                                          )
+                                        : "-"
+                                }}
+                            />
                             <TextField
                                 label="Associated Application ID"
                                 source="associated_application_id"

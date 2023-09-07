@@ -7,7 +7,7 @@ import { COLOURS } from "../../../Colours"
 import ModalButton from "../BCGovModal/BCGovModalButton"
 import React, { useEffect, useState } from "react"
 import { ScreenReaderOnly } from "../../styles/ScreenReaderOnly"
-import { useDataProvider, useGetIdentity } from "react-admin"
+import { useDataProvider, useGetIdentity, useRefresh } from "react-admin"
 
 interface UsersListProps {
     users: any[]
@@ -79,11 +79,13 @@ interface ShareModalProps {
     onRequestClose: (event: any) => void
     contentLabel: string
     selectedIds: any[]
+    resource: string
 }
 
-const ShareModal: React.FC<ShareModalProps> = ({ isOpen, onRequestClose, contentLabel, selectedIds }) => {
+const ShareModal: React.FC<ShareModalProps> = ({ isOpen, onRequestClose, contentLabel, selectedIds, resource }) => {
     const { identity } = useGetIdentity()
     const dataProvider = useDataProvider()
+    const refresh = useRefresh()
     const [availableUsers, setAvailableUsers] = useState<any[]>([])
     const [selectedUsers, setSelectedUsers] = useState<any[]>([])
     const [availableUsersSelection, setAvailableUsersSelection] = useState<any[]>([])
@@ -113,7 +115,14 @@ const ShareModal: React.FC<ShareModalProps> = ({ isOpen, onRequestClose, content
 
     const shareWithSelectedUsers = (event: any) => {
         if (selectedUsers.length > 0) {
-            // TODO: share selected forms with selected users.
+            dataProvider
+                .shareMany(resource, {
+                    ids: selectedIds,
+                    data: {
+                        users: selectedUsers.map((user) => user.id)
+                    }
+                })
+                .then(() => refresh())
         }
         onRequestClose(event)
     }

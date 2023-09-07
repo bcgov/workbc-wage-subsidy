@@ -3,6 +3,7 @@
 import * as express from "express"
 
 import * as claimService from "../services/claim.service"
+import * as employerService from "../services/employer.service"
 import * as formService from "../services/form.service"
 
 export const getAllClaims = async (req: any, res: express.Response) => {
@@ -64,6 +65,9 @@ export const createClaim = async (req: any, res: express.Response) => {
         if (bceid_guid === undefined) {
             return res.status(403).send("Not Authorized")
         }
+        if (!req.body?.guid || req.body.guid !== bceid_guid) {
+            return res.status(403).send("Forbidden")
+        }
         const created = await claimService.insertClaim(
             req.body.formKey,
             req.body.guid,
@@ -86,6 +90,10 @@ export const getOneClaim = async (req: any, res: express.Response) => {
             return res.status(403).send("Not Authorized")
         }
         const { id } = req.params
+        const employerClaimRecord = await claimService.getEmployerClaimRecord(bceid_guid, id)
+        if (!employerClaimRecord) {
+            return res.status(403).send("Forbidden or Not Found")
+        }
         const claims = await claimService.getClaimByID(id)
         return res.status(200).send(claims)
     } catch (e: unknown) {
@@ -100,12 +108,36 @@ export const updateClaim = async (req: any, res: express.Response) => {
             return res.status(403).send("Not Authorized")
         }
         const { id } = req.params
-        const updated = await claimService.updateClaim(id, "Draft", req.body)
-        if (updated !== 0) {
-            // eslint-disable-next-line object-shorthand
-            return res.status(200).send({ id: id })
+        const employerClaimRecord = await claimService.getEmployerClaimRecord(bceid_guid, id)
+        if (!employerClaimRecord) {
+            return res.status(403).send("Forbidden or Not Found")
         }
-        return res.status(401).send("Not Found or Not Authorized")
+        await claimService.updateClaim(id, null, req.body)
+        return res.status(200).send({ id })
+    } catch (e: unknown) {
+        return res.status(500).send("Internal Server Error")
+    }
+}
+
+export const shareClaim = async (req: any, res: express.Response) => {
+    try {
+        const { bceid_user_guid, bceid_business_guid } = req.kauth.grant.access_token.content
+        if (bceid_user_guid === undefined) {
+            return res.status(401).send("Not Authorized")
+        }
+        const { id } = req.params
+        const { users } = req.body
+        const targetUsers = await employerService.getEmployersByIDs(users)
+        const employerClaimRecord = await claimService.getEmployerClaimRecord(bceid_user_guid, id)
+        if (
+            !employerClaimRecord ||
+            bceid_business_guid === undefined ||
+            !targetUsers.every((user: any) => user.bceid_business_guid === bceid_business_guid)
+        ) {
+            return res.status(403).send("Forbidden or Not Found")
+        }
+        await claimService.shareClaim(id, users)
+        return res.status(200).send({ id })
     } catch (e: unknown) {
         return res.status(500).send("Internal Server Error")
     }

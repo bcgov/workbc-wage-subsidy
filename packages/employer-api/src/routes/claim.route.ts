@@ -7,6 +7,7 @@ router.get("/", claimController.getAllClaims)
 router.post("/", claimController.createClaim)
 router.get("/:id", claimController.getOneClaim)
 router.put("/:id", claimController.updateClaim)
+router.put("/share/:id", claimController.shareClaim)
 router.delete("/:id", claimController.deleteClaim)
 
 export default router
