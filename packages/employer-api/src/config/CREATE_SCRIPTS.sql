@@ -83,3 +83,27 @@ TABLESPACE pg_default;
 
 ALTER TABLE IF EXISTS public.employers
     OWNER to postgres;
+
+CREATE TABLE IF NOT EXISTS public.employers_applications
+(
+    employer_id character varying(255) COLLATE pg_catalog."default" REFERENCES employers(id),
+    application_id character varying(255) COLLATE pg_catalog."default" REFERENCES applications(id),
+    CONSTRAINT employers_applications_pkey PRIMARY KEY (employer_id, application_id)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public.employers_applications
+    OWNER to postgres;
+
+CREATE TABLE IF NOT EXISTS public.employers_claims
+(
+    employer_id character varying(255) COLLATE pg_catalog."default" REFERENCES employers(id),
+    claim_id character varying(255) COLLATE pg_catalog."default" REFERENCES claims(id),
+    CONSTRAINT employers_claims_pkey PRIMARY KEY (employer_id, claim_id)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public.employers_claims
+    OWNER to postgres;

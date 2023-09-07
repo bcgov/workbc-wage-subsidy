@@ -7,6 +7,7 @@ router.get("/", applicationController.getAllApplications)
 router.post("/", applicationController.createApplication)
 router.get("/:id", applicationController.getOneApplication)
 router.put("/:id", applicationController.updateApplication)
+router.put("/share/:id", applicationController.shareApplication)
 router.delete("/:id", applicationController.deleteApplication)
 
 export default router

@@ -2,13 +2,14 @@
 /* eslint-disable import/prefer-default-export */
 import * as express from "express"
 import * as applicationService from "../services/application.service"
+import * as employerService from "../services/employer.service"
 import * as formService from "../services/form.service"
 
 export const getAllApplications = async (req: any, res: express.Response) => {
     try {
         const bceid_guid = req.kauth.grant.access_token.content?.bceid_user_guid
         if (bceid_guid === undefined) {
-            return res.status(403).send("Not Authorized")
+            return res.status(401).send("Not Authorized")
         }
         const filter = req.query.filter ? JSON.parse(req.query.filter) : {}
         const sort: string[] = req.query.sort ? JSON.parse(req.query.sort) : ["id", "ASC"]
@@ -75,13 +76,12 @@ export const createApplication = async (req: any, res: express.Response) => {
         const bceid_guid = req.kauth.grant.access_token.content?.bceid_user_guid
         // **TODO: Can't use standard realm token to create a form for the user, this needs to wait till CHEFS & Wage Sub are on the same realm
         if (bceid_guid === undefined) {
-            return res.status(403).send("Not Authorized")
+            return res.status(401).send("Not Authorized")
         }
-        const insertResult = await applicationService.insertApplication(
-            req.body.formKey,
-            req.body.guid,
-            req.body.formType
-        )
+        if (!req.body?.guid || req.body.guid !== bceid_guid) {
+            return res.status(403).send("Forbidden")
+        }
+        const created = await applicationService.insertApplication(req.body.formKey, req.body.guid, req.body.formType)
         // TODO: create a new draft version of the form with pre-filled fields //
         // if (insertResult?.rowCount === 1) { // successful insertion
         //     // create a new form draft //
@@ -101,7 +101,10 @@ export const createApplication = async (req: any, res: express.Response) => {
         //     const createDraftResult = await formService.createDraft(req.kauth.grant.access_token.token, formID, formPass, formVersionID, {}) //**TODO: should probably try to create the draft before  */
         //     return res.status(200).send({ data: insertResult })
         // }
-        return res.status(200).send({ data: insertResult })
+        if (created) {
+            return res.status(200).send({ data: created })
+        }
+        return res.status(500).send("Internal Server Error")
     } catch (e: unknown) {
         return res.status(500).send("Internal Server Error")
     }
@@ -111,11 +114,15 @@ export const getOneApplication = async (req: any, res: express.Response) => {
     try {
         const bceid_guid = req.kauth.grant.access_token.content?.bceid_user_guid
         if (bceid_guid === undefined) {
-            return res.status(403).send("Not Authorized")
+            return res.status(401).send("Not Authorized")
         }
         const { id } = req.params
-        const applications = await applicationService.getApplicationByID(id)
-        return res.status(200).send(applications)
+        const employerApplicationRecord = await applicationService.getEmployerApplicationRecord(bceid_guid, id)
+        if (!employerApplicationRecord) {
+            return res.status(403).send("Forbidden or Not Found")
+        }
+        const application = await applicationService.getApplicationByID(id)
+        return res.status(200).send(application)
     } catch (e: unknown) {
         return res.status(500).send("Internal Server Error")
     }
@@ -128,12 +135,36 @@ export const updateApplication = async (req: any, res: express.Response) => {
             return res.status(403).send("Not Authorized")
         }
         const { id } = req.params
-        const updated = await applicationService.updateApplication(id, null, req.body)
-        if (updated !== 0) {
-            // eslint-disable-next-line object-shorthand
-            return res.status(200).send({ id: id })
+        const employerApplicationRecord = await applicationService.getEmployerApplicationRecord(bceid_guid, id)
+        if (!employerApplicationRecord) {
+            return res.status(403).send("Forbidden or Not Found")
         }
-        return res.status(401).send("Not Found or Not Authorized")
+        await applicationService.updateApplication(id, null, req.body)
+        return res.status(200).send({ id })
+    } catch (e: unknown) {
+        return res.status(500).send("Internal Server Error")
+    }
+}
+
+export const shareApplication = async (req: any, res: express.Response) => {
+    try {
+        const { bceid_user_guid, bceid_business_guid } = req.kauth.grant.access_token.content
+        if (bceid_user_guid === undefined) {
+            return res.status(401).send("Not Authorized")
+        }
+        const { id } = req.params
+        const { users } = req.body
+        const targetUsers = await employerService.getEmployersByIDs(users)
+        const employerApplicationRecord = await applicationService.getEmployerApplicationRecord(bceid_user_guid, id)
+        if (
+            !employerApplicationRecord ||
+            bceid_business_guid === undefined ||
+            !targetUsers.every((user: any) => user.bceid_business_guid === bceid_business_guid)
+        ) {
+            return res.status(403).send("Forbidden or Not Found")
+        }
+        await applicationService.shareApplication(id, users)
+        return res.status(200).send({ id })
     } catch (e: unknown) {
         return res.status(500).send("Internal Server Error")
     }

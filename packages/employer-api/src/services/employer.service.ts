@@ -41,6 +41,11 @@ export const getEmployerByID = async (userGuid: string) => {
     return employers[0]
 }
 
+export const getEmployersByIDs = async (userGuids: string[]) => {
+    const employers = await knex("employers").where((builder: any) => builder.whereIn("id", userGuids))
+    return employers
+}
+
 export const updateEmployer = async (userGuid: string, data: any) => {
     let numUpdated = 0
     if (Object.keys(data).length > 0) {
