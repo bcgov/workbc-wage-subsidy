@@ -435,6 +435,16 @@ objects:
             value: ${REACT_APP_KEYCLOAK_REALM}
           - name: REACT_APP_ADMIN_API_URL
             value: ${REACT_APP_ADMIN_API_URL}
+          - name: REACT_ADMIN_TOKEN
+            valueFrom:
+              secretKeyRef:
+                key: ${NPM_INSTALL_TOKENS_SECRET_NAME}
+                name: REACT_ADMIN_TOKEN
+          - name: FONT_AWESOME_TOKEN
+            valueFrom:
+              secretKeyRef:
+                key: ${NPM_INSTALL_TOKENS_SECRET_NAME}
+                name: FONT_AWESOME_TOKEN
           image: ${NAME}-admin-client:${TAG}
           livenessProbe:
             failureThreshold: 3
@@ -520,6 +530,16 @@ objects:
             value: ${REACT_APP_CLAIM_URL}
           - name: REACT_APP_VIEW_URL
             value: ${REACT_APP_VIEW_URL}
+          - name: REACT_ADMIN_TOKEN
+            valueFrom:
+              secretKeyRef:
+                key: ${NPM_INSTALL_TOKENS_SECRET_NAME}
+                name: REACT_ADMIN_TOKEN
+          - name: FONT_AWESOME_TOKEN
+            valueFrom:
+              secretKeyRef:
+                key: ${NPM_INSTALL_TOKENS_SECRET_NAME}
+                name: FONT_AWESOME_TOKEN
           image: ${NAME}-employer-client:${TAG}
           livenessProbe:
             failureThreshold: 3
@@ -844,4 +864,8 @@ parameters:
 - description: S3 Static Image URL
   displayName: S3 Static Image URL
   name: S3_STATIC_IMG_URL
+  value: ""
+- description: Secret containing the npm install tokens (react-admin, fontawesome, etc)
+  displayName: NPM Install Tokens Secret Name
+  name: NPM_INSTALL_TOKENS_SECRET_NAME
   value: ""
