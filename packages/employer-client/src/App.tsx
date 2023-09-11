@@ -17,10 +17,10 @@ import { ClaimList } from "./Claims/ClaimList"
 import { ClaimShow } from "./Claims/ClaimShow"
 import { COLOURS } from "./Colours"
 import { dataProvider } from "./DataProvider/DataProvider"
+import { ViewForm } from "./Form/ViewForm"
 import Layout from "./Layout"
 import Footer from "./footer"
 import "@bcgov/bc-sans/css/BCSans.css"
-import { ViewForm } from "./Form/ViewForm"
 
 const initOptions = {
     url: process.env.REACT_APP_KEYCLOAK_URL || "",
@@ -29,9 +29,15 @@ const initOptions = {
 }
 
 let keycloak = new Keycloak(initOptions)
+const kcLogin = keycloak.login
+keycloak.login = (options) => {
+    if (options) options.idpHint = "bceid"
+    return kcLogin(options)
+}
 
 const onToken = () => {
     if (keycloak.token && keycloak.refreshToken) {
+        console.log(keycloak.token)
         localStorage.setItem("token", keycloak.token)
         localStorage.setItem("refresh-token", keycloak.refreshToken)
         localStorage.setItem("provider", keycloak.idTokenParsed?.identity_provider)
@@ -193,10 +199,10 @@ export const lightTheme = {
 }
 
 const CustomAdminWithKeycloak = () => {
-    const customAuthProvider = useAuthProvider(process.env.REACT_APP_KEYCLOAK_CLIENT_ID || "")
+    const customAuthProvider = useAuthProvider(process.env.REACT_APP_KEYCLOAK_CLIENT_ID ?? "")
     const [permissions, setPermissions] = useState(keycloak.idTokenParsed?.identity_provider === "bceid")
     React.useEffect(() => {
-        if (keycloak && keycloak.idTokenParsed?.identity_provider === "bceidboth") {
+        if (keycloak && keycloak.idTokenParsed?.identity_provider === "bceid") {
             setPermissions(true)
         }
     }, [])

@@ -43,10 +43,11 @@ export const getApplicationByID = async (id: string) => {
     return wages[0]
 }
 
-export const insertApplication = async (id: string, user: string, formType: string) => {
+export const insertApplication = async (id: string, user: string, formType: string, submissionID: string) => {
     const data = {
         id,
         form_type: formType,
+        form_submission_id: submissionID,
         created_date: new Date(),
         created_by: user,
         shared_with: [],
