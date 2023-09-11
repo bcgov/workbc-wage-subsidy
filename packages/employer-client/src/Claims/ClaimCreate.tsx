@@ -18,7 +18,7 @@ export const ClaimCreate = () => {
                                 <Box paddingLeft="0.75em">
                                     <p>
                                         In order to receive your wage subsidy reimbursement, you must{<br />}
-                                        submit a claim for which is associated to a previously{<br />}
+                                        submit a claim form which is associated to a previously{<br />}
                                         completed application
                                     </p>
                                 </Box>
