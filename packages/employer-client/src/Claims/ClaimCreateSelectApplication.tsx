@@ -48,6 +48,11 @@ export const ClaimCreateSelectApplication = (props: any) => {
                     rowClick={handleClick}
                     bulkActionButtons={false}
                     ariaLabel="list of completed applications"
+                    empty={
+                        <p style={{ padding: "16px" }}>
+                            You must have at least one completed application in order to submit a claim
+                        </p>
+                    }
                 >
                     <TextField label="Submission ID" source="form_confirmation_id" emptyText="-" />
                     <TextField label="Position Title" source="position_title" emptyText="-" />
