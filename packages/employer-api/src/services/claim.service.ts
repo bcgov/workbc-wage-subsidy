@@ -60,7 +60,7 @@ export const updateClaim = async (id: number, status: string | null, form: any) 
         return 0
     }
     let result
-    if (form && form.userInfo) {
+    if (form?.userInfo) {
         result = await knex("claims")
             .where("id", id)
             .update({
@@ -71,6 +71,41 @@ export const updateClaim = async (id: number, status: string | null, form: any) 
                 employee_last_name: form.container.employeeLastName,
                 status,
                 updated_by: form.userInfo.username, // TODO: should match 'user' on insertion (uses a hash version of the users bceid instead of the actual username)
+                updated_date: new Date()
+            })
+    }
+    return result
+}
+
+export const addServiceProviderClaim = async (
+    submissionResponse: any,
+    serviceProviderInternalID: string,
+    serviceProviderSubmissionID: string
+) => {
+    const submission = submissionResponse?.submission?.submission
+    if (!submission) {
+        return null
+    }
+    const claims = await knex("claims").where("id", submission?.data?.internalId)
+    if (claims.length === 0) {
+        return null
+    }
+
+    let result
+    if (submission?.data?.internalId) {
+        result = await knex("claims")
+            .where("id", submission.data.internalId)
+            .update({
+                form_confirmation_id:
+                    submission.state === "submitted" ? submissionResponse.submission.confirmationId : null, // only store the confirmation ID when the form has been submitted
+                form_submission_id: submissionResponse.submission.id,
+                form_submitted_date: submission.state === "submitted" ? submissionResponse.submission.createdAt : null,
+                employee_first_name: submission.data.container.employeeFirstName,
+                employee_last_name: submission.data.container.employeeLastName,
+                status: "New",
+                service_provider_form_submission_id: serviceProviderSubmissionID, // TODO: add column to DB
+                service_provider_form_internal_id: serviceProviderInternalID, // TODO: add column to DB
+                updated_by: submissionResponse.submission.createdBy,
                 updated_date: new Date()
             })
     }

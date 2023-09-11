@@ -96,6 +96,7 @@ export const createApplication = async (req: any, res: express.Response) => {
             {}
         )
         if (createDraftResult) {
+            // TODO: better check
             const insertResult = await applicationService.insertApplication(
                 req.body.formKey,
                 req.body.guid,
