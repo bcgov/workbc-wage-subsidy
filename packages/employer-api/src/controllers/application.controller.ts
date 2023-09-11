@@ -81,30 +81,39 @@ export const createApplication = async (req: any, res: express.Response) => {
         if (!req.body?.guid || req.body.guid !== bceid_guid) {
             return res.status(403).send("Forbidden")
         }
-        const created = await applicationService.insertApplication(req.body.formKey, req.body.guid, req.body.formType)
-        // TODO: create a new draft version of the form with pre-filled fields //
-        // if (insertResult?.rowCount === 1) { // successful insertion
-        //     // create a new form draft //
-        //     let formID: string = ""
-        //     let formPass: string = ""
-        //     let formVersionID: string = ""
-        //     if (req.body.formType === "Have Employee"){
-        //         formID = process.env.HAVE_EMPLOYEE_ID as string
-        //         formPass = process.env.HAVE_EMPLOYEE_PASS as string
-        //         formVersionID = process.env.HAVE_EMPLOYEE_VERSION_ID as string
-        //     }
-        //     else if (req.body.formType === "Need Employee"){
-        //         formID = process.env.NEED_EMPLOYEE_ID as string
-        //         formPass = process.env.NEED_EMPLOYEE_PASS as string
-        //         formVersionID = process.env.NEED_EMPLOYEE_VERSION_ID as string
-        //     }
-        //     const createDraftResult = await formService.createDraft(req.kauth.grant.access_token.token, formID, formPass, formVersionID, {}) //**TODO: should probably try to create the draft before  */
-        //     return res.status(200).send({ data: insertResult })
-        // }
-        if (created) {
-            return res.status(200).send({ data: created })
+        // Create a new form draft //
+        let formID = ""
+        let formVersionID = ""
+        if (req.body.formType === "Have Employee") {
+            formID = process.env.HAVE_EMPLOYEE_ID as string
+            formVersionID = process.env.HAVE_EMPLOYEE_VERSION_ID as string
+        } else if (req.body.formType === "Need Employee") {
+            formID = process.env.NEED_EMPLOYEE_ID as string
+            formVersionID = process.env.NEED_EMPLOYEE_VERSION_ID as string
         }
-        return res.status(500).send("Internal Server Error")
+        const createDraftResult = await formService.createLoginProtectedDraft(
+            req.kauth.grant.access_token,
+            formID,
+            formVersionID,
+            req.body.formKey,
+            {}
+        )
+        if (createDraftResult) {
+            // TODO: better check
+            const insertResult = await applicationService.insertApplication(
+                req.body.formKey,
+                req.body.guid,
+                req.body.formType,
+                createDraftResult.id
+            )
+            if (insertResult?.rowCount === 1) {
+                // successful insertion
+                return res.status(200).send({ data: insertResult })
+            }
+        } else {
+            return res.status(500).send("Internal Server Error")
+        }
+        return res.status(200).send("Created")
     } catch (e: unknown) {
         return res.status(500).send("Internal Server Error")
     }
