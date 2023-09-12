@@ -80,7 +80,7 @@ jobs:
         with:
           # URL to your OpenShift cluster.
           # Refer to Step 2.
-          openshift_server_url: ${{secrets.OCP4_SERVER_URL}}
+          openshift_server_url: ${{ secrets.OCP4_SERVER_URL }}
 
           # Authentication Token. Can use username and password instead.
           # Refer to Step 3.
@@ -103,22 +103,22 @@ jobs:
           tls-verify: false
           build-args: |
             VITE_REACT_ENVIRONMENT=TEST
-            REACT_APP_DATA_PROVIDER_URL=${{ secrets.REACT_APP_DATA_PROVIDER_URL_TEST }}
-            REACT_APP_ADMIN_API_URL=${{ secrets.REACT_APP_ADMIN_API_URL_TEST }}
-            REACT_APP_KEYCLOAK_REALM=${{ secrets.REACT_APP_KEYCLOAK_REALM_TEST }}
-            REACT_APP_KEYCLOAK_URL=${{ secrets.REACT_APP_KEYCLOAK_URL_TEST }}
-            REACT_APP_KEYCLOAK_CLIENT_ID=${{ secrets.REACT_APP_KEYCLOAK_CLIENT_ID_TEST }}
-            REACT_APP_HAVE_EMPLOYEE_URL=${{ secrets.REACT_APP_HAVE_EMPLOYEE_URL_TEST }}
-            REACT_APP_NEED_EMPLOYEE_URL=${{ secrets.REACT_APP_NEED_EMPLOYEE_URL_TEST }}
-            REACT_APP_CLAIM_URL=${{ secrets.REACT_APP_CLAIM_URL_TEST }}
-            REACT_APP_DRAFT_URL=${{ secrets.REACT_APP_DRAFT_URL_TEST }}
-            REACT_APP_VIEW_URL=${{ secrets.REACT_APP_VIEW_URL_TEST }}
             REACT_APP_ENVIRONMENT=TEST
             REACT_ADMIN_TOKEN=${{ secrets.REACT_ADMIN_TOKEN }}
             FONT_AWESOME_TOKEN=${{ secrets.FONT_AWESOME_TOKEN }}
-            VITE_EMPLOYER_URL=${{ secrets.VITE_EMPLOYER_URL_TEST }}
-            VITE_SERVICE_PROVIDER_URL=${{ secrets.VITE_SERVICE_PROVIDER_URL_TEST }}
-            VITE_MINISTRY_URL=${{ secrets.VITE_MINISTRY_URL_TEST }}
+            REACT_APP_DATA_PROVIDER_URL=${{ vars.REACT_APP_DATA_PROVIDER_URL }}
+            REACT_APP_ADMIN_API_URL=${{ vars.REACT_APP_ADMIN_API_URL }}
+            REACT_APP_KEYCLOAK_REALM=${{ vars.REACT_APP_KEYCLOAK_REALM }}
+            REACT_APP_KEYCLOAK_URL=${{ vars.REACT_APP_KEYCLOAK_URL }}
+            REACT_APP_KEYCLOAK_CLIENT_ID=${{ vars.REACT_APP_KEYCLOAK_CLIENT_ID }}
+            REACT_APP_HAVE_EMPLOYEE_URL=${{ vars.REACT_APP_HAVE_EMPLOYEE_URL }}
+            REACT_APP_NEED_EMPLOYEE_URL=${{ vars.REACT_APP_NEED_EMPLOYEE_URL }}
+            REACT_APP_CLAIM_URL=${{ vars.REACT_APP_CLAIM_URL }}
+            REACT_APP_DRAFT_URL=${{ vars.REACT_APP_DRAFT_URL }}
+            REACT_APP_VIEW_URL=${{ vars.REACT_APP_VIEW_URL }}
+            VITE_EMPLOYER_URL=${{ vars.VITE_EMPLOYER_URL }}
+            VITE_SERVICE_PROVIDER_URL=${{ vars.VITE_SERVICE_PROVIDER_URL }}
+            VITE_MINISTRY_URL=${{ vars.VITE_MINISTRY_URL }}
       - name: Build for pushing static image to Docker hub
         id: build-static-image-docker
         uses: redhat-actions/buildah-build@v2
@@ -130,22 +130,22 @@ jobs:
           tls-verify: false
           build-args: |
             VITE_REACT_ENVIRONMENT=TEST
-            REACT_APP_DATA_PROVIDER_URL=${{ secrets.REACT_APP_DATA_PROVIDER_URL_TEST }}
-            REACT_APP_ADMIN_API_URL=${{ secrets.REACT_APP_ADMIN_API_URL_TEST }}
-            REACT_APP_KEYCLOAK_REALM=${{ secrets.REACT_APP_KEYCLOAK_REALM_TEST }}
-            REACT_APP_KEYCLOAK_URL=${{ secrets.REACT_APP_KEYCLOAK_URL_TEST }}
-            REACT_APP_KEYCLOAK_CLIENT_ID=${{ secrets.REACT_APP_KEYCLOAK_CLIENT_ID_TEST }}
-            REACT_APP_HAVE_EMPLOYEE_URL=${{ secrets.REACT_APP_HAVE_EMPLOYEE_URL_TEST }}
-            REACT_APP_NEED_EMPLOYEE_URL=${{ secrets.REACT_APP_NEED_EMPLOYEE_URL_TEST }}
-            REACT_APP_CLAIM_URL=${{ secrets.REACT_APP_CLAIM_URL_TEST }}
-            REACT_APP_DRAFT_URL=${{ secrets.REACT_APP_DRAFT_URL_TEST }}
-            REACT_APP_VIEW_URL=${{ secrets.REACT_APP_VIEW_URL_TEST }}
             REACT_APP_ENVIRONMENT=TEST
             REACT_ADMIN_TOKEN=${{ secrets.REACT_ADMIN_TOKEN }}
             FONT_AWESOME_TOKEN=${{ secrets.FONT_AWESOME_TOKEN }}
-            VITE_EMPLOYER_URL=${{ secrets.VITE_EMPLOYER_URL_TEST }}
-            VITE_SERVICE_PROVIDER_URL=${{ secrets.VITE_SERVICE_PROVIDER_URL_TEST }}
-            VITE_MINISTRY_URL=${{ secrets.VITE_MINISTRY_URL_TEST }}
+            REACT_APP_DATA_PROVIDER_URL=${{ vars.REACT_APP_DATA_PROVIDER_URL }}
+            REACT_APP_ADMIN_API_URL=${{ vars.REACT_APP_ADMIN_API_URL }}
+            REACT_APP_KEYCLOAK_REALM=${{ vars.REACT_APP_KEYCLOAK_REALM }}
+            REACT_APP_KEYCLOAK_URL=${{ vars.REACT_APP_KEYCLOAK_URL }}
+            REACT_APP_KEYCLOAK_CLIENT_ID=${{ vars.REACT_APP_KEYCLOAK_CLIENT_ID }}
+            REACT_APP_HAVE_EMPLOYEE_URL=${{ vars.REACT_APP_HAVE_EMPLOYEE_URL }}
+            REACT_APP_NEED_EMPLOYEE_URL=${{ vars.REACT_APP_NEED_EMPLOYEE_URL }}
+            REACT_APP_CLAIM_URL=${{ vars.REACT_APP_CLAIM_URL }}
+            REACT_APP_DRAFT_URL=${{ vars.REACT_APP_DRAFT_URL }}
+            REACT_APP_VIEW_URL=${{ vars.REACT_APP_VIEW_URL }}
+            VITE_EMPLOYER_URL=${{ vars.VITE_EMPLOYER_URL }}
+            VITE_SERVICE_PROVIDER_URL=${{ vars.VITE_SERVICE_PROVIDER_URL }}
+            VITE_MINISTRY_URL=${{ vars.VITE_MINISTRY_URL }}
       - name: Push Static To OpenShift Image repo
         id: push-to-os-static
         uses: redhat-actions/push-to-registry@v2
