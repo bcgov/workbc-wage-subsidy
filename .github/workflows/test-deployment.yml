@@ -43,7 +43,8 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       - name: test echo
-        run: echo "Realm name is $REALM_NAME"
+        run: echo "Realm name is $REALM_NAME. Secret token is $TOKEN"
         env: 
           REALM_NAME: ${{ vars.REACT_APP_KEYCLOAK_REALM }}
+          TOKEN: ${{ secrets.FONT_AWESOME_TOKEN }}
         
