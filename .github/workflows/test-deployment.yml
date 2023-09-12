@@ -1,0 +1,45 @@
+
+
+# This is a basic workflow that will start a build with every push
+
+
+name: CI/CD Runtests and build on TEST
+
+
+# Controls when the action will run. Triggers the workflow on push or pull request
+# events but only for the master branch
+on:
+  workflow_dispatch:
+    inputs:
+      logLevel:
+        description: 'Log level'
+        required: true
+        default: 'warning'
+        type: choice
+        options:
+        - info
+        - warning
+        - debug
+      tags:
+        description: 'Test scenario tags'
+        required: false
+        type: boolean
+      environment:
+        description: 'Environment to run tests against'
+        type: environment
+        required: true
+  push:
+    branches: [ test ]
+    paths-ignore:
+        - '.github/workflows/**'
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+    environment: test
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      - run: echo "Realm name is {{ vars.REACT_APP_KEYCLOAK_REALM }}"
