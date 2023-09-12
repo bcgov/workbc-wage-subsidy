@@ -17,6 +17,7 @@ export const getFormSubmissions = async (formID: string, formPass: string, param
         const formSubmissionResponse = await chefsApi.get(url, config)
         return formSubmissionResponse.data
     } catch (e: any) {
+        console.log(e.response)
         throw new Error(e.response?.status)
     }
 }
@@ -36,15 +37,16 @@ export const getSubmission = async (formID: string, formPass: string, submission
         const formSubmissionResponse = await chefsApi.get(url, config)
         return formSubmissionResponse.data
     } catch (e: any) {
+        console.log(e.message)
         throw new Error(e.response?.status)
     }
 }
 
-export const createDraft = async (
-    token: string,
+export const createLoginProtectedDraft = async (
+    accessToken: any,
     formID: string,
-    formPass: string,
     formVersionID: string,
+    internalID: string,
     prefillFields: any
 ) => {
     try {
@@ -52,12 +54,59 @@ export const createDraft = async (
         const config = {
             headers: {
                 "Content-Type": "application/json",
-                Authorization: `Bearer ${token}`
+                Authorization: `Bearer ${accessToken.token}`
             }
         }
-        const formSubmissionResponse = await chefsApi.post(url, config)
+        const data = {
+            draft: true,
+            submission: {
+                data: {
+                    lateEntry: false,
+                    internalId: internalID, // TODO: do we need internalId as a concept?
+                    employerEmail: accessToken.content.email,
+                    businessEmail: accessToken.content.email,
+                    operatingName: accessToken.content.bceid_business_name,
+                    submit: false
+                }
+            }
+        }
+        const formSubmissionResponse = await chefsApi.post(url, data, config)
         return formSubmissionResponse.data
     } catch (e: any) {
+        console.log(e.response)
+        throw new Error(e.response?.status)
+    }
+}
+
+export const createTeamProtectedDraft = async (
+    formID: string,
+    formPass: string,
+    formVersionID: string,
+    internalID: string,
+    prefillFields: any
+) => {
+    try {
+        const url = `forms/${formID}/versions/${formVersionID}/submissions`
+        const config = {
+            headers: {
+                "Content-Type": "application/json"
+            },
+            auth: {
+                username: formID,
+                password: formPass
+            }
+        }
+        const data = {
+            draft: true,
+            submission: {
+                data: { ...prefillFields, lateEntry: false, internalId: internalID, submit: false },
+                state: "draft"
+            }
+        }
+        const formSubmissionResponse = await chefsApi.post(url, data, config)
+        return formSubmissionResponse.data
+    } catch (e: any) {
+        console.log(e.response)
         throw new Error(e.response?.status)
     }
 }

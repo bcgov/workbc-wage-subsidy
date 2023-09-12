@@ -45,8 +45,13 @@ export const getAllApplications = async (req: any, res: express.Response) => {
                         )
                         if (app) {
                             if (submission.formSubmissionStatusCode === "SUBMITTED") {
-                                if (app.status !== "Submitted" && app.status !== "Completed") {
-                                    applicationService.updateApplication(app.id, "Submitted", submission)
+                                if (
+                                    app.status !== "New" &&
+                                    app.status !== "In Progress" &&
+                                    app.status !== "Completed" &&
+                                    app.status !== "Cancelled"
+                                ) {
+                                    applicationService.updateApplication(app.id, "New", submission)
                                 }
                             } else if (app.status === "Draft") {
                                 await applicationService.updateApplication(app.id, "Draft", submission)
@@ -73,35 +78,43 @@ export const getAllApplications = async (req: any, res: express.Response) => {
 export const createApplication = async (req: any, res: express.Response) => {
     try {
         const bceid_guid = req.kauth.grant.access_token.content?.bceid_user_guid
-        // **TODO: Can't use standard realm token to create a form for the user, this needs to wait till CHEFS & Wage Sub are on the same realm
         if (bceid_guid === undefined) {
             return res.status(403).send("Not Authorized")
         }
-        const insertResult = await applicationService.insertApplication(
+
+        // Create a new form draft //
+        let formID = ""
+        let formVersionID = ""
+        if (req.body.formType === "Have Employee") {
+            formID = process.env.HAVE_EMPLOYEE_ID as string
+            formVersionID = process.env.HAVE_EMPLOYEE_VERSION_ID as string
+        } else if (req.body.formType === "Need Employee") {
+            formID = process.env.NEED_EMPLOYEE_ID as string
+            formVersionID = process.env.NEED_EMPLOYEE_VERSION_ID as string
+        }
+        const createDraftResult = await formService.createLoginProtectedDraft(
+            req.kauth.grant.access_token,
+            formID,
+            formVersionID,
             req.body.formKey,
-            req.body.guid,
-            req.body.formType
+            {}
         )
-        // TODO: create a new draft version of the form with pre-filled fields //
-        // if (insertResult?.rowCount === 1) { // successful insertion
-        //     // create a new form draft //
-        //     let formID: string = ""
-        //     let formPass: string = ""
-        //     let formVersionID: string = ""
-        //     if (req.body.formType === "Have Employee"){
-        //         formID = process.env.HAVE_EMPLOYEE_ID as string
-        //         formPass = process.env.HAVE_EMPLOYEE_PASS as string
-        //         formVersionID = process.env.HAVE_EMPLOYEE_VERSION_ID as string
-        //     }
-        //     else if (req.body.formType === "Need Employee"){
-        //         formID = process.env.NEED_EMPLOYEE_ID as string
-        //         formPass = process.env.NEED_EMPLOYEE_PASS as string
-        //         formVersionID = process.env.NEED_EMPLOYEE_VERSION_ID as string
-        //     }
-        //     const createDraftResult = await formService.createDraft(req.kauth.grant.access_token.token, formID, formPass, formVersionID, {}) //**TODO: should probably try to create the draft before  */
-        //     return res.status(200).send({ data: insertResult })
-        // }
-        return res.status(200).send({ data: insertResult })
+        if (createDraftResult) {
+            // TODO: better check
+            const insertResult = await applicationService.insertApplication(
+                req.body.formKey,
+                req.body.guid,
+                req.body.formType,
+                createDraftResult.id
+            )
+            if (insertResult?.rowCount === 1) {
+                // successful insertion
+                return res.status(200).send({ data: insertResult })
+            }
+        } else {
+            return res.status(500).send("Internal Server Error")
+        }
+        return res.status(200).send("Created")
     } catch (e: unknown) {
         return res.status(500).send("Internal Server Error")
     }
