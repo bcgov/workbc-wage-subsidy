@@ -85,16 +85,16 @@ export const ClaimList = (props: any) => {
                                     <Box display="flex" width="100%" justifyContent="center">
                                         <Chip
                                             label={
-                                                record.status === "Submitted" ||
-                                                record.status === "Processing" ||
+                                                record.status === "New" ||
+                                                record.status === "In Progress" ||
                                                 record.status === "Completed"
                                                     ? "Submitted"
                                                     : record.status
                                             }
                                             size="small"
                                             color={
-                                                record.status === "Submitted" ||
-                                                record.status === "Processing" ||
+                                                record.status === "New" ||
+                                                record.status === "In Progress" ||
                                                 record.status === "Completed"
                                                     ? "primary"
                                                     : record.status === "Cancelled"
