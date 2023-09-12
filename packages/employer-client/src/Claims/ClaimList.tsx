@@ -10,7 +10,7 @@ import { ListAside } from "../common/components/ListAside/ListAside"
 export const claimStatusFilters = {
     All: { label: "All" },
     NotSubmitted: { label: "Draft", status: ["Draft"] },
-    Submitted: { label: "Submitted", status: ["Submitted", "Processing", "Completed"] },
+    Submitted: { label: "Submitted", status: ["New", "In Progress", "Completed"] },
     Cancelled: { label: "Cancelled", status: ["Cancelled"] }
 } as { [key: string]: any }
 
