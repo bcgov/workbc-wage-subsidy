@@ -42,4 +42,6 @@ jobs:
     environment: test
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      - run: echo "Realm name is {{ vars.REACT_APP_KEYCLOAK_REALM }}"
+      - run: echo "Realm name is $Realm_Name"
+      env:
+        Realm_Name: {{ vars.REACT_APP_KEYCLOAK_REALM }}
