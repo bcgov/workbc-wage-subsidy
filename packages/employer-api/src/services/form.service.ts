@@ -17,6 +17,7 @@ export const getFormSubmissions = async (formID: string, formPass: string, param
         const formSubmissionResponse = await chefsApi.get(url, config)
         return formSubmissionResponse.data
     } catch (e: any) {
+        console.log(e.response)
         throw new Error(e.response?.status)
     }
 }
@@ -98,11 +99,7 @@ export const createTeamProtectedDraft = async (
         const data = {
             draft: true,
             submission: {
-                data: Object.assign(prefillFields, {
-                    lateEntry: false,
-                    internalId: internalID,
-                    submit: false
-                }),
+                data: { ...prefillFields, lateEntry: false, internalId: internalID, submit: false },
                 state: "draft"
             }
         }

@@ -7,7 +7,7 @@ import { COLOURS } from "../../../Colours"
 const CalculatorButtonField: React.FC = () => {
     const record = useRecordContext()
 
-    return record.status === "Processing" ? (
+    return record.status === "In Progress" ? (
         <Button
             onClick={(event) => {
                 event?.stopPropagation()
