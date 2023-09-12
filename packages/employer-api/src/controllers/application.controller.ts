@@ -73,7 +73,6 @@ export const getAllApplications = async (req: any, res: express.Response) => {
 export const createApplication = async (req: any, res: express.Response) => {
     try {
         const bceid_guid = req.kauth.grant.access_token.content?.bceid_user_guid
-        // **TODO: Can't use standard realm token to create a form for the user, this needs to wait till CHEFS & Wage Sub are on the same realm
         if (bceid_guid === undefined) {
             return res.status(403).send("Not Authorized")
         }

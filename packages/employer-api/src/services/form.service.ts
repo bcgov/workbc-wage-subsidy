@@ -98,11 +98,7 @@ export const createTeamProtectedDraft = async (
         const data = {
             draft: true,
             submission: {
-                data: Object.assign(prefillFields, {
-                    lateEntry: false,
-                    internalId: internalID,
-                    submit: false
-                }),
+                data: { ...prefillFields, lateEntry: false, internalId: internalID, submit: false },
                 state: "draft"
             }
         }
