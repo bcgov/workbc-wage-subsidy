@@ -222,7 +222,7 @@ describe("updateClaim", () => {
     })
     it("returns 200 with claim id when bceid username defined", async () => {
         const catchments = [1]
-        const claim = { id: "1", catchmentno: 1, status: "Processing" }
+        const claim = { id: "1", catchmentno: 1, status: "In Progress" }
         const claimID = { id: "1" }
         const numUpdated = 1
         ;(getCatchments as jest.Mock).mockResolvedValue(catchments)
@@ -239,7 +239,7 @@ describe("updateClaim", () => {
         }
         req.body.catchmentNo = 2
         const catchments = [1, 2]
-        const claim = { id: "1", catchmentno: 1, status: "Processing" }
+        const claim = { id: "1", catchmentno: 1, status: "In Progress" }
         const claimID = { id: "1" }
         const numUpdated = 1
         ;(getCatchments as jest.Mock).mockResolvedValue(catchments)
@@ -251,7 +251,7 @@ describe("updateClaim", () => {
     })
     it("returns 500 when no records are updated but no error occurs", async () => {
         const catchments = [1]
-        const claim = { id: "1", catchmentno: 1, status: "Processing" }
+        const claim = { id: "1", catchmentno: 1, status: "In Progress" }
         const claimID = { id: "1" }
         const numUpdated = 0
         ;(getCatchments as jest.Mock).mockResolvedValue(catchments)
@@ -272,7 +272,7 @@ describe("updateClaim", () => {
     })
     it("returns 403 when no catchments obtained", async () => {
         const catchments: never[] = []
-        const claim = { id: "1", catchmentno: 1, status: "Processing" }
+        const claim = { id: "1", catchmentno: 1, status: "In Progress" }
         ;(getCatchments as jest.Mock).mockResolvedValue(catchments)
         ;(claimService.getClaimByID as jest.Mock).mockResolvedValue(claim)
         await updateClaim(req, res)
@@ -281,7 +281,7 @@ describe("updateClaim", () => {
     })
     it("returns 403 when user lacks catchment permission", async () => {
         const catchments = [2]
-        const claim = { id: "1", catchmentno: 1, status: "Processing" }
+        const claim = { id: "1", catchmentno: 1, status: "In Progress" }
         ;(getCatchments as jest.Mock).mockResolvedValue(catchments)
         ;(claimService.getClaimByID as jest.Mock).mockResolvedValue(claim)
         await updateClaim(req, res)
@@ -291,7 +291,7 @@ describe("updateClaim", () => {
     it("returns 403 when bceid user attempts to update catchment", async () => {
         req.body.catchmentNo = 2
         const catchments = [1, 2]
-        const claim = { id: "1", catchmentno: 1, status: "Processing" }
+        const claim = { id: "1", catchmentno: 1, status: "In Progress" }
         ;(getCatchments as jest.Mock).mockResolvedValue(catchments)
         ;(claimService.getClaimByID as jest.Mock).mockResolvedValue(claim)
         await updateClaim(req, res)
@@ -305,7 +305,7 @@ describe("updateClaim", () => {
         }
         req.body.catchmentNo = 2
         const catchments = [1]
-        const claim = { id: "1", catchmentno: 1, status: "Processing" }
+        const claim = { id: "1", catchmentno: 1, status: "In Progress" }
         ;(getCatchments as jest.Mock).mockResolvedValue(catchments)
         ;(claimService.getClaimByID as jest.Mock).mockResolvedValue(claim)
         await updateClaim(req, res)

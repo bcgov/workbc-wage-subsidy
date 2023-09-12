@@ -38,14 +38,8 @@ export const getAllClaims = async (req: any, res: express.Response) => {
                 )
                 submissions.forEach(async (submission: any) => {
                     const claim = claims.data.find((c: any) => c.id === submission.internalId)
-                    if (claim) {
-                        if (submission.formSubmissionStatusCode === "SUBMITTED") {
-                            if (claim.status !== "Submitted" && claim.status !== "Completed") {
-                                claimService.updateClaim(claim.id, "Submitted", submission)
-                            }
-                        } else if (claim.status === "Draft") {
-                            await claimService.updateClaim(claim.id, "Draft", submission)
-                        }
+                    if (claim && claim.status === "Draft") {
+                        await claimService.updateClaim(claim.id, "Draft", submission)
                     }
                 })
             }

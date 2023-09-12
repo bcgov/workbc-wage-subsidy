@@ -34,6 +34,8 @@ CREATE TABLE IF NOT EXISTS public.claims
     form_confirmation_id character varying(255) COLLATE pg_catalog."default",
     form_submission_id character varying(255) COLLATE pg_catalog."default",
     form_submitted_date date,
+    service_provider_form_submission_id character varying(255) COLLATE pg_catalog."default",
+    service_provider_form_internal_id character varying(255) COLLATE pg_catalog."default",
     created_by character varying(255) COLLATE pg_catalog."default",
     created_date date,
     updated_by character varying(255) COLLATE pg_catalog."default",
