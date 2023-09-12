@@ -76,10 +76,8 @@ export const ClaimList = (props: any) => {
                             <FunctionField
                                 label="Shared With"
                                 render={(record: any) => {
-                                    return record["shared_with_dynamic"].length > 1
-                                        ? record["shared_with_dynamic"].filter(
-                                              (fullName) => fullName !== identity?.fullName
-                                          )
+                                    return record["shared_with"].length > 1
+                                        ? record["shared_with"].filter((fullName) => fullName !== identity?.fullName)
                                         : "-"
                                 }}
                             />

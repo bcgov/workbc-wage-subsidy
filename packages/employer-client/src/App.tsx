@@ -37,7 +37,6 @@ keycloak.login = (options) => {
 
 const onToken = () => {
     if (keycloak.token && keycloak.refreshToken) {
-        console.log(keycloak.token)
         localStorage.setItem("token", keycloak.token)
         localStorage.setItem("refresh-token", keycloak.refreshToken)
         localStorage.setItem("provider", keycloak.idTokenParsed?.identity_provider)

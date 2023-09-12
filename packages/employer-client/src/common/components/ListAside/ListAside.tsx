@@ -12,7 +12,7 @@ interface ListAsideProps {
 }
 
 export const ListAside: React.FC<ListAsideProps> = ({ statusFilters, statusFilter, setStatusFilter, user }) => {
-    const { resource, total, isLoading } = useListContext()
+    const { resource, total, isFetching } = useListContext()
     const redirect = useRedirect()
 
     const skipToDatagrid = (event: any) => {
@@ -23,11 +23,11 @@ export const ListAside: React.FC<ListAsideProps> = ({ statusFilters, statusFilte
     }
 
     useEffect(() => {
-        if (statusFilter.label === "All" && total === 0) {
+        if (!isFetching && statusFilter.label === "All" && total === 0) {
             setStatusFilter(statusFilters["All"])
             redirect("create", resource)
         }
-    }, [isLoading])
+    }, [isFetching])
 
     return (
         <Box width={200} mr={1} mt={7} flexShrink={0} order={-1}>

@@ -20,19 +20,19 @@ export const getAllEmployers = async (
 }
 
 export const insertEmployer = async (data: any) => {
-    const result = await knex("employers").modify((queryBuilder: any) => {
-        queryBuilder.insert("id", data.id)
-        queryBuilder.insert("created_by", data.id)
-        queryBuilder.insert("created_date", new Date())
-        queryBuilder.insert("contact_name", data.contact_name)
-        queryBuilder.insert("contact_email", data.contact_email)
-        if (data.bceid_business_guid) {
-            queryBuilder.insert("bceid_business_guid", data.bceid_business_guid)
-        }
-        if (data.bceid_business_name) {
-            queryBuilder.insert("bceid_business_name", data.bceid_business_name)
-        }
-    })
+    const employerData: any = {}
+    employerData.id = data.id
+    employerData.created_by = data.id
+    employerData.created_date = new Date()
+    employerData.contact_name = data.contact_name
+    employerData.contact_email = data.contact_email
+    if (data.bceid_business_guid) {
+        employerData.bceid_business_guid = data.bceid_business_guid
+    }
+    if (data.bceid_business_name) {
+        employerData.bceid_business_name = data.bceid_business_name
+    }
+    const result = await knex("employers").insert(employerData)
     return result
 }
 

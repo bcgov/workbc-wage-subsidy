@@ -4,6 +4,7 @@ import * as express from "express"
 import * as applicationService from "../services/application.service"
 import * as employerService from "../services/employer.service"
 import * as formService from "../services/form.service"
+import { insertApplication } from "../lib/transactions"
 
 export const getAllApplications = async (req: any, res: express.Response) => {
     try {
@@ -100,7 +101,7 @@ export const createApplication = async (req: any, res: express.Response) => {
         )
         if (createDraftResult) {
             // TODO: better check
-            const insertResult = await applicationService.insertApplication(
+            const insertResult = await insertApplication(
                 req.body.formKey,
                 req.body.guid,
                 req.body.formType,

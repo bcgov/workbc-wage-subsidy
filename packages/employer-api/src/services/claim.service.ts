@@ -9,7 +9,7 @@ export const getAllClaims = async (perPage: number, currPage: number, filters: a
         .whereIn("c.id", claimIds)
         .select("c.*")
         .groupBy("c.id")
-        .select(knex.raw("ARRAY_AGG(e.contact_name) as shared_with_dynamic"))
+        .select(knex.raw("ARRAY_AGG(e.contact_name) as shared_with"))
         .modify((queryBuilder: any) => {
             if (filters.id) {
                 queryBuilder.where("id", filters.id)
@@ -33,7 +33,7 @@ export const getClaimByID = async (id: string) => {
     return claim.length > 0 ? claim[0] : null
 }
 
-export const insertClaim = async (id: string, userGuid: string, formType: string, applicationID: string) => {
+export const insertClaim = async (id: string, userGuid: string, formType: string, applicationID: string, trx?: any) => {
     const application = await knex("applications").where("form_confirmation_id", applicationID)
     if (application && application.length > 0) {
         const data = {
@@ -43,12 +43,15 @@ export const insertClaim = async (id: string, userGuid: string, formType: string
             associated_application_id: applicationID,
             created_date: new Date(),
             created_by: userGuid,
-            shared_with: [],
             status: "Draft",
             catchmentno: application[0].catchmentno
         }
-        const result = await knex("claims").insert(data)
-        await knex("employers_claims").insert({ employer_id: userGuid, claim_id: id })
+        const result = await knex("claims").modify((queryBuilder: any) => {
+            queryBuilder.insert(data)
+            if (trx) {
+                queryBuilder.transacting(trx)
+            }
+        })
         return result
     }
     return false
@@ -81,11 +84,6 @@ export const shareClaim = async (id: string, userGuids: string[]) => {
     const data = userGuids.map((guid) => ({ employer_id: guid, claim_id: id }))
     const result = await knex("employers_claims").insert(data).onConflict(["employer_id", "claim_id"]).ignore()
     return result
-}
-
-export const getEmployerClaimRecord = async (employerId: string, claimId: string) => {
-    const result = await knex("employers_claims").where("employer_id", employerId).where("claim_id", claimId)
-    return result.length > 0 ? result[0] : null
 }
 
 export const addServiceProviderClaim = async (
@@ -130,4 +128,19 @@ export const deleteClaim = async (id: number) => {
         return result
     }
     return null
+}
+
+export const getEmployerClaimRecord = async (employerId: string, claimId: string) => {
+    const result = await knex("employers_claims").where("employer_id", employerId).where("claim_id", claimId)
+    return result.length > 0 ? result[0] : null
+}
+
+export const insertEmployerClaimRecord = async (employerId: string, claimId: string, trx?: any) => {
+    const result = await knex("employers_claims").modify((queryBuilder: any) => {
+        queryBuilder.insert({ employer_id: employerId, claim_id: claimId })
+        if (trx) {
+            queryBuilder.transacting(trx)
+        }
+    })
+    return result
 }
