@@ -10,7 +10,7 @@ import { ListAside } from "../common/components/ListAside/ListAside"
 export const claimStatusFilters = {
     All: { label: "All" },
     New: { label: "New", status: "Submitted" },
-    InProgress: { label: "In Progress", status: "Processing" },
+    InProgress: { label: "In Progress", status: "In Progress" },
     Completed: { label: "Completed", status: "Completed" },
     Cancelled: { label: "Cancelled", status: "Cancelled" }
 } as { [key: string]: any }
@@ -89,7 +89,7 @@ export const ClaimList = (props: any) => {
                                     <Box display="flex" width="100%" justifyContent="center">
                                         <Chip
                                             label={
-                                                record.status === "Processing"
+                                                record.status === "In Progress"
                                                     ? "In Progress"
                                                     : record.status === "Completed"
                                                     ? "Completed"
@@ -103,7 +103,7 @@ export const ClaimList = (props: any) => {
                                                     ? "info"
                                                     : record.status === "Submitted"
                                                     ? "primary"
-                                                    : record.status === "Processing"
+                                                    : record.status === "In Progress"
                                                     ? "warning"
                                                     : record.status === "Completed"
                                                     ? "success"

@@ -86,6 +86,7 @@ export const addServiceProviderClaim = async (
     if (!submission) {
         return null
     }
+
     const claims = await knex("claims").where("id", submission?.data?.internalId)
     if (claims.length === 0) {
         return null
@@ -93,21 +94,27 @@ export const addServiceProviderClaim = async (
 
     let result
     if (submission?.data?.internalId) {
-        result = await knex("claims")
-            .where("id", submission.data.internalId)
-            .update({
-                form_confirmation_id:
-                    submission.state === "submitted" ? submissionResponse.submission.confirmationId : null, // only store the confirmation ID when the form has been submitted
-                form_submission_id: submissionResponse.submission.id,
-                form_submitted_date: submission.state === "submitted" ? submissionResponse.submission.createdAt : null,
-                employee_first_name: submission.data.container.employeeFirstName,
-                employee_last_name: submission.data.container.employeeLastName,
-                status: "New",
-                service_provider_form_submission_id: serviceProviderSubmissionID, // TODO: add column to DB
-                service_provider_form_internal_id: serviceProviderInternalID, // TODO: add column to DB
-                updated_by: submissionResponse.submission.createdBy,
-                updated_date: new Date()
-            })
+        try {
+            result = await knex("claims")
+                .where("id", submission.data.internalId)
+                .update({
+                    form_confirmation_id:
+                        submission.state === "submitted" ? submissionResponse.submission.confirmationId : null, // only store the confirmation ID when the form has been submitted
+                    form_submission_id: submissionResponse.submission.id,
+                    form_submitted_date:
+                        submission.state === "submitted" ? submissionResponse.submission.createdAt : null,
+                    employee_first_name: submission.data.container.employeeFirstName,
+                    employee_last_name: submission.data.container.employeeLastName,
+                    status: "New",
+                    service_provider_form_submission_id: serviceProviderSubmissionID, // TODO: add column to DB
+                    service_provider_form_internal_id: serviceProviderInternalID, // TODO: add column to DB
+                    updated_by: submissionResponse.submission.createdBy,
+                    updated_date: new Date()
+                })
+        } catch (e: any) {
+            console.log(e.message)
+            throw new Error("Database update failed")
+        }
     }
     return result
 }
