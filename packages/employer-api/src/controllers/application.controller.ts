@@ -45,8 +45,13 @@ export const getAllApplications = async (req: any, res: express.Response) => {
                         )
                         if (app) {
                             if (submission.formSubmissionStatusCode === "SUBMITTED") {
-                                if (app.status !== "Submitted" && app.status !== "Completed") {
-                                    applicationService.updateApplication(app.id, "Submitted", submission)
+                                if (
+                                    app.status !== "New" &&
+                                    app.status !== "In Progress" &&
+                                    app.status !== "Completed" &&
+                                    app.status !== "Cancelled"
+                                ) {
+                                    applicationService.updateApplication(app.id, "New", submission)
                                 }
                             } else if (app.status === "Draft") {
                                 await applicationService.updateApplication(app.id, "Draft", submission)
