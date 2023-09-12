@@ -1,5 +1,5 @@
-import { Box, Chip } from "@mui/material"
-import { FunctionField, Identifier, List, TextField, useUnselectAll } from "react-admin"
+import { Box, Chip, MenuItem, Select } from "@mui/material"
+import { FunctionField, Identifier, List, TextField, useUnselectAll, useUpdate, useRefresh } from "react-admin"
 import { useContext, useEffect, useState } from "react"
 import CatchmentLabel from "../common/components/CatchmentLabel/CatchmentLabel"
 import { CatchmentContext } from "../common/contexts/CatchmentContext/CatchmentContext"
@@ -9,8 +9,8 @@ import { ListAside } from "../common/components/ListAside/ListAside"
 
 export const applicationStatusFilters = {
     All: { label: "All" },
-    New: { label: "New", status: "Submitted" },
-    InProgress: { label: "In Progress", status: "Processing" },
+    New: { label: "New", status: "New" },
+    InProgress: { label: "In Progress", status: "In Progress" },
     Completed: { label: "Completed", status: "Completed" },
     Cancelled: { label: "Cancelled", status: "Cancelled" }
 } as { [key: string]: any }
@@ -19,6 +19,8 @@ export const ApplicationList = (props: any) => {
     const cc = useContext(CatchmentContext)
     const unselectAll = useUnselectAll("applications")
     const [statusFilter, setStatusFilter] = useState(applicationStatusFilters["All"])
+    const [update] = useUpdate()
+    const refresh = useRefresh()
 
     useEffect(() => {
         unselectAll()
@@ -26,20 +28,21 @@ export const ApplicationList = (props: any) => {
 
     const handleRowClick = (id: Identifier, resource: string, record: any) => {
         // Temporary click functionality (opens form in a new tab) (will get replaced by embed functionality eventually)
-        if (record.status === "Submitted") {
-            // submitted
-            window.open(`${process.env.REACT_APP_VIEW_URL}${record.form_submission_id}`)
-        } else if (record.status === "Draft" && record.form_submission_id) {
-            // saved
-            window.open(`${process.env.REACT_APP_DRAFT_URL}${record.form_submission_id}`)
-        } else {
-            // new
-            if (record.form_type === "Have Employee")
-                window.open(`${process.env.REACT_APP_HAVE_EMPLOYEE_URL}&token=${id}`)
-            else if (record.form_type === "Need Employee")
-                window.open(`${process.env.REACT_APP_NEED_EMPLOYEE_URL}&token=${id}`)
-        }
+        window.open(`${process.env.REACT_APP_VIEW_URL}${record.form_submission_id}`)
         return "" // rowClick expects a path to be returned
+    }
+
+    const handleStatusChange = (record, newStatus) => {
+        const diff = { status: newStatus }
+        update(
+            "applications",
+            { id: record.id, data: diff, previousData: record },
+            {
+                onSuccess: () => {
+                    refresh()
+                }
+            }
+        )
     }
 
     return (
@@ -77,22 +80,14 @@ export const ApplicationList = (props: any) => {
                                 render={(record: any) => (
                                     <Box display="flex" width="100%" justifyContent="center">
                                         <Chip
-                                            label={
-                                                record.status === "Processing"
-                                                    ? "In Progress"
-                                                    : record.status === "Completed"
-                                                    ? "Completed"
-                                                    : record.status === "Cancelled"
-                                                    ? "Cancelled"
-                                                    : "New"
-                                            }
+                                            label={record.status}
                                             size="small"
                                             color={
                                                 record.status === "Draft"
-                                                    ? "secondary"
-                                                    : record.status === "Submitted"
+                                                    ? "info"
+                                                    : record.status === "New"
                                                     ? "primary"
-                                                    : record.status === "Processing"
+                                                    : record.status === "In Progress"
                                                     ? "warning"
                                                     : record.status === "Completed"
                                                     ? "success"
@@ -103,6 +98,34 @@ export const ApplicationList = (props: any) => {
                                         />
                                     </Box>
                                 )}
+                            />
+                            {/* TODO: move to embedded form page once created */}
+                            <FunctionField
+                                label="Set Status"
+                                render={(record: any) => {
+                                    const statuses = [
+                                        { label: "New", status: "New" },
+                                        { label: "In Progress", status: "In Progress" },
+                                        { label: "Completed", status: "Completed" },
+                                        { label: "Cancelled", status: "Cancelled" }
+                                    ]
+                                    return (
+                                        <Box display="flex" width="100%" justifyContent="center">
+                                            <Select
+                                                value={record.status}
+                                                onChange={(event) => handleStatusChange(record, event.target.value)}
+                                                displayEmpty
+                                                renderValue={() => record.status}
+                                            >
+                                                {statuses.map((status) => (
+                                                    <MenuItem key={status.status} value={status.status}>
+                                                        <span aria-hidden={true}>{status.label}</span>
+                                                    </MenuItem>
+                                                ))}
+                                            </Select>
+                                        </Box>
+                                    )
+                                }}
                             />
                         </CustomDatagrid>
                     </List>

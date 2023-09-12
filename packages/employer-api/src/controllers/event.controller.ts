@@ -32,12 +32,10 @@ export const submission = async (req: any, res: express.Response) => {
         if (submission.data.container.submit === false)
             // draft submission
             return res.status(200).send()
-        console.log("SUBMISSION RES: ", submissionResponse)
-        console.log("SUBMISSION: ", submission)
 
         // Claim form submission events //
         if (formType === "ClaimForm") {
-            const serviceProviderInternalID = `xSP${submission.data.internalId}` // create a new internal id for the SP form
+            const serviceProviderInternalID = `SPx${submission.data.internalId}` // create a new internal id for the SP form
             const createDraftResult = await formService.createTeamProtectedDraft(
                 process.env.SP_CLAIM_FORM_ID as string,
                 process.env.SP_CLAIM_FORM_PASS as string,
@@ -45,7 +43,6 @@ export const submission = async (req: any, res: express.Response) => {
                 serviceProviderInternalID,
                 submission.data
             )
-            console.log("CREATE DRAFT RESULT: ", createDraftResult)
             if (createDraftResult?.id && createDraftResult.submission) {
                 const addResult = await claimService.addServiceProviderClaim(
                     submissionResponse,
