@@ -6,7 +6,6 @@ CREATE TABLE IF NOT EXISTS public.applications
     form_type character varying(255) COLLATE pg_catalog."default",
     catchmentno integer,
     num_positions integer,
-    shared_with text[] COLLATE pg_catalog."default",
     form_confirmation_id character varying(255) COLLATE pg_catalog."default",
     form_submission_id character varying(255) COLLATE pg_catalog."default",
     form_submitted_date date,
@@ -22,8 +21,6 @@ TABLESPACE pg_default;
 ALTER TABLE IF EXISTS public.applications
     OWNER to postgres;
 
-
-
 CREATE TABLE IF NOT EXISTS public.claims
 (
     id character varying(255) COLLATE pg_catalog."default" NOT NULL,
@@ -34,7 +31,6 @@ CREATE TABLE IF NOT EXISTS public.claims
     employee_first_name character varying(255) COLLATE pg_catalog."default",
     employee_last_name character varying(255) COLLATE pg_catalog."default",
     associated_application_id character varying(10) COLLATE pg_catalog."default",
-    shared_with text[] COLLATE pg_catalog."default",
     form_confirmation_id character varying(255) COLLATE pg_catalog."default",
     form_submission_id character varying(255) COLLATE pg_catalog."default",
     form_submitted_date date,

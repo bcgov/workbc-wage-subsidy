@@ -15,7 +15,7 @@ export const getAllApplications = async (
         .whereIn("a.id", applicationIds)
         .select("a.*")
         .groupBy("a.id")
-        .select(knex.raw("ARRAY_AGG(e.contact_name) as shared_with_dynamic"))
+        .select(knex.raw("ARRAY_AGG(e.contact_name) as shared_with"))
         .modify((queryBuilder: any) => {
             if (filters.id) {
                 queryBuilder.where("id", filters.id)
@@ -39,18 +39,28 @@ export const getApplicationByID = async (id: string) => {
     return application.length > 0 ? application[0] : null
 }
 
-export const insertApplication = async (id: string, userGuid: string, formType: string, submissionID: string) => {
+export const insertApplication = async (
+    id: string,
+    userGuid: string,
+    formType: string,
+    submissionID: string,
+    trx?: any
+) => {
     const data = {
         id,
         form_type: formType,
         form_submission_id: submissionID,
         created_date: new Date(),
         created_by: userGuid,
-        shared_with: [],
-        status: "Draft"
+        status: "Draft",
+        catchmentno: 5 // Temporary, for testing: set arbitrary catchment.
     }
-    const result = await knex("applications").insert(data)
-    await knex("employers_applications").insert({ employer_id: userGuid, application_id: id })
+    const result = await knex("applications").modify((queryBuilder: any) => {
+        queryBuilder.insert(data)
+        if (trx) {
+            queryBuilder.transacting(trx)
+        }
+    })
     return result
 }
 
@@ -87,6 +97,11 @@ export const shareApplication = async (id: string, userGuids: string[]) => {
     return result
 }
 
+export const deleteApplication = async (id: number) => {
+    const result = await knex("applications").where("id", id).del()
+    return result
+}
+
 export const getEmployerApplicationRecord = async (employerId: string, applicationId: string) => {
     const result = await knex("employers_applications")
         .where("employer_id", employerId)
@@ -94,7 +109,12 @@ export const getEmployerApplicationRecord = async (employerId: string, applicati
     return result.length > 0 ? result[0] : null
 }
 
-export const deleteApplication = async (id: number) => {
-    const result = await knex("applications").where("id", id).del()
+export const insertEmployerApplicationRecord = async (employerId: string, applicationId: string, trx?: any) => {
+    const result = await knex("employers_applications").modify((queryBuilder: any) => {
+        queryBuilder.insert({ employer_id: employerId, application_id: applicationId })
+        if (trx) {
+            queryBuilder.transacting(trx)
+        }
+    })
     return result
 }

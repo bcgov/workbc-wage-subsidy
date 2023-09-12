@@ -1,5 +1,5 @@
 import { Box, Chip } from "@mui/material"
-import { FunctionField, List, TextField } from "react-admin"
+import { FunctionField, List, TextField, useGetIdentity } from "react-admin"
 import { applicationStatusFilters } from "../Applications/ApplicationList"
 import { DatagridStyles } from "../common/styles/DatagridStyles"
 import { CustomSearchInput } from "./ClaimCustomSearchInput"
@@ -15,6 +15,8 @@ const applicationFilters = [
 ]
 
 export const ClaimCreateSelectApplication = (props: any) => {
+    const { identity } = useGetIdentity()
+
     const handleClick = (id, resource, record) => {
         return "/claims/create/Form/" + record.form_confirmation_id
     }
@@ -64,7 +66,14 @@ export const ClaimCreateSelectApplication = (props: any) => {
                                 record.form_submitted_date ? record.form_submitted_date.split("T")[0] : "-" // remove timestamp
                         }
                     />
-                    <TextField label="Shared With" source="shared_with" emptyText="-" />
+                    <FunctionField
+                        label="Shared With"
+                        render={(record: any) => {
+                            return record["shared_with"].length > 1
+                                ? record["shared_with"].filter((fullName) => fullName !== identity?.fullName)
+                                : "-"
+                        }}
+                    />
                     <FunctionField
                         label=""
                         render={(record: any) => (

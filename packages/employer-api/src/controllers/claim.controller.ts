@@ -5,6 +5,7 @@ import * as express from "express"
 import * as claimService from "../services/claim.service"
 import * as employerService from "../services/employer.service"
 import * as formService from "../services/form.service"
+import { insertClaim } from "../lib/transactions"
 
 export const getAllClaims = async (req: any, res: express.Response) => {
     try {
@@ -68,14 +69,14 @@ export const createClaim = async (req: any, res: express.Response) => {
         if (!req.body?.guid || req.body.guid !== bceid_guid) {
             return res.status(403).send("Forbidden")
         }
-        const created = await claimService.insertClaim(
+        const insertResult = await insertClaim(
             req.body.formKey,
             req.body.guid,
             req.body.formtype,
             req.body.application_id
         )
-        if (created) {
-            return res.status(200).send({ data: created })
+        if (insertResult?.rowCount === 1) {
+            return res.status(200).send({ data: insertResult })
         }
         return res.status(500).send("Internal Server Error")
     } catch (e: unknown) {
