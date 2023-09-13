@@ -13,7 +13,11 @@ const Ready = () => {
     const handleClick = () => logout()
     React.useEffect(() => {
         // checking storage for events when storage is changed
-        if (keycloak && keycloak.idTokenParsed?.identity_provider === "bceid") {
+        if (
+            keycloak &&
+            (keycloak.idTokenParsed?.identity_provider === "bceid" ||
+                keycloak.idTokenParsed?.identity_provider === "bceidboth")
+        ) {
             setAccess(true)
             setLoading(false)
         } else if (keycloak.authenticated) {
