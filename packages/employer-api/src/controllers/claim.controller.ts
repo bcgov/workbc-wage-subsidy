@@ -49,7 +49,8 @@ export const getAllClaims = async (req: any, res: express.Response) => {
             "Content-Range": `0 - ${claims.pagination.to} / ${claims.pagination.total}`
         })
         return res.status(200).send(claims.data)
-    } catch (e: unknown) {
+    } catch (e: any) {
+        console.log(e?.message)
         return res.status(500).send("Server Error")
     }
 }
@@ -73,7 +74,8 @@ export const createClaim = async (req: any, res: express.Response) => {
             return res.status(200).send({ data: insertResult })
         }
         return res.status(500).send("Internal Server Error")
-    } catch (e: unknown) {
+    } catch (e: any) {
+        console.log(e?.message)
         return res.status(500).send("Internal Server Error")
     }
 }
@@ -91,7 +93,8 @@ export const getOneClaim = async (req: any, res: express.Response) => {
         }
         const claims = await claimService.getClaimByID(id)
         return res.status(200).send(claims)
-    } catch (e: unknown) {
+    } catch (e: any) {
+        console.log(e?.message)
         return res.status(500).send("Internal Server Error")
     }
 }
@@ -109,7 +112,8 @@ export const updateClaim = async (req: any, res: express.Response) => {
         }
         await claimService.updateClaim(id, null, req.body)
         return res.status(200).send({ id })
-    } catch (e: unknown) {
+    } catch (e: any) {
+        console.log(e?.message)
         return res.status(500).send("Internal Server Error")
     }
 }
@@ -133,7 +137,8 @@ export const shareClaim = async (req: any, res: express.Response) => {
         }
         await claimService.shareClaim(id, users)
         return res.status(200).send({ id })
-    } catch (e: unknown) {
+    } catch (e: any) {
+        console.log(e?.message)
         return res.status(500).send("Internal Server Error")
     }
 }
@@ -156,7 +161,8 @@ export const deleteClaim = async (req: any, res: express.Response) => {
             return res.status(200).send({ id })
         }
         return res.status(401).send("Not Found or Not Authorized")
-    } catch (e: unknown) {
+    } catch (e: any) {
+        console.log(e?.message)
         return res.status(500).send("Internal Server Error")
     }
 }
