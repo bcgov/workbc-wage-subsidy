@@ -23,7 +23,6 @@ export const ClaimCreateForm = (props: any) => {
     const { identity, isLoading: identityLoading } = useGetIdentity()
     const defaultValues = {
         formKey: uuidv4(),
-        userName: identity?.username || "",
         guid: identity?.guid || ""
     }
 

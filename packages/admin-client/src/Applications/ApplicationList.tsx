@@ -84,7 +84,7 @@ export const ApplicationList = (props: any) => {
                                             size="small"
                                             color={
                                                 record.status === "Draft"
-                                                    ? "info"
+                                                    ? "secondary"
                                                     : record.status === "New"
                                                     ? "primary"
                                                     : record.status === "In Progress"
