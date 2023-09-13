@@ -23,7 +23,6 @@ export const ApplicationCreateForm = (props: any) => {
     const { identity, isLoading: identityLoading } = useGetIdentity()
     const defaultValues = {
         formKey: uuidv4(),
-        userName: identity?.username || "",
         guid: identity?.guid || ""
     }
     // TODO: use current value of formType to obtain form URL.

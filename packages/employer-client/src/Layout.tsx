@@ -28,6 +28,7 @@ export default (props: any) => {
                         <HorizontalMenu.Item label="Claim Forms" to="/claims" value="claims" style={itemStyle} />
                     </HorizontalMenu>
                 }
+                userMenu={true}
             />
             <ReactQueryDevtools initialIsOpen={false} />
         </>

@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useCallback, useState } from "react"
 import { Link as RouterLink } from "react-router-dom"
 import { Toolbar, AppBar, AppBarProps, Box, Link, Button } from "@mui/material"
 import { styled } from "@mui/material/styles"
@@ -8,9 +8,20 @@ import { faBookOpenReader } from "@fortawesome/pro-solid-svg-icons"
 import { useContainerLayout, HorizontalMenu } from "@react-admin/ra-navigation"
 import Logo from "./Logo"
 import Tag from "./Tag"
+import { CustomUserMenu } from "./CustomUserMenu"
+import UserProfileModal from "./UserProfileModal"
 
 export const Header = (props: HeaderProps) => {
     const { menu = defaultMenu, toolbar = defaultToolbar, userMenu = defaultUserMenu } = useContainerLayout(props)
+    const [modalIsOpen, setModalIsOpen] = useState(false)
+
+    const openModal = useCallback(() => {
+        setModalIsOpen(true)
+    }, [])
+
+    const closeModal = useCallback(() => {
+        setModalIsOpen(false)
+    }, [])
 
     return (
         <>
@@ -34,7 +45,13 @@ export const Header = (props: HeaderProps) => {
                     </Box>
                     <Box display="flex">
                         {toolbar}
-                        {typeof userMenu === "boolean" ? userMenu === true ? <UserMenu /> : null : userMenu}
+                        {typeof userMenu === "boolean" ? (
+                            userMenu === true ? (
+                                <CustomUserMenu openModal={openModal} />
+                            ) : null
+                        ) : (
+                            userMenu
+                        )}
                     </Box>
                 </Toolbar>
             </Root1>
@@ -79,6 +96,9 @@ export const Header = (props: HeaderProps) => {
                     </Button>
                 </Toolbar>
             </Root2>
+            {/* Mount modal outside of CustomUserMenu. */}
+            {/* Then menu can close when modal opens, allowing modal to receive focus. */}
+            <UserProfileModal isOpen={modalIsOpen} onRequestClose={closeModal} contentLabel="Update user profile" />
         </>
     )
 }

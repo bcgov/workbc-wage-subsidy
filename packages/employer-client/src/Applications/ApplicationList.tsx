@@ -72,7 +72,14 @@ export const ApplicationList = (props: any) => {
                                         record.form_submitted_date ? record.form_submitted_date.split("T")[0] : "-" // remove timestamp
                                 }
                             />
-                            <TextField label="Shared With" source="shared_with" emptyText="-" />
+                            <FunctionField
+                                label="Shared With"
+                                render={(record: any) => {
+                                    return record["shared_with"].length > 1
+                                        ? record["shared_with"].filter((fullName) => fullName !== identity?.fullName)
+                                        : "-"
+                                }}
+                            />
                             <FunctionField
                                 label=""
                                 render={(record: any) => {
@@ -93,7 +100,7 @@ export const ApplicationList = (props: any) => {
                                                 size="small"
                                                 color={
                                                     record.status === "Draft"
-                                                        ? "info"
+                                                        ? "secondary"
                                                         : record.status === "New"
                                                         ? "primary"
                                                         : record.status === "In Progress"

@@ -8,7 +8,14 @@ export const getAllApplications = async (
     sort: string[],
     user: string
 ) => {
-    const applications = await knex("applications")
+    const applicationIds = knex("employers_applications").select("application_id").where("employer_id", user)
+    const applicationsAndSharedUsers = await knex("applications as a")
+        .join("employers_applications as ea", "a.id", "=", "ea.application_id")
+        .join("employers as e", "ea.employer_id", "=", "e.id")
+        .whereIn("a.id", applicationIds)
+        .select("a.*")
+        .groupBy("a.id")
+        .select(knex.raw("ARRAY_AGG(e.contact_name) as shared_with"))
         .modify((queryBuilder: any) => {
             if (filters.id) {
                 queryBuilder.where("id", filters.id)
@@ -19,41 +26,41 @@ export const getAllApplications = async (
             if (filters.form_confirmation_id) {
                 queryBuilder.where("form_confirmation_id", filters.form_confirmation_id)
             }
-            if (filters.catchmentno) {
-                queryBuilder.where("catchmentno", Number(filters.catchmentno))
-            }
-            if (user) {
-                queryBuilder.where("created_by", user) // TODO .orWhereLike("shared_with", `%${user}%`)
-            }
             if (sort) {
                 queryBuilder.orderBy(sort[0], sort[1])
             }
         })
         .paginate({ perPage, currentPage: currPage, isLengthAware: true })
-    return applications
-}
-
-export const getApplicationByCatchment = async (ca: number[]) => {
-    const claims = await knex("applications").where((builder: any) => builder.whereIn("catchmentno", ca))
-    return claims
+    return applicationsAndSharedUsers
 }
 
 export const getApplicationByID = async (id: string) => {
-    const wages = await knex("applications").where((builder: any) => builder.where("id", id))
-    return wages[0]
+    const application = await knex("application").where("id", id)
+    return application.length > 0 ? application[0] : null
 }
 
-export const insertApplication = async (id: string, user: string, formType: string, submissionID: string) => {
+export const insertApplication = async (
+    id: string,
+    userGuid: string,
+    formType: string,
+    submissionID: string,
+    trx?: any
+) => {
     const data = {
         id,
         form_type: formType,
         form_submission_id: submissionID,
         created_date: new Date(),
-        created_by: user,
-        shared_with: [],
-        status: "Draft"
+        created_by: userGuid,
+        status: "Draft",
+        catchmentno: 5 // Temporary, for testing: set arbitrary catchment.
     }
-    const result = await knex("applications").insert(data)
+    const result = await knex("applications").modify((queryBuilder: any) => {
+        queryBuilder.insert(data)
+        if (trx) {
+            queryBuilder.transacting(trx)
+        }
+    })
     return result
 }
 
@@ -81,7 +88,33 @@ export const updateApplication = async (id: number, status: string | null, form:
     return result
 }
 
+export const shareApplication = async (id: string, userGuids: string[]) => {
+    const data = userGuids.map((guid) => ({ employer_id: guid, application_id: id }))
+    const result = await knex("employers_applications")
+        .insert(data)
+        .onConflict(["employer_id", "application_id"])
+        .ignore()
+    return result
+}
+
 export const deleteApplication = async (id: number) => {
     const result = await knex("applications").where("id", id).del()
+    return result
+}
+
+export const getEmployerApplicationRecord = async (employerId: string, applicationId: string) => {
+    const result = await knex("employers_applications")
+        .where("employer_id", employerId)
+        .where("application_id", applicationId)
+    return result.length > 0 ? result[0] : null
+}
+
+export const insertEmployerApplicationRecord = async (employerId: string, applicationId: string, trx?: any) => {
+    const result = await knex("employers_applications").modify((queryBuilder: any) => {
+        queryBuilder.insert({ employer_id: employerId, application_id: applicationId })
+        if (trx) {
+            queryBuilder.transacting(trx)
+        }
+    })
     return result
 }
