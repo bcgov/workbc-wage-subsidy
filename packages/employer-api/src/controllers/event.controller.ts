@@ -60,7 +60,7 @@ export const submission = async (req: any, res: express.Response) => {
         }
         return res.status(200).send()
     } catch (e: any) {
-        console.log(e)
+        console.log(e?.message)
         return res.status(500).send("Server Error")
     }
 }

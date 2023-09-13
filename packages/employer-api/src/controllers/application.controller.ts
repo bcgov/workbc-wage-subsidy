@@ -72,7 +72,8 @@ export const getAllApplications = async (req: any, res: express.Response) => {
             "Content-Range": `0 - ${applications.pagination.to} / ${applications.pagination.total}`
         })
         return res.status(200).send(applications.data)
-    } catch (e: unknown) {
+    } catch (e: any) {
+        console.log(e?.message)
         return res.status(500).send("Server Error")
     }
 }
@@ -119,7 +120,8 @@ export const createApplication = async (req: any, res: express.Response) => {
             return res.status(500).send("Internal Server Error")
         }
         return res.status(200).send("Created")
-    } catch (e: unknown) {
+    } catch (e: any) {
+        console.log(e?.message)
         return res.status(500).send("Internal Server Error")
     }
 }
@@ -155,7 +157,8 @@ export const updateApplication = async (req: any, res: express.Response) => {
         }
         await applicationService.updateApplication(id, null, req.body)
         return res.status(200).send({ id })
-    } catch (e: unknown) {
+    } catch (e: any) {
+        console.log(e?.message)
         return res.status(500).send("Internal Server Error")
     }
 }
@@ -179,7 +182,8 @@ export const shareApplication = async (req: any, res: express.Response) => {
         }
         await applicationService.shareApplication(id, users)
         return res.status(200).send({ id })
-    } catch (e: unknown) {
+    } catch (e: any) {
+        console.log(e?.message)
         return res.status(500).send("Internal Server Error")
     }
 }
@@ -202,7 +206,8 @@ export const deleteApplication = async (req: any, res: express.Response) => {
             return res.status(200).send({ id })
         }
         return res.status(401).send("Not Found or Not Authorized")
-    } catch (e: unknown) {
+    } catch (e: any) {
+        console.log(e?.message)
         return res.status(500).send("Internal Server Error")
     }
 }

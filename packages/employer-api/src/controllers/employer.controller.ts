@@ -27,8 +27,9 @@ export const getAllEmployers = async (req: any, res: express.Response) => {
             "Content-Range": `0 - ${employers.pagination.to} / ${employers.pagination.total}`
         })
         return res.status(200).send(employers.data)
-    } catch (e: unknown) {
-        return res.status(500).send("Internal Server Error")
+    } catch (e: any) {
+        console.log(e?.message)
+        return res.status(500).send("Server Error")
     }
 }
 
@@ -43,8 +44,9 @@ export const createEmployer = async (req: any, res: express.Response) => {
         }
         const insertResult = await employerService.insertEmployer(req.body)
         return res.status(200).send({ data: insertResult })
-    } catch (e: unknown) {
-        return res.status(500).send("Internal Server Error")
+    } catch (e: any) {
+        console.log(e?.message)
+        return res.status(500).send("Server Error")
     }
 }
 
@@ -63,8 +65,9 @@ export const getOneEmployer = async (req: any, res: express.Response) => {
             return res.status(404).send("Not Found")
         }
         return res.status(200).send(employer)
-    } catch (e: unknown) {
-        return res.status(500).send("Internal Server Error")
+    } catch (e: any) {
+        console.log(e?.message)
+        return res.status(500).send("Server Error")
     }
 }
 
@@ -84,8 +87,9 @@ export const updateEmployer = async (req: any, res: express.Response) => {
         }
         await employerService.updateEmployer(id, req.body)
         return res.status(200).send({ id })
-    } catch (e: unknown) {
-        return res.status(500).send("Internal Server Error")
+    } catch (e: any) {
+        console.log(e?.message)
+        return res.status(500).send("Server Error")
     }
 }
 
@@ -106,7 +110,8 @@ export const createOrUpdateEmployer = async (req: any, res: express.Response) =>
             await employerService.updateEmployer(id, req.body)
         }
         return res.status(200).send({ id })
-    } catch (e: unknown) {
-        return res.status(500).send("Internal Server Error")
+    } catch (e: any) {
+        console.log(e?.message)
+        return res.status(500).send("Server Error")
     }
 }
