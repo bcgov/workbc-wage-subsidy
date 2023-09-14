@@ -30,10 +30,12 @@ export const submission = async (req: any, res: express.Response) => {
         const submissionResponse = await formService.getSubmission(req.body.formId, formPass, req.body.submissionId)
         const submission = submissionResponse?.submission?.submission
         if (!submission) {
+            console.log("formService getSubmission failed")
             return res.status(500).send("Internal Server Error")
         }
+        console.log("RETRIEVED SUBMISSION: ", submissionResponse)
 
-        if (submission?.data?.submit === false) {
+        if (submissionResponse.submission.draft !== false) {
             // draft submission
             return res.status(200).send()
         }
@@ -58,10 +60,12 @@ export const submission = async (req: any, res: express.Response) => {
                     return res.status(200).send()
                 }
 
-                return res.status(500).send("Unable to update claim database entry")
+                console.log("Unable to update claim database entry")
+                return res.status(500).send("Internal Server Error")
             }
 
-            return res.status(500).send("Unable to create new service provider claim form")
+            console.log("Unable to create new service provider claim form")
+            return res.status(500).send("Internal Server Error")
         }
         return res.status(200).send()
     } catch (e: any) {
