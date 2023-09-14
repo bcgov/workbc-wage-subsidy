@@ -1,9 +1,10 @@
 import { Box, Chip } from "@mui/material"
-import { FunctionField, List, TextField, useGetIdentity } from "react-admin"
+import { FunctionField, List, TextField, useCreate, useGetIdentity, useRedirect } from "react-admin"
 import { applicationStatusFilters } from "../Applications/ApplicationList"
 import { DatagridStyles } from "../common/styles/DatagridStyles"
 import { CustomSearchInput } from "./ClaimCustomSearchInput"
 import CustomDatagrid from "../common/components/CustomDatagrid/CustomDatagrid"
+import { v4 as uuidv4 } from "uuid"
 
 const applicationFilters = [
     <CustomSearchInput
@@ -16,9 +17,17 @@ const applicationFilters = [
 
 export const ClaimCreateSelectApplication = (props: any) => {
     const { identity } = useGetIdentity()
+    const redirect = useRedirect()
+    const [create] = useCreate()
 
-    const handleClick = (id, resource, record) => {
-        return "/claims/create/Form/" + record.form_confirmation_id
+    const handleClick = async (id, resource, record) => {
+        if (identity?.guid && record?.form_confirmation_id) {
+            await create(
+                "claims",
+                { data: { formKey: uuidv4(), guid: identity.guid, application_id: record.form_confirmation_id } },
+                { onSuccess: (data, error) => redirect("/ViewForm/Draft/" + data.id, "") }
+            )
+        }
     }
 
     return (
