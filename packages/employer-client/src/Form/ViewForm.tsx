@@ -1,19 +1,41 @@
+/* eslint-disable jsx-a11y/iframe-has-title */
+import { Box } from "@mui/material"
+import { useParams } from "react-router"
+
 export const ViewForm = () => {
+    const { urlType, formId } = useParams()
+    if (!urlType || !formId) {
+        return <span />
+    }
+
+    let formUrl
+    if (urlType === "View") formUrl = process.env.REACT_APP_VIEW_URL + formId
+    if (urlType === "Draft") formUrl = process.env.REACT_APP_DRAFT_URL + formId
+
     return (
-        <>
-            <div style={{ position: "relative", height: "700px", marginTop: 7 }}>
-                <div
-                    style={{ backgroundColor: "white", width: "100%", height: "68px", position: "absolute", zIndex: 1 }}
-                >
-                    &nbsp;
-                </div>
-                <iframe
-                    src={`${process.env.REACT_APP_HAVE_EMPLOYEE_URL}&token=test1234`}
-                    style={{ width: "100%", height: "700px" }}
-                    onLoad={(e) => {}}
-                ></iframe>
-                {/* <div className="bottom-hider" style={{ backgroundColor: "white", width: "100%", height: "110px", position: "absolute", zIndex: 1, bottom: 0 }}>&nbsp;</div> */}
+        <Box style={{ position: "relative", marginTop: 7 }}>
+            <div style={{ backgroundColor: "white", width: "100%", height: "70px", position: "absolute", zIndex: 1 }}>
+                &nbsp;
             </div>
-        </>
+            <iframe
+                src={formUrl}
+                style={{ border: "0", width: "100%", height: "160em", overflow: "hidden" }}
+                onLoad={(e) => {}}
+                scrolling="no"
+            />
+            <div
+                className="bottom-hider"
+                style={{
+                    backgroundColor: "white",
+                    width: "100%",
+                    height: "110px",
+                    position: "absolute",
+                    zIndex: 1,
+                    bottom: 0
+                }}
+            >
+                &nbsp;
+            </div>
+        </Box>
     )
 }
