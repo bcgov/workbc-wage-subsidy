@@ -27,7 +27,7 @@ export const ViewForm = () => {
             )}
             <iframe
                 src={formUrl}
-                style={{ border: "0", width: "100%", height: "160em", overflow: "hidden" }}
+                style={{ border: "0", width: "100%", height: "175em", overflow: "hidden" }}
                 onLoad={(e) => {
                     setIframeLoaded(true)
                 }}
