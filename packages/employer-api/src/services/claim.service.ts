@@ -36,7 +36,6 @@ export const getClaimByID = async (id: string) => {
 export const insertClaim = async (
     id: string,
     userGuid: string,
-    formType: string,
     applicationID: string,
     submissionID: string,
     trx?: any
@@ -45,7 +44,6 @@ export const insertClaim = async (
     if (application && application.length > 0) {
         const data = {
             id,
-            form_type: formType,
             form_submission_id: submissionID,
             position_title: application[0].position_title,
             associated_application_id: applicationID,

@@ -26,7 +26,6 @@ CREATE TABLE IF NOT EXISTS public.claims
     id character varying(255) COLLATE pg_catalog."default" NOT NULL,
     position_title character varying(255) COLLATE pg_catalog."default",
     status character varying(255) COLLATE pg_catalog."default",
-    form_type character varying(255) COLLATE pg_catalog."default",
     catchmentno integer,
     employee_first_name character varying(255) COLLATE pg_catalog."default",
     employee_last_name character varying(255) COLLATE pg_catalog."default",

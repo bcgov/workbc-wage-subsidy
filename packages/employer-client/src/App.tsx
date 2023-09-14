@@ -10,7 +10,6 @@ import { ApplicationCreate } from "./Applications/ApplicationCreate"
 import { ApplicationList } from "./Applications/ApplicationList"
 import useAuthProvider from "./Auth/authProvider"
 import { ClaimCreate } from "./Claims/ClaimCreate"
-import { ClaimCreateForm } from "./Claims/ClaimCreateForm"
 import { ClaimCreateSelectApplication } from "./Claims/ClaimCreateSelectApplication"
 import { ClaimList } from "./Claims/ClaimList"
 import { COLOURS } from "./Colours"
@@ -226,7 +225,6 @@ const CustomAdminWithKeycloak = () => {
                     />
                     <Resource name="claims" options={{ label: "Claims" }} list={ClaimList} create={ClaimCreate}>
                         <Route path="create/SelectApplication" element={<ClaimCreateSelectApplication />} />
-                        <Route path="create/Form/:appID" element={<ClaimCreateForm />} />
                     </Resource>
                     <CustomRoutes>
                         <Route path="ViewForm/:urlType/:formId" element={<ViewForm />} />

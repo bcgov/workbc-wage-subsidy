@@ -18,15 +18,9 @@ export const insertApplication = async (id: string, userGuid: string, formType: 
         return applicationResult
     })
 
-export const insertClaim = async (
-    id: string,
-    userGuid: string,
-    formType: string,
-    applicationID: string,
-    submissionID: string
-) =>
+export const insertClaim = async (id: string, userGuid: string, applicationID: string, submissionID: string) =>
     knex.transaction(async (trx: any) => {
-        const claimResult = await claimService.insertClaim(id, userGuid, formType, applicationID, submissionID, trx)
+        const claimResult = await claimService.insertClaim(id, userGuid, applicationID, submissionID, trx)
         if (claimResult.rowCount !== 1) {
             throw new Error("Insert failed")
         }
