@@ -64,18 +64,32 @@ export const createClaim = async (req: any, res: express.Response) => {
         if (!req.body?.guid || req.body.guid !== bceid_guid) {
             return res.status(403).send("Forbidden")
         }
-        const insertResult = await insertClaim(
+        // Create a new form draft //
+        const createDraftResult = await formService.createLoginProtectedDraft(
+            req.kauth.grant.access_token,
+            process.env.CLAIM_FORM_ID as string,
+            process.env.CLAIM_FORM_VERSION_ID as string,
             req.body.formKey,
-            req.body.guid,
-            req.body.formtype,
-            req.body.application_id
+            {}
         )
-        if (insertResult?.rowCount === 1) {
-            return res.status(200).send({ data: insertResult })
+        if (createDraftResult?.id) {
+            const insertResult = await insertClaim(
+                req.body.formKey,
+                req.body.guid,
+                req.body.formType,
+                req.body.application_id,
+                createDraftResult.id
+            )
+            if (insertResult?.rowCount === 1) {
+                // successful insertion
+                return res.status(200).send({ data: insertResult })
+            }
+        } else {
+            return res.status(500).send("Internal Server Error")
         }
         return res.status(500).send("Internal Server Error")
     } catch (e: any) {
-        console.log(e?.message)
+        console.log(e)
         return res.status(500).send("Internal Server Error")
     }
 }
