@@ -1,10 +1,10 @@
 /* eslint-disable camelcase */
 /* eslint-disable import/prefer-default-export */
 import * as express from "express"
+import { insertApplication } from "../lib/transactions"
 import * as applicationService from "../services/application.service"
 import * as employerService from "../services/employer.service"
 import * as formService from "../services/form.service"
-import { insertApplication } from "../lib/transactions"
 
 export const getAllApplications = async (req: any, res: express.Response) => {
     try {
@@ -113,7 +113,7 @@ export const createApplication = async (req: any, res: express.Response) => {
             )
             if (insertResult?.rowCount === 1) {
                 // successful insertion
-                return res.status(200).send({ data: insertResult })
+                return res.status(200).send({ submissionId: createDraftResult.id })
             }
         } else {
             return res.status(500).send("Internal Server Error")
