@@ -1,14 +1,23 @@
 import Box from "@mui/material/Box"
 import Grid from "@mui/material/Grid"
-import { useRedirect } from "react-admin"
+import { useCreate, useGetIdentity, useRedirect } from "react-admin"
+import { v4 as uuidv4 } from "uuid"
 import BCGovPrimaryButton from "../common/components/BCGovPrimaryButton/BCGovPrimaryButton"
 import Card from "../common/components/Card/Card"
 
 export const ApplicationCreate = () => {
     const redirect = useRedirect()
+    const { identity } = useGetIdentity()
+    const [create] = useCreate()
 
-    const handleClick = (formType) => {
-        redirect("Form/" + formType, "applications")
+    const handleClick = async (formType) => {
+        if (identity?.guid) {
+            await create(
+                "applications",
+                { data: { formKey: uuidv4(), guid: identity?.guid || "", formType: formType } },
+                { onSuccess: (data, error) => redirect("/ViewForm/Draft/" + data.id, "") }
+            )
+        }
     }
 
     return (
@@ -49,7 +58,7 @@ export const ApplicationCreate = () => {
                                     <Box display="flex" justifyContent="right">
                                         <BCGovPrimaryButton
                                             text="I Have an Employee"
-                                            onClick={() => handleClick("HaveEmployee")}
+                                            onClick={() => handleClick("Have Employee")}
                                         />
                                     </Box>
                                 </Grid>
@@ -57,7 +66,7 @@ export const ApplicationCreate = () => {
                                     <Box display="flex" justifyContent="left">
                                         <BCGovPrimaryButton
                                             text="I Need an Employee"
-                                            onClick={() => handleClick("NeedEmployee")}
+                                            onClick={() => handleClick("Need Employee")}
                                         />
                                     </Box>
                                 </Grid>
