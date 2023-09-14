@@ -20,7 +20,7 @@ export const ClaimList = (props: any) => {
 
     const handleRowClick = (id: Identifier, resource: string, record: any) => {
         // Temporary click functionality (opens form in a new tab) (will get replaced by embed functionality eventually)
-        if (record.status === "Submitted") {
+        if (record.status === "New") {
             // submitted
             window.open(`${process.env.REACT_APP_VIEW_URL}${record.form_submission_id}`)
         } else if (record.status === "Draft" && record.form_submission_id) {
