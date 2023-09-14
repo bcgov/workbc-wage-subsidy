@@ -37,7 +37,6 @@ keycloak.login = (options) => {
 
 const onToken = () => {
     if (keycloak.token && keycloak.refreshToken) {
-        console.log(keycloak.token)
         localStorage.setItem("token", keycloak.token)
         localStorage.setItem("refresh-token", keycloak.refreshToken)
         localStorage.setItem("provider", keycloak.idTokenParsed?.identity_provider)
@@ -202,7 +201,10 @@ const CustomAdminWithKeycloak = () => {
     const customAuthProvider = useAuthProvider(process.env.REACT_APP_KEYCLOAK_CLIENT_ID ?? "")
     const [permissions, setPermissions] = useState(keycloak.idTokenParsed?.identity_provider === "bceid")
     React.useEffect(() => {
-        if (keycloak && keycloak.idTokenParsed?.identity_provider === "bceid") {
+        if (
+            (keycloak && keycloak.idTokenParsed?.identity_provider === "bceid") ||
+            (keycloak && keycloak.idTokenParsed?.identity_provider === "bceidboth")
+        ) {
             setPermissions(true)
         }
     }, [])

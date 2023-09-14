@@ -3,7 +3,9 @@
 import * as express from "express"
 
 import * as claimService from "../services/claim.service"
+import * as employerService from "../services/employer.service"
 import * as formService from "../services/form.service"
+import { insertClaim } from "../lib/transactions"
 
 export const getAllClaims = async (req: any, res: express.Response) => {
     try {
@@ -47,7 +49,8 @@ export const getAllClaims = async (req: any, res: express.Response) => {
             "Content-Range": `0 - ${claims.pagination.to} / ${claims.pagination.total}`
         })
         return res.status(200).send(claims.data)
-    } catch (e: unknown) {
+    } catch (e: any) {
+        console.log(e?.message)
         return res.status(500).send("Server Error")
     }
 }
@@ -58,17 +61,35 @@ export const createClaim = async (req: any, res: express.Response) => {
         if (bceid_guid === undefined) {
             return res.status(403).send("Not Authorized")
         }
-        const created = await claimService.insertClaim(
+        if (!req.body?.guid || req.body.guid !== bceid_guid) {
+            return res.status(403).send("Forbidden")
+        }
+        // Create a new form draft //
+        const createDraftResult = await formService.createLoginProtectedDraft(
+            req.kauth.grant.access_token,
+            process.env.CLAIM_FORM_ID as string,
+            process.env.CLAIM_FORM_VERSION_ID as string,
             req.body.formKey,
-            req.body.guid,
-            req.body.formtype,
-            req.body.application_id
+            {}
         )
-        if (created) {
-            return res.status(200).send({ data: created })
+        if (createDraftResult?.id) {
+            const insertResult = await insertClaim(
+                req.body.formKey,
+                req.body.guid,
+                req.body.formType,
+                req.body.application_id,
+                createDraftResult.id
+            )
+            if (insertResult?.rowCount === 1) {
+                // successful insertion
+                return res.status(200).send({ data: insertResult })
+            }
+        } else {
+            return res.status(500).send("Internal Server Error")
         }
         return res.status(500).send("Internal Server Error")
-    } catch (e: unknown) {
+    } catch (e: any) {
+        console.log(e)
         return res.status(500).send("Internal Server Error")
     }
 }
@@ -80,9 +101,14 @@ export const getOneClaim = async (req: any, res: express.Response) => {
             return res.status(403).send("Not Authorized")
         }
         const { id } = req.params
+        const employerClaimRecord = await claimService.getEmployerClaimRecord(bceid_guid, id)
+        if (!employerClaimRecord) {
+            return res.status(403).send("Forbidden or Not Found")
+        }
         const claims = await claimService.getClaimByID(id)
         return res.status(200).send(claims)
-    } catch (e: unknown) {
+    } catch (e: any) {
+        console.log(e?.message)
         return res.status(500).send("Internal Server Error")
     }
 }
@@ -94,13 +120,39 @@ export const updateClaim = async (req: any, res: express.Response) => {
             return res.status(403).send("Not Authorized")
         }
         const { id } = req.params
-        const updated = await claimService.updateClaim(id, "Draft", req.body)
-        if (updated !== 0) {
-            // eslint-disable-next-line object-shorthand
-            return res.status(200).send({ id: id })
+        const employerClaimRecord = await claimService.getEmployerClaimRecord(bceid_guid, id)
+        if (!employerClaimRecord) {
+            return res.status(403).send("Forbidden or Not Found")
         }
-        return res.status(401).send("Not Found or Not Authorized")
-    } catch (e: unknown) {
+        await claimService.updateClaim(id, null, req.body)
+        return res.status(200).send({ id })
+    } catch (e: any) {
+        console.log(e?.message)
+        return res.status(500).send("Internal Server Error")
+    }
+}
+
+export const shareClaim = async (req: any, res: express.Response) => {
+    try {
+        const { bceid_user_guid, bceid_business_guid } = req.kauth.grant.access_token.content
+        if (bceid_user_guid === undefined) {
+            return res.status(401).send("Not Authorized")
+        }
+        const { id } = req.params
+        const { users } = req.body
+        const targetUsers = await employerService.getEmployersByIDs(users)
+        const employerClaimRecord = await claimService.getEmployerClaimRecord(bceid_user_guid, id)
+        if (
+            !employerClaimRecord ||
+            bceid_business_guid === undefined ||
+            !targetUsers.every((user: any) => user.bceid_business_guid === bceid_business_guid)
+        ) {
+            return res.status(403).send("Forbidden or Not Found")
+        }
+        await claimService.shareClaim(id, users)
+        return res.status(200).send({ id })
+    } catch (e: any) {
+        console.log(e?.message)
         return res.status(500).send("Internal Server Error")
     }
 }
@@ -123,7 +175,8 @@ export const deleteClaim = async (req: any, res: express.Response) => {
             return res.status(200).send({ id })
         }
         return res.status(401).send("Not Found or Not Authorized")
-    } catch (e: unknown) {
+    } catch (e: any) {
+        console.log(e?.message)
         return res.status(500).send("Internal Server Error")
     }
 }

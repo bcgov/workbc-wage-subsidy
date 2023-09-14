@@ -4,6 +4,7 @@ import helmet from "helmet"
 import Keycloak from "keycloak-connect"
 import morgan from "morgan"
 
+import employerRoute from "./routes/employer.route"
 import claimRoute from "./routes/claim.route"
 import applicationRoute from "./routes/application.route"
 import eventRoute from "./routes/event.route"
@@ -39,6 +40,7 @@ app.use(keycloak.middleware())
 app.use("/applications", keycloak.protect(), applicationRoute)
 app.use("/claims", keycloak.protect(), claimRoute)
 app.use("/events", eventRoute)
+app.use("/employers", keycloak.protect(), employerRoute)
 
 const port = process.env.PORT || "8000"
 app.listen(port, () => {

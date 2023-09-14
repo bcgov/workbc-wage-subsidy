@@ -20,14 +20,12 @@ export const ClaimList = (props: any) => {
 
     const handleRowClick = (id: Identifier, resource: string, record: any) => {
         // Temporary click functionality (opens form in a new tab) (will get replaced by embed functionality eventually)
-        if (record.status === "Submitted") {
-            // submitted
-            window.open(`${process.env.REACT_APP_VIEW_URL}${record.form_submission_id}`)
-        } else if (record.status === "Draft" && record.form_submission_id) {
+        if (record.status === "Draft" && record.form_submission_id) {
             // saved
             window.open(`${process.env.REACT_APP_DRAFT_URL}${record.form_submission_id}`)
-        } else {
-            window.open(`${process.env.REACT_APP_CLAIM_URL}&token=${id}`)
+        } else if (record.status !== "Draft" && record.form_submission_id) {
+            // submitted
+            window.open(`${process.env.REACT_APP_VIEW_URL}${record.form_submission_id}`)
         }
         return "" // rowClick expects a path to be returned
     }
@@ -73,7 +71,14 @@ export const ClaimList = (props: any) => {
                                         record.form_submitted_date ? record.form_submitted_date.split("T")[0] : "-" // remove timestamp
                                 }
                             />
-                            <TextField label="Shared With" source="shared_with" emptyText="-" /> {/* TODO */}
+                            <FunctionField
+                                label="Shared With"
+                                render={(record: any) => {
+                                    return record["shared_with"].length > 1
+                                        ? record["shared_with"].filter((fullName) => fullName !== identity?.fullName)
+                                        : "-"
+                                }}
+                            />
                             <TextField
                                 label="Associated Application ID"
                                 source="associated_application_id"

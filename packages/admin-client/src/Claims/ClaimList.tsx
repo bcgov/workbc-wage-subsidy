@@ -9,7 +9,7 @@ import { ListAside } from "../common/components/ListAside/ListAside"
 
 export const claimStatusFilters = {
     All: { label: "All" },
-    New: { label: "New", status: "Submitted" },
+    New: { label: "New", status: "New" },
     InProgress: { label: "In Progress", status: "In Progress" },
     Completed: { label: "Completed", status: "Completed" },
     Cancelled: { label: "Cancelled", status: "Cancelled" }
@@ -26,18 +26,12 @@ export const ClaimList = (props: any) => {
 
     const handleRowClick = (id: Identifier, resource: string, record: any) => {
         // Temporary click functionality (opens form in a new tab) (will get replaced by embed functionality eventually)
-        if (record.status === "Submitted") {
+        if (record.status === "New") {
             // submitted
             window.open(`${process.env.REACT_APP_VIEW_URL}${record.form_submission_id}`)
         } else if (record.status === "Draft" && record.form_submission_id) {
             // saved
             window.open(`${process.env.REACT_APP_DRAFT_URL}${record.form_submission_id}`)
-        } else {
-            // new
-            if (record.form_type === "Have Employee")
-                window.open(`${process.env.REACT_APP_HAVE_EMPLOYEE_URL}&token=${id}`)
-            else if (record.form_type === "Need Employee")
-                window.open(`${process.env.REACT_APP_NEED_EMPLOYEE_URL}&token=${id}`)
         }
         return "" // rowClick expects a path to be returned
     }
@@ -100,8 +94,8 @@ export const ClaimList = (props: any) => {
                                             size="small"
                                             color={
                                                 record.status === "Draft"
-                                                    ? "info"
-                                                    : record.status === "Submitted"
+                                                    ? "secondary"
+                                                    : record.status === "New"
                                                     ? "primary"
                                                     : record.status === "In Progress"
                                                     ? "warning"

@@ -10,7 +10,7 @@ const getCatchments = () => {
     let result: any[] = []
     const provider = localStorage.getItem("provider")
     const permissions = localStorage.getItem("permissions")
-    if ((provider === "BCEID" || provider === "IDIR") && permissions !== null) {
+    if ((provider === "BCEID" || provider === "BCEIDBOTH" || provider === "IDIR") && permissions !== null) {
         JSON.parse(permissions).forEach((item: { catchmentNo: number; location: string }) => {
             result.push({
                 id: item.catchmentNo,
