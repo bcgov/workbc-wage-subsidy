@@ -17,7 +17,7 @@ export const getFormSubmissions = async (formID: string, formPass: string, param
         const formSubmissionResponse = await chefsApi.get(url, config)
         return formSubmissionResponse.data
     } catch (e: any) {
-        console.log(e.response)
+        console.log(e)
         throw new Error(e.response?.status)
     }
 }
@@ -37,6 +37,7 @@ export const getSubmission = async (formID: string, formPass: string, submission
         const formSubmissionResponse = await chefsApi.get(url, config)
         return formSubmissionResponse.data
     } catch (e: any) {
+        console.log(e)
         throw new Error(e.response?.status)
     }
 }
@@ -72,6 +73,7 @@ export const createLoginProtectedDraft = async (
         const formSubmissionResponse = await chefsApi.post(url, data, config)
         return formSubmissionResponse.data
     } catch (e: any) {
+        console.log(e)
         throw new Error(e.response?.status)
     }
 }
@@ -104,6 +106,7 @@ export const createTeamProtectedDraft = async (
         const formSubmissionResponse = await chefsApi.post(url, data, config)
         return formSubmissionResponse.data
     } catch (e: any) {
+        console.log(e)
         throw new Error(e.response?.status)
     }
 }

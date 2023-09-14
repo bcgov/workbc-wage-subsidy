@@ -33,12 +33,20 @@ export const getClaimByID = async (id: string) => {
     return claim.length > 0 ? claim[0] : null
 }
 
-export const insertClaim = async (id: string, userGuid: string, formType: string, applicationID: string, trx?: any) => {
+export const insertClaim = async (
+    id: string,
+    userGuid: string,
+    formType: string,
+    applicationID: string,
+    submissionID: string,
+    trx?: any
+) => {
     const application = await knex("applications").where("form_confirmation_id", applicationID)
     if (application && application.length > 0) {
         const data = {
             id,
             form_type: formType,
+            form_submission_id: submissionID,
             position_title: application[0].position_title,
             associated_application_id: applicationID,
             created_date: new Date(),

@@ -47,7 +47,6 @@ export const ApplicationList = (props: any) => {
                         actions={<ListActions createButtonLabel="New Application" />}
                         filter={{ ...statusFilter, user: identity.guid }}
                         filterDefaultValues={{ ...statusFilter, user: identity.guid }}
-                        sort={{ field: "submitted_date", order: "DESC" }}
                         aside={
                             <ListAside
                                 statusFilters={applicationStatusFilters}

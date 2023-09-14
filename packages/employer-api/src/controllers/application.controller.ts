@@ -104,8 +104,7 @@ export const createApplication = async (req: any, res: express.Response) => {
             req.body.formKey,
             {}
         )
-        if (createDraftResult) {
-            // TODO: better check
+        if (createDraftResult?.id) {
             const insertResult = await insertApplication(
                 req.body.formKey,
                 req.body.guid,
@@ -119,7 +118,7 @@ export const createApplication = async (req: any, res: express.Response) => {
         } else {
             return res.status(500).send("Internal Server Error")
         }
-        return res.status(200).send("Created")
+        return res.status(500).send("Internal Server Error")
     } catch (e: any) {
         console.log(e?.message)
         return res.status(500).send("Internal Server Error")
