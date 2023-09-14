@@ -2,10 +2,10 @@
 /* eslint-disable import/prefer-default-export */
 import * as express from "express"
 
+import { insertClaim } from "../lib/transactions"
 import * as claimService from "../services/claim.service"
 import * as employerService from "../services/employer.service"
 import * as formService from "../services/form.service"
-import { insertClaim } from "../lib/transactions"
 
 export const getAllClaims = async (req: any, res: express.Response) => {
     try {
@@ -76,13 +76,12 @@ export const createClaim = async (req: any, res: express.Response) => {
             const insertResult = await insertClaim(
                 req.body.formKey,
                 req.body.guid,
-                req.body.formType,
                 req.body.application_id,
                 createDraftResult.id
             )
             if (insertResult?.rowCount === 1) {
                 // successful insertion
-                return res.status(200).send({ data: insertResult })
+                return res.status(200).send({ submissionId: createDraftResult.id })
             }
         } else {
             return res.status(500).send("Internal Server Error")
