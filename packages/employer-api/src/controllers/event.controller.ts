@@ -28,10 +28,15 @@ export const submission = async (req: any, res: express.Response) => {
         }
 
         const submissionResponse = await formService.getSubmission(req.body.formId, formPass, req.body.submissionId)
-        const { submission } = submissionResponse.submission
-        if (submission.data.container.submit === false)
+        const submission = submissionResponse?.submission?.submission
+        if (!submission) {
+            return res.status(500).send("Internal Server Error")
+        }
+
+        if (submission?.data?.submit === false) {
             // draft submission
             return res.status(200).send()
+        }
 
         // Claim form submission events //
         if (formType === "ClaimForm") {
@@ -60,7 +65,7 @@ export const submission = async (req: any, res: express.Response) => {
         }
         return res.status(200).send()
     } catch (e: any) {
-        console.log(e?.message)
+        console.log(e)
         return res.status(500).send("Server Error")
     }
 }
