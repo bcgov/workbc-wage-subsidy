@@ -2,7 +2,7 @@ import { ReactKeycloakProvider } from "@react-keycloak/web"
 import axios from "axios"
 import Keycloak from "keycloak-js"
 import { useEffect, useState } from "react"
-import { Admin, Resource } from "react-admin"
+import { Admin, CustomRoutes, Resource } from "react-admin"
 import Ready from "./admin/ready"
 import "./App.css"
 import { ApplicationList } from "./Applications/ApplicationList"
@@ -14,6 +14,8 @@ import Footer from "./Footer"
 import Layout from "./Layout"
 import { CatchmentProvider } from "./common/contexts/CatchmentContext/CatchmentContext"
 import "@bcgov/bc-sans/css/BCSans.css"
+import { Route } from "react-router-dom"
+import { ViewForm } from "./Form/ViewForm"
 
 const initOptions = {
     url: process.env.REACT_APP_KEYCLOAK_URL || "",
@@ -236,6 +238,9 @@ const CustomAdminWithKeycloak = () => {
                 <>
                     <Resource name="applications" options={{ label: "Applications" }} list={ApplicationList} />
                     <Resource name="claims" options={{ label: "Claims" }} list={ClaimList} />
+                    <CustomRoutes>
+                        <Route path="ViewForm/:urlType/:formId" element={<ViewForm />} />
+                    </CustomRoutes>
                 </>
             )}
         </Admin>
