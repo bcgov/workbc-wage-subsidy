@@ -99,7 +99,7 @@ export const addServiceProviderClaim = async (
 ) => {
     let result
     try {
-        const submission = submissionResponse?.submission?.submission
+        const submission = submissionResponse?.submission
         if (!submission) {
             return null
         }
