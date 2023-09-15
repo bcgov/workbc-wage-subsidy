@@ -1,5 +1,15 @@
 import { Box, Chip, MenuItem, Select } from "@mui/material"
-import { FunctionField, Identifier, List, TextField, useUnselectAll, useUpdate, useRefresh } from "react-admin"
+import {
+    FunctionField,
+    Identifier,
+    List,
+    TextField,
+    useUnselectAll,
+    useUpdate,
+    useRefresh,
+    useRedirect,
+    useGetIdentity
+} from "react-admin"
 import { useContext, useEffect, useState } from "react"
 import CatchmentLabel from "../common/components/CatchmentLabel/CatchmentLabel"
 import { CatchmentContext } from "../common/contexts/CatchmentContext/CatchmentContext"
@@ -21,15 +31,20 @@ export const ApplicationList = (props: any) => {
     const [statusFilter, setStatusFilter] = useState(applicationStatusFilters["All"])
     const [update] = useUpdate()
     const refresh = useRefresh()
+    const redirect = useRedirect()
+    const { identity } = useGetIdentity()
 
     useEffect(() => {
         unselectAll()
     }, [cc.catchment])
 
     const handleRowClick = (id: Identifier, resource: string, record: any) => {
-        // Temporary click functionality (opens form in a new tab) (will get replaced by embed functionality eventually)
-        window.open(`${process.env.REACT_APP_VIEW_URL}${record.form_submission_id}`)
-        return "" // rowClick expects a path to be returned
+        // Only service providers can view forms.
+        if (identity?.idp === "bceid" && record.status !== "Draft" && record.form_submission_id) {
+            redirect("/ViewForm/View/" + record.form_submission_id, "")
+        } else {
+            return "" // rowClick expects a path to be returned
+        }
     }
 
     const handleStatusChange = (record, newStatus) => {
