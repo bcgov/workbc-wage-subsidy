@@ -27,6 +27,8 @@ export const submission = async (req: any, res: express.Response) => {
             return res.status(401).send("Invalid api key")
         }
 
+        console.log("EVENT BODY: ", req.body)
+
         const submissionResponse = await formService.getSubmission(req.body.formId, formPass, req.body.submissionId)
         const submission = submissionResponse?.submission?.submission
         if (!submission) {
@@ -34,9 +36,10 @@ export const submission = async (req: any, res: express.Response) => {
             return res.status(500).send("Internal Server Error")
         }
         console.log("RETRIEVED SUBMISSION: ", submissionResponse)
+        console.log("SUBMISSION OBJ: ", submission)
 
-        if (submissionResponse.submission.draft !== false) {
-            // draft submission
+        if (submission?.data?.container?.submit !== true) {
+            console.log("draft submission event - ignoring")
             return res.status(200).send()
         }
 
