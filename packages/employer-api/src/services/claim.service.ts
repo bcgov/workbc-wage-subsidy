@@ -99,38 +99,36 @@ export const addServiceProviderClaim = async (
 ) => {
     let result
     try {
-        const submission = submissionResponse?.submission
-        if (!submission) {
+        const submission = submissionResponse?.submission?.submission
+        if (submission?.data?.internalId) {
             return null
         }
-
-        const claims = await knex("claims").where("id", submission?.data?.internalId)
+        console.log("INTERNAL ID: ", submission.data.internalId)
+        const claims = await knex("claims").where("id", submission.data.internalId)
         if (claims.length === 0) {
             console.log("claim not found")
             return null
         }
-        if (submission?.data?.internalId) {
-            try {
-                result = await knex("claims")
-                    .where("id", submission.data.internalId)
-                    .update({
-                        form_confirmation_id:
-                            submission.state === "submitted" ? submissionResponse.submission.confirmationId : null, // only store the confirmation ID when the form has been submitted
-                        form_submission_id: submissionResponse.submission.id,
-                        form_submitted_date:
-                            submission.state === "submitted" ? submissionResponse.submission.createdAt : null,
-                        employee_first_name: submission.data.container.employeeFirstName,
-                        employee_last_name: submission.data.container.employeeLastName,
-                        status: "New",
-                        service_provider_form_submission_id: serviceProviderSubmissionID, // TODO: add column to DB
-                        service_provider_form_internal_id: serviceProviderInternalID, // TODO: add column to DB
-                        updated_by: submissionResponse.submission.createdBy,
-                        updated_date: new Date()
-                    })
-            } catch (e: any) {
-                console.log(e.message)
-                throw new Error("Database update failed")
-            }
+        try {
+            result = await knex("claims")
+                .where("id", submission.data.internalId)
+                .update({
+                    form_confirmation_id:
+                        submission.state === "submitted" ? submissionResponse.submission.confirmationId : null, // only store the confirmation ID when the form has been submitted
+                    form_submission_id: submissionResponse.submission.id,
+                    form_submitted_date:
+                        submission.state === "submitted" ? submissionResponse.submission.createdAt : null,
+                    employee_first_name: submission.data.container.employeeFirstName,
+                    employee_last_name: submission.data.container.employeeLastName,
+                    status: "New",
+                    service_provider_form_submission_id: serviceProviderSubmissionID,
+                    service_provider_form_internal_id: serviceProviderInternalID,
+                    updated_by: submissionResponse.submission.createdBy,
+                    updated_date: new Date()
+                })
+        } catch (e: any) {
+            console.log(e.message)
+            throw new Error("Database update failed")
         }
     } catch (e: any) {
         console.log(e)
