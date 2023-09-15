@@ -103,7 +103,7 @@ export const ClaimList = (props: any) => {
                                                     ? "primary"
                                                     : record.status === "Cancelled"
                                                     ? "error"
-                                                    : "info"
+                                                    : "secondary"
                                             }
                                         />
                                     </Box>
