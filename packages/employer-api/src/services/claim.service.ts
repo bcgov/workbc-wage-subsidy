@@ -100,10 +100,11 @@ export const addServiceProviderClaim = async (
     let result
     try {
         const submission = submissionResponse?.submission?.submission
-        if (submission?.data?.internalId) {
+        console.log("add SP Claim Submission: ", submission)
+        if (!submission?.data?.internalId) {
             return null
         }
-        console.log("INTERNAL ID: ", submission.data.internalId)
+        console.log("EMPLOYER CLAIM INTERNAL ID: ", submission.data.internalId)
         const claims = await knex("claims").where("id", submission.data.internalId)
         if (claims.length === 0) {
             console.log("claim not found")
