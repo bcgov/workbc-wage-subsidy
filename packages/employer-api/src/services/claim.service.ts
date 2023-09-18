@@ -36,7 +36,6 @@ export const getClaimByID = async (id: string) => {
 export const insertClaim = async (
     id: string,
     userGuid: string,
-    formType: string,
     applicationID: string,
     submissionID: string,
     trx?: any
@@ -45,7 +44,6 @@ export const insertClaim = async (
     if (application && application.length > 0) {
         const data = {
             id,
-            form_type: formType,
             form_submission_id: submissionID,
             position_title: application[0].position_title,
             associated_application_id: applicationID,
@@ -99,18 +97,19 @@ export const addServiceProviderClaim = async (
     serviceProviderInternalID: string,
     serviceProviderSubmissionID: string
 ) => {
-    const submission = submissionResponse?.submission?.submission
-    if (!submission) {
-        return null
-    }
-
-    const claims = await knex("claims").where("id", submission?.data?.internalId)
-    if (claims.length === 0) {
-        return null
-    }
-
     let result
-    if (submission?.data?.internalId) {
+    try {
+        const submission = submissionResponse?.submission?.submission
+        console.log("add SP Claim Submission: ", submission)
+        if (!submission?.data?.internalId) {
+            return null
+        }
+        console.log("EMPLOYER CLAIM INTERNAL ID: ", submission.data.internalId)
+        const claims = await knex("claims").where("id", submission.data.internalId)
+        if (claims.length === 0) {
+            console.log("claim not found")
+            return null
+        }
         try {
             result = await knex("claims")
                 .where("id", submission.data.internalId)
@@ -123,8 +122,8 @@ export const addServiceProviderClaim = async (
                     employee_first_name: submission.data.container.employeeFirstName,
                     employee_last_name: submission.data.container.employeeLastName,
                     status: "New",
-                    service_provider_form_submission_id: serviceProviderSubmissionID, // TODO: add column to DB
-                    service_provider_form_internal_id: serviceProviderInternalID, // TODO: add column to DB
+                    service_provider_form_submission_id: serviceProviderSubmissionID,
+                    service_provider_form_internal_id: serviceProviderInternalID,
                     updated_by: submissionResponse.submission.createdBy,
                     updated_date: new Date()
                 })
@@ -132,6 +131,9 @@ export const addServiceProviderClaim = async (
             console.log(e.message)
             throw new Error("Database update failed")
         }
+    } catch (e: any) {
+        console.log(e)
+        throw new Error(e.message)
     }
     return result
 }

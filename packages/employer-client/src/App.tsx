@@ -1,26 +1,23 @@
+import "@bcgov/bc-sans/css/BCSans.css"
 import { ReactKeycloakProvider } from "@react-keycloak/web"
 import Keycloak from "keycloak-js"
 import React, { useState } from "react"
-import { Admin, Resource, CustomRoutes } from "react-admin"
+import { Admin, CustomRoutes, Resource } from "react-admin"
 import { Route } from "react-router-dom"
+import { QueryClient } from "react-query"
 import Ready from "./Admin/ready"
 import "./App.css"
 import { ApplicationCreate } from "./Applications/ApplicationCreate"
-import { ApplicationCreateForm } from "./Applications/ApplicationCreateForm"
 import { ApplicationList } from "./Applications/ApplicationList"
-import { ApplicationShow } from "./Applications/ApplicationShow"
 import useAuthProvider from "./Auth/authProvider"
 import { ClaimCreate } from "./Claims/ClaimCreate"
-import { ClaimCreateForm } from "./Claims/ClaimCreateForm"
 import { ClaimCreateSelectApplication } from "./Claims/ClaimCreateSelectApplication"
 import { ClaimList } from "./Claims/ClaimList"
-import { ClaimShow } from "./Claims/ClaimShow"
 import { COLOURS } from "./Colours"
 import { dataProvider } from "./DataProvider/DataProvider"
 import { ViewForm } from "./Form/ViewForm"
 import Layout from "./Layout"
 import Footer from "./footer"
-import "@bcgov/bc-sans/css/BCSans.css"
 
 const initOptions = {
     url: process.env.REACT_APP_KEYCLOAK_URL || "",
@@ -208,6 +205,21 @@ const CustomAdminWithKeycloak = () => {
             setPermissions(true)
         }
     }, [])
+
+    const queryClient = new QueryClient({
+        defaultOptions: {
+            queries: {
+                retry: false,
+                refetchOnWindowFocus: true,
+                refetchOnMount: true,
+                refetchOnReconnect: true
+            },
+            mutations: {
+                retryDelay: 10000
+            }
+        }
+    })
+
     return (
         <Admin
             theme={lightTheme}
@@ -218,6 +230,7 @@ const CustomAdminWithKeycloak = () => {
             disableTelemetry
             requireAuth
             ready={Ready}
+            queryClient={queryClient}
         >
             {permissions && (
                 <>
@@ -226,22 +239,12 @@ const CustomAdminWithKeycloak = () => {
                         options={{ label: "Applications" }}
                         list={ApplicationList}
                         create={ApplicationCreate}
-                        show={ApplicationShow}
-                    >
-                        <Route path="create/Form/:formType" element={<ApplicationCreateForm />} />
-                    </Resource>
-                    <Resource
-                        name="claims"
-                        options={{ label: "Claims" }}
-                        list={ClaimList}
-                        create={ClaimCreate}
-                        show={ClaimShow}
-                    >
+                    />
+                    <Resource name="claims" options={{ label: "Claims" }} list={ClaimList} create={ClaimCreate}>
                         <Route path="create/SelectApplication" element={<ClaimCreateSelectApplication />} />
-                        <Route path="create/Form/:appID" element={<ClaimCreateForm />} />
                     </Resource>
                     <CustomRoutes>
-                        <Route path="ViewForm" element={<ViewForm />} />
+                        <Route path="ViewForm/:urlType/:formId" element={<ViewForm />} />
                     </CustomRoutes>
                 </>
             )}

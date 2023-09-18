@@ -27,11 +27,21 @@ export const submission = async (req: any, res: express.Response) => {
             return res.status(401).send("Invalid api key")
         }
 
+        console.log("EVENT BODY: ", req.body)
+
         const submissionResponse = await formService.getSubmission(req.body.formId, formPass, req.body.submissionId)
-        const { submission } = submissionResponse.submission
-        if (submission.data.container.submit === false)
-            // draft submission
+        const submission = submissionResponse?.submission?.submission
+        if (!submission) {
+            console.log("formService getSubmission failed")
+            return res.status(500).send("Internal Server Error")
+        }
+        console.log("RETRIEVED SUBMISSION: ", submissionResponse)
+        console.log("SUBMISSION OBJ: ", submission)
+
+        if (submission?.data?.container?.submit !== true) {
+            console.log("draft submission event - ignoring")
             return res.status(200).send()
+        }
 
         // Claim form submission events //
         if (formType === "ClaimForm") {
@@ -53,14 +63,16 @@ export const submission = async (req: any, res: express.Response) => {
                     return res.status(200).send()
                 }
 
-                return res.status(500).send("Unable to update claim database entry")
+                console.log("Unable to update claim database entry")
+                return res.status(500).send("Internal Server Error")
             }
 
-            return res.status(500).send("Unable to create new service provider claim form")
+            console.log("Unable to create new service provider claim form")
+            return res.status(500).send("Internal Server Error")
         }
         return res.status(200).send()
     } catch (e: any) {
-        console.log(e?.message)
+        console.log(e)
         return res.status(500).send("Server Error")
     }
 }

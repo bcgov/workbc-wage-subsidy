@@ -1,11 +1,11 @@
-import { FunctionField, List, TextField, Identifier, useGetIdentity } from "react-admin"
 import { Box, Chip } from "@mui/material"
-import { FormBulkActionButtons } from "../common/components/FormBulkActionButtons/FormBulkActionButtons"
-import { DatagridStyles } from "../common/styles/DatagridStyles"
-import { ListActions } from "../common/components/ListActions/ListActions"
-import CustomDatagrid from "../common/components/CustomDatagrid/CustomDatagrid"
 import { useState } from "react"
+import { FunctionField, Identifier, List, TextField, useGetIdentity, useRedirect } from "react-admin"
+import CustomDatagrid from "../common/components/CustomDatagrid/CustomDatagrid"
+import { FormBulkActionButtons } from "../common/components/FormBulkActionButtons/FormBulkActionButtons"
+import { ListActions } from "../common/components/ListActions/ListActions"
 import { ListAside } from "../common/components/ListAside/ListAside"
+import { DatagridStyles } from "../common/styles/DatagridStyles"
 
 export const applicationStatusFilters = {
     All: { label: "All" },
@@ -19,23 +19,16 @@ export const applicationStatusFilters = {
 export const ApplicationList = (props: any) => {
     const [statusFilter, setStatusFilter] = useState(applicationStatusFilters["All"])
     const { identity } = useGetIdentity()
+    const redirect = useRedirect()
 
     const handleRowClick = (id: Identifier, resource: string, record: any) => {
-        // Temporary click functionality (opens form in a new tab) (will get replaced by embed functionality eventually)
-        if (record.status === "New" || record.status === "In Progress" || record.status === "Completed") {
-            // submitted
-            window.open(`${process.env.REACT_APP_VIEW_URL}${record.form_submission_id}`)
-        } else if (record.status === "Draft" && record.form_submission_id) {
-            // saved
-            window.open(`${process.env.REACT_APP_DRAFT_URL}${record.form_submission_id}`)
-        } else if (record.status !== "Cancelled") {
-            // new
-            if (record.form_type === "Have Employee")
-                window.open(`${process.env.REACT_APP_HAVE_EMPLOYEE_URL}&token=${id}`)
-            else if (record.form_type === "Need Employee")
-                window.open(`${process.env.REACT_APP_NEED_EMPLOYEE_URL}&token=${id}`)
+        if (record.status === "Draft" && record.form_submission_id) {
+            redirect("/ViewForm/Draft/" + record.form_submission_id, "")
+        } else if (record.form_submission_id) {
+            redirect("/ViewForm/View/" + record.form_submission_id, "")
+        } else {
+            return "" // rowClick expects a path to be returned
         }
-        return "" // rowClick expects a path to be returned
     }
 
     return (
