@@ -4,6 +4,7 @@ import Keycloak from "keycloak-js"
 import React, { useState } from "react"
 import { Admin, CustomRoutes, Resource } from "react-admin"
 import { Route } from "react-router-dom"
+import { QueryClient } from "react-query"
 import Ready from "./Admin/ready"
 import "./App.css"
 import { ApplicationCreate } from "./Applications/ApplicationCreate"
@@ -204,6 +205,19 @@ const CustomAdminWithKeycloak = () => {
             setPermissions(true)
         }
     }, [])
+
+    const queryClient = new QueryClient({
+        defaultOptions: {
+            queries: {
+                retry: false,
+                refetchOnWindowFocus: true
+            },
+            mutations: {
+                retryDelay: 10000
+            }
+        }
+    })
+
     return (
         <Admin
             theme={lightTheme}
@@ -214,6 +228,7 @@ const CustomAdminWithKeycloak = () => {
             disableTelemetry
             requireAuth
             ready={Ready}
+            queryClient={queryClient}
         >
             {permissions && (
                 <>
