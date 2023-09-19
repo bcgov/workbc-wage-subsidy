@@ -177,7 +177,7 @@ export const lightTheme = {
             main: COLOURS.BC_GOLD
         },
         info: {
-            main: COLOURS.LIGHTBLUE
+            main: "#E5412C"
         },
         warning: {
             main: COLOURS.BC_DARKBLUE

@@ -100,7 +100,7 @@ export const ClaimList = (props: any) => {
                                                 record.status === "New" ||
                                                 record.status === "In Progress" ||
                                                 record.status === "Completed"
-                                                    ? "primary"
+                                                    ? "info"
                                                     : record.status === "Cancelled"
                                                     ? "error"
                                                     : "secondary"
