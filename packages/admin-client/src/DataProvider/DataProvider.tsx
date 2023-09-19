@@ -50,6 +50,19 @@ export const dataProvider = {
             }
         })
     },
+    getCounts: (resource: any, params: { filter: any }) => {
+        const query = {
+            filter: JSON.stringify(params.filter)
+        }
+        return httpClient(`${apiUrl}/${resource}/counts?${stringify(query)}`, {
+            headers: new Headers({
+                Accept: "application/json",
+                Authorization: `Bearer ${localStorage.getItem("token")}`
+            })
+        }).then(({ json }) => ({
+            data: json
+        }))
+    },
     getOne: (resource: any, params: { id: any }) =>
         httpClient(`${apiUrl}/${resource}/${params.id}`, {
             headers: new Headers({

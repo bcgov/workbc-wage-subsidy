@@ -95,14 +95,14 @@ export const ApplicationList = (props: any) => {
                                                     record.status === "Draft"
                                                         ? "secondary"
                                                         : record.status === "New"
-                                                        ? "primary"
+                                                        ? "info"
                                                         : record.status === "In Progress"
                                                         ? "warning"
                                                         : record.status === "Completed"
                                                         ? "success"
                                                         : record.status === "Cancelled"
                                                         ? "error"
-                                                        : "info"
+                                                        : "primary"
                                                 }
                                             />
                                         </Box>

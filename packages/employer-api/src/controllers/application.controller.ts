@@ -78,6 +78,19 @@ export const getAllApplications = async (req: any, res: express.Response) => {
     }
 }
 
+export const getApplicationCounts = async (req: any, res: express.Response) => {
+    try {
+        const bceid_guid = req.kauth.grant.access_token.content?.bceid_user_guid
+        if (bceid_guid === undefined) {
+            return res.status(401).send("Not Authorized")
+        }
+        const applicationCounts = await applicationService.getApplicationCounts(bceid_guid)
+        return res.status(200).send(applicationCounts)
+    } catch (e: unknown) {
+        return res.status(500).send("Internal Server Error")
+    }
+}
+
 export const createApplication = async (req: any, res: express.Response) => {
     try {
         const bceid_guid = req.kauth.grant.access_token.content?.bceid_user_guid
