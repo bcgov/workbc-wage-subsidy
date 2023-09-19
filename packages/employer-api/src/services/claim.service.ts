@@ -28,6 +28,16 @@ export const getAllClaims = async (perPage: number, currPage: number, filters: a
     return claimsAndSharedUsers
 }
 
+export const getClaimCounts = async (userGuid: string) => {
+    const claimCounts = knex
+        .select("status")
+        .count("*")
+        .from(knex.select("claim_id").from("employers_claims").where("employer_id", userGuid).as("ec"))
+        .join("claims as c", "ec.claim_id", "=", "c.id")
+        .groupBy("status")
+    return claimCounts
+}
+
 export const getClaimByID = async (id: string) => {
     const claim = await knex("claims").where("id", id)
     return claim.length > 0 ? claim[0] : null

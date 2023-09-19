@@ -39,6 +39,17 @@ export const getAllClaims = async (
     return claims
 }
 
+export const getClaimCounts = async (catchmentno: string) => {
+    const claimCounts = knex
+        .select("status")
+        .count("*")
+        .from("claims")
+        .whereNot("status", "Draft")
+        .where("catchmentno", Number(catchmentno))
+        .groupBy("status")
+    return claimCounts
+}
+
 export const getClaimByID = async (id: string) => {
     const claim = await knex("claims").where((builder: any) => builder.where("id", id))
     return claim.length > 0 ? claim[0] : null
