@@ -42,6 +42,28 @@ export const getAllApplications = async (req: any, res: express.Response) => {
     }
 }
 
+export const getApplicationCounts = async (req: any, res: express.Response) => {
+    try {
+        const { bceid_user_guid, idir_user_guid } = req.kauth.grant.access_token.content
+        if (bceid_user_guid === undefined && idir_user_guid === undefined) {
+            return res.status(401).send("Not Authorized")
+        }
+        const filter = req.query.filter ? JSON.parse(req.query.filter) : {}
+        const catchments = await getCatchments(req.kauth.grant.access_token)
+        if (
+            catchments.length === 0 ||
+            !filter.catchmentno ||
+            (filter.catchmentno !== -1 && !catchments.includes(filter.catchmentno))
+        ) {
+            return res.status(403).send("Forbidden")
+        }
+        const applicationCounts = await applicationService.getApplicationCounts(filter.catchmentno)
+        return res.status(200).send(applicationCounts)
+    } catch (e: unknown) {
+        return res.status(500).send("Internal Server Error")
+    }
+}
+
 export const getOneApplication = async (req: any, res: express.Response) => {
     try {
         const { bceid_user_guid, idir_user_guid } = req.kauth.grant.access_token.content

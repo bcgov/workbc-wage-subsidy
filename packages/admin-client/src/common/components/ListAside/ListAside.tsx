@@ -1,9 +1,10 @@
 import { Box, ListItemText, MenuItem, MenuList } from "@mui/material"
-import { useContext, useEffect } from "react"
+import { useContext, useEffect, useState } from "react"
 import { CatchmentContext } from "../../contexts/CatchmentContext/CatchmentContext"
-import { Count } from "react-admin"
+import { useDataProvider, useListContext } from "react-admin"
 import isEqual from "lodash/isEqual"
 import { ScreenReaderOnly } from "../../styles/ScreenReaderOnly"
+import { COLOURS } from "../../../Colours"
 
 interface ListAsideProps {
     statusFilters: { [key: string]: any }
@@ -13,11 +14,14 @@ interface ListAsideProps {
 
 export const ListAside: React.FC<ListAsideProps> = ({ statusFilters, statusFilter, setStatusFilter }) => {
     const cc = useContext(CatchmentContext)
-
-    useEffect(() => {
-        // When catchment is changed, set status filter to 'All'.
-        setStatusFilter(statusFilters["All"])
-    }, [cc.catchment])
+    const { resource, isFetching } = useListContext()
+    const dataProvider = useDataProvider()
+    const [counts, setCounts] = useState<any>(
+        Object.entries(statusFilters).reduce((acc: any, [key, val]) => {
+            acc[val?.status ? val.status : "All"] = 0
+            return acc
+        }, {} as Record<string, number>)
+    )
 
     const skipToDatagrid = (event: any) => {
         if (event.key === "ArrowLeft" || event.key === "ArrowRight") {
@@ -25,6 +29,28 @@ export const ListAside: React.FC<ListAsideProps> = ({ statusFilters, statusFilte
             element?.focus()
         }
     }
+
+    const getCounts = () => {
+        dataProvider.getCounts(resource, { filter: { catchmentno: cc.catchment.id } }).then(({ data }) => {
+            const total = data.reduce((acc, val) => acc + Number(Object(val).count), 0)
+            const byStatus = data.reduce((acc, val) => {
+                acc[val.status] = Number(val.count)
+                return acc
+            }, {} as Record<string, number>)
+            setCounts({ All: total, ...byStatus })
+        })
+    }
+
+    useEffect(() => {
+        if (isFetching) {
+            getCounts()
+        }
+    }, [isFetching])
+
+    useEffect(() => {
+        // When catchment is changed, set status filter to 'All'.
+        setStatusFilter(statusFilters["All"])
+    }, [cc.catchment])
 
     return (
         <Box width={200} mr={1} mt={7} flexShrink={0} order={-1}>
@@ -39,7 +65,13 @@ export const ListAside: React.FC<ListAsideProps> = ({ statusFilters, statusFilte
                     >
                         <ListItemText aria-hidden={true}>{statusFilters[key].label}</ListItemText>
                         <span style={ScreenReaderOnly}>{"status: " + statusFilters[key].label + ", count: "}</span>
-                        <Count filter={{ ...statusFilters[key], catchmentno: cc.catchment.id }} color="text.disabled" />
+                        <span style={{ color: COLOURS.MEDIUMGREY }}>
+                            {statusFilters[key].label === "All"
+                                ? counts["All"]
+                                : statusFilters[key].status in counts
+                                ? counts[statusFilters[key].status]
+                                : "0"}
+                        </span>
                         <span style={ScreenReaderOnly}>
                             {isEqual(statusFilter, statusFilters[key]) ? ", selected" : ", unselected"}
                         </span>

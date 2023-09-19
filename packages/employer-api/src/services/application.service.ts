@@ -34,6 +34,16 @@ export const getAllApplications = async (
     return applicationsAndSharedUsers
 }
 
+export const getApplicationCounts = async (userGuid: string) => {
+    const applicationCounts = knex
+        .select("status")
+        .count("*")
+        .from(knex.select("application_id").from("employers_applications").where("employer_id", userGuid).as("ea"))
+        .join("applications as a", "ea.application_id", "=", "a.id")
+        .groupBy("status")
+    return applicationCounts
+}
+
 export const getApplicationByID = async (id: string) => {
     const application = await knex("application").where("id", id)
     return application.length > 0 ? application[0] : null
