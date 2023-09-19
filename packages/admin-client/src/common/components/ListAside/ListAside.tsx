@@ -48,6 +48,10 @@ export const ListAside: React.FC<ListAsideProps> = ({ statusFilters, statusFilte
     }, [isFetching])
 
     useEffect(() => {
+        getCounts()
+    }, [])
+
+    useEffect(() => {
         // When catchment is changed, set status filter to 'All'.
         setStatusFilter(statusFilters["All"])
     }, [cc.catchment])
