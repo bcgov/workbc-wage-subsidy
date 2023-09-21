@@ -27,9 +27,9 @@ export const ClaimList = (props: any) => {
 
     const handleRowClick = (id: Identifier, resource: string, record: any) => {
         if (record.status === "Draft" && record.service_provider_form_submission_id) {
-            redirect("/ViewForm/Draft/" + record.service_provider_form_submission_id, "")
+            redirect("/ViewForm/Draft/claims/" + record.service_provider_form_submission_id + "/" + record.id, "")
         } else if (record.service_provider_form_submission_id) {
-            redirect("/ViewForm/View/" + record.service_provider_form_submission_id, "")
+            redirect("/ViewForm/View/claims/" + record.service_provider_form_submission_id + "/" + record.id, "")
         } else {
             return "" // rowClick expects a path to be returned
         }
