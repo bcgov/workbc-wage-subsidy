@@ -239,7 +239,7 @@ const CustomAdminWithKeycloak = () => {
                     <Resource name="applications" options={{ label: "Applications" }} list={ApplicationList} />
                     <Resource name="claims" options={{ label: "Claims" }} list={ClaimList} />
                     <CustomRoutes>
-                        <Route path="ViewForm/:urlType/:formId" element={<ViewForm />} />
+                        <Route path="ViewForm/:urlType/:resource/:formId/:recordId" element={<ViewForm />} />
                     </CustomRoutes>
                 </>
             )}

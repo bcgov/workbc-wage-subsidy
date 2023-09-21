@@ -75,9 +75,6 @@ export const ListAside: React.FC<ListAsideProps> = ({ statusFilters, statusFilte
                                 ? counts[statusFilters[key].status]
                                 : "0"}
                         </span>
-                        <span style={ScreenReaderOnly}>
-                            {isEqual(statusFilter, statusFilters[key]) ? ", selected" : ", unselected"}
-                        </span>
                     </MenuItem>
                 ))}
             </MenuList>

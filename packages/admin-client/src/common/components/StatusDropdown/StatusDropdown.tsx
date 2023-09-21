@@ -10,7 +10,6 @@ const outlineStyles = {
 const styles = {
     // Disable default 'notched' outline.
     "& .MuiOutlinedInput-notchedOutline": { border: "none" },
-    marginLeft: "auto",
     width: "9em",
     height: "3em",
     backgroundColor: COLOURS.LIGHTBLUE_TRANSLUCENT,
@@ -21,7 +20,7 @@ const styles = {
 
 interface StatusDropdownProps {
     record: any
-    onChange: (record: any, newStatus: any) => void
+    onChange: (newStatus: any) => void
 }
 
 const StatusDropdown: React.FC<StatusDropdownProps> = ({ record, onChange }) => {
@@ -40,15 +39,16 @@ const StatusDropdown: React.FC<StatusDropdownProps> = ({ record, onChange }) => 
     }
 
     return (
-        <Box display="flex" width="100%" justifyContent="center">
+        <Box display="flex" width="100%" justifyContent="left">
             <Select
                 value={record.status}
-                onChange={(event) => onChange(record, event.target.value)}
+                onChange={(event) => onChange(event.target.value)}
                 displayEmpty
                 renderValue={() => record.status}
                 onFocus={() => setOutline(outlineStyles.solidOutline)}
                 onBlur={() => setOutline(outlineStyles.noOutline)}
                 sx={{ ...styles, ...outline }}
+                label="Status"
             >
                 {choices[record.status].map((status) => (
                     <MenuItem key={status.status} value={status.status}>
