@@ -1,21 +1,11 @@
 import { Box, Chip } from "@mui/material"
-import {
-    FunctionField,
-    Identifier,
-    List,
-    TextField,
-    useUnselectAll,
-    useUpdate,
-    useRefresh,
-    useRedirect
-} from "react-admin"
+import { FunctionField, Identifier, List, TextField, useUnselectAll, useRedirect } from "react-admin"
 import { useContext, useEffect, useState } from "react"
 import CatchmentLabel from "../common/components/CatchmentLabel/CatchmentLabel"
 import { CatchmentContext } from "../common/contexts/CatchmentContext/CatchmentContext"
 import CustomDatagrid from "../common/components/CustomDatagrid/CustomDatagrid"
 import { ListActions } from "../common/components/ListActions/ListActions"
 import { ListAside } from "../common/components/ListAside/ListAside"
-import StatusDropdown from "../common/components/StatusDropdown/StatusDropdown"
 
 export const applicationStatusFilters = {
     All: { label: "All" },
@@ -29,8 +19,6 @@ export const ApplicationList = (props: any) => {
     const cc = useContext(CatchmentContext)
     const unselectAll = useUnselectAll("applications")
     const [statusFilter, setStatusFilter] = useState(applicationStatusFilters["All"])
-    const [update] = useUpdate()
-    const refresh = useRefresh()
     const redirect = useRedirect()
 
     useEffect(() => {
@@ -39,25 +27,12 @@ export const ApplicationList = (props: any) => {
 
     const handleRowClick = (id: Identifier, resource: string, record: any) => {
         if (record.status === "Draft" && record.form_submission_id) {
-            redirect("/ViewForm/Draft/" + record.form_submission_id, "")
+            redirect("/ViewForm/Draft/applications/" + record.form_submission_id + "/" + record.id, "")
         } else if (record.form_submission_id) {
-            redirect("/ViewForm/View/" + record.form_submission_id, "")
+            redirect("/ViewForm/View/applications/" + record.form_submission_id + "/" + record.id, "")
         } else {
             return "" // rowClick expects a path to be returned
         }
-    }
-
-    const handleStatusChange = (record, newStatus) => {
-        const diff = { status: newStatus }
-        update(
-            "applications",
-            { id: record.id, data: diff, previousData: record },
-            {
-                onSuccess: () => {
-                    refresh()
-                }
-            }
-        )
     }
 
     return (
@@ -112,13 +87,6 @@ export const ApplicationList = (props: any) => {
                                             }
                                         />
                                     </Box>
-                                )}
-                            />
-                            {/* TODO: move to embedded form page once created */}
-                            <FunctionField
-                                label="Set Status"
-                                render={(record: any) => (
-                                    <StatusDropdown record={record} onChange={handleStatusChange} />
                                 )}
                             />
                         </CustomDatagrid>
