@@ -15,7 +15,7 @@ export const ApplicationCreate = () => {
             await create(
                 "applications",
                 { data: { formKey: uuidv4(), guid: identity?.guid || "", formType: formType } },
-                { onSuccess: (data, error) => redirect("/ViewForm/Draft/" + data.id, "") }
+                { onSuccess: (data, error) => redirect("/ViewForm/Draft/applications/" + data.id, "") }
             )
         }
     }
