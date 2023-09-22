@@ -25,7 +25,7 @@ export const ClaimCreateSelectApplication = (props: any) => {
             await create(
                 "claims",
                 { data: { formKey: uuidv4(), guid: identity.guid, application_id: record.form_confirmation_id } },
-                { onSuccess: (data, error) => redirect("/ViewForm/Draft/" + data.id, "") }
+                { onSuccess: (data, error) => redirect("/ViewForm/Draft/claims/" + data.id, "") }
             )
         }
     }
