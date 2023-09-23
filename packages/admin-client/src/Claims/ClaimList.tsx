@@ -26,7 +26,10 @@ export const ClaimList = (props: any) => {
     }, [cc.catchment])
 
     const handleRowClick = (id: Identifier, resource: string, record: any) => {
-        if (record.status === "New" && record.service_provider_form_submission_id) {
+        if (
+            (record.status === "New" || record.status === "In Progress") &&
+            record.service_provider_form_submission_id
+        ) {
             redirect("/ViewForm/Draft/claims/" + record.service_provider_form_submission_id + "/" + record.id, "")
         } else if (record.service_provider_form_submission_id) {
             redirect("/ViewForm/View/claims/" + record.service_provider_form_submission_id + "/" + record.id, "")
