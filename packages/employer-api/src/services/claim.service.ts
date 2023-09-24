@@ -117,7 +117,7 @@ export const addServiceProviderClaim = async (
         console.log("EMPLOYER CLAIM INTERNAL ID: ", submission.data.internalId)
         const claims = await knex("claims").where("id", submission.data.internalId)
         if (claims.length === 0) {
-            console.log("claim not found")
+            console.log("claim record not found")
             return null
         }
         try {
@@ -134,7 +134,41 @@ export const addServiceProviderClaim = async (
                     status: "New",
                     service_provider_form_submission_id: serviceProviderSubmissionID,
                     service_provider_form_internal_id: serviceProviderInternalID,
-                    updated_by: submissionResponse.submission.createdBy,
+                    updated_by: submissionResponse.submission.updatedBy ?? submissionResponse.submission.createdBy,
+                    updated_date: new Date()
+                })
+        } catch (e: any) {
+            console.log(e.message)
+            throw new Error("Database update failed")
+        }
+    } catch (e: any) {
+        console.log(e)
+        throw new Error(e.message)
+    }
+    return result
+}
+
+export const updateServiceProviderClaim = async (submissionResponse: any) => {
+    let result = 0
+    try {
+        console.log("update SP Claim submissionResponse: ", submissionResponse)
+        const claimID = submissionResponse?.submission?.id
+        console.log("SP CLAIM ID: ", claimID)
+        if (!claimID) {
+            console.log("claim id not provided")
+            return 0
+        }
+        const claims = await knex("claims").where("service_provider_form_submission_id", claimID)
+        if (claims.length === 0) {
+            console.log("claim record not found")
+            return 0
+        }
+        try {
+            result = await knex("claims")
+                .where("service_provider_form_submission_id", claimID)
+                .update({
+                    status: "Completed",
+                    updated_by: submissionResponse.submission.updatedBy ?? submissionResponse.submission.createdBy,
                     updated_date: new Date()
                 })
         } catch (e: any) {
