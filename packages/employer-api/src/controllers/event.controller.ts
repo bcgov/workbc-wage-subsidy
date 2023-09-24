@@ -39,7 +39,7 @@ export const submission = async (req: any, res: express.Response) => {
         if (formType === "ClaimForm") {
             if (submissionResponse.submission.draft === true) {
                 console.log("claim form draft submission event - ignoring") // TODO: claim form update on draft
-                return res.status(200).send()
+                return res.status(200).send("claim form draft submission event - ignoring")
             }
             const serviceProviderInternalID = `SPx${submission.data.internalId}` // create a new internal id for the SP form
             const createDraftResult = await formService.createTeamProtectedDraft(
@@ -70,6 +70,10 @@ export const submission = async (req: any, res: express.Response) => {
 
         // Service Provider Claim Form draft submission events - triggered on calculator approval //
         if (formType === "ServiceProviderClaimForm") {
+            if (submission.data.customEvent !== true) {
+                console.log("not a custom event - ignoring")
+                return res.status(200).send("not a custom event - ignoring")
+            }
             if (submissionResponse.submission.draft !== true) {
                 console.log("service provider claim form submission events should not occur")
                 return res.status(400).send("service provider claim form submission events should not occur")
