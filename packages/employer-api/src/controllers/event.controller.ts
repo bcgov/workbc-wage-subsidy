@@ -37,7 +37,7 @@ export const submission = async (req: any, res: express.Response) => {
 
         // Claim Form submission events //
         if (formType === "ClaimForm") {
-            if (submissionResponse.submission.draft !== true) {
+            if (submissionResponse.submission.draft === true) {
                 console.log("claim form draft submission event - ignoring") // TODO: claim form update on draft
                 return res.status(200).send()
             }
