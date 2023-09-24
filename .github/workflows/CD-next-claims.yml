@@ -45,21 +45,27 @@ jobs:
         include:
           - imagename: "workbc-wage-subsidy-v2-static"
             context: "./packages/static"
+            packagelock: "./packages/static/package-lock.json"
             env: true
           - imagename: "workbc-wage-subsidy-v2-admin-api"
             context: "./packages/admin-api"
+            packagelock: "./packages/admin-api/package-lock.json"
             env: false
           - imagename: "workbc-wage-subsidy-v2-admin-client"
             context: "./packages/admin-client"
+            packagelock: "./packages/admin-client/package-lock.json"
             env: true
           - imagename: "workbc-wage-subsidy-v2-employer-client"
             context: "./packages/employer-client"
+            packagelock: "./packages/employer-client/package-lock.json"
             env: true
           - imagename: "workbc-wage-subsidy-v2-employer-api"
             context: "./packages/employer-api"
+            packagelock: "./packages/employer-api/package-lock.json"
             env: false
           - imagename: "workbc-wage-subsidy-v2-form-api"
             context: "./packages/form-api"
+            packagelock: "./packages/form-api/package-lock.json"
             env: false
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
@@ -72,6 +78,7 @@ jobs:
         with:
           node-version: '18.x'
           cache: 'npm'
+          cache-dependency-path: ${{ matrix.packagelock }}
       - name: Install oc v3
         uses: redhat-actions/openshift-tools-installer@v1
         with:
