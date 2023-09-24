@@ -522,8 +522,6 @@ objects:
             value: ${REACT_APP_KEYCLOAK_URL}
           - name: REACT_APP_KEYCLOAK_REALM
             value: ${REACT_APP_KEYCLOAK_REALM}
-          - name: REACT_APP_CLAIM_URL
-            value: ${REACT_APP_CLAIM_URL}
           - name: REACT_APP_VIEW_URL
             value: ${REACT_APP_VIEW_URL}
           - name: REACT_ADMIN_TOKEN
@@ -836,10 +834,6 @@ parameters:
 - description: Data Provider URL
   displayName: Data Provider URL
   name: REACT_APP_DATA_PROVIDER_URL
-  value: ""
-- description: React App Claim URL
-  displayName: React App Claim URL
-  name: REACT_APP_CLAIM_URL
   value: ""
 - description: React App Draft URL
   displayName: React App Draft URL
