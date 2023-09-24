@@ -38,13 +38,12 @@ export const submission = async (req: any, res: express.Response) => {
         console.log("RETRIEVED SUBMISSION: ", submissionResponse)
         console.log("SUBMISSION OBJ: ", submission)
 
-        if (submission?.data?.container?.submit !== true) {
-            console.log("draft submission event - ignoring")
-            return res.status(200).send()
-        }
-
-        // Claim form submission events //
+        // Claim Form submission events //
         if (formType === "ClaimForm") {
+            if (submission?.data?.container?.submit !== true) {
+                console.log("claim form draft submission event - ignoring") // TODO: claim form update on draft
+                return res.status(200).send()
+            }
             const serviceProviderInternalID = `SPx${submission.data.internalId}` // create a new internal id for the SP form
             const createDraftResult = await formService.createTeamProtectedDraft(
                 process.env.SP_CLAIM_FORM_ID as string,
@@ -68,6 +67,22 @@ export const submission = async (req: any, res: express.Response) => {
             }
 
             console.log("Unable to create new service provider claim form")
+            return res.status(500).send("Internal Server Error")
+        }
+
+        // Service Provider Claim Form draft submission events - triggered on calculator approval //
+        if (formType === "ServiceProviderClaimForm") {
+            if (submission?.data?.container?.submit === true) {
+                console.log("service provider claim form submission events should not occur")
+                return res.status(400).send("service provider claim form submission events should not occur")
+            }
+            // Update the claim form entry //
+            const updateResult = await claimService.updateServiceProviderClaim(submissionResponse)
+            if (updateResult === 1) {
+                return res.status(200).send()
+            }
+
+            console.log("Unable to update claim database entry")
             return res.status(500).send("Internal Server Error")
         }
         return res.status(200).send()

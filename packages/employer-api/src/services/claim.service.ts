@@ -117,7 +117,7 @@ export const addServiceProviderClaim = async (
         console.log("EMPLOYER CLAIM INTERNAL ID: ", submission.data.internalId)
         const claims = await knex("claims").where("id", submission.data.internalId)
         if (claims.length === 0) {
-            console.log("claim not found")
+            console.log("claim record not found")
             return null
         }
         try {
@@ -137,6 +137,45 @@ export const addServiceProviderClaim = async (
                     updated_by: submissionResponse.submission.createdBy,
                     updated_date: new Date()
                 })
+        } catch (e: any) {
+            console.log(e.message)
+            throw new Error("Database update failed")
+        }
+    } catch (e: any) {
+        console.log(e)
+        throw new Error(e.message)
+    }
+    return result
+}
+
+export const updateServiceProviderClaim = async (submissionResponse: any) => {
+    const result = 0
+    try {
+        const submission = submissionResponse?.submission?.submission
+        console.log("update SP Claim Submission: ", submission)
+        console.log("SP CLAIM ID: ", submission.data.id)
+        const claims = await knex("claims").where("service_provider_form_submission_id", submission.data.id)
+        if (claims.length === 0) {
+            console.log("claim record not found")
+            return 0
+        }
+        try {
+            // result = await knex("claims")
+            //     .where("id", submission.data.internalId)
+            //     .update({
+            //         form_confirmation_id:
+            //             submission.state === "submitted" ? submissionResponse.submission.confirmationId : null, // only store the confirmation ID when the form has been submitted
+            //         form_submission_id: submissionResponse.submission.id,
+            //         form_submitted_date:
+            //             submission.state === "submitted" ? submissionResponse.submission.createdAt : null,
+            //         employee_first_name: submission.data.container.employeeFirstName,
+            //         employee_last_name: submission.data.container.employeeLastName,
+            //         status: "New",
+            //         service_provider_form_submission_id: serviceProviderSubmissionID,
+            //         service_provider_form_internal_id: serviceProviderInternalID,
+            //         updated_by: submissionResponse.submission.createdBy,
+            //         updated_date: new Date()
+            //     })
         } catch (e: any) {
             console.log(e.message)
             throw new Error("Database update failed")
