@@ -45,26 +45,26 @@ jobs:
         include:
           - imagename: "workbc-wage-subsidy-v2-static"
             context: "./packages/static"
-            packagelock: "./package-lock.json"
+            packagelock: ""
             env: true
           - imagename: "workbc-wage-subsidy-v2-admin-api"
-            context: "./package-lock.json"
+            context: ""
             packagelock: ""
             env: false
           - imagename: "workbc-wage-subsidy-v2-admin-client"
             context: "./packages/admin-client"
-            packagelock: "./package-lock.json"
+            packagelock: "package-lock.json"
             env: true
           - imagename: "workbc-wage-subsidy-v2-employer-client"
             context: "./packages/employer-client"
             packagelock: "./packages/employer-client/package-lock.json"
             env: true
           - imagename: "workbc-wage-subsidy-v2-employer-api"
-            context: "./package-lock.json"
+            context: ""
             packagelock: ""
             env: false
           - imagename: "workbc-wage-subsidy-v2-form-api"
-            context: "./package-lock.json"
+            context: ""
             packagelock: ""
             env: false
     # Steps represent a sequence of tasks that will be executed as part of the job
