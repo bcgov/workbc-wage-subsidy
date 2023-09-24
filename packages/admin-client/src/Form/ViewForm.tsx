@@ -59,16 +59,19 @@ export const ViewForm = () => {
                             <Stack direction="row" spacing={0}>
                                 <BackButton resource={resource} />
                                 <StatusDropdown record={record} onChange={handleStatusChange} />
-                                {resource === "claims" && record.updated_by && record.updated_date && (
-                                    <>
-                                        <div>
-                                            <a>Approved by: {record.updated_by}</a>
-                                        </div>
-                                        <div>
-                                            <a>Approved on: {record.updated_date.split("T")[0]}</a>
-                                        </div>
-                                    </>
-                                )}
+                                {resource === "claims" &&
+                                    record.calculator_approved &&
+                                    record.updated_by &&
+                                    record.updated_date && (
+                                        <>
+                                            <div>
+                                                <a>Approved by: {record.updated_by}</a>
+                                            </div>
+                                            <div>
+                                                <a>Approved on: {record.updated_date.split("T")[0]}</a>
+                                            </div>
+                                        </>
+                                    )}
                             </Stack>
                         </Box>
                     ) : (

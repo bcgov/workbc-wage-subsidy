@@ -168,6 +168,7 @@ export const updateServiceProviderClaim = async (submissionResponse: any) => {
                 .where("service_provider_form_submission_id", claimID)
                 .update({
                     status: "Completed",
+                    calculator_approved: true,
                     updated_by: submissionResponse.submission.updatedBy ?? submissionResponse.submission.createdBy,
                     updated_date: new Date()
                 })
