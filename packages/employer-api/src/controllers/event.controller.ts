@@ -37,7 +37,7 @@ export const submission = async (req: any, res: express.Response) => {
 
         // Claim Form submission events //
         if (formType === "ClaimForm") {
-            if (submission?.data?.container?.submit !== true) {
+            if (submissionResponse.submission.draft !== true) {
                 console.log("claim form draft submission event - ignoring") // TODO: claim form update on draft
                 return res.status(200).send()
             }
@@ -70,7 +70,7 @@ export const submission = async (req: any, res: express.Response) => {
 
         // Service Provider Claim Form draft submission events - triggered on calculator approval //
         if (formType === "ServiceProviderClaimForm") {
-            if (submission?.data?.container?.submit === true) {
+            if (submissionResponse.submission.draft !== true) {
                 console.log("service provider claim form submission events should not occur")
                 return res.status(400).send("service provider claim form submission events should not occur")
             }
