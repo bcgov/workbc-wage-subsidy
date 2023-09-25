@@ -99,7 +99,7 @@ export const createTeamProtectedDraft = async (
         const data = {
             draft: true,
             submission: {
-                data: { ...prefillFields, lateEntry: false, internalId: internalID, submit: false },
+                data: { ...prefillFields, lateEntry: false, internalId: internalID, submit: false, customEvent: false },
                 state: "draft"
             }
         }

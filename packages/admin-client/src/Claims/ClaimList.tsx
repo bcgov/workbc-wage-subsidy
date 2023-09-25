@@ -1,5 +1,5 @@
 import { Box, Chip } from "@mui/material"
-import { FunctionField, Identifier, List, TextField, useUnselectAll } from "react-admin"
+import { FunctionField, Identifier, List, TextField, useRedirect, useUnselectAll } from "react-admin"
 import { useContext, useEffect, useState } from "react"
 import CatchmentLabel from "../common/components/CatchmentLabel/CatchmentLabel"
 import { CatchmentContext } from "../common/contexts/CatchmentContext/CatchmentContext"
@@ -19,15 +19,23 @@ export const ClaimList = (props: any) => {
     const cc = useContext(CatchmentContext)
     const unselectAll = useUnselectAll("claims")
     const [statusFilter, setStatusFilter] = useState(claimStatusFilters["All"])
+    const redirect = useRedirect()
 
     useEffect(() => {
         unselectAll()
     }, [cc.catchment])
 
     const handleRowClick = (id: Identifier, resource: string, record: any) => {
-        // Temporary click functionality (opens form in a new tab) (will get replaced by embed functionality eventually)
-        window.open(`${process.env.REACT_APP_DRAFT_URL}${record.service_provider_form_submission_id}`)
-        return "" // rowClick expects a path to be returned
+        if (
+            (record.status === "New" || record.status === "In Progress") &&
+            record.service_provider_form_submission_id
+        ) {
+            redirect("/ViewForm/Draft/claims/" + record.service_provider_form_submission_id + "/" + record.id, "")
+        } else if (record.service_provider_form_submission_id) {
+            redirect("/ViewForm/View/claims/" + record.service_provider_form_submission_id + "/" + record.id, "")
+        } else {
+            return "" // rowClick expects a path to be returned
+        }
     }
 
     return (
@@ -90,14 +98,14 @@ export const ClaimList = (props: any) => {
                                                 record.status === "Draft"
                                                     ? "secondary"
                                                     : record.status === "New"
-                                                    ? "primary"
+                                                    ? "info"
                                                     : record.status === "In Progress"
                                                     ? "warning"
                                                     : record.status === "Completed"
                                                     ? "success"
                                                     : record.status === "Cancelled"
                                                     ? "error"
-                                                    : "info"
+                                                    : "primary"
                                             }
                                         />
                                     </Box>

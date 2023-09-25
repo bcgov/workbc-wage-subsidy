@@ -55,6 +55,19 @@ export const getAllClaims = async (req: any, res: express.Response) => {
     }
 }
 
+export const getClaimCounts = async (req: any, res: express.Response) => {
+    try {
+        const bceid_guid = req.kauth.grant.access_token.content?.bceid_user_guid
+        if (bceid_guid === undefined) {
+            return res.status(401).send("Not Authorized")
+        }
+        const claimCounts = await claimService.getClaimCounts(bceid_guid)
+        return res.status(200).send(claimCounts)
+    } catch (e: unknown) {
+        return res.status(500).send("Internal Server Error")
+    }
+}
+
 export const createClaim = async (req: any, res: express.Response) => {
     try {
         const bceid_guid = req.kauth.grant.access_token.content?.bceid_user_guid

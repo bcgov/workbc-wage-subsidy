@@ -23,9 +23,9 @@ export const ApplicationList = (props: any) => {
 
     const handleRowClick = (id: Identifier, resource: string, record: any) => {
         if (record.status === "Draft" && record.form_submission_id) {
-            redirect("/ViewForm/Draft/" + record.form_submission_id, "")
+            redirect("/ViewForm/Draft/applications/" + record.form_submission_id, "")
         } else if (record.form_submission_id) {
-            redirect("/ViewForm/View/" + record.form_submission_id, "")
+            redirect("/ViewForm/View/applications/" + record.form_submission_id, "")
         } else {
             return "" // rowClick expects a path to be returned
         }
@@ -68,9 +68,14 @@ export const ApplicationList = (props: any) => {
                             <FunctionField
                                 label="Shared With"
                                 render={(record: any) => {
-                                    return record["shared_with"].length > 1
-                                        ? record["shared_with"].filter((fullName) => fullName !== identity?.fullName)
-                                        : "-"
+                                    const otherUsers = record["shared_with"].filter(
+                                        (fullName) => fullName !== identity?.fullName
+                                    )
+                                    return otherUsers.length === 0
+                                        ? "-"
+                                        : otherUsers.length === 1
+                                        ? otherUsers[0]
+                                        : otherUsers[0] + "..."
                                 }}
                             />
                             <FunctionField
@@ -95,14 +100,14 @@ export const ApplicationList = (props: any) => {
                                                     record.status === "Draft"
                                                         ? "secondary"
                                                         : record.status === "New"
-                                                        ? "primary"
+                                                        ? "info"
                                                         : record.status === "In Progress"
                                                         ? "warning"
                                                         : record.status === "Completed"
                                                         ? "success"
                                                         : record.status === "Cancelled"
                                                         ? "error"
-                                                        : "info"
+                                                        : "primary"
                                                 }
                                             />
                                         </Box>

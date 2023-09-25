@@ -177,7 +177,7 @@ export const lightTheme = {
             main: COLOURS.BC_GOLD
         },
         info: {
-            main: COLOURS.LIGHTBLUE
+            main: "#E5412C"
         },
         warning: {
             main: COLOURS.BC_DARKBLUE
@@ -244,7 +244,7 @@ const CustomAdminWithKeycloak = () => {
                         <Route path="create/SelectApplication" element={<ClaimCreateSelectApplication />} />
                     </Resource>
                     <CustomRoutes>
-                        <Route path="ViewForm/:urlType/:formId" element={<ViewForm />} />
+                        <Route path="ViewForm/:urlType/:resource/:formId" element={<ViewForm />} />
                     </CustomRoutes>
                 </>
             )}

@@ -52,9 +52,11 @@ jobs:
             env: false
           - imagename: "workbc-wage-subsidy-v2-admin-client"
             context: "./packages/admin-client"
+            packagelock: "./package-lock.json"
             env: true
           - imagename: "workbc-wage-subsidy-v2-employer-client"
             context: "./packages/employer-client"
+            packagelock: "./packages/employer-client/package-lock.json"
             env: true
           - imagename: "workbc-wage-subsidy-v2-employer-api"
             context: "./packages/employer-api"
@@ -73,6 +75,7 @@ jobs:
         with:
           node-version: '18.x'
           cache: 'npm'
+          cache-dependency-path: ${{ matrix.packagelock }}
       - name: Install oc v3
         uses: redhat-actions/openshift-tools-installer@v1
         with:
@@ -113,11 +116,9 @@ jobs:
             REACT_APP_KEYCLOAK_REALM=${{ vars.REACT_APP_KEYCLOAK_REALM }}
             REACT_APP_KEYCLOAK_URL=${{ vars.REACT_APP_KEYCLOAK_URL }}
             REACT_APP_KEYCLOAK_CLIENT_ID=${{ vars.REACT_APP_KEYCLOAK_CLIENT_ID }}
-            REACT_APP_HAVE_EMPLOYEE_URL=${{ vars.REACT_APP_HAVE_EMPLOYEE_URL }}
-            REACT_APP_NEED_EMPLOYEE_URL=${{ vars.REACT_APP_NEED_EMPLOYEE_URL }}
-            REACT_APP_CLAIM_URL=${{ vars.REACT_APP_CLAIM_URL }}
             REACT_APP_DRAFT_URL=${{ vars.REACT_APP_DRAFT_URL }}
             REACT_APP_VIEW_URL=${{ vars.REACT_APP_VIEW_URL }}
+            REACT_APP_MINISTRY_VIEW_URL=${{ vars.REACT_APP_MINISTRY_VIEW_URL }}
             VITE_EMPLOYER_URL=${{ vars.VITE_EMPLOYER_URL }}
             VITE_SERVICE_PROVIDER_URL=${{ vars.VITE_SERVICE_PROVIDER_URL }}
             VITE_MINISTRY_URL=${{ vars.VITE_MINISTRY_URL }}
@@ -140,11 +141,9 @@ jobs:
             REACT_APP_KEYCLOAK_REALM=${{ vars.REACT_APP_KEYCLOAK_REALM }}
             REACT_APP_KEYCLOAK_URL=${{ vars.REACT_APP_KEYCLOAK_URL }}
             REACT_APP_KEYCLOAK_CLIENT_ID=${{ vars.REACT_APP_KEYCLOAK_CLIENT_ID }}
-            REACT_APP_HAVE_EMPLOYEE_URL=${{ vars.REACT_APP_HAVE_EMPLOYEE_URL }}
-            REACT_APP_NEED_EMPLOYEE_URL=${{ vars.REACT_APP_NEED_EMPLOYEE_URL }}
-            REACT_APP_CLAIM_URL=${{ vars.REACT_APP_CLAIM_URL }}
             REACT_APP_DRAFT_URL=${{ vars.REACT_APP_DRAFT_URL }}
             REACT_APP_VIEW_URL=${{ vars.REACT_APP_VIEW_URL }}
+            REACT_APP_MINISTRY_VIEW_URL=${{ vars.REACT_APP_MINISTRY_VIEW_URL }}
             VITE_EMPLOYER_URL=${{ vars.VITE_EMPLOYER_URL }}
             VITE_SERVICE_PROVIDER_URL=${{ vars.VITE_SERVICE_PROVIDER_URL }}
             VITE_MINISTRY_URL=${{ vars.VITE_MINISTRY_URL }}

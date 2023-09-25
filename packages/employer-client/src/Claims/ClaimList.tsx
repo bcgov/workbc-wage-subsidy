@@ -21,9 +21,9 @@ export const ClaimList = (props: any) => {
 
     const handleRowClick = (id: Identifier, resource: string, record: any) => {
         if (record.status === "Draft" && record.form_submission_id) {
-            redirect("/ViewForm/Draft/" + record.form_submission_id, "")
+            redirect("/ViewForm/Draft/claims/" + record.form_submission_id, "")
         } else if (record.status !== "Draft" && record.form_submission_id) {
-            redirect("/ViewForm/View/" + record.form_submission_id, "")
+            redirect("/ViewForm/View/claims/" + record.form_submission_id, "")
         } else {
             return "" // rowClick expects a path to be returned
         }
@@ -100,7 +100,7 @@ export const ClaimList = (props: any) => {
                                                 record.status === "New" ||
                                                 record.status === "In Progress" ||
                                                 record.status === "Completed"
-                                                    ? "primary"
+                                                    ? "info"
                                                     : record.status === "Cancelled"
                                                     ? "error"
                                                     : "secondary"

@@ -1,15 +1,5 @@
-import { Box, Chip, MenuItem, Select } from "@mui/material"
-import {
-    FunctionField,
-    Identifier,
-    List,
-    TextField,
-    useUnselectAll,
-    useUpdate,
-    useRefresh,
-    useRedirect,
-    useGetIdentity
-} from "react-admin"
+import { Box, Chip } from "@mui/material"
+import { FunctionField, Identifier, List, TextField, useUnselectAll, useRedirect } from "react-admin"
 import { useContext, useEffect, useState } from "react"
 import CatchmentLabel from "../common/components/CatchmentLabel/CatchmentLabel"
 import { CatchmentContext } from "../common/contexts/CatchmentContext/CatchmentContext"
@@ -29,35 +19,20 @@ export const ApplicationList = (props: any) => {
     const cc = useContext(CatchmentContext)
     const unselectAll = useUnselectAll("applications")
     const [statusFilter, setStatusFilter] = useState(applicationStatusFilters["All"])
-    const [update] = useUpdate()
-    const refresh = useRefresh()
     const redirect = useRedirect()
-    const { identity } = useGetIdentity()
 
     useEffect(() => {
         unselectAll()
     }, [cc.catchment])
 
     const handleRowClick = (id: Identifier, resource: string, record: any) => {
-        // Only service providers can view forms.
-        if (identity?.idp === "bceid" && record.status !== "Draft" && record.form_submission_id) {
-            redirect("/ViewForm/View/" + record.form_submission_id, "")
+        if (record.status === "Draft" && record.form_submission_id) {
+            redirect("/ViewForm/Draft/applications/" + record.form_submission_id + "/" + record.id, "")
+        } else if (record.form_submission_id) {
+            redirect("/ViewForm/View/applications/" + record.form_submission_id + "/" + record.id, "")
         } else {
             return "" // rowClick expects a path to be returned
         }
-    }
-
-    const handleStatusChange = (record, newStatus) => {
-        const diff = { status: newStatus }
-        update(
-            "applications",
-            { id: record.id, data: diff, previousData: record },
-            {
-                onSuccess: () => {
-                    refresh()
-                }
-            }
-        )
     }
 
     return (
@@ -101,46 +76,18 @@ export const ApplicationList = (props: any) => {
                                                 record.status === "Draft"
                                                     ? "secondary"
                                                     : record.status === "New"
-                                                    ? "primary"
+                                                    ? "info"
                                                     : record.status === "In Progress"
                                                     ? "warning"
                                                     : record.status === "Completed"
                                                     ? "success"
                                                     : record.status === "Cancelled"
                                                     ? "error"
-                                                    : "info"
+                                                    : "primary"
                                             }
                                         />
                                     </Box>
                                 )}
-                            />
-                            {/* TODO: move to embedded form page once created */}
-                            <FunctionField
-                                label="Set Status"
-                                render={(record: any) => {
-                                    const statuses = [
-                                        { label: "New", status: "New" },
-                                        { label: "In Progress", status: "In Progress" },
-                                        { label: "Completed", status: "Completed" },
-                                        { label: "Cancelled", status: "Cancelled" }
-                                    ]
-                                    return (
-                                        <Box display="flex" width="100%" justifyContent="center">
-                                            <Select
-                                                value={record.status}
-                                                onChange={(event) => handleStatusChange(record, event.target.value)}
-                                                displayEmpty
-                                                renderValue={() => record.status}
-                                            >
-                                                {statuses.map((status) => (
-                                                    <MenuItem key={status.status} value={status.status}>
-                                                        <span aria-hidden={true}>{status.label}</span>
-                                                    </MenuItem>
-                                                ))}
-                                            </Select>
-                                        </Box>
-                                    )
-                                }}
                             />
                         </CustomDatagrid>
                     </List>

@@ -3,9 +3,12 @@ import "./Header.css"
 const Header = () => (
     <header>
         <div className="banner">
-            <a href="https://gov.bc.ca">
-                <img width="175px" src="/BCID_H_rgb_rev.svg" alt="Go to the Government of British Columbia website" />
-            </a>
+            <img
+                src="https://apply.workbc.ca/Content/images/Govt/WorkBC_lrg_RGB_rev.svg"
+                height="52"
+                alt="Work BC Logo"
+                style={{ marginTop: "-8px" }}
+            />
             <h2>WorkBC Wage Subsidy</h2>
             <div aria-label="This application is currently in Beta phase" className="Beta-PhaseBanner">
                 {import.meta.env.VITE_REACT_ENVIRONMENT || "Beta"}

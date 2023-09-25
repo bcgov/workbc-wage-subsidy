@@ -34,6 +34,17 @@ export const getAllApplications = async (
     return applications
 }
 
+export const getApplicationCounts = async (catchmentno: string) => {
+    const applicationCounts = knex
+        .select("status")
+        .count("*")
+        .from("applications")
+        .whereNot("status", "Draft")
+        .where("catchmentno", Number(catchmentno))
+        .groupBy("status")
+    return applicationCounts
+}
+
 export const getApplicationByID = async (id: string) => {
     const application = await knex("applications").where((builder: any) => builder.where("id", id))
     return application.length > 0 ? application[0] : null

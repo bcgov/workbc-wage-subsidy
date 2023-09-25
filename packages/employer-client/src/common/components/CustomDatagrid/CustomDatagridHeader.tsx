@@ -86,7 +86,6 @@ export const CustomDatagridHeader = (props: DatagridHeaderProps) => {
                             key={(field.props as any).source || index}
                             resource={resource}
                             updateSort={updateSort}
-                            aria-label="TEST LABEL"
                         />
                     ) : null
                 )}
