@@ -122,7 +122,6 @@ export const shareForm = async (token: any, submissionID: string, userGUIDs: str
             const chefsUserID = await userLookup(token, userGUID)
             if (!chefsUserID) {
                 console.log(`user guid ${userGUID} not found in CHEFS - skipping`)
-                /* eslint-disable no-continue */
                 continue
             }
             const config = {
@@ -135,7 +134,6 @@ export const shareForm = async (token: any, submissionID: string, userGUIDs: str
                     Authorization: `Bearer ${token}`
                 }
             }
-            /* eslint-disable no-await-in-loop */
             await chefsApi
                 .put(url, data, config)
                 .then(() => console.log(`successfully shared form submission ${submissionID} with guid ${userGUID}`))
