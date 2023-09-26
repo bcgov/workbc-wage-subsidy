@@ -7,7 +7,10 @@ module.exports = {
     rules: {
         "prettier/prettier": ["error", prettierConfig],
         "react/react-in-jsx-scope": "off",
-        "@typescript-eslint/no-shadow": "off"
+        "@typescript-eslint/no-shadow": "off",
+        "no-await-in-loop": "off",
+        "no-continue": "off",
+        "no-restricted-syntax": "off"
     },
     ignorePatterns: ["**/dist/**/*.js"]
 }

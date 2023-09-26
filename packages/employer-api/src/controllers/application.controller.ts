@@ -192,7 +192,15 @@ export const shareApplication = async (req: any, res: express.Response) => {
         ) {
             return res.status(403).send("Forbidden or Not Found")
         }
-        await applicationService.shareApplication(id, users)
+        const application = await applicationService.getApplicationByID(id)
+        const shareResult = await formService.shareForm(
+            req.kauth.grant.access_token.token,
+            application.form_submission_id,
+            users
+        )
+        if (shareResult) {
+            await applicationService.shareApplication(id, users)
+        }
         return res.status(200).send({ id })
     } catch (e: any) {
         console.log(e?.message)
