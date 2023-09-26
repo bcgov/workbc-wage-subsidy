@@ -45,7 +45,7 @@ export const getApplicationCounts = async (userGuid: string) => {
 }
 
 export const getApplicationByID = async (id: string) => {
-    const application = await knex("application").where("id", id)
+    const application = await knex("applications").where("id", id)
     return application.length > 0 ? application[0] : null
 }
 
