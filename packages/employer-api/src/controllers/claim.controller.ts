@@ -161,7 +161,15 @@ export const shareClaim = async (req: any, res: express.Response) => {
         ) {
             return res.status(403).send("Forbidden or Not Found")
         }
-        await claimService.shareClaim(id, users)
+        const claim = await claimService.getClaimByID(id)
+        const shareResult = await formService.shareForm(
+            req.kauth.grant.access_token.token,
+            claim.form_submission_id,
+            users
+        )
+        if (shareResult) {
+            await claimService.shareClaim(id, users)
+        }
         return res.status(200).send({ id })
     } catch (e: any) {
         console.log(e?.message)
