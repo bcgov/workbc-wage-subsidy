@@ -119,10 +119,16 @@ export const shareForm = async (token: any, submissionID: string, userGUIDs: str
         }
         for (const userGUID of userGUIDs) {
             console.log(`sharing form submission ${submissionID} with guid ${userGUID}`)
-            const chefsUserID = await userLookup(token, userGUID)
+            let chefsUserID = await userLookup(token, userGUID)
             if (!chefsUserID) {
-                console.log(`user guid ${userGUID} not found in CHEFS - skipping`)
-                continue
+                console.log(`user guid ${userGUID} not found in CHEFS - creating user`)
+                chefsUserID = await createUser(token, userGUID)
+                if (chefsUserID) {
+                    console.log(`successfully created CHEFS user with id ${chefsUserID}`)
+                } else {
+                    console.log(`unable to create CHEFS user for guid ${userGUID} - skipping`)
+                    continue
+                }
             }
             const config = {
                 params: {
@@ -137,6 +143,7 @@ export const shareForm = async (token: any, submissionID: string, userGUIDs: str
             await chefsApi
                 .put(url, data, config)
                 .then(() => console.log(`successfully shared form submission ${submissionID} with guid ${userGUID}`))
+                .catch(() => console.log(`unable to share form submission ${submissionID} with guid ${userGUID}`))
         }
         return true
     } catch (e: any) {
@@ -147,7 +154,7 @@ export const shareForm = async (token: any, submissionID: string, userGUIDs: str
 
 export const userLookup = async (token: string, userGUID: string) => {
     try {
-        const url = `users`
+        const url = "users"
         const config = {
             params: {
                 idpUserId: userGUID
@@ -166,6 +173,26 @@ export const userLookup = async (token: string, userGUID: string) => {
             console.log(`user guid ${userGUID} returned multiple results in CHEFS - should not happen`)
         }
         return null
+    } catch (e: any) {
+        console.log(e)
+        throw new Error()
+    }
+}
+
+export const createUser = async (token: string, userGUID: string) => {
+    try {
+        const url = "users"
+        const data = {
+            guid: userGUID
+        }
+        const config = {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        }
+        const userCreateResponse = await chefsApi.post(url, data, config)
+        const createdUserID = userCreateResponse.data
+        return createdUserID
     } catch (e: any) {
         console.log(e)
         throw new Error()
