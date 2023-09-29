@@ -19,7 +19,7 @@ const EditProfileMenuItem: React.FC<EditProfileMenuItemProps> = ({ openModal }) 
     }
 
     return (
-        <MenuItem onClick={handleClick}>
+        <MenuItem onClick={handleClick} tabIndex={0}>
             <ListItemIcon>
                 <FontAwesomeIcon icon={faUserPen} size="lg" style={{ color: "black" }} />
             </ListItemIcon>
@@ -35,6 +35,6 @@ interface CustomUserMenuProps {
 export const CustomUserMenu: React.FC<CustomUserMenuProps> = ({ openModal }) => (
     <UserMenu>
         <EditProfileMenuItem openModal={openModal} />
-        <Logout icon={<FontAwesomeIcon icon={faPowerOff} size="lg" style={{ color: "black" }} />} />
+        <Logout icon={<FontAwesomeIcon icon={faPowerOff} size="lg" style={{ color: "black" }} tabIndex={0} />} />
     </UserMenu>
 )
