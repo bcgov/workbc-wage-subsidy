@@ -1,17 +1,24 @@
 import { Button } from "@mui/material"
-import { useRecordContext } from "react-admin"
+import { useRecordContext, useRedirect } from "react-admin"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faCalculator } from "@fortawesome/pro-solid-svg-icons"
 import { COLOURS } from "../../../Colours"
 
 const CalculatorButtonField: React.FC = () => {
     const record = useRecordContext()
+    const redirect = useRedirect()
 
     return record.status === "In Progress" ? (
         <Button
             onClick={(event) => {
                 event?.stopPropagation()
-                // TODO: navigate to calculator
+                redirect(
+                    `/ViewForm/Draft/claims/${record.service_provider_form_submission_id}/${record.id}`,
+                    "",
+                    "",
+                    {},
+                    { initialTab: "calculator" }
+                )
             }}
             sx={{ minWidth: "2.5em" }}
             aria-label="Open calculator"
