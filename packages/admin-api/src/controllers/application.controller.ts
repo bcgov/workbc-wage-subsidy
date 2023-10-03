@@ -4,11 +4,10 @@ import * as express from "express"
 
 import { getCatchments } from "../lib/catchment"
 import * as applicationService from "../services/application.service"
-import { generateDocumentTemplate } from "../services/cdogs.service"
+import * as formService from "../services/form.service"
+import { generatePdf } from "../services/cdogs.service"
 import { updateApplicationWithSideEffects } from "../lib/transactions"
-
-const needEmployeeHash = process.env.NEED_EMPLOYEE_HASH || ""
-const haveEmployeeHash = process.env.HAVE_EMPLOYEE_HASH || ""
+import { formatDateMmmDDYYYY } from "../utils/string-functions"
 
 export const getAllApplications = async (req: any, res: express.Response) => {
     try {
@@ -79,9 +78,6 @@ export const getOneApplication = async (req: any, res: express.Response) => {
         if (!application) {
             return res.status(404).send("Not Found")
         }
-
-        // TODO: synchronize DB with CHEFS form as necessary.
-
         return res.status(200).send(application)
     } catch (e: unknown) {
         return res.status(500).send("Internal Server Error")
@@ -151,29 +147,72 @@ export const deleteApplication = async (req: any, res: express.Response) => {
 }
 
 export const generatePDF = async (req: any, res: express.Response) => {
-    // TODO: rework when we implement PDF generation.
     try {
-        const { id } = req.params
-        const application = await applicationService.getApplicationByIdPDF(id)
-        const data = application[0].data ? application[0].data : application[0]
+        const { bceid_user_guid, idir_user_guid } = req.kauth.grant.access_token.content
+        if (bceid_user_guid === undefined && idir_user_guid === undefined) {
+            return res.status(401).send("Not Authorized")
+        }
+        const { id, formType } = req.params
+        const application = await applicationService.getApplicationByID(id)
+        const catchments = await getCatchments(req.kauth.grant.access_token)
         if (
-            data.participantemail0 &&
-            data.participantemail0.includes(";") &&
-            data.participantemail0.split(";")[0] !== ""
+            (formType !== "HaveEmployee" && formType !== "NeedEmployee") ||
+            catchments.length === 0 ||
+            (application && !catchments.includes(application.catchmentno))
         ) {
-            data.position1emails = `${data.participantemail0.split(";")[0]} ${data.participantemail1.split(";")[0]} ${
-                data.participantemail2.split(";")[0]
-            } ${data.participantemail3.split(";")[0]} ${data.participantemail4.split(";")[0]}`
-            data.position2emails = `${data.participantemail0.split(";")[1]} ${data.participantemail1.split(";")[1]} ${
-                data.participantemail2.split(";")[1]
-            } ${data.participantemail3.split(";")[1]} ${data.participantemail4.split(";")[1]}`
-        } else if (
-            // This is strictly in the case of legacy applications where participantemail0 is not in the new format
-            data.participantemail0 &&
-            !data.participantemail0.includes(";") &&
-            data.participantemail0.includes("@")
-        ) {
-            data.position1emails = data.participantemail0
+            return res.status(403).send("Forbidden")
+        }
+        if (!application) {
+            return res.status(404).send("Not Found")
+        }
+        const formId = formType === "HaveEmployee" ? process.env.HAVE_EMPLOYEE_ID : process.env.NEED_EMPLOYEE_ID
+        const formPass = formType === "HaveEmployee" ? process.env.HAVE_EMPLOYEE_PASS : process.env.NEED_EMPLOYEE_PASS
+        const templateHash =
+            formType === "HaveEmployee" ? process.env.HAVE_EMPLOYEE_HASH : process.env.NEED_EMPLOYEE_HASH
+        const submissionId = application?.form_submission_id
+        const submittedDate = application?.form_submitted_date
+        if (!formId || !formPass || !templateHash || !submissionId || !submittedDate) {
+            return res.status(500).send("Internal Server Error")
+        }
+        const submissionResponse = await formService.getSubmission(formId, formPass, submissionId)
+        const submission = submissionResponse?.submission?.submission
+        if (!submission) {
+            return res.status(500).send("Internal Server Error")
+        }
+        const data = {
+            operatingName: submission.data?.operatingName,
+            businessNumber: submission.data?.businessNumber,
+            businessAddress: submission.data?.businessAddress,
+            businessCity: submission.data?.businessCity,
+            businessProvince: submission.data?.businessProvince,
+            businessPostal: submission.data?.businessPostal,
+            businessPhone: submission.data?.businessPhone,
+            businessFax: submission.data?.businessFax,
+            businessEmail: submission.data?.businessEmail,
+            sectorType: submission.data?.sectorType,
+            organizationSize: submission.data?.organizationSize,
+            typeOfIndustry: submission.data?.typeOfIndustry,
+            employeeDisplacement: submission.data?.employeeDisplacement,
+            labourDispute: submission.data?.labourDispute,
+            unionConcurrence: submission.data?.unionConcurrence,
+            liabilityCoverage: submission.data?.liabilityCoverage,
+            wageSubsidy: submission.data?.wageSubsidy,
+            WSBCCoverage: submission.data?.WSBCCoverage,
+            addressAlt: submission.data?.addressAlt,
+            cityAlt: submission.data?.cityAlt,
+            provinceAlt: submission.data?.provinceAlt,
+            postalAlt: submission.data?.postalAlt,
+            positionTitle0: submission.data?.positionTitle0,
+            numberOfPositions0: submission.data?.numberOfPositions0,
+            startDate0: formatDateMmmDDYYYY(submission.data?.startDate0),
+            hours0: submission.data?.hours0,
+            wage0: submission.data?.wage0,
+            duties0: submission.data?.duties0,
+            skills0: submission.data?.skills0,
+            workExperience0: submission.data?.workExperience0,
+            signatory1: submission.data?.signatory1,
+            signatoryTitle: submission.data?.signatoryTitle,
+            submittedDate: formatDateMmmDDYYYY(submittedDate)
         }
         const templateConfig = {
             // eslint-disable-next-line object-shorthand
@@ -188,13 +227,8 @@ export const generatePDF = async (req: any, res: express.Response) => {
                 reportName: `pdf.pdf`
             }
         }
-        const templateHash =
-            application[0].participantemail0 !== null && application[0].participantemail0 !== ";"
-                ? haveEmployeeHash
-                : needEmployeeHash
-        const pdf = await generateDocumentTemplate(templateHash, templateConfig)
-        res.setHeader("Content-Disposition", `attachment; filename=pdf.pdf`)
-        return res.status(200).send(pdf)
+        const pdf = await generatePdf(templateHash, templateConfig)
+        return res.status(200).send({ result: pdf })
     } catch (e: unknown) {
         return res.status(500).send("Internal Server Error")
     }

@@ -194,5 +194,13 @@ export const dataProvider = {
             )
         ).then((responses) => ({
             data: responses.map(({ json }) => json.id)
-        }))
+        })),
+    getPdf: (resource: any, params: { id: any; formType: any }) =>
+        httpClient(`${apiUrl}/${resource}/pdf/${params.id}/${params.formType}`, {
+            method: "GET",
+            headers: new Headers({
+                Accept: "application/json",
+                Authorization: `Bearer ${localStorage.getItem("token")}`
+            })
+        }).then(({ json }) => json)
 }

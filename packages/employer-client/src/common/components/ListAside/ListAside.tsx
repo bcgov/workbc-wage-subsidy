@@ -56,7 +56,22 @@ export const ListAside: React.FC<ListAsideProps> = ({ statusFilters, statusFilte
     }, [])
 
     return (
-        <Box width={200} mr={1} mt={7} flexShrink={0} order={-1}>
+        <Box width={200} mr={1} mt={7} flexShrink={0} order={-1} style={{ transform: "translate(0em, -1.85em)" }}>
+            <Box
+                // width="11em"
+                style={{
+                    color: "#307FE2",
+                    padding: "0em 0.5em 0.0em 0.5em",
+                    borderBottom: "3px solid #307FE2",
+                    marginBottom: "0px",
+                    cursor: "default",
+                    fontSize: "18px"
+                }}
+            >
+                <span className="catchment-label" aria-hidden={true}>
+                    Status Filter
+                </span>
+            </Box>
             <MenuList aria-label="status filters" id="list-aside" tabIndex={0} onKeyDown={skipToDatagrid}>
                 {Object.keys(statusFilters).map((key) => (
                     <MenuItem
@@ -74,6 +89,9 @@ export const ListAside: React.FC<ListAsideProps> = ({ statusFilters, statusFilte
                                 : statusFilters[key].status in counts
                                 ? counts[statusFilters[key].status]
                                 : "0"}
+                        </span>
+                        <span style={ScreenReaderOnly}>
+                            {isEqual(statusFilter, statusFilters[key]) ? ", selected" : ", not selected"}
                         </span>
                     </MenuItem>
                 ))}
