@@ -84,7 +84,11 @@ export const ClaimList = (props: any) => {
                                 emptyText="-"
                             />
                             <FunctionField
-                                label=""
+                                label={
+                                    <Box display="flex" width="100%" justifyContent="center">
+                                        Status
+                                    </Box>
+                                }
                                 render={(record: any) => (
                                     <Box display="flex" width="100%" justifyContent="center">
                                         <Chip

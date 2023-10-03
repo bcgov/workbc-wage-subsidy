@@ -11,28 +11,34 @@ import { CustomDatagridHeader } from "./CustomDatagridHeader"
 type CustomDatagridProps<T> = T & {
     ariaLabel: string
     showCalculatorButton?: boolean
+    rowAriaLabel?: string
 }
 
 type CustomDatagridBodyProps<T> = T & {
     showCalculatorButton?: boolean
+    rowAriaLabel?: string
 }
 
-const CustomDatagridBody = <T,>({ showCalculatorButton, ...props }: CustomDatagridBodyProps<T>) => {
-    return <DatagridBody {...props} row={<CustomDatagridRow showCalculatorButton={showCalculatorButton} />} />
+const CustomDatagridBody = <T,>({ rowAriaLabel, showCalculatorButton, ...props }: CustomDatagridBodyProps<T>) => {
+    return (
+        <DatagridBody
+            {...props}
+            row={<CustomDatagridRow rowAriaLabel={rowAriaLabel} showCalculatorButton={showCalculatorButton} />}
+        />
+    )
 }
 
-const CustomDatagrid = <T,>({ ariaLabel, showCalculatorButton, ...props }: CustomDatagridProps<T>) => {
+const CustomDatagrid = <T,>({ ariaLabel, showCalculatorButton, rowAriaLabel, ...props }: CustomDatagridProps<T>) => {
     const skipToListAside = (event: any) => {
         if (event.key === "ArrowLeft" || event.key === "ArrowRight") {
             const element = document.getElementById("list-aside")
             element?.focus()
         }
     }
-
     return (
         <Datagrid
             {...props}
-            body={<CustomDatagridBody showCalculatorButton={showCalculatorButton} />}
+            body={<CustomDatagridBody rowAriaLabel={rowAriaLabel} showCalculatorButton={showCalculatorButton} />}
             header={<CustomDatagridHeader />}
             aria-label={ariaLabel}
             id="datagrid"

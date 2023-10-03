@@ -5,6 +5,7 @@ import { useDataProvider, useListContext } from "react-admin"
 import isEqual from "lodash/isEqual"
 import { ScreenReaderOnly } from "../../styles/ScreenReaderOnly"
 import { COLOURS } from "../../../Colours"
+import "../CatchmentLabel/CatchmentLabel.css"
 
 interface ListAsideProps {
     statusFilters: { [key: string]: any }
@@ -57,7 +58,12 @@ export const ListAside: React.FC<ListAsideProps> = ({ statusFilters, statusFilte
     }, [cc.catchment])
 
     return (
-        <Box width={200} mr={1} mt={7} flexShrink={0} order={-1}>
+        <Box width={200} mr={1} mt={7} flexShrink={0} order={-1} style={{ transform: "translate(0em, -1.7em)" }}>
+            <Box width="30em" style={{ transform: "translate(0em, -0.5em)" }}>
+                <span className="catchment-label" aria-hidden={true}>
+                    Status Filter
+                </span>
+            </Box>
             <MenuList aria-label="status filters" id="list-aside" tabIndex={0} onKeyDown={skipToDatagrid}>
                 {Object.keys(statusFilters).map((key) => (
                     <MenuItem
@@ -75,6 +81,9 @@ export const ListAside: React.FC<ListAsideProps> = ({ statusFilters, statusFilte
                                 : statusFilters[key].status in counts
                                 ? counts[statusFilters[key].status]
                                 : "0"}
+                        </span>
+                        <span style={ScreenReaderOnly}>
+                            {isEqual(statusFilter, statusFilters[key]) ? ", selected" : ", not selected"}
                         </span>
                     </MenuItem>
                 ))}
