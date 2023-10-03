@@ -1,7 +1,7 @@
 /* eslint-disable jsx-a11y/iframe-has-title */
-import { Box, Tooltip } from "@mui/material"
+import { Box, Stack, Tooltip } from "@mui/material"
 import { Button, useGetIdentity, useGetOne, useRefresh, useUpdate } from "react-admin"
-import { useParams } from "react-router"
+import { useParams, useLocation } from "react-router"
 import StatusDropdown from "../common/components/StatusDropdown/StatusDropdown"
 import { COLOURS } from "../Colours"
 import BackButton from "../common/components/BackButton/BackButton"
@@ -13,6 +13,7 @@ export const ViewForm = () => {
     const [update] = useUpdate()
     const refresh = useRefresh()
     const { urlType, resource, formId, recordId } = useParams()
+    const { state: location } = useLocation()
     const { data: record, error } = useGetOne(resource ? resource : "", { id: recordId })
     if (error || !urlType || !resource || !formId || !recordId || !identity) {
         return <span />
@@ -24,14 +25,13 @@ export const ViewForm = () => {
     } else if (urlType === "View" && identity.idp === "bceid") {
         formUrl = process.env.REACT_APP_VIEW_URL + formId
     } else if (urlType === "Draft") {
-        formUrl = process.env.REACT_APP_DRAFT_URL + formId
+        formUrl = `${process.env.REACT_APP_DRAFT_URL}${formId}&initialTab=${location?.initialTab}`
     } else {
         return <span />
     }
 
     const handleStatusChange = (newStatus) => {
         const diff = { status: newStatus }
-        console.log(recordId)
         update(
             resource,
             { id: recordId, data: diff, previousData: undefined },
