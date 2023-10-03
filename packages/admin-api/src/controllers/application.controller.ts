@@ -177,6 +177,7 @@ export const generatePDF = async (req: any, res: express.Response) => {
         const submissionResponse = await formService.getSubmission(formId, formPass, submissionId)
         const submission = submissionResponse?.submission?.submission
         if (!submission) {
+            console.log("Submission not found.")
             return res.status(500).send("Internal Server Error")
         }
         const data = {
@@ -230,6 +231,7 @@ export const generatePDF = async (req: any, res: express.Response) => {
         const pdf = await generatePdf(templateHash, templateConfig)
         return res.status(200).send({ result: pdf })
     } catch (e: unknown) {
+        console.log(e)
         return res.status(500).send("Internal Server Error")
     }
 }
