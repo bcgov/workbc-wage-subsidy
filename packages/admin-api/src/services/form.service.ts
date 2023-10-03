@@ -14,6 +14,8 @@ export const getSubmission = async (formID: string, formPass: string, submission
             }
         }
         const formSubmissionResponse = await chefsApi.get(url, config)
+        console.log("submission response:")
+        console.log(formSubmissionResponse)
         return formSubmissionResponse.data
     } catch (e: any) {
         console.log(e)
