@@ -1,10 +1,12 @@
 /* eslint-disable jsx-a11y/iframe-has-title */
-import { Box, Stack } from "@mui/material"
-import { useGetIdentity, useGetOne, useRefresh, useUpdate } from "react-admin"
+import { Box, Stack, Tooltip } from "@mui/material"
+import { Button, useGetIdentity, useGetOne, useRefresh, useUpdate } from "react-admin"
 import { useParams, useLocation } from "react-router"
 import StatusDropdown from "../common/components/StatusDropdown/StatusDropdown"
 import { COLOURS } from "../Colours"
 import BackButton from "../common/components/BackButton/BackButton"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { faUpRightFromSquare } from "@fortawesome/pro-solid-svg-icons"
 
 export const ViewForm = () => {
     const { identity } = useGetIdentity()
@@ -55,11 +57,31 @@ export const ViewForm = () => {
                     }}
                 >
                     {record ? (
-                        <Box style={{ marginTop: identity.idp === "idir" ? "4em" : "1em" }}>
-                            <Stack direction="row" spacing={0}>
-                                <BackButton resource={resource} />
-                                <StatusDropdown record={record} onChange={handleStatusChange} />
-                            </Stack>
+                        <Box style={{ display: "flex", marginTop: identity.idp === "idir" ? "4em" : "1em" }}>
+                            <BackButton resource={resource} />
+                            <StatusDropdown record={record} onChange={handleStatusChange} />
+                            <Box style={{ display: "flex", width: "100%", justifyContent: "right" }}>
+                                <Tooltip title={"Open form in new tab"}>
+                                    <span>
+                                        <Button
+                                            onClick={(event) => {
+                                                window.open(formUrl)
+                                            }}
+                                            sx={{ minWidth: "4em" }}
+                                            aria-label="Open form in new tab"
+                                        >
+                                            <FontAwesomeIcon
+                                                icon={faUpRightFromSquare}
+                                                style={{
+                                                    color: COLOURS.LIGHTBLUE_TEXT,
+                                                    padding: "0.65em 0em",
+                                                    height: "21px"
+                                                }}
+                                            />
+                                        </Button>
+                                    </span>
+                                </Tooltip>
+                            </Box>
                         </Box>
                     ) : (
                         <span />

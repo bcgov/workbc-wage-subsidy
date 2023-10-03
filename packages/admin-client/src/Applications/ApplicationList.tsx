@@ -66,7 +66,11 @@ export const ApplicationList = (props: any) => {
                             />
                             <TextField label="Form Type" source="form_type" emptyText="-" />
                             <FunctionField
-                                label=""
+                                label={
+                                    <Box display="flex" width="100%" justifyContent="center">
+                                        Status
+                                    </Box>
+                                }
                                 render={(record: any) => (
                                     <Box display="flex" width="100%" justifyContent="center">
                                         <Chip

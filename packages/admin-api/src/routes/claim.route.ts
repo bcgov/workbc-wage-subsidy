@@ -9,6 +9,6 @@ router.get("/:id", claimController.getOneClaim)
 router.put("/:id", claimController.updateClaim)
 router.delete("/:id", claimController.deleteClaim)
 router.get("/:id/file/:fileid", claimController.getFile)
-router.get("/pdf/:id", claimController.generatePDF)
+router.get("/pdf/:id/:formType", claimController.generatePDF)
 
 export default router

@@ -76,9 +76,3 @@ export const deleteApplication = async (id: string) => {
     const numDeleted = await knex("applications").where("id", id).del()
     return numDeleted
 }
-
-export const getApplicationByIdPDF = async (id: number) => {
-    // TODO: rework when we implement PDF generation.
-    const application = await knex("applications").where("id", id)
-    return application
-}

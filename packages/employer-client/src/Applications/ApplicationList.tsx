@@ -79,7 +79,11 @@ export const ApplicationList = (props: any) => {
                                 }}
                             />
                             <FunctionField
-                                label=""
+                                label={
+                                    <Box display="flex" width="100%" justifyContent="center">
+                                        Status
+                                    </Box>
+                                }
                                 render={(record: any) => {
                                     return (
                                         <Box display="flex" width="100%" justifyContent="center">
