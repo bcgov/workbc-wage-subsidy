@@ -314,7 +314,6 @@ export const generatePDF = async (req: any, res: express.Response) => {
         const pdf = await generatePdf(templateHash, templateConfig)
         return res.status(200).send({ result: pdf })
     } catch (e: unknown) {
-        console.log(e)
         return res.status(500).send("Internal Server Error")
     }
 }

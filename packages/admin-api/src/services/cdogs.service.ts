@@ -21,7 +21,6 @@ export const generatePdf = async (templateHash: string, templateConfig: any) => 
         })
         return cdogsResponse.data
     } catch (error: any) {
-        console.log(error)
         throw new Error(error)
     }
 }
