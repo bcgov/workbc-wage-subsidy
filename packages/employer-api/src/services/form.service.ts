@@ -110,3 +110,91 @@ export const createTeamProtectedDraft = async (
         throw new Error(e.response?.status)
     }
 }
+
+export const shareForm = async (token: any, submissionID: string, userGUIDs: string[]) => {
+    try {
+        const url = `rbac/submissions`
+        const data = {
+            permissions: ["submission_update", "submission_read"]
+        }
+        for (const userGUID of userGUIDs) {
+            console.log(`sharing form submission ${submissionID} with guid ${userGUID}`)
+            let chefsUserID = await userLookup(token, userGUID)
+            if (!chefsUserID) {
+                console.log(`user guid ${userGUID} not found in CHEFS - creating user`)
+                chefsUserID = await createUser(token, userGUID)
+                if (chefsUserID) {
+                    console.log(`successfully created CHEFS user with id ${chefsUserID}`)
+                } else {
+                    console.log(`unable to create CHEFS user for guid ${userGUID} - skipping`)
+                    continue
+                }
+            }
+            const config = {
+                params: {
+                    formSubmissionId: submissionID,
+                    userId: chefsUserID
+                },
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`
+                }
+            }
+            await chefsApi
+                .put(url, data, config)
+                .then(() => console.log(`successfully shared form submission ${submissionID} with guid ${userGUID}`))
+                .catch(() => console.log(`unable to share form submission ${submissionID} with guid ${userGUID}`))
+        }
+        return true
+    } catch (e: any) {
+        console.log(e)
+        throw new Error(e.response?.status)
+    }
+}
+
+export const userLookup = async (token: string, userGUID: string) => {
+    try {
+        const url = "users"
+        const config = {
+            params: {
+                idpUserId: userGUID
+            },
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        }
+        const userResponse = await chefsApi.get(url, config)
+        if (userResponse?.data?.length === 1) {
+            return userResponse.data[0].id
+        }
+        if (userResponse?.data?.length === 0) {
+            console.log(`user guid ${userGUID} not found in CHEFS`)
+        } else {
+            console.log(`user guid ${userGUID} returned multiple results in CHEFS - should not happen`)
+        }
+        return null
+    } catch (e: any) {
+        console.log(e)
+        throw new Error()
+    }
+}
+
+export const createUser = async (token: string, userGUID: string) => {
+    try {
+        const url = "users"
+        const data = {
+            guid: userGUID
+        }
+        const config = {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        }
+        const userCreateResponse = await chefsApi.post(url, data, config)
+        const createdUserID = userCreateResponse.data
+        return createdUserID
+    } catch (e: any) {
+        console.log(e)
+        throw new Error()
+    }
+}

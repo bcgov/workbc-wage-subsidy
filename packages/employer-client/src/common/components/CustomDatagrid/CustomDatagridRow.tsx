@@ -28,12 +28,14 @@ const computeNbColumns = (expand, children, hasBulkActions) =>
 
 type CustomDatagridRowProps = DatagridRowProps & {
     showCalculatorButton?: boolean
+    rowAriaLabel?: string
 }
 
 const DatagridRow: FC<CustomDatagridRowProps> = React.forwardRef((props, ref) => {
     // const DatagridRow: FC<DatagridRowProps> = React.forwardRef((props, ref) => {
     const {
         showCalculatorButton,
+        rowAriaLabel,
         children,
         className,
         expand,
@@ -141,7 +143,11 @@ const DatagridRow: FC<CustomDatagridRowProps> = React.forwardRef((props, ref) =>
                                 }
                             }}
                             onClick={handleClick}
-                            aria-label="View or edit form"
+                            aria-label={
+                                (rowAriaLabel ? rowAriaLabel : "View or edit form") +
+                                " with position title " +
+                                record.position_title
+                            }
                         />
                         {hasBulkActions && (
                             <Checkbox
@@ -164,6 +170,7 @@ const DatagridRow: FC<CustomDatagridRowProps> = React.forwardRef((props, ref) =>
                             className={clsx(`column-${(field.props as any).source}`, DatagridClasses.rowCell)}
                             record={record}
                             {...{ field, resource }}
+                            aria-label={field.key?.toString()}
                         />
                     ) : null
                 )}

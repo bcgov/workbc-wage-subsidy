@@ -2,7 +2,7 @@
 import axios from "axios"
 import { getCDOGSToken } from "./common.service"
 
-export const generateDocumentTemplate = async (templateHash: string, templateConfig: any) => {
+export const generatePdf = async (templateHash: string, templateConfig: any) => {
     try {
         const token: string = await getCDOGSToken()
         const cdogsResponse = await axios({
