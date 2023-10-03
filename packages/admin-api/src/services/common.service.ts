@@ -18,7 +18,6 @@ export const getCDOGSToken = async () => {
         const token: string = authResponse.data.access_token
         return token
     } catch (error: any) {
-        console.log(error)
         throw new Error(error.response?.status)
     }
 }
@@ -41,7 +40,6 @@ export const getCHEFSToken = async () => {
         const token: string = authResponse.data.access_token
         return token
     } catch (error: any) {
-        console.log(error)
         throw new Error(error.response?.status)
     }
 }

@@ -2,7 +2,7 @@ import cors from "cors"
 import express from "express"
 import helmet from "helmet"
 import Keycloak from "keycloak-connect"
-// import morgan from "morgan"
+import morgan from "morgan"
 import applicationRoute from "./routes/application.route"
 import claimRoute from "./routes/claim.route"
 import permissionRoute from "./routes/permission.route"
@@ -29,7 +29,7 @@ const app = express()
 
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
-// app.use(morgan("[:date] :method :url :status :res[content-length] - :remote-addr - :response-time ms"))
+app.use(morgan("[:date] :method :url :status :res[content-length] - :remote-addr - :response-time ms"))
 app.set("trust proxy", "loopback, linklocal, uniquelocal")
 app.use(cors(corsOptions))
 app.use(helmet())
