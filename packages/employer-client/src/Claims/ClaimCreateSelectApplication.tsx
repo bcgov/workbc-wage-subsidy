@@ -59,6 +59,7 @@ export const ClaimCreateSelectApplication = (props: any) => {
                     rowClick={handleClick}
                     bulkActionButtons={false}
                     ariaLabel="list of completed applications"
+                    rowAriaLabel="create a claim form for application"
                     empty={
                         <p style={{ padding: "16px" }}>
                             You must have at least one completed application in order to submit a claim
