@@ -26,13 +26,13 @@ export const ClaimList = (props: any) => {
     }, [cc.catchment])
 
     const handleRowClick = (id: Identifier, resource: string, record: any) => {
-        if (
-            (record.status === "New" || record.status === "In Progress") &&
-            record.service_provider_form_submission_id
-        ) {
-            redirect("/ViewForm/Draft/claims/" + record.service_provider_form_submission_id + "/" + record.id, "")
-        } else if (record.service_provider_form_submission_id) {
-            redirect("/ViewForm/View/claims/" + record.service_provider_form_submission_id + "/" + record.id, "")
+        if (record.service_provider_form_submission_id) {
+            //TODO: cancelled status
+            if (record.status === "In Progress") {
+                redirect("/ViewForm/Draft/claims/" + record.service_provider_form_submission_id + "/" + record.id, "")
+            } else {
+                redirect("/ViewForm/View/claims/" + record.service_provider_form_submission_id + "/" + record.id, "")
+            }
         } else {
             return "" // rowClick expects a path to be returned
         }
@@ -55,6 +55,10 @@ export const ClaimList = (props: any) => {
                                 setStatusFilter={setStatusFilter}
                             />
                         }
+                        sort={{
+                            field: "form_submitted_date,updated_date,created_date",
+                            order: "DESC,DESC,DESC"
+                        }}
                     >
                         <CustomDatagrid showCalculatorButton={true} rowClick={handleRowClick} ariaLabel="claims list">
                             <TextField label="Submission ID" source="form_confirmation_id" emptyText="-" />

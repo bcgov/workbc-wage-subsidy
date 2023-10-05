@@ -28,18 +28,16 @@ export const getAllClaims = async (req: any, res: express.Response) => {
         ) {
             return res.status(403).send("Forbidden")
         }
-        const sort: string[] = req.query.sort ? JSON.parse(req.query.sort) : ["id", "ASC"]
+        const sort: string[] = req.query.sort ? JSON.parse(req.query.sort) : []
+        const sortFields = sort?.length > 0 ? sort[0].split(",") : []
+        const sortOrders = sort?.length > 0 ? sort[1].split(",") : []
         const page = req.query.page ?? 1
         const perPage = req.query.perPage ?? 1
-        const claims = await claimService.getAllClaims(Number(perPage), Number(page), filter, sort)
+        const claims = await claimService.getAllClaims(Number(perPage), Number(page), filter, sortFields, sortOrders)
         res.set({
             "Access-Control-Expose-Headers": "Content-Range",
             "Content-Range": `0 - ${claims.pagination.to} / ${claims.pagination.total}`
         })
-
-        // TODO: synchronize DB with CHEFS forms as necessary.
-        // TODO: create service provider CHEFS forms as necessary.
-
         return res.status(200).send(claims.data)
     } catch (e: unknown) {
         return res.status(500).send("Internal Server Error")
