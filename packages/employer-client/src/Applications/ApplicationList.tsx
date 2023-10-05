@@ -48,6 +48,10 @@ export const ApplicationList = (props: any) => {
                                 user={identity.guid}
                             />
                         }
+                        sort={{
+                            field: "form_submitted_date,updated_date,created_date",
+                            order: "DESC,DESC,DESC"
+                        }}
                     >
                         <CustomDatagrid
                             bulkActionButtons={<FormBulkActionButtons />}
