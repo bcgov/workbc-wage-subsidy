@@ -45,7 +45,7 @@ export const ViewForm = () => {
                 onSuccess: () => {
                     refresh()
                     // also refresh the iframe based on status (changing src triggers an iframe refresh) //
-                    if (iframeRef?.current?.src) {
+                    if (resource === "claims" && iframeRef?.current?.src) {
                         if (newStatus === "Completed" || newStatus === "Cancelled") {
                             if (identity.idp === "idir") iframeRef.current.src = idirViewUrl
                             else if (identity.idp === "bceid") iframeRef.current.src = bceidViewUrl
@@ -112,7 +112,7 @@ export const ViewForm = () => {
                 style={{ border: "solid 2px " + COLOURS.MEDIUMGREY, width: "100%", height: "55em" }}
                 onLoad={async (e) => {
                     if (numLoads > 2) {
-                        await timeout(4000)
+                        await timeout(2000)
                         refresh()
                     }
                     setNumLoads((numLoads) => numLoads + 1)
