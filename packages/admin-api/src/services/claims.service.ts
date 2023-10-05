@@ -7,7 +7,8 @@ export const getAllClaims = async (
     perPage: number,
     currPage: number,
     filters: any,
-    sort: any,
+    sortFields: string[],
+    sortOrders: string[],
     getDrafts?: boolean,
     trx?: any
 ) => {
@@ -28,8 +29,13 @@ export const getAllClaims = async (
             if (filters.associated_application_id) {
                 queryBuilder.where("associated_application_id", filters.associated_application_id)
             }
-            if (sort) {
-                queryBuilder.orderBy(sort[0], sort[1])
+            if (sortFields?.length > 0 && sortOrders?.length > 0) {
+                sortFields.forEach((field, i) => {
+                    queryBuilder.orderByRaw(`${field} ${sortOrders[i]} NULLS LAST`)
+                })
+            } else {
+                // default sort
+                queryBuilder.orderBy("id", "ASC")
             }
             if (trx) {
                 queryBuilder.transacting(trx)
