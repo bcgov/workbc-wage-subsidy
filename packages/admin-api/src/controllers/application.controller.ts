@@ -189,6 +189,7 @@ export const generatePDF = async (req: any, res: express.Response) => {
             businessPhone: submission.data?.businessPhone,
             businessFax: submission.data?.businessFax,
             businessEmail: submission.data?.businessEmail,
+            CEWSAndOrCRHP: submission.data?.CEWSAndOrCRHP,
             sectorType: submission.data?.sectorType,
             organizationSize: submission.data?.organizationSize,
             typeOfIndustry: submission.data?.typeOfIndustry,
@@ -198,10 +199,10 @@ export const generatePDF = async (req: any, res: express.Response) => {
             liabilityCoverage: submission.data?.liabilityCoverage,
             wageSubsidy: submission.data?.wageSubsidy,
             WSBCCoverage: submission.data?.WSBCCoverage,
-            addressAlt: submission.data?.addressAlt,
-            cityAlt: submission.data?.cityAlt,
-            provinceAlt: submission.data?.provinceAlt,
-            postalAlt: submission.data?.postalAlt,
+            addressAlt: submission.data.container?.addressAlt,
+            cityAlt: submission.data.container?.cityAlt,
+            provinceAlt: submission.data.container?.provinceAlt,
+            postalAlt: submission.data.container?.postalAlt,
             positionTitle0: submission.data?.positionTitle0,
             numberOfPositions0: submission.data?.numberOfPositions0,
             startDate0: formatDateMmmDDYYYY(submission.data?.startDate0),
@@ -210,6 +211,24 @@ export const generatePDF = async (req: any, res: express.Response) => {
             duties0: submission.data?.duties0,
             skills0: submission.data?.skills0,
             workExperience0: submission.data?.workExperience0,
+            employeeEmail0: submission.data?.employeeEmail0,
+            employeeEmail1: submission.data?.employeeEmail1,
+            employeeEmail2: submission.data?.employeeEmail2,
+            employeeEmail3: submission.data?.employeeEmail3,
+            employeeEmail4: submission.data?.employeeEmail4,
+            positionTitle1: submission.data.position2?.positionTitle1,
+            numberOfPositions1: submission.data.position2?.numberOfPositions1,
+            startDate1: submission.data.position2?.startDate1,
+            hours1: submission.data.position2?.hours1,
+            wage1: submission.data.position2?.wage1,
+            duties1: submission.data.position2?.duties1,
+            skills1: submission.data.position2?.skills1,
+            workExperience1: submission.data.position2?.workExperience1,
+            employeeEmail5: submission.data.position2?.employeeEmail0,
+            employeeEmail6: submission.data.position2?.employeeEmail1,
+            employeeEmail7: submission.data.position2?.employeeEmail2,
+            employeeEmail8: submission.data.position2?.employeeEmail3,
+            employeeEmail9: submission.data.position2?.employeeEmail4,
             signatory1: submission.data?.signatory1,
             signatoryTitle: submission.data?.signatoryTitle,
             submittedDate: formatDateMmmDDYYYY(submittedDate)
@@ -230,6 +249,7 @@ export const generatePDF = async (req: any, res: express.Response) => {
         const pdf = await generatePdf(templateHash, templateConfig)
         return res.status(200).send({ result: pdf })
     } catch (e: unknown) {
+        console.log(e)
         return res.status(500).send("Internal Server Error")
     }
 }
