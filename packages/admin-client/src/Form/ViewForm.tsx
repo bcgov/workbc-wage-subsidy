@@ -45,7 +45,7 @@ export const ViewForm = () => {
                 onSuccess: () => {
                     refresh()
                     // also refresh the iframe based on status (changing src triggers an iframe refresh) //
-                    if (iframeRef?.current?.src) {
+                    if (resource === "claims" && iframeRef?.current?.src) {
                         if (newStatus === "Completed" || newStatus === "Cancelled") {
                             if (identity.idp === "idir") iframeRef.current.src = idirViewUrl
                             else if (identity.idp === "bceid") iframeRef.current.src = bceidViewUrl
