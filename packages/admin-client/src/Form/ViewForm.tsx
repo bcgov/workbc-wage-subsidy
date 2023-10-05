@@ -112,7 +112,7 @@ export const ViewForm = () => {
                 style={{ border: "solid 2px " + COLOURS.MEDIUMGREY, width: "100%", height: "55em" }}
                 onLoad={async (e) => {
                     if (numLoads > 2) {
-                        await timeout(4000)
+                        await timeout(2000)
                         refresh()
                     }
                     setNumLoads((numLoads) => numLoads + 1)
