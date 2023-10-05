@@ -56,6 +56,10 @@ export const ViewForm = () => {
         )
     }
 
+    const timeout = (delay: number) => {
+        return new Promise((res) => setTimeout(res, delay))
+    }
+
     return (
         <Box style={{ position: "relative", marginTop: 7 }}>
             {record && (
@@ -106,10 +110,9 @@ export const ViewForm = () => {
                 src={formUrl}
                 ref={iframeRef}
                 style={{ border: "solid 2px " + COLOURS.MEDIUMGREY, width: "100%", height: "55em" }}
-                onLoad={(e) => {
-                    console.log("target: ", e.target)
+                onLoad={async (e) => {
                     if (numLoads > 2) {
-                        console.log("src: ", e.target["src"])
+                        await timeout(4000)
                         refresh()
                     }
                     setNumLoads((numLoads) => numLoads + 1)
