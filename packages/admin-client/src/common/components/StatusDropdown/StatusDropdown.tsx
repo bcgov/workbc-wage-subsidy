@@ -23,7 +23,7 @@ interface StatusDropdownProps {
     onChange: (newStatus: any) => void
 }
 
-const StatusDropdown: React.FC<StatusDropdownProps> = ({ record, onChange }) => {
+const StatusDropdown = ({ record, resource, onChange }) => {
     const [outline, setOutline] = useState(outlineStyles.noOutline)
     const statuses = [
         { label: "New", status: "New" },
@@ -34,7 +34,7 @@ const StatusDropdown: React.FC<StatusDropdownProps> = ({ record, onChange }) => 
     const choices = {
         New: [statuses[0], statuses[1], statuses[3]],
         Cancelled: [statuses[1], statuses[3]],
-        "In Progress": [statuses[1], statuses[2], statuses[3]],
+        "In Progress": resource === "claims" ? [statuses[1], statuses[3]] : [statuses[1], statuses[2], statuses[3]],
         Completed: [statuses[1], statuses[2]]
     }
 
