@@ -1,5 +1,5 @@
 /* eslint-disable jsx-a11y/iframe-has-title */
-import { Box, Stack, Tooltip } from "@mui/material"
+import { Box, Tooltip } from "@mui/material"
 import { Button, useGetIdentity, useGetOne, useRefresh, useUpdate } from "react-admin"
 import { useParams, useLocation } from "react-router"
 import StatusDropdown from "../common/components/StatusDropdown/StatusDropdown"
@@ -7,6 +7,7 @@ import { COLOURS } from "../Colours"
 import BackButton from "../common/components/BackButton/BackButton"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faUpRightFromSquare } from "@fortawesome/pro-solid-svg-icons"
+import { useRef, useState } from "react"
 
 export const ViewForm = () => {
     const { identity } = useGetIdentity()
@@ -15,17 +16,22 @@ export const ViewForm = () => {
     const { urlType, resource, formId, recordId } = useParams()
     const { state: location } = useLocation()
     const { data: record, error } = useGetOne(resource ? resource : "", { id: recordId })
+    const iframeRef = useRef<HTMLIFrameElement>(null)
+    const [numLoads, setNumLoads] = useState(0)
     if (error || !urlType || !resource || !formId || !recordId || !identity) {
         return <span />
     }
 
     let formUrl
+    const idirViewUrl = process.env.REACT_APP_MINISTRY_VIEW_URL + formId
+    const bceidViewUrl = process.env.REACT_APP_VIEW_URL + formId
+    const draftUrl = `${process.env.REACT_APP_DRAFT_URL}${formId}&initialTab=${location?.initialTab}`
     if (urlType === "View" && identity.idp === "idir") {
-        formUrl = process.env.REACT_APP_MINISTRY_VIEW_URL + formId
+        formUrl = idirViewUrl
     } else if (urlType === "View" && identity.idp === "bceid") {
-        formUrl = process.env.REACT_APP_VIEW_URL + formId
+        formUrl = bceidViewUrl
     } else if (urlType === "Draft") {
-        formUrl = `${process.env.REACT_APP_DRAFT_URL}${formId}&initialTab=${location?.initialTab}`
+        formUrl = draftUrl
     } else {
         return <span />
     }
@@ -38,9 +44,20 @@ export const ViewForm = () => {
             {
                 onSuccess: () => {
                     refresh()
+                    // also refresh the iframe based on status (changing src triggers an iframe refresh) //
+                    if (resource === "claims" && iframeRef?.current?.src) {
+                        if (newStatus === "Completed" || newStatus === "Cancelled") {
+                            if (identity.idp === "idir") iframeRef.current.src = idirViewUrl
+                            else if (identity.idp === "bceid") iframeRef.current.src = bceidViewUrl
+                        } else if (newStatus === "In Progress") iframeRef.current.src = draftUrl
+                    }
                 }
             }
         )
+    }
+
+    const timeout = (delay: number) => {
+        return new Promise((res) => setTimeout(res, delay))
     }
 
     return (
@@ -59,7 +76,7 @@ export const ViewForm = () => {
                     {record ? (
                         <Box style={{ display: "flex", marginTop: identity.idp === "idir" ? "4em" : "1em" }}>
                             <BackButton resource={resource} />
-                            <StatusDropdown record={record} onChange={handleStatusChange} />
+                            <StatusDropdown record={record} resource={resource} onChange={handleStatusChange} />
                             <Box style={{ display: "flex", width: "100%", justifyContent: "right" }}>
                                 <Tooltip title={"Open form in new tab"}>
                                     <span>
@@ -91,7 +108,15 @@ export const ViewForm = () => {
             )}
             <iframe
                 src={formUrl}
+                ref={iframeRef}
                 style={{ border: "solid 2px " + COLOURS.MEDIUMGREY, width: "100%", height: "55em" }}
+                onLoad={async (e) => {
+                    if (numLoads > 2) {
+                        await timeout(2000)
+                        refresh()
+                    }
+                    setNumLoads((numLoads) => numLoads + 1)
+                }}
             />
             <div
                 className="bottom-hider"

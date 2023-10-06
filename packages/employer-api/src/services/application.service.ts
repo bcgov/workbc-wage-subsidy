@@ -5,7 +5,8 @@ export const getAllApplications = async (
     perPage: number,
     currPage: number,
     filters: any,
-    sort: string[],
+    sortFields: string[],
+    sortOrders: string[],
     user: string
 ) => {
     const applicationIds = knex("employers_applications").select("application_id").where("employer_id", user)
@@ -26,8 +27,13 @@ export const getAllApplications = async (
             if (filters.form_confirmation_id) {
                 queryBuilder.where("form_confirmation_id", filters.form_confirmation_id)
             }
-            if (sort) {
-                queryBuilder.orderBy(sort[0], sort[1])
+            if (sortFields?.length > 0 && sortOrders?.length > 0) {
+                sortFields.forEach((field, i) => {
+                    queryBuilder.orderByRaw(`${field} ${sortOrders[i]} NULLS LAST`)
+                })
+            } else {
+                // default sort
+                queryBuilder.orderBy("id", "ASC")
             }
         })
         .paginate({ perPage, currentPage: currPage, isLengthAware: true })
@@ -92,7 +98,8 @@ export const updateApplication = async (id: number, status: string | null, form:
                 catchmentno: Number(form.catchmentNo),
                 status,
                 updated_by: form.userInfo.username, // TODO: should match 'user' on insertion (uses a hash version of the users bceid instead of the actual username)
-                updated_date: new Date()
+                updated_date: new Date(),
+                organization: form.operatingName
             })
     }
     return result

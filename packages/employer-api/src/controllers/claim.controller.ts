@@ -14,10 +14,19 @@ export const getAllClaims = async (req: any, res: express.Response) => {
             return res.status(403).send("Not Authorized")
         }
         const filter = req.query.filter ? JSON.parse(req.query.filter) : {}
-        const sort: string[] = req.query.sort ? JSON.parse(req.query.sort) : ["id", "ASC"]
+        const sort: string[] = req.query.sort ? JSON.parse(req.query.sort) : []
+        const sortFields = sort?.length > 0 ? sort[0].split(",") : []
+        const sortOrders = sort?.length > 0 ? sort[1].split(",") : []
         const page = req.query.page ?? 1
         const perPage = req.query.perPage ?? 1
-        const claims = await claimService.getAllClaims(Number(perPage), Number(page), filter, sort, bceid_guid)
+        const claims = await claimService.getAllClaims(
+            Number(perPage),
+            Number(page),
+            filter,
+            sortFields,
+            sortOrders,
+            bceid_guid
+        )
 
         if (filter.status == null && perPage > 1) {
             // only update applications once each call cycle

@@ -52,10 +52,14 @@ export const ApplicationList = (props: any) => {
                                 setStatusFilter={setStatusFilter}
                             />
                         }
+                        sort={{
+                            field: "form_submitted_date,updated_date,created_date",
+                            order: "DESC,DESC,DESC"
+                        }}
                     >
                         <CustomDatagrid rowClick={handleRowClick} ariaLabel="applications list">
                             <TextField label="Submission ID" source="form_confirmation_id" emptyText="-" />
-                            <TextField label="Organization" source="created_by" emptyText="-" />
+                            <TextField label="Organization" source="organization" emptyText="-" />
                             <TextField label="Position Title" source="position_title" emptyText="-" />
                             <FunctionField
                                 label="Submitted Date"

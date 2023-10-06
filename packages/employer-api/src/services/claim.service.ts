@@ -1,7 +1,14 @@
 /* eslint-disable import/prefer-default-export */
 import { knex } from "../config/db-config"
 
-export const getAllClaims = async (perPage: number, currPage: number, filters: any, sort: any, user: string) => {
+export const getAllClaims = async (
+    perPage: number,
+    currPage: number,
+    filters: any,
+    sortFields: string[],
+    sortOrders: string[],
+    user: string
+) => {
     const claimIds = knex("employers_claims").select("claim_id").where("employer_id", user)
     const claimsAndSharedUsers = await knex("claims as c")
         .join("employers_claims as ec", "c.id", "=", "ec.claim_id")
@@ -20,8 +27,13 @@ export const getAllClaims = async (perPage: number, currPage: number, filters: a
             if (filters.catchmentno) {
                 queryBuilder.where("catchmentno", Number(filters.catchmentno))
             }
-            if (sort) {
-                queryBuilder.orderBy(sort[0], sort[1])
+            if (sortFields?.length > 0 && sortOrders?.length > 0) {
+                sortFields.forEach((field, i) => {
+                    queryBuilder.orderByRaw(`${field} ${sortOrders[i]} NULLS LAST`)
+                })
+            } else {
+                // default sort
+                queryBuilder.orderBy("id", "ASC")
             }
         })
         .paginate({ perPage, currentPage: currPage, isLengthAware: true })
