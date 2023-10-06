@@ -76,7 +76,7 @@ export const ViewForm = () => {
                     {record ? (
                         <Box style={{ display: "flex", marginTop: identity.idp === "idir" ? "4em" : "1em" }}>
                             <BackButton resource={resource} />
-                            <StatusDropdown record={record} onChange={handleStatusChange} />
+                            <StatusDropdown record={record} resource={resource} onChange={handleStatusChange} />
                             <Box style={{ display: "flex", width: "100%", justifyContent: "right" }}>
                                 <Tooltip title={"Open form in new tab"}>
                                     <span>
