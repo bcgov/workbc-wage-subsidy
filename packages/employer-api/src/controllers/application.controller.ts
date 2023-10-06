@@ -34,7 +34,7 @@ export const getAllApplications = async (req: any, res: express.Response) => {
             const containsHaveEmployee = applications.data.some((a: any) => a.form_type === "Have Employee")
             const containsNonComplete = applications.data.some((a: any) => a.status !== "Complete")
             const params = {
-                fields: "userInfo,internalId,catchmentNo,positionTitle0,numberOfPositions0",
+                fields: "userInfo,internalId,catchmentNo,positionTitle0,numberOfPositions0,operatingName",
                 // eslint-disable-next-line camelcase
                 // createdBy: `${bceid_guid}@bceid`, //TODO: use guid from applications object
                 deleted: false

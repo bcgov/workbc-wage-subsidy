@@ -2,6 +2,7 @@ CREATE TABLE IF NOT EXISTS public.applications
 (
     id character varying(255) COLLATE pg_catalog."default" NOT NULL,
     position_title character varying(255) COLLATE pg_catalog."default",
+    organization character varying(255) COLLATE pg_catalog."default",
     status character varying(255) COLLATE pg_catalog."default",
     form_type character varying(255) COLLATE pg_catalog."default",
     catchmentno integer,
