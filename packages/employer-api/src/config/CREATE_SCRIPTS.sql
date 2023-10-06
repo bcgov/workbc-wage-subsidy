@@ -104,3 +104,17 @@ TABLESPACE pg_default;
 
 ALTER TABLE IF EXISTS public.employers_claims
     OWNER to postgres;
+
+
+CREATE TABLE IF NOT EXISTS public.notifications
+(
+    id character varying(255) COLLATE pg_catalog."default" NOT NULL,
+    email character varying(255) COLLATE pg_catalog."default",
+    catchmentno integer
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public.notifications
+    OWNER to postgres;
+

@@ -10,7 +10,8 @@ module.exports = {
         "@typescript-eslint/no-shadow": "off",
         "no-await-in-loop": "off",
         "no-continue": "off",
-        "no-restricted-syntax": "off"
+        "no-restricted-syntax": "off",
+        "no-console": "off"
     },
     ignorePatterns: ["**/dist/**/*.js"]
 }
