@@ -29,29 +29,22 @@ export const getAllClaims = async (req: any, res: express.Response) => {
         )
 
         if (filter.status == null && perPage > 1) {
-            // only update applications once each call cycle
-            // update users claims as needed //
-            const containsNonComplete = claims.data.some((a: any) => a.status !== "Completed")
-            const params = {
-                fields: `formHandler, storefrontId, catchmentNo, userInfo, applicationId, internalId, container`,
-                // eslint-disable-next-line camelcase
-                // createdBy: bceid_guid,
-                deleted: false
-            }
-            if (containsNonComplete) {
-                // only query the forms service if we might need to update something
-                const submissions = await formService.getFormSubmissions(
-                    process.env.CLAIM_FORM_ID || "",
-                    process.env.CLAIM_FORM_PASS || "",
-                    params
-                )
-                submissions.forEach(async (submission: any) => {
-                    const claim = claims.data.find((c: any) => c.id === submission.internalId)
-                    if (claim && claim.status === "Draft") {
-                        await claimService.updateClaim(claim.id, "Draft", submission)
+            claims.data.forEach(async (claim: any) => {
+                if (claim.status === "Draft") {
+                    const formID = process.env.CLAIM_FORM_ID
+                    const formPass = process.env.CLAIM_FORM_PASS
+                    if (formID && formPass && claim.form_submission_id) {
+                        const submissionResponse = await formService.getSubmission(
+                            formID,
+                            formPass,
+                            claim.form_submission_id
+                        )
+                        if (submissionResponse.submission.draft === true) {
+                            await claimService.updateClaim(claim.id, "Draft", submissionResponse.submission)
+                        }
                     }
-                })
-            }
+                }
+            })
         }
         res.set({
             "Access-Control-Expose-Headers": "Content-Range",

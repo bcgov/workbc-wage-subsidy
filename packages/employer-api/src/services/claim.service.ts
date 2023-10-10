@@ -85,23 +85,23 @@ export const insertClaim = async (
     return false
 }
 
-export const updateClaim = async (id: number, status: string | null, form: any) => {
+export const updateClaim = async (id: number, status: string | null, body: any) => {
     const claims = await knex("claims").where("id", id)
     if (claims.length === 0) {
         return 0
     }
     let result
-    if (form?.userInfo) {
+    if (body) {
+        const submitted = body.draft === false
         result = await knex("claims")
             .where("id", id)
             .update({
-                form_confirmation_id: form.formSubmissionStatusCode === "SUBMITTED" ? form.confirmationId : null, // only store the confirmation ID when the form has been submitted
-                form_submission_id: form.submissionId,
-                form_submitted_date: form.formSubmissionStatusCode === "SUBMITTED" ? form.createdAt : null,
-                employee_first_name: form.container.employeeFirstName,
-                employee_last_name: form.container.employeeLastName,
+                form_confirmation_id: submitted ? body.confirmationId : null, // only store the confirmation ID when the form has been submitted
+                form_submitted_date: submitted ? body.createdAt : null,
+                employee_first_name: body.submission.data.container.employeeFirstName,
+                employee_last_name: body.submission.data.container.employeeLastName,
                 status,
-                updated_by: form.userInfo.username, // TODO: should match 'user' on insertion (uses a hash version of the users bceid instead of the actual username)
+                updated_by: "system",
                 updated_date: new Date()
             })
     }
