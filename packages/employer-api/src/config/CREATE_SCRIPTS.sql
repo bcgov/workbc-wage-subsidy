@@ -111,7 +111,7 @@ CREATE TABLE IF NOT EXISTS public.notifications
     id SERIAL NOT NULL,
     email character varying(255) COLLATE pg_catalog."default" UNIQUE,
     catchmentno integer,
-    type character varying(255) COLLATE pg_catalog."default",
+    type character varying(255) COLLATE pg_catalog."default"
 )
 
 TABLESPACE pg_default;

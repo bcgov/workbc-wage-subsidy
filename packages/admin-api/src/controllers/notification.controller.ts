@@ -6,7 +6,7 @@ export const getNotification = async (req: any, res: express.Response) => {
     try {
         const { catchmentNo, type } = req.body
         const { email } = req.kauth.grant.access_token.content
-        if (type !== "application" || type !== "claim") {
+        if (type !== "application" && type !== "claim") {
             return res.status(400).send("Invalid type")
         }
         const notifications = await notificationService.getNotification(email, Number(catchmentNo), type)
@@ -21,7 +21,7 @@ export const addNotification = async (req: any, res: express.Response) => {
     try {
         const { catchmentNo, type } = req.body
         const { email } = req.kauth.grant.access_token.content
-        if (type !== "application" || type !== "claim") {
+        if (type !== "application" && type !== "claim") {
             return res.status(400).send("Invalid type")
         }
         const result = await notificationService.addNotification(email, Number(catchmentNo), type)
@@ -36,7 +36,7 @@ export const deleteNotification = async (req: any, res: express.Response) => {
     try {
         const { catchmentNo, type } = req.body
         const { email } = req.kauth.grant.access_token.content
-        if (type !== "application" || type !== "claim") {
+        if (type !== "application" && type !== "claim") {
             return res.status(400).send("Invalid type")
         }
         const result = await notificationService.deleteNotification(email, Number(catchmentNo), type)
