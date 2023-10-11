@@ -6,7 +6,6 @@ const getNotification = async (email: string, catchmentNo: number, type: string)
         .where("email", email)
         .andWhere("catchmentno", catchmentNo)
         .andWhere("type", type)
-    console.log(notifications)
     return notifications
 }
 
@@ -17,7 +16,6 @@ const addNotification = async (email: string, catchmentNo: number, type: string)
         type
     }
     const result = await knex("notifications").insert(data).returning(["id", "email", "catchmentno", "type"])
-    console.log(result)
     return result
 }
 
@@ -28,7 +26,6 @@ const deleteNotification = async (email: string, catchmentNo: number, type: stri
         .andWhere("type", type)
         .del()
         .returning(["id", "email", "catchmentno", "type"])
-    console.log(result)
     return result
 }
 
