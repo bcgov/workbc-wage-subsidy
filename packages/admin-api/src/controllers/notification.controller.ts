@@ -1,10 +1,17 @@
 import express from "express"
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import notificationService from "../services/notification.service"
+import { getCatchments } from "../lib/catchment"
 
 export const getNotification = async (req: any, res: express.Response) => {
     try {
         const { catchmentNo, type } = req.body
+        const catchments = await getCatchments(req.kauth.grant.access_token)
+
+        if (catchments.length === 0 || !catchments.includes(Number(catchmentNo))) {
+            return res.status(403).send("Forbidden")
+        }
+
         const { email } = req.kauth.grant.access_token.content
         if (type !== "application" && type !== "claim") {
             return res.status(400).send("Invalid type")
@@ -20,6 +27,12 @@ export const getNotification = async (req: any, res: express.Response) => {
 export const addNotification = async (req: any, res: express.Response) => {
     try {
         const { catchmentNo, type } = req.body
+        const catchments = await getCatchments(req.kauth.grant.access_token)
+
+        if (catchments.length === 0 || !catchments.includes(Number(catchmentNo))) {
+            return res.status(403).send("Forbidden")
+        }
+
         const { email } = req.kauth.grant.access_token.content
         if (type !== "application" && type !== "claim") {
             return res.status(400).send("Invalid type")
@@ -35,6 +48,12 @@ export const addNotification = async (req: any, res: express.Response) => {
 export const deleteNotification = async (req: any, res: express.Response) => {
     try {
         const { catchmentNo, type } = req.body
+        const catchments = await getCatchments(req.kauth.grant.access_token)
+
+        if (catchments.length === 0 || !catchments.includes(Number(catchmentNo))) {
+            return res.status(403).send("Forbidden")
+        }
+
         const { email } = req.kauth.grant.access_token.content
         if (type !== "application" && type !== "claim") {
             return res.status(400).send("Invalid type")

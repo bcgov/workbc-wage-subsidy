@@ -54,7 +54,7 @@ export const sendEmail = async (req: any, res: express.Response) => {
 
         // Get catchment number and then proceed to send notifications to all users who have enabled notifications on that catchment's applications
         if (data.catchmentNo) {
-            const notificationHTML = notificationTemplate.applicationNotification(`${data.catchmentNo}`)
+            const notificationHTML = notificationTemplate.applicationNotification(`${data.catchmentNo}`, "application")
             const notificationList = await notificationService.getNotification(Number(data.catchmentNo), "application")
             notificationList.forEach(async (notification: Notification) => {
                 await emailService.sendEmail(notificationHTML, `New Wage Subsidy Application Submitted`, [
@@ -63,10 +63,13 @@ export const sendEmail = async (req: any, res: express.Response) => {
             })
         } else if (data.catchmentNoStoreFront) {
             // Get catchment number and then proceed to send notifications to all users who have enabled notifications on that catchment's applications
-            const notificationHTML = notificationTemplate.applicationNotification(data.catchmentNoStoreFront)
+            const notificationHTML = notificationTemplate.applicationNotification(
+                data.catchmentNoStoreFront,
+                "application"
+            )
             const notificationList = await notificationService.getNotification(
                 Number(data.catchmentNoStoreFront.split("-")[0]),
-                "storefront"
+                "application"
             )
             notificationList.forEach(async (notification: Notification) => {
                 await emailService.sendEmail(notificationHTML, `New Wage Subsidy Application Submitted`, [
