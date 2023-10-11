@@ -33,7 +33,7 @@ export const ViewForm = () => {
 
     return (
         <div>
-            {loading && <Loading></Loading>}
+            {loading && <Loading sx={{ marginTop: 20 }}></Loading>}
             <Box hidden={loading} style={{ position: "relative", marginTop: 7 }}>
                 <div
                     style={{

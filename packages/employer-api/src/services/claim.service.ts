@@ -98,8 +98,8 @@ export const updateClaim = async (id: number, status: string | null, body: any) 
             .update({
                 form_confirmation_id: submitted ? body.confirmationId : null, // only store the confirmation ID when the form has been submitted
                 form_submitted_date: submitted ? body.createdAt : null,
-                employee_first_name: body.submission.data.container.employeeFirstName,
-                employee_last_name: body.submission.data.container.employeeLastName,
+                employee_first_name: body.submission?.data?.container?.employeeFirstName,
+                employee_last_name: body.submission?.data?.container?.employeeLastName,
                 status,
                 updated_by: "system",
                 updated_date: new Date()

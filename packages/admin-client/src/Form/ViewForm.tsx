@@ -117,7 +117,7 @@ export const ViewForm = () => {
                     &nbsp;
                 </div>
             )}
-            {loading && <Loading></Loading>}
+            {loading && <Loading sx={{ marginTop: 20 }}></Loading>}
             <iframe
                 src={formUrl}
                 ref={iframeRef}
