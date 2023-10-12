@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/iframe-has-title */
 import { Box, Tooltip } from "@mui/material"
-import { Button, useGetIdentity, useGetOne, useRefresh, useUpdate } from "react-admin"
+import { Button, Loading, useGetIdentity, useGetOne, useRefresh, useUpdate } from "react-admin"
 import { useParams, useLocation } from "react-router"
 import StatusDropdown from "../common/components/StatusDropdown/StatusDropdown"
 import { COLOURS } from "../Colours"
@@ -8,6 +8,7 @@ import BackButton from "../common/components/BackButton/BackButton"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faUpRightFromSquare } from "@fortawesome/pro-solid-svg-icons"
 import { useRef, useState } from "react"
+import React from "react"
 
 export const ViewForm = () => {
     const { identity } = useGetIdentity()
@@ -18,6 +19,16 @@ export const ViewForm = () => {
     const { data: record, error } = useGetOne(resource ? resource : "", { id: recordId })
     const iframeRef = useRef<HTMLIFrameElement>(null)
     const [numLoads, setNumLoads] = useState(0)
+    const [loading, setLoading] = useState(true)
+
+    React.useEffect(() => {
+        if (numLoads === 2) {
+            refresh()
+            setLoading(false)
+            setNumLoads(0)
+        }
+    }, [numLoads])
+
     if (error || !urlType || !resource || !formId || !recordId || !identity) {
         return <span />
     }
@@ -106,15 +117,13 @@ export const ViewForm = () => {
                     &nbsp;
                 </div>
             )}
+            {loading && <Loading sx={{ marginTop: 20 }}></Loading>}
             <iframe
                 src={formUrl}
                 ref={iframeRef}
                 style={{ border: "solid 2px " + COLOURS.MEDIUMGREY, width: "100%", height: "55em" }}
-                onLoad={async (e) => {
-                    if (numLoads > 2) {
-                        await timeout(2000)
-                        refresh()
-                    }
+                hidden={loading}
+                onLoad={(e) => {
                     setNumLoads((numLoads) => numLoads + 1)
                 }}
             />

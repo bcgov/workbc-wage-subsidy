@@ -80,26 +80,28 @@ export const insertApplication = async (
     return result
 }
 
-export const updateApplication = async (id: number, status: string | null, form: any) => {
+export const updateApplication = async (id: number, status: string | null, body: any) => {
     const wages = await knex("applications").where("id", id)
     if (wages.length === 0) {
         return 0
     }
     let result
-    if (form && form.userInfo) {
+    if (body) {
+        const submitted = body.draft === false
         result = await knex("applications")
             .where("id", id)
             .update({
-                form_confirmation_id: form.formSubmissionStatusCode === "SUBMITTED" ? form.confirmationId : null, // only store the confirmation ID when the form has been submitted
-                form_submission_id: form.submissionId,
-                form_submitted_date: form.formSubmissionStatusCode === "SUBMITTED" ? form.createdAt : null,
-                position_title: form.positionTitle0, // TODO: what to do in the case of multiple positions?
-                num_positions: Number(form.numberOfPositions0), // TODO: what to do in the case of multiple positions?
-                catchmentno: Number(form.catchmentNo),
+                form_confirmation_id: submitted ? body.confirmationId : null, // only store the confirmation ID when the form has been submitted
+                form_submitted_date: submitted ? body.createdAt : null,
+                position_title: body.submission.data.positionTitle0,
+                num_positions: body.submission.data.numberOfPositions0
+                    ? Number(body.submission.data.numberOfPositions0)
+                    : null,
+                catchmentno: body.submission.data.catchmentNo ? Number(body.submission.data.catchmentNo) : null,
                 status,
-                updated_by: form.userInfo.username, // TODO: should match 'user' on insertion (uses a hash version of the users bceid instead of the actual username)
+                updated_by: "system",
                 updated_date: new Date(),
-                organization: form.operatingName
+                organization: body.submission.data.operatingName
             })
     }
     return result
