@@ -8,7 +8,7 @@ import emailRoute from "./routes/email.route"
 import wageRoute from "./routes/wage.route"
 
 const corsOptions = {
-    origin: process.env.CHEF_URL || process.env.ORIGIN_URL || "https://form-dev.es.workbc.ca",
+    origin: process.env.CHEFS_URL || process.env.ORIGIN_URL || "https://forms-dev.es.workbc.ca",
     credentials: true,
     optionsSuccessStatus: 200
 }

@@ -1,14 +1,15 @@
 /* eslint-disable import/prefer-default-export */
 import * as express from "express"
 
-import { Notification } from "../typings"
+// eslint-disable-next-line import/no-relative-packages
+import { NeedEmployeeData, Notification } from "../../../typings/emailData"
 
 import notificationService from "../services/notification.service"
 import * as emailService from "../services/email.service"
 import received from "../templates/received.template"
 import notificationTemplate from "../templates/notification.template"
 
-const createEmail = (data: any) => {
+const createEmail = (data: NeedEmployeeData) => {
     let emailHTML = ""
     // in case of employee email, it is have employee application
     if (data.employeeEmail0) {
@@ -25,7 +26,7 @@ export const sendEmail = async (req: any, res: express.Response) => {
         const { data } = req.body
         let recipients: string[] = []
         console.log(data)
-        if (data.employeeEmail0 && data.employeeEmail0 !== null) {
+        if (data.applicationType === "HaveEmployee") {
             recipients = Object.keys(data)
                 .map((key: string) => {
                     if (key.includes("employeeEmail")) {
@@ -35,7 +36,7 @@ export const sendEmail = async (req: any, res: express.Response) => {
                 })
                 .filter((email: string) => email !== null)
                 .filter((v: string, i: number, a: string[]) => a.indexOf(v) === i)
-        } else if (data.positionTitle0 && data.employeeEmail0 === undefined) {
+        } else if (data.applicationType === "NeedEmployee") {
             recipients = Object.keys(data)
                 .map((key: string) => {
                     if (key.includes("businessEmail")) {
@@ -53,24 +54,9 @@ export const sendEmail = async (req: any, res: express.Response) => {
         }
 
         // Get catchment number and then proceed to send notifications to all users who have enabled notifications on that catchment's applications
-        if (data.catchmentNo) {
+        if (data.applicationType === "HaveEmployee" || data.applicationType === "NeedEmployee") {
             const notificationHTML = notificationTemplate.applicationNotification(`${data.catchmentNo}`, "application")
             const notificationList = await notificationService.getNotification(Number(data.catchmentNo), "application")
-            notificationList.forEach(async (notification: Notification) => {
-                await emailService.sendEmail(notificationHTML, `New Wage Subsidy Application Submitted`, [
-                    notification.email
-                ])
-            })
-        } else if (data.catchmentNoStoreFront) {
-            // Get catchment number and then proceed to send notifications to all users who have enabled notifications on that catchment's applications
-            const notificationHTML = notificationTemplate.applicationNotification(
-                data.catchmentNoStoreFront,
-                "application"
-            )
-            const notificationList = await notificationService.getNotification(
-                Number(data.catchmentNoStoreFront.split("-")[0]),
-                "application"
-            )
             notificationList.forEach(async (notification: Notification) => {
                 await emailService.sendEmail(notificationHTML, `New Wage Subsidy Application Submitted`, [
                     notification.email
