@@ -231,7 +231,7 @@ export const generatePDF = async (req: any, res: express.Response) => {
             employeeEmail4: submission.data?.employeeEmail4,
             positionTitle1: submission.data.position2?.positionTitle1,
             numberOfPositions1: submission.data.position2?.numberOfPositions1,
-            startDate1: submission.data.position2?.startDate1,
+            startDate1: formatDateMmmDDYYYY(submission.data.position2?.startDate1),
             hours1: submission.data.position2?.hours1,
             wage1: submission.data.position2?.wage1,
             duties1: submission.data.position2?.duties1,
