@@ -21,7 +21,7 @@ const createEmail = (data: NeedEmployeeData) => {
     return emailHTML
 }
 
-export const sendEmail = async (req: any, res: express.Response) => {
+export const sendEmail = async (req: express.Request, res: express.Response) => {
     try {
         const { data } = req.body
         let recipients: string[] = []
