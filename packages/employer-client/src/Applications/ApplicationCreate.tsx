@@ -1,4 +1,4 @@
-import React from "react"
+import { useEffect, useState } from "react"
 import Box from "@mui/material/Box"
 import Grid from "@mui/material/Grid"
 import { LoadingIndicator, useCreate, useGetIdentity, useGetList, useRedirect } from "react-admin"
@@ -11,7 +11,7 @@ export const ApplicationCreate = () => {
     const redirect = useRedirect()
     const { identity } = useGetIdentity()
     const [create] = useCreate()
-    const [loading, setLoading] = React.useState(false)
+    const [loading, setLoading] = useState(false)
     const { total, isLoading } = useGetList("applications", { pagination: { page: 1, perPage: 1 } })
     const [searchParams] = useSearchParams()
 
@@ -34,7 +34,7 @@ export const ApplicationCreate = () => {
         }
     }
 
-    React.useEffect(() => {
+    useEffect(() => {
         if (searchParams.get("redirectType") === "firstload" && total !== 0) {
             redirect("list", "applications")
         }

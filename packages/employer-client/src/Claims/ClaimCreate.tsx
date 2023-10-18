@@ -1,4 +1,4 @@
-import React from "react"
+import { useEffect } from "react"
 import Box from "@mui/material/Box"
 import Grid from "@mui/material/Grid"
 import { useGetList, useRedirect } from "react-admin"
@@ -11,7 +11,7 @@ export const ClaimCreate = () => {
     const { total, isLoading } = useGetList("claims", { pagination: { page: 1, perPage: 1 } })
     const [searchParams] = useSearchParams()
 
-    React.useEffect(() => {
+    useEffect(() => {
         if (searchParams.get("redirectType") === "firstload" && total !== 0) {
             redirect("list", "claims")
         }
