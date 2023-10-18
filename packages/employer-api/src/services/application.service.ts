@@ -22,7 +22,7 @@ export const getAllApplications = async (
                 queryBuilder.where("id", filters.id)
             }
             if (filters.status) {
-                queryBuilder.where("status", filters.status)
+                queryBuilder.whereIn("status", filters.status)
             }
             if (filters.form_confirmation_id) {
                 queryBuilder.where("form_confirmation_id", filters.form_confirmation_id)
