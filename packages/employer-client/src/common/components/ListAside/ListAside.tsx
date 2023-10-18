@@ -47,7 +47,7 @@ export const ListAside: React.FC<ListAsideProps> = ({ statusFilters, statusFilte
         }
         if (!isFetching && statusFilter.label === "All" && total === 0) {
             setStatusFilter(statusFilters["All"])
-            redirect("create", resource)
+            redirect("create?redirectType=firstload", resource)
         }
     }, [isFetching])
 
