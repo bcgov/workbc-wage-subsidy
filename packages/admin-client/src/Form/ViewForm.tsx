@@ -72,75 +72,78 @@ export const ViewForm = () => {
     }
 
     return (
-        <Box style={{ position: "relative", marginTop: 7 }}>
-            {record && (
+        <div>
+            {loading && <Loading sx={{ marginTop: 20 }}></Loading>}
+            <Box hidden={loading} style={{ position: "relative", marginTop: 7 }}>
+                {record && (
+                    <div
+                        style={{
+                            borderBottom: "solid 2px " + COLOURS.MEDIUMGREY,
+                            backgroundColor: "white",
+                            width: "100%",
+                            height: identity.idp === "idir" ? "8em" : "5em",
+                            position: "absolute",
+                            zIndex: 1
+                        }}
+                    >
+                        {record ? (
+                            <Box style={{ display: "flex", marginTop: identity.idp === "idir" ? "4em" : "1em" }}>
+                                <BackButton resource={resource} />
+                                <StatusDropdown record={record} resource={resource} onChange={handleStatusChange} />
+                                <Box style={{ display: "flex", width: "100%", justifyContent: "right" }}>
+                                    <Tooltip title={"Open form in new tab"}>
+                                        <span>
+                                            <Button
+                                                onClick={(event) => {
+                                                    window.open(formUrl)
+                                                }}
+                                                sx={{ minWidth: "4em" }}
+                                                aria-label="Open form in new tab"
+                                            >
+                                                <FontAwesomeIcon
+                                                    icon={faUpRightFromSquare}
+                                                    style={{
+                                                        color: COLOURS.LIGHTBLUE_TEXT,
+                                                        padding: "0.65em 0em",
+                                                        height: "21px"
+                                                    }}
+                                                />
+                                            </Button>
+                                        </span>
+                                    </Tooltip>
+                                </Box>
+                            </Box>
+                        ) : (
+                            <span />
+                        )}
+                        &nbsp;
+                    </div>
+                )}
+                {loading && <Loading sx={{ marginTop: 20 }}></Loading>}
+                <iframe
+                    src={formUrl}
+                    ref={iframeRef}
+                    style={{ border: "solid 2px " + COLOURS.MEDIUMGREY, width: "100%", height: "55em" }}
+                    hidden={loading}
+                    onLoad={(e) => {
+                        setNumLoads((numLoads) => numLoads + 1)
+                    }}
+                />
                 <div
+                    className="bottom-hider"
                     style={{
-                        borderBottom: "solid 2px " + COLOURS.MEDIUMGREY,
+                        borderTop: "solid 2px " + COLOURS.MEDIUMGREY,
                         backgroundColor: "white",
                         width: "100%",
-                        height: identity.idp === "idir" ? "8em" : "5em",
+                        height: "110px",
                         position: "absolute",
-                        zIndex: 1
+                        zIndex: 1,
+                        bottom: 0
                     }}
                 >
-                    {record ? (
-                        <Box style={{ display: "flex", marginTop: identity.idp === "idir" ? "4em" : "1em" }}>
-                            <BackButton resource={resource} />
-                            <StatusDropdown record={record} resource={resource} onChange={handleStatusChange} />
-                            <Box style={{ display: "flex", width: "100%", justifyContent: "right" }}>
-                                <Tooltip title={"Open form in new tab"}>
-                                    <span>
-                                        <Button
-                                            onClick={(event) => {
-                                                window.open(formUrl)
-                                            }}
-                                            sx={{ minWidth: "4em" }}
-                                            aria-label="Open form in new tab"
-                                        >
-                                            <FontAwesomeIcon
-                                                icon={faUpRightFromSquare}
-                                                style={{
-                                                    color: COLOURS.LIGHTBLUE_TEXT,
-                                                    padding: "0.65em 0em",
-                                                    height: "21px"
-                                                }}
-                                            />
-                                        </Button>
-                                    </span>
-                                </Tooltip>
-                            </Box>
-                        </Box>
-                    ) : (
-                        <span />
-                    )}
                     &nbsp;
                 </div>
-            )}
-            {loading && <Loading sx={{ marginTop: 20 }}></Loading>}
-            <iframe
-                src={formUrl}
-                ref={iframeRef}
-                style={{ border: "solid 2px " + COLOURS.MEDIUMGREY, width: "100%", height: "55em" }}
-                hidden={loading}
-                onLoad={(e) => {
-                    setNumLoads((numLoads) => numLoads + 1)
-                }}
-            />
-            <div
-                className="bottom-hider"
-                style={{
-                    borderTop: "solid 2px " + COLOURS.MEDIUMGREY,
-                    backgroundColor: "white",
-                    width: "100%",
-                    height: "110px",
-                    position: "absolute",
-                    zIndex: 1,
-                    bottom: 0
-                }}
-            >
-                &nbsp;
-            </div>
-        </Box>
+            </Box>
+        </div>
     )
 }
