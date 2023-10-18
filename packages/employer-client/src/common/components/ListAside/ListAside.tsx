@@ -43,7 +43,7 @@ export const ListAside: React.FC<ListAsideProps> = ({ statusFilters, statusFilte
     }
 
     const [counts, setCounts] = useState<any>(() => createCountsObject())
-    const [labels] = useState<any>(() => createLabelsObject())
+    const labels = createLabelsObject()
 
     const getCounts = () => {
         dataProvider.getCounts(resource).then(({ data }) => {
