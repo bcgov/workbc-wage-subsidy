@@ -1,16 +1,19 @@
+import React from "react"
 import Box from "@mui/material/Box"
 import Grid from "@mui/material/Grid"
-import { LoadingIndicator, useCreate, useGetIdentity, useRedirect } from "react-admin"
+import { LoadingIndicator, useCreate, useGetIdentity, useGetList, useRedirect } from "react-admin"
 import { v4 as uuidv4 } from "uuid"
 import BCGovPrimaryButton from "../common/components/BCGovPrimaryButton/BCGovPrimaryButton"
 import Card from "../common/components/Card/Card"
-import { useState } from "react"
+import { useSearchParams } from "react-router-dom"
 
 export const ApplicationCreate = () => {
     const redirect = useRedirect()
     const { identity } = useGetIdentity()
     const [create] = useCreate()
-    const [loading, setLoading] = useState(false)
+    const [loading, setLoading] = React.useState(false)
+    const { total, isLoading } = useGetList("applications", { pagination: { page: 1, perPage: 1 } })
+    const [searchParams] = useSearchParams()
 
     const handleClick = async (formType) => {
         if (identity?.guid) {
@@ -30,6 +33,12 @@ export const ApplicationCreate = () => {
             )
         }
     }
+
+    React.useEffect(() => {
+        if (searchParams.get("redirectType") === "firstload" && total !== 0) {
+            redirect("list", "applications")
+        }
+    }, [isLoading, redirect, searchParams, total])
 
     return (
         <Box paddingTop="6em" paddingBottom="3em" width="100%" display="flex" justifyContent="center" minWidth="58em">
