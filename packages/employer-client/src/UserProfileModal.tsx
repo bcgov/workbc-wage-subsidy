@@ -81,7 +81,7 @@ const UserProfileModal: React.FC<UserProfileModalProps> = ({ isOpen, onRequestCl
             {userProfile && (
                 <BCGovModal isOpen={isOpen} onRequestClose={onRequestClose} contentLabel={contentLabel}>
                     <h2>Edit Profile</h2>
-                    <div style={{ marginBottom: "1em" }}>Certain information linked to your BCeID is not editable</div>
+                    {/* <div style={{ marginBottom: "1em" }}>Certain information linked to your BCeID is not editable</div> */}
                     <SimpleForm
                         resource="employers"
                         record={userProfile}
@@ -96,13 +96,11 @@ const UserProfileModal: React.FC<UserProfileModalProps> = ({ isOpen, onRequestCl
                                         source="bceid_business_name"
                                         label="Employer Name (Business Name)"
                                         sx={{ minWidth: "20em" }}
-                                        disabled
                                     />
                                     <StyledTextInput
                                         source="contact_name"
                                         label="Employer Contact"
                                         sx={{ minWidth: "20em" }}
-                                        disabled
                                     />
                                 </Stack>
                                 <Stack direction="row" spacing={6}>
@@ -115,7 +113,6 @@ const UserProfileModal: React.FC<UserProfileModalProps> = ({ isOpen, onRequestCl
                                         source="contact_email"
                                         label="Employer Email Address"
                                         sx={{ minWidth: "20em" }}
-                                        disabled
                                     />
                                 </Stack>
                                 <Stack direction="row" spacing={6}>
