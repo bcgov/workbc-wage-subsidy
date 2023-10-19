@@ -35,7 +35,7 @@ export const ApplicationCreate = () => {
     }
 
     useEffect(() => {
-        if (searchParams.get("redirectType") === "firstload" && total !== 0) {
+        if (searchParams.get("redirectType") === "firstload" && typeof total === "number" && total !== 0) {
             redirect("list", "applications")
         }
     }, [isLoading, redirect, searchParams, total])
