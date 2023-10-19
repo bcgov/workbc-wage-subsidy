@@ -12,7 +12,7 @@ export const ClaimCreate = () => {
     const [searchParams] = useSearchParams()
 
     useEffect(() => {
-        if (searchParams.get("redirectType") === "firstload" && total !== 0) {
+        if (searchParams.get("redirectType") === "firstload" && typeof total === "number" && total !== 0) {
             redirect("list", "claims")
         }
     }, [isLoading, redirect, searchParams, total])
