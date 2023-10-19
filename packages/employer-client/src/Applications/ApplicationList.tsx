@@ -9,11 +9,11 @@ import { DatagridStyles } from "../common/styles/DatagridStyles"
 
 export const applicationStatusFilters = {
     All: { label: "All" },
-    NotSubmitted: { label: "Draft", status: "Draft" },
-    Submitted: { label: "Submitted", status: "New" },
-    Processing: { label: "Processing", status: "In Progress" },
-    Completed: { label: "Completed", status: "Completed" },
-    Cancelled: { label: "Cancelled", status: "Cancelled" }
+    NotSubmitted: { label: "Draft", status: ["Draft"] },
+    Submitted: { label: "Submitted", status: ["New"] },
+    Processing: { label: "Processing", status: ["In Progress"] },
+    Completed: { label: "Completed", status: ["Completed"] },
+    Cancelled: { label: "Cancelled", status: ["Cancelled"] }
 } as { [key: string]: any }
 
 export const ApplicationList = (props: any) => {

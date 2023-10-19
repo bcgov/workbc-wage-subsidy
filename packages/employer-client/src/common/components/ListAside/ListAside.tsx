@@ -1,5 +1,5 @@
 import { Box, ListItemText, MenuItem, MenuList } from "@mui/material"
-import { Count, useDataProvider, useListContext, useRedirect } from "react-admin"
+import { useDataProvider, useListContext, useRedirect } from "react-admin"
 import isEqual from "lodash/isEqual"
 import { ScreenReaderOnly } from "../../styles/ScreenReaderOnly"
 import { useEffect, useState } from "react"
@@ -16,29 +16,53 @@ export const ListAside: React.FC<ListAsideProps> = ({ statusFilters, statusFilte
     const { resource, total, isFetching } = useListContext()
     const dataProvider = useDataProvider()
     const redirect = useRedirect()
-    const [counts, setCounts] = useState<any>(
-        Object.entries(statusFilters).reduce((acc: any, [key, val]) => {
-            acc[val?.status ? val.status : "All"] = 0
+
+    // A single label in the status sidebar may correspond to multiple statuses internally.
+    // So initialize two mappings:
+    //     status -> label
+    //     label -> count
+    // Then to obtain counts by status:
+    //     counts[labels[status]]
+
+    const createCountsObject = () => {
+        return Object.entries(statusFilters).reduce((acc: any, [key, val]) => {
+            acc[val.label] = 0
             return acc
         }, {} as Record<string, number>)
-    )
+    }
+
+    const createLabelsObject = () => {
+        return Object.entries(statusFilters).reduce((acc: any, [key, val]) => {
+            val?.status
+                ? val.status.forEach((status) => {
+                      acc[status] = val.label
+                  })
+                : (acc["All"] = "All")
+            return acc
+        }, {} as Record<string, number>)
+    }
+
+    const [counts, setCounts] = useState<any>(() => createCountsObject())
+    const labels = createLabelsObject()
+
+    const getCounts = () => {
+        dataProvider.getCounts(resource).then(({ data }) => {
+            const newCounts = createCountsObject()
+            let total = 0
+            data.forEach((item) => {
+                newCounts[labels[item.status]] += Number(item.count)
+                total += Number(item.count)
+            })
+            newCounts["All"] = total
+            setCounts(newCounts)
+        })
+    }
 
     const skipToDatagrid = (event: any) => {
         if (event.key === "ArrowLeft" || event.key === "ArrowRight") {
             const element = document.getElementById("datagrid")
             element?.focus()
         }
-    }
-
-    const getCounts = () => {
-        dataProvider.getCounts(resource).then(({ data }) => {
-            const total = data.reduce((acc, val) => acc + Number(Object(val).count), 0)
-            const byStatus = data.reduce((acc, val) => {
-                acc[val.status] = Number(val.count)
-                return acc
-            }, {} as Record<string, number>)
-            setCounts({ All: total, ...byStatus })
-        })
     }
 
     useEffect(() => {
@@ -86,8 +110,8 @@ export const ListAside: React.FC<ListAsideProps> = ({ statusFilters, statusFilte
                         <span style={{ color: COLOURS.MEDIUMGREY }}>
                             {statusFilters[key].label === "All"
                                 ? counts["All"]
-                                : statusFilters[key].status in counts
-                                ? counts[statusFilters[key].status]
+                                : statusFilters[key].label in counts
+                                ? counts[statusFilters[key].label]
                                 : "0"}
                         </span>
                         <span style={ScreenReaderOnly}>
