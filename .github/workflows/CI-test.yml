@@ -87,11 +87,7 @@ jobs:
           node-version: '18.x'
           cache: 'npm'
           cache-dependency-path: ${{ matrix.packagelock }}
-      - name: Install Monorepo Dependancies
-        run: npm install
-        env:
-          REACT_ADMIN_TOKEN: ${{ secrets.REACT_ADMIN_TOKEN }}
-          FONT_AWESOME_TOKEN: ${{ secrets.FONT_AWESOME_TOKEN }}
+      - run: cp -n ${{ matrix.context }}/.npmrc.dist ./.npmrc
       - name: Install Dependancies
         working-directory: ${{ matrix.context }}
         run: npm install
