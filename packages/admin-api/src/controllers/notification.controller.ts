@@ -5,9 +5,9 @@ import { getCatchments } from "../lib/catchment"
 
 export const getNotification = async (req: any, res: express.Response) => {
     try {
-        const { catchmentNo, type } = req.body
+        const { catchmentNo, type } = req.query
+        console.log(req.kauth.grant.access_token)
         const catchments = await getCatchments(req.kauth.grant.access_token)
-
         if (catchments.length === 0 || !catchments.includes(Number(catchmentNo))) {
             return res.status(403).send("Forbidden")
         }
