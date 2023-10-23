@@ -6,7 +6,8 @@
     "scripts": {
         "build": "tsc && vite build",
         "dev": "vite",
-        "preview": "vite preview"
+        "preview": "vite preview",
+        "test": "echo \"Error: no test specified\" && exit 1"
     },
     "dependencies": {
         "@bcgov/bc-sans": "^1.0.1",

@@ -3,7 +3,7 @@
 # This is a basic workflow that will start a build with every push
 
 
-name: CI/CD Runtests and build on DEV
+name: CD builds and push to registry
 
 
 # Controls when the action will run. Triggers the workflow on push or pull request
@@ -21,7 +21,7 @@ on:
         - warning
         - debug
   push:
-    branches: [ dev ]
+    branches: [ dev,test,prod ]
     paths-ignore:
         - '.github/workflows/**'
 
@@ -57,9 +57,13 @@ jobs:
             env: false
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
+      - name: Extract branch name
+        shell: bash
+        run: echo "branch=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_OUTPUT
+        id: extract_branch
       - uses: actions/checkout@v3
         with:
-          ref: 'dev'
+          ref: ${{ steps.extract_branch.outputs.branch }}
       - name: Cache node modules
         id: cache-npm
         uses: actions/cache@v3
@@ -99,19 +103,18 @@ jobs:
 
           # Optional - this sets your Kubernetes context's current namespace after logging in.
           namespace: ${{secrets.PROJECT_TOOLS_4}}
-      #static openshift
-      - name: Build for pushing static image to OpenShift registry
+      - name: Building images
         id: build-static-image
         uses: redhat-actions/buildah-build@v2
         with:
           image: ${{ matrix.imagename }}
-          tags: latest
+          tags: ${{ steps.extract_branch.outputs.branch == 'dev' && 'latest' || steps.extract_branch.outputs.branch}}
           context: ${{ matrix.context }}
           containerfiles: ${{ matrix.context }}/Dockerfile
           tls-verify: false
           build-args: |
-            VITE_REACT_ENVIRONMENT=DEV
-            REACT_APP_ENVIRONMENT=DEV
+            VITE_REACT_ENVIRONMENT=${{ vars.REACT_APP_ENVIRONMENT }}
+            REACT_APP_ENVIRONMENT=${{ vars.REACT_APP_ENVIRONMENT }}
             REACT_ADMIN_TOKEN=${{ secrets.REACT_ADMIN_TOKEN }}
             FONT_AWESOME_TOKEN=${{ secrets.FONT_AWESOME_TOKEN }}
             REACT_APP_DATA_PROVIDER_URL=${{ vars.REACT_APP_DATA_PROVIDER_URL }}
