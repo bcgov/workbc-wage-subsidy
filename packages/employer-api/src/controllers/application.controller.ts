@@ -29,37 +29,7 @@ export const getAllApplications = async (req: any, res: express.Response) => {
 
         if (filter.status == null && perPage > 1) {
             // only update applications once each call cycle
-            applications.data.forEach(async (application: any) => {
-                if (application.status === "Draft") {
-                    let formID
-                    let formPass
-                    if (application.form_type === "Have Employee") {
-                        formID = process.env.HAVE_EMPLOYEE_ID
-                        formPass = process.env.HAVE_EMPLOYEE_PASS
-                    } else if (application.form_type === "Need Employee") {
-                        formID = process.env.NEED_EMPLOYEE_ID
-                        formPass = process.env.NEED_EMPLOYEE_PASS
-                    }
-                    if (formID && formPass && application.form_submission_id) {
-                        const submissionResponse = await formService.getSubmission(
-                            formID,
-                            formPass,
-                            application.form_submission_id
-                        )
-                        if (submissionResponse.submission.draft === false) {
-                            // submitted
-                            applicationService.updateApplication(application.id, "New", submissionResponse.submission)
-                        } else if (submissionResponse.submission.draft === true) {
-                            // draft
-                            await applicationService.updateApplication(
-                                application.id,
-                                "Draft",
-                                submissionResponse.submission
-                            )
-                        }
-                    }
-                }
-            })
+            applications.data.forEach(updateApplicationHelper)
         }
         res.set({
             "Access-Control-Expose-Headers": "Content-Range",
@@ -161,11 +131,35 @@ export const updateApplication = async (req: any, res: express.Response) => {
         if (!employerApplicationRecord) {
             return res.status(403).send("Forbidden or Not Found")
         }
-        await applicationService.updateApplication(id, null, req.body)
+        await updateApplicationHelper(employerApplicationRecord)
         return res.status(200).send({ id })
     } catch (e: any) {
         console.log(e?.message)
         return res.status(500).send("Internal Server Error")
+    }
+}
+
+const updateApplicationHelper = async (application: any) => {
+    if (application.status === "Draft") {
+        let formID
+        let formPass
+        if (application.form_type === "Have Employee") {
+            formID = process.env.HAVE_EMPLOYEE_ID
+            formPass = process.env.HAVE_EMPLOYEE_PASS
+        } else if (application.form_type === "Need Employee") {
+            formID = process.env.NEED_EMPLOYEE_ID
+            formPass = process.env.NEED_EMPLOYEE_PASS
+        }
+        if (formID && formPass && application.form_submission_id) {
+            const submissionResponse = await formService.getSubmission(formID, formPass, application.form_submission_id)
+            if (submissionResponse.submission.draft === false) {
+                // submitted
+                applicationService.updateApplication(application.id, "New", submissionResponse.submission)
+            } else if (submissionResponse.submission.draft === true) {
+                // draft
+                await applicationService.updateApplication(application.id, "Draft", submissionResponse.submission)
+            }
+        }
     }
 }
 

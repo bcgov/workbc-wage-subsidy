@@ -121,7 +121,8 @@ export const deleteApplication = async (id: number) => {
     return result
 }
 
-export const getEmployerApplicationRecord = async (employerId: string, applicationId: string) => {
+export const getEmployerApplicationRecord = async (employerId: string, submissionId: string) => {
+    const applicationId = knex("applications").where("form_submission_id", submissionId).select("id")
     const result = await knex("employers_applications")
         .where("employer_id", employerId)
         .where("application_id", applicationId)

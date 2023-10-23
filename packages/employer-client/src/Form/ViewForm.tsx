@@ -1,5 +1,5 @@
 /* eslint-disable jsx-a11y/iframe-has-title */
-import React from "react"
+import { useEffect } from "react"
 import { useState } from "react"
 import { Box, Button, Tooltip } from "@mui/material"
 import { useParams } from "react-router"
@@ -15,7 +15,7 @@ export const ViewForm = () => {
     const [loading, setLoading] = useState(true)
     const refresh = useRefresh()
 
-    React.useEffect(() => {
+    useEffect(() => {
         if (numLoads === 2) {
             refresh()
             setLoading(false)
@@ -46,7 +46,7 @@ export const ViewForm = () => {
                     }}
                 >
                     <Box style={{ display: "flex", marginTop: "1em" }}>
-                        <BackButton resource={resource} />
+                        <BackButton resource={`${resource}?redirectType=refresh&formId=${formId}`} />
                         <Box style={{ display: "flex", width: "100%", justifyContent: "right" }}>
                             <Tooltip title="Open form in new tab">
                                 <Button

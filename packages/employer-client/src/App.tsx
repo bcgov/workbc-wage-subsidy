@@ -1,7 +1,7 @@
 import "@bcgov/bc-sans/css/BCSans.css"
 import { ReactKeycloakProvider } from "@react-keycloak/web"
 import Keycloak from "keycloak-js"
-import React, { useState } from "react"
+import { useEffect, useState } from "react"
 import { Admin, CustomRoutes, Resource } from "react-admin"
 import { Route } from "react-router-dom"
 import { QueryClient } from "react-query"
@@ -197,7 +197,7 @@ export const lightTheme = {
 const CustomAdminWithKeycloak = () => {
     const customAuthProvider = useAuthProvider(process.env.REACT_APP_KEYCLOAK_CLIENT_ID ?? "")
     const [permissions, setPermissions] = useState(keycloak.idTokenParsed?.identity_provider === "bceid")
-    React.useEffect(() => {
+    useEffect(() => {
         if (
             (keycloak && keycloak.idTokenParsed?.identity_provider === "bceid") ||
             (keycloak && keycloak.idTokenParsed?.identity_provider === "bceidboth")
@@ -239,7 +239,7 @@ const CustomAdminWithKeycloak = () => {
                     <Resource
                         name="applications"
                         options={{ label: "Applications" }}
-                        list={ApplicationList}
+                        list={<ApplicationList queryClient={queryClient} />}
                         create={ApplicationCreate}
                     />
                     <Resource name="claims" options={{ label: "Claims" }} list={ClaimList} create={ClaimCreate}>
