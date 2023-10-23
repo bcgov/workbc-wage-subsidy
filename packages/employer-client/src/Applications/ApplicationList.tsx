@@ -2,7 +2,6 @@ import { Box, Chip } from "@mui/material"
 import { useState } from "react"
 import { FunctionField, Identifier, List, TextField, useGetIdentity, useRedirect } from "react-admin"
 import CustomDatagrid from "../common/components/CustomDatagrid/CustomDatagrid"
-import { FormBulkActionButtons } from "../common/components/FormBulkActionButtons/FormBulkActionButtons"
 import { ListActions } from "../common/components/ListActions/ListActions"
 import { ListAside } from "../common/components/ListAside/ListAside"
 import { DatagridStyles } from "../common/styles/DatagridStyles"
@@ -53,12 +52,7 @@ export const ApplicationList = (props: any) => {
                             order: "DESC,DESC,DESC"
                         }}
                     >
-                        <CustomDatagrid
-                            bulkActionButtons={<FormBulkActionButtons />}
-                            sx={DatagridStyles}
-                            rowClick={handleRowClick}
-                            ariaLabel="applications list"
-                        >
+                        <CustomDatagrid sx={DatagridStyles} rowClick={handleRowClick} ariaLabel="applications list">
                             <TextField label="Submission ID" source="form_confirmation_id" emptyText="-" />
                             <TextField label="Position Title" source="position_title" emptyText="-" />
                             <TextField label="Number of Positions" source="num_positions" emptyText="-" />{" "}
