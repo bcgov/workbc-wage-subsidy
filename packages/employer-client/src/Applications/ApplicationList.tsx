@@ -1,6 +1,17 @@
 import { Box, Chip } from "@mui/material"
 import { useEffect, useState } from "react"
-import { FunctionField, Identifier, List, TextField, useGetIdentity, useNotify, useRedirect } from "react-admin"
+import {
+    FunctionField,
+    Identifier,
+    List,
+    TextField,
+    useGetIdentity,
+    useNotify,
+    useRedirect,
+    useRefresh,
+    useUpdate
+} from "react-admin"
+import { useSearchParams } from "react-router-dom"
 import CustomDatagrid from "../common/components/CustomDatagrid/CustomDatagrid"
 import { FormBulkActionButtons } from "../common/components/FormBulkActionButtons/FormBulkActionButtons"
 import { ListActions } from "../common/components/ListActions/ListActions"
@@ -20,7 +31,6 @@ export const ApplicationList = (props: any) => {
     const [statusFilter, setStatusFilter] = useState(applicationStatusFilters["All"])
     const { identity } = useGetIdentity()
     const redirect = useRedirect()
-    const notify = useNotify()
 
     const handleRowClick = (id: Identifier, resource: string, record: any) => {
         if (record.status === "Draft" && record.form_submission_id) {
@@ -31,17 +41,6 @@ export const ApplicationList = (props: any) => {
             return "" // rowClick expects a path to be returned
         }
     }
-
-    useEffect(() => {
-        notify("Updating Applications...", { type: "info", autoHideDuration: 5000 })
-        const update = async () => {
-            setTimeout(() => {
-                console.log("waiting")
-                notify("Applications Updated.", { type: "success", autoHideDuration: 1000 })
-            }, 5000)
-        }
-        update()
-    }, [])
 
     return (
         <>

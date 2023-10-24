@@ -8,11 +8,13 @@ import BackButton from "../common/components/BackButton/BackButton"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faUpRightFromSquare } from "@fortawesome/pro-solid-svg-icons"
 import { Loading, useRefresh } from "react-admin"
+import { useLocation } from "react-router-dom"
 
 export const ViewForm = () => {
     const { urlType, resource, formId } = useParams()
     const [numLoads, setNumLoads] = useState(0)
     const [loading, setLoading] = useState(true)
+    const location = useLocation()
     const refresh = useRefresh()
 
     useEffect(() => {
@@ -22,6 +24,9 @@ export const ViewForm = () => {
             setNumLoads(0)
         }
     }, [numLoads])
+    useEffect(() => {
+        console.log("location", location)
+    }, [location])
 
     if (!urlType || !resource || !formId) {
         return <span />

@@ -212,9 +212,7 @@ const CustomAdminWithKeycloak = () => {
                 retry: false,
                 refetchOnWindowFocus: true,
                 refetchOnMount: true,
-                refetchOnReconnect: true,
-                refetchInterval: 5000,
-                refetchIntervalInBackground: true
+                refetchOnReconnect: true
             },
             mutations: {
                 retryDelay: 10000

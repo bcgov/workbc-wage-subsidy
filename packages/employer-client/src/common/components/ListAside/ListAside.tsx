@@ -13,7 +13,7 @@ interface ListAsideProps {
 }
 
 export const ListAside: React.FC<ListAsideProps> = ({ statusFilters, statusFilter, setStatusFilter, user }) => {
-    const { resource, total, isFetching } = useListContext()
+    const { resource, total, isFetching, refetch } = useListContext()
     const dataProvider = useDataProvider()
     const redirect = useRedirect()
 
