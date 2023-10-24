@@ -81,7 +81,6 @@ const UserProfileModal: React.FC<UserProfileModalProps> = ({ isOpen, onRequestCl
             {userProfile && (
                 <BCGovModal isOpen={isOpen} onRequestClose={onRequestClose} contentLabel={contentLabel}>
                     <h2>Edit Profile</h2>
-                    {/* <div style={{ marginBottom: "1em" }}>Certain information linked to your BCeID is not editable</div> */}
                     <SimpleForm
                         resource="employers"
                         record={userProfile}
