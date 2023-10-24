@@ -1,6 +1,8 @@
-import { Datagrid, DatagridBody } from "react-admin"
+import { Datagrid, DatagridBody, useGetIdentity } from "react-admin"
 import CustomDatagridRow from "./CustomDatagridRow"
 import { CustomDatagridHeader } from "./CustomDatagridHeader"
+import { useEffect, useState } from "react"
+import { FormBulkActionButtons } from "../FormBulkActionButtons/FormBulkActionButtons"
 
 // CustomDatagrid:
 // - Each row includes a PDF button.
@@ -29,6 +31,13 @@ const CustomDatagridBody = <T,>({ rowAriaLabel, showCalculatorButton, ...props }
 }
 
 const CustomDatagrid = <T,>({ ariaLabel, showCalculatorButton, rowAriaLabel, ...props }: CustomDatagridProps<T>) => {
+    const { identity } = useGetIdentity()
+    const [hasBulkActions, setHasBulkActions] = useState<boolean>(false)
+
+    useEffect(() => {
+        setHasBulkActions(identity && identity.businessGuid && identity.businessName)
+    }, [identity])
+
     const skipToListAside = (event: any) => {
         if (event.key === "ArrowLeft" || event.key === "ArrowRight") {
             const element = document.getElementById("list-aside")
@@ -38,6 +47,7 @@ const CustomDatagrid = <T,>({ ariaLabel, showCalculatorButton, rowAriaLabel, ...
     return (
         <Datagrid
             {...props}
+            bulkActionButtons={hasBulkActions ? <FormBulkActionButtons /> : false}
             body={<CustomDatagridBody rowAriaLabel={rowAriaLabel} showCalculatorButton={showCalculatorButton} />}
             header={<CustomDatagridHeader />}
             aria-label={ariaLabel}
