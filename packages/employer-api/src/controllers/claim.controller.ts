@@ -143,6 +143,8 @@ export const updateClaim = async (req: any, res: express.Response) => {
     }
 }
 
+// Helper function to update the status of an application, if it is in draft
+// and the form is still in draft, then update the application status to draft
 const updateClaimHelper = async (employerClaimRecord: any) => {
     if (employerClaimRecord.status === "Draft") {
         const formID = process.env.CLAIM_FORM_ID

@@ -150,6 +150,7 @@ export const updateApplication = async (req: any, res: express.Response) => {
     }
 }
 
+// updates the status of applications that have been submitted or in draft
 const updateApplicationHelper = async (application: any) => {
     if (application.status === "Draft") {
         let formID
