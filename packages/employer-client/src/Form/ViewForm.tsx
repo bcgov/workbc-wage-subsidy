@@ -45,7 +45,7 @@ export const ViewForm = () => {
                     }}
                 >
                     <Box style={{ display: "flex", marginTop: "1em" }}>
-                        <BackButton resource={`${resource}`} />
+                        <BackButton resource={resource} />
                         <Box style={{ display: "flex", width: "100%", justifyContent: "right" }}>
                             <Tooltip title="Open form in new tab">
                                 <Button

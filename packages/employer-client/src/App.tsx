@@ -237,7 +237,7 @@ const CustomAdminWithKeycloak = () => {
                     <Resource
                         name="applications"
                         options={{ label: "Applications" }}
-                        list={<ApplicationList queryClient={queryClient} />}
+                        list={ApplicationList}
                         create={ApplicationCreate}
                     />
                     <Resource name="claims" options={{ label: "Claims" }} list={ClaimList} create={ClaimCreate}>
