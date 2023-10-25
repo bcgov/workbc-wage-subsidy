@@ -29,8 +29,10 @@ export const getAllClaims = async (req: any, res: express.Response) => {
         )
 
         let claimsUpdated = claims
-
+        // create a new list of applications with updated status
         if (filter.status == null && perPage > 1) {
+            // only update applications once each call cycle
+            // updates the status of applications that have been submitted or in draft
             await Promise.all(claims.data.map(updateClaimHelper))
             claimsUpdated = await claimService.getAllClaims(
                 Number(perPage),

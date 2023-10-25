@@ -1,6 +1,5 @@
 /* eslint-disable jsx-a11y/iframe-has-title */
-import { useEffect } from "react"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Box, Button, Tooltip } from "@mui/material"
 import { useParams } from "react-router"
 import { COLOURS } from "../Colours"
@@ -8,13 +7,11 @@ import BackButton from "../common/components/BackButton/BackButton"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faUpRightFromSquare } from "@fortawesome/pro-solid-svg-icons"
 import { Loading, useRefresh } from "react-admin"
-import { useLocation } from "react-router-dom"
 
 export const ViewForm = () => {
     const { urlType, resource, formId } = useParams()
     const [numLoads, setNumLoads] = useState(0)
     const [loading, setLoading] = useState(true)
-    const location = useLocation()
     const refresh = useRefresh()
 
     useEffect(() => {
@@ -24,9 +21,6 @@ export const ViewForm = () => {
             setNumLoads(0)
         }
     }, [numLoads])
-    useEffect(() => {
-        console.log("location", location)
-    }, [location])
 
     if (!urlType || !resource || !formId) {
         return <span />
