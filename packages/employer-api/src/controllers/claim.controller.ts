@@ -33,7 +33,7 @@ export const getAllClaims = async (req: any, res: express.Response) => {
         if (filter.status == null && perPage > 1) {
             // only update applications once each call cycle
             // updates the status of applications that have been submitted or in draft
-            await Promise.all(claims.data.map(updateClaimHelper))
+            await Promise.all(claims.data.map(updateClaimFromForm))
             claimsUpdated = await claimService.getAllClaims(
                 Number(perPage),
                 Number(page),
@@ -143,9 +143,9 @@ export const updateClaim = async (req: any, res: express.Response) => {
     }
 }
 
-// Helper function to update the status of an application, if it is in draft
-// and the form is still in draft, then update the application status to draft
-const updateClaimHelper = async (employerClaimRecord: any) => {
+// Helper function to update the status of an claim, if it is in draft
+// and the form is still in draft, then update the claim status to draft
+const updateClaimFromForm = async (employerClaimRecord: any) => {
     if (employerClaimRecord.status === "Draft") {
         const formID = process.env.CLAIM_FORM_ID
         const formPass = process.env.CLAIM_FORM_PASS

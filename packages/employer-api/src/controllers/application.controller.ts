@@ -31,7 +31,7 @@ export const getAllApplications = async (req: any, res: express.Response) => {
         if (filter.status == null && perPage > 1) {
             // only update applications once each call cycle
             // updates the status of applications that have been submitted or in draft
-            await Promise.all(applications.data.map(updateApplicationHelper))
+            await Promise.all(applications.data.map(updateApplicationFromForm))
             applicationsNew = await applicationService.getAllApplications(
                 Number(perPage),
                 Number(page),
@@ -142,7 +142,6 @@ export const updateApplication = async (req: any, res: express.Response) => {
         if (!employerApplicationRecord) {
             return res.status(403).send("Forbidden or Not Found")
         }
-        await updateApplicationHelper(employerApplicationRecord)
         return res.status(200).send({ id })
     } catch (e: any) {
         console.log(e?.message)
@@ -151,7 +150,7 @@ export const updateApplication = async (req: any, res: express.Response) => {
 }
 
 // updates the status of applications that have been submitted or in draft
-const updateApplicationHelper = async (application: any) => {
+const updateApplicationFromForm = async (application: any) => {
     if (application.status === "Draft") {
         let formID
         let formPass
