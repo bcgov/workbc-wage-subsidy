@@ -228,5 +228,13 @@ export const dataProvider = {
                 Accept: "application/json",
                 Authorization: `Bearer ${localStorage.getItem("token")}`
             })
+        }).then(({ json }) => json),
+    checkNotifcation: () =>
+        httpClient(`${apiUrl}/notification/check`, {
+            method: "GET",
+            headers: new Headers({
+                Accept: "application/json",
+                Authorization: `Bearer ${localStorage.getItem("token")}`
+            })
         }).then(({ json }) => json)
 }

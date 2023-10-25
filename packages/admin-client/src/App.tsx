@@ -221,6 +221,7 @@ const CustomAdminWithKeycloak = () => {
         // When token refreshes, update local 'access' variable used to conditionally render app.
         window.addEventListener("storage", () => {
             setAccess(localStorage.getItem("access") === "true")
+            dataProvider.checkNotifcation()
         })
     }, [])
     return (
