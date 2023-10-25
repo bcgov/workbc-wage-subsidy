@@ -16,7 +16,9 @@ export const getNotification = async (req: any, res: express.Response) => {
         if (type !== "application" && type !== "claim") {
             return res.status(400).send("Invalid type")
         }
-        const notifications = await notificationService.getNotification(email, Number(catchmentNo), type)
+        const username = `${req.kauth.grant.access_token.content.username}@${req.kauth.grant.access_token.content.identity_provider}`
+        console.log(username)
+        const notifications = await notificationService.getNotification(email, Number(catchmentNo), type, username)
         return res.status(200).send(notifications)
     } catch (e: unknown) {
         console.error(e)
@@ -37,7 +39,9 @@ export const addNotification = async (req: any, res: express.Response) => {
         if (type !== "application" && type !== "claim") {
             return res.status(400).send("Invalid type")
         }
-        const result = await notificationService.addNotification(email, Number(catchmentNo), type)
+        const username = `${req.kauth.grant.access_token.content.username}@${req.kauth.grant.access_token.content.identity_provider}`
+        console.log(username)
+        const result = await notificationService.addNotification(email, Number(catchmentNo), type, username)
         return res.status(200).send(result)
     } catch (e: unknown) {
         console.error(e)
@@ -58,7 +62,9 @@ export const deleteNotification = async (req: any, res: express.Response) => {
         if (type !== "application" && type !== "claim") {
             return res.status(400).send("Invalid type")
         }
-        const result = await notificationService.deleteNotification(email, Number(catchmentNo), type)
+        const username = `${req.kauth.grant.access_token.content.username}@${req.kauth.grant.access_token.content.identity_provider}`
+        console.log(username)
+        const result = await notificationService.deleteNotification(email, Number(catchmentNo), type, username)
         return res.status(200).send(result)
     } catch (e: unknown) {
         console.error(e)

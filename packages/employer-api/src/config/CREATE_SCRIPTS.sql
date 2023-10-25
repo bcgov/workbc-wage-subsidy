@@ -110,6 +110,7 @@ CREATE TABLE IF NOT EXISTS public.notifications
 (
     id SERIAL NOT NULL,
     email character varying(255) COLLATE pg_catalog."default",
+    username character varying(255) COLLATE pg_catalog."default",
     catchmentno integer,
     type character varying(255) COLLATE pg_catalog."default"
 )
