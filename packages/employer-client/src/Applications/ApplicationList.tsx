@@ -1,17 +1,6 @@
 import { Box, Chip } from "@mui/material"
-import { useEffect, useState } from "react"
-import {
-    FunctionField,
-    Identifier,
-    List,
-    TextField,
-    useGetIdentity,
-    useNotify,
-    useRedirect,
-    useRefresh,
-    useUpdate
-} from "react-admin"
-import { useSearchParams } from "react-router-dom"
+import { useState } from "react"
+import { FunctionField, Identifier, List, TextField, useGetIdentity, useRedirect } from "react-admin"
 import CustomDatagrid from "../common/components/CustomDatagrid/CustomDatagrid"
 import { FormBulkActionButtons } from "../common/components/FormBulkActionButtons/FormBulkActionButtons"
 import { ListActions } from "../common/components/ListActions/ListActions"
