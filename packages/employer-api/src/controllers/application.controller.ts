@@ -142,6 +142,7 @@ export const updateApplication = async (req: any, res: express.Response) => {
         if (!employerApplicationRecord) {
             return res.status(403).send("Forbidden or Not Found")
         }
+        await applicationService.updateApplication(id, null, req.body)
         return res.status(200).send({ id })
     } catch (e: any) {
         console.log(e?.message)
