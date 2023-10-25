@@ -1,8 +1,4 @@
 
-
-# This is a basic workflow that will start a build with every push
-
-
 name: CI Run tests
 
 
@@ -39,27 +35,21 @@ jobs:
           # - imagename: "workbc-wage-subsidy-v2-static"
           #   context: "./packages/static"
           #   packagelock: "./packages/static/package-lock.json"
-          #   env: true
           - imagename: "workbc-wage-subsidy-v2-admin-api"
             context: "./packages/admin-api"
             packagelock: "./packages/admin-api/package-lock.json"
-            env: false
           # - imagename: "workbc-wage-subsidy-v2-admin-client"
           #   context: "./packages/admin-client"
           #   packagelock: "./packages/admin-client/package-lock.json"
-          #   env: true
           # - imagename: "workbc-wage-subsidy-v2-employer-client"
           #   context: "./packages/employer-client"
           #   packagelock: "./packages/employer-client/package-lock.json"
-          #   env: true
           # - imagename: "workbc-wage-subsidy-v2-employer-api"
           #   context: "./packages/employer-api"
           #   packagelock: "./packages/employer-api/package-lock.json"
-          #   env: false
           # - imagename: "workbc-wage-subsidy-v2-form-api"
           #   context: "./packages/form-api"
           #   packagelock: "./packages/form-api/package-lock.json"
-          #   env: false
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       - name: Extract branch name
