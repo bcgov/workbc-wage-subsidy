@@ -40,6 +40,25 @@ export const getAllApplications = async (req: any, res: express.Response) => {
                 sortOrders,
                 bceid_guid
             )
+            // If the user just submitted their first application, update their profile from the application data.
+            const firstApplication = firstApplicationSubmitted(applications, applicationsNew)
+            if (firstApplication) {
+                const employer = await employerService.getEmployerByID(bceid_guid)
+                if (!employer || employer?.id !== bceid_guid) {
+                    return res.status(403).send("Forbidden")
+                }
+                const formId = applicationService.getFormId(firstApplication.form_type)
+                const formPass = applicationService.getFormPass(firstApplication.form_type)
+                const submissionResponse = await formService.getSubmission(
+                    formId,
+                    formPass,
+                    firstApplication.form_submission_id
+                )
+                await employerService.updateEmployerFromApplicationForm(
+                    employer,
+                    submissionResponse.submission.submission.data
+                )
+            }
         }
 
         res.set({
@@ -75,22 +94,23 @@ export const createApplication = async (req: any, res: express.Response) => {
         if (!req.body?.guid || req.body.guid !== bceid_guid) {
             return res.status(403).send("Forbidden")
         }
-        // Create a new form draft //
-        let formID = ""
-        let formVersionID = ""
-        if (req.body.formType === "Have Employee") {
-            formID = process.env.HAVE_EMPLOYEE_ID as string
-            formVersionID = process.env.HAVE_EMPLOYEE_VERSION_ID as string
-        } else if (req.body.formType === "Need Employee") {
-            formID = process.env.NEED_EMPLOYEE_ID as string
-            formVersionID = process.env.NEED_EMPLOYEE_VERSION_ID as string
+
+        // Prepare pre-fill data.
+        const employer = await employerService.getEmployerByID(bceid_guid)
+        if (!employer || employer?.id !== bceid_guid) {
+            return res.status(403).send("Forbidden")
         }
+        const prefillFields = computeApplicationPrefillFields(employer)
+
+        // Create a new form draft //
+        const formID = applicationService.getFormId(req.body.formType)
+        const formVersionID = applicationService.getFormVersionId(req.body.formType)
         const createDraftResult = await formService.createLoginProtectedDraft(
             req.kauth.grant.access_token,
             formID,
             formVersionID,
             req.body.formKey,
-            {}
+            prefillFields
         )
         if (createDraftResult?.id) {
             const insertResult = await insertApplication(
@@ -153,15 +173,8 @@ export const updateApplication = async (req: any, res: express.Response) => {
 // updates the status of applications that have been submitted or in draft
 const updateApplicationFromForm = async (application: any) => {
     if (application.status === "Draft") {
-        let formID
-        let formPass
-        if (application.form_type === "Have Employee") {
-            formID = process.env.HAVE_EMPLOYEE_ID
-            formPass = process.env.HAVE_EMPLOYEE_PASS
-        } else if (application.form_type === "Need Employee") {
-            formID = process.env.NEED_EMPLOYEE_ID
-            formPass = process.env.NEED_EMPLOYEE_PASS
-        }
+        const formID = applicationService.getFormId(application.form_type)
+        const formPass = applicationService.getFormPass(application.form_type)
         if (formID && formPass && application.form_submission_id) {
             const submissionResponse = await formService.getSubmission(formID, formPass, application.form_submission_id)
             if (submissionResponse.submission.draft === false) {
@@ -230,4 +243,48 @@ export const deleteApplication = async (req: any, res: express.Response) => {
         console.log(e?.message)
         return res.status(500).send("Internal Server Error")
     }
+}
+
+const computeApplicationPrefillFields = (employer: any) => ({
+    ...(employer?.workbc_center && {
+        areYouCurrentlyWorkingWithAWorkBcCentre: "Yes",
+        catchmentNoStoreFront: employer.workbc_center
+    }),
+    ...(!employer?.workbc_center && { areYouCurrentlyWorkingWithAWorkBcCentre: "No" }),
+    ...(employer?.bceid_business_name && { operatingName: employer.bceid_business_name }),
+    ...(employer?.cra_business_number && { businessNumber: employer.cra_business_number }),
+    ...(employer?.street_address && { businessAddress: employer.street_address }),
+    ...(employer?.city && { businessCity: employer.city }),
+    ...(employer?.province && { businessProvince: employer.province }),
+    ...(employer?.postal_code && { businessPostal: employer.postal_code }),
+    ...(employer?.phone_number && { businessPhone: employer.phone_number }),
+    ...(employer?.fax_number && { businessFax: employer.fax_number }),
+    ...(employer?.contact_email && { employerEmail: employer.contact_email }),
+    ...((employer?.workplace_street_address || employer?.workplace_city || employer?.workplace_postal_code) && {
+        otherWorkAddress: true
+    }),
+    ...(!employer?.workplace_street_address &&
+        !employer?.workplace_city &&
+        !employer?.workplace_postal_code && {
+            otherWorkAddress: false
+        }),
+    container: {
+        ...(employer?.workplace_street_address && { addressAlt: employer.workplace_street_address }),
+        ...(employer?.workplace_city && { cityAlt: employer.workplace_city }),
+        ...(employer?.workplace_province && { provinceAlt: employer.workplace_province }),
+        ...(employer?.workplace_postal_code && { postalAlt: employer.workplace_postal_code })
+    },
+    ...(employer?.contact_name && { signatory1: employer.contact_name })
+})
+
+const firstApplicationSubmitted = (applicationsOld: any, applicationsNew: any) => {
+    const submittedApplicationsNew = applicationsNew.data.filter((application: any) => application.status === "New")
+    if (submittedApplicationsNew.length !== 1) {
+        return null
+    }
+    const submittedApplicationsOld = applicationsOld.data.filter((application: any) => application.status === "New")
+    if (submittedApplicationsOld.length !== 0) {
+        return null
+    }
+    return submittedApplicationsNew[0]
 }
