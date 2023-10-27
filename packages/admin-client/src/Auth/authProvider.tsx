@@ -4,14 +4,14 @@
 import { useKeycloak } from "@react-keycloak/web"
 import jwt_decode from "jwt-decode"
 import axios from "axios"
+import { parseCatchments } from "../utils/parseCatchments"
 
 const useAuthProvider = () => {
     const { keycloak } = useKeycloak()
     return {
         login: () => keycloak.login(),
         checkError: () => Promise.resolve(),
-        checkAuth: () =>
-            localStorage.getItem("token") ? Promise.resolve() : Promise.reject("Failed to obtain access token."),
+        checkAuth: () => (keycloak.token ? Promise.resolve() : Promise.reject("Failed to obtain access token.")),
         logout: () => {
             localStorage.removeItem("token")
             localStorage.removeItem("refresh_token")
@@ -38,7 +38,7 @@ const useAuthProvider = () => {
                     Authorization: `Bearer ${localStorage.getItem("token")}`
                 }
             })
-            return res.data.access
+            return parseCatchments(res.data.permissions)
         }
     }
 }

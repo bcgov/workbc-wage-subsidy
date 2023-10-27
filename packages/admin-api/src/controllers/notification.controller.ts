@@ -1,6 +1,6 @@
 import express from "express"
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import notificationService from "../services/notification.service"
+import * as notificationService from "../services/notification.service"
 import { getCatchments } from "../lib/catchment"
 
 export const getNotification = async (req: any, res: express.Response) => {

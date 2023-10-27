@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { knex } from "../config/db-config"
 
-const getAllNotificationsFromUser = async (username: string) => {
+export const getAllNotificationsFromUser = async (username: string) => {
     const notifications = await knex("notifications").where("username", username)
     return notifications
 }
 
-const getNotification = async (email: string, catchmentNo: number, type: string, username: string) => {
+export const getNotification = async (email: string, catchmentNo: number, type: string, username: string) => {
     const notifications = await knex("notifications")
         .where("email", email)
         .andWhere("catchmentno", catchmentNo)
@@ -15,7 +15,7 @@ const getNotification = async (email: string, catchmentNo: number, type: string,
     return notifications
 }
 
-const addNotification = async (email: string, catchmentNo: number, type: string, username: string) => {
+export const addNotification = async (email: string, catchmentNo: number, type: string, username: string) => {
     const data = {
         email,
         catchmentno: catchmentNo,
@@ -28,7 +28,13 @@ const addNotification = async (email: string, catchmentNo: number, type: string,
     return result
 }
 
-const updateNotification = async (id: number, email: string, catchmentNo: number, type: string, username: string) => {
+export const updateNotification = async (
+    id: number,
+    email: string,
+    catchmentNo: number,
+    type: string,
+    username: string
+) => {
     const data = {
         email,
         catchmentno: catchmentNo,
@@ -42,7 +48,7 @@ const updateNotification = async (id: number, email: string, catchmentNo: number
     return result
 }
 
-const deleteNotification = async (email: string, catchmentNo: number, type: string, username: string) => {
+export const deleteNotification = async (email: string, catchmentNo: number, type: string, username: string) => {
     const result = await knex("notifications")
         .where("email", email)
         .andWhere("catchmentno", catchmentNo)
@@ -51,12 +57,4 @@ const deleteNotification = async (email: string, catchmentNo: number, type: stri
         .del()
         .returning(["id", "email", "catchmentno", "type", "username"])
     return result
-}
-
-export default {
-    getNotification,
-    addNotification,
-    updateNotification,
-    deleteNotification,
-    getAllNotificationsFromUser
 }

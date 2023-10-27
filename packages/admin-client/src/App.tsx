@@ -16,6 +16,7 @@ import { CatchmentProvider } from "./common/contexts/CatchmentContext/CatchmentC
 import "@bcgov/bc-sans/css/BCSans.css"
 import { Route } from "react-router-dom"
 import { ViewForm } from "./Form/ViewForm"
+import { parseCatchments } from "./utils/parseCatchments"
 
 const initOptions = {
     url: process.env.REACT_APP_KEYCLOAK_URL || "",
@@ -24,29 +25,6 @@ const initOptions = {
 }
 
 const keycloak = new Keycloak(initOptions)
-
-const toTitleCase = (str: string) => {
-    return str
-        .toLowerCase()
-        .split(" ")
-        .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-        .join(" ")
-}
-
-const parseCatchments = (permissions: any[]) => {
-    // Extract catchment number and location. Remove leading '1'.
-    // Remove null and non-numeric catchment numbers.
-    // Sort in ascending order.
-    return permissions
-        .map((item: any) => {
-            return {
-                catchmentNo: Number(item.Catchment.slice(1)),
-                location: toTitleCase(item.CatchmentDescription)
-            }
-        })
-        .filter((item: any) => item.catchmentNo != null && !Number.isNaN(item.catchmentNo))
-        .sort((item1: any, item2: any) => item1.catchmentNo - item2.catchmentNo)
-}
 
 const onToken = async () => {
     if (keycloak.token && keycloak.refreshToken) {
@@ -221,7 +199,6 @@ const CustomAdminWithKeycloak = () => {
         // When token refreshes, update local 'access' variable used to conditionally render app.
         window.addEventListener("storage", () => {
             setAccess(localStorage.getItem("access") === "true")
-            dataProvider.checkNotifcation()
         })
     }, [])
     return (
