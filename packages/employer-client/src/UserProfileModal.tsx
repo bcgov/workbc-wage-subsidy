@@ -1,11 +1,21 @@
 import BCGovModal from "./common/components/BCGovModal/BCGovModal"
 import ModalButton from "./common/components/BCGovModal/BCGovModalButton"
-import { SaveButton, SimpleForm, useCreate, useDataProvider, useGetIdentity } from "react-admin"
+import {
+    SaveButton,
+    SimpleForm,
+    useCreate,
+    useDataProvider,
+    useGetIdentity,
+    maxLength,
+    email,
+    regex
+} from "react-admin"
 import { useEffect, useState } from "react"
 import { Box } from "@mui/system"
 import { Stack } from "@mui/material"
 import StyledTextInput from "./common/components/Forms/Fields/StyledTextInput"
 import StyledSelectInput from "./common/components/Forms/Fields/StyledSelectInput"
+import { useMutation } from "react-query"
 
 const SaveButtonStyles = {
     color: "#307FE2",
@@ -34,22 +44,23 @@ const UserProfileModal: React.FC<UserProfileModalProps> = ({ isOpen, onRequestCl
     const [profileExists, setProfileExists] = useState<boolean>(false)
     const [userProfile, setUserProfile] = useState<any>(null)
     const [create] = useCreate()
+    const [loading, setLoading] = useState(false)
 
-    const getProfile = (userGuid: string) => {
-        dataProvider.getOne("employers", { id: userGuid }).then(({ data }) => {
+    // When used in React Admin, useMutation() activates the loading indicator during queries.
+    const { mutate: getProfile } = useMutation((userGuid: string) => {
+        return dataProvider.getOne("employers", { id: userGuid }).then(({ data }) => {
             setUserProfile(data)
+            setLoading(false)
         })
-    }
+    })
 
-    const saveProfile = (data: any) => {
+    const { mutate: saveProfile } = useMutation((data: any) => {
         const { id: userGuid, ...formData } = data
-        dataProvider.update("employers", { id: userGuid, data: formData, previousData: undefined }).then(({ data }) => {
-            onRequestClose(null)
-        })
-    }
+        return dataProvider.update("employers", { id: userGuid, data: formData, previousData: undefined })
+    })
 
-    const createProfileIfNotExists = async (identity: any) => {
-        await create(
+    const { mutate: createProfileIfNotExists } = useMutation((identity: any) => {
+        return create(
             "employers",
             {
                 data: {
@@ -66,6 +77,11 @@ const UserProfileModal: React.FC<UserProfileModalProps> = ({ isOpen, onRequestCl
                 }
             }
         )
+    })
+
+    const handleSubmit = (data: any) => {
+        saveProfile(data)
+        onRequestClose(null)
     }
 
     useEffect(() => {
@@ -75,6 +91,12 @@ const UserProfileModal: React.FC<UserProfileModalProps> = ({ isOpen, onRequestCl
     }, [isOpen, profileExists])
 
     useEffect(() => {
+        if (!isOpen) {
+            setUserProfile(null)
+        }
+    }, [isOpen])
+
+    useEffect(() => {
         if (identity) {
             createProfileIfNotExists(identity)
         }
@@ -82,15 +104,17 @@ const UserProfileModal: React.FC<UserProfileModalProps> = ({ isOpen, onRequestCl
 
     return (
         <>
-            {userProfile && (
+            {!loading && userProfile && (
                 <BCGovModal isOpen={isOpen} onRequestClose={onRequestClose} contentLabel={contentLabel}>
                     <h2>Edit Profile</h2>
                     <SimpleForm
                         resource="employers"
                         record={userProfile}
-                        onSubmit={saveProfile}
+                        onSubmit={handleSubmit}
                         toolbar={false}
                         sx={{ padding: "0em 0em" }}
+                        mode="onBlur"
+                        reValidateMode="onBlur"
                     >
                         <Stack direction="column" spacing={0} paddingTop="2em">
                             <Stack direction="column" spacing={2}>
@@ -99,11 +123,13 @@ const UserProfileModal: React.FC<UserProfileModalProps> = ({ isOpen, onRequestCl
                                         source="bceid_business_name"
                                         label="Employer Name (Business Name)"
                                         sx={{ minWidth: "20em" }}
+                                        validate={maxLength(255)}
                                     />
                                     <StyledTextInput
                                         source="contact_name"
                                         label="Employer Contact"
                                         sx={{ minWidth: "20em" }}
+                                        validate={maxLength(255)}
                                     />
                                 </Stack>
                                 <Stack direction="row" spacing={6}>
@@ -111,27 +137,43 @@ const UserProfileModal: React.FC<UserProfileModalProps> = ({ isOpen, onRequestCl
                                         source="phone_number"
                                         label="Phone Number"
                                         sx={{ minWidth: "20em" }}
+                                        validate={maxLength(12)}
                                     />
                                     <StyledTextInput
                                         source="contact_email"
                                         label="Employer Email Address"
                                         sx={{ minWidth: "20em" }}
+                                        validate={[email(), maxLength(255)]}
                                     />
                                 </Stack>
                                 <Stack direction="row" spacing={6}>
-                                    <StyledTextInput source="fax_number" label="Fax Number" sx={{ minWidth: "20em" }} />
+                                    <StyledTextInput
+                                        source="fax_number"
+                                        label="Fax Number"
+                                        sx={{ minWidth: "20em" }}
+                                        validate={maxLength(12)}
+                                    />
                                     <StyledTextInput
                                         source="cra_business_number"
                                         label="CRA Business Number"
                                         sx={{ minWidth: "20em" }}
+                                        validate={regex(
+                                            /^[0-9]{9}[A-Z]{2}[0]{3}[1]/,
+                                            "Must have format: [0-9]{9}[A-Z]{2}[0]{3}[1]"
+                                        )}
                                     />
                                 </Stack>
                             </Stack>
-                            <Stack direction="column" spacing={2}>
-                                <h3>Address</h3>
+                            <h3>Address</h3>
+                            <Stack direction="column" spacing={2} sx={{ paddingTop: "1em" }}>
                                 <StyledTextInput source="street_address" label="Address" sx={{ minWidth: "43em" }} />
                                 <Stack direction="row" spacing={6}>
-                                    <StyledTextInput source="city" label="City" sx={{ minWidth: "20em" }} />
+                                    <StyledTextInput
+                                        source="city"
+                                        label="City"
+                                        sx={{ minWidth: "20em" }}
+                                        validate={maxLength(255)}
+                                    />
                                     <StyledSelectInput
                                         source="province"
                                         label="Province"
@@ -153,20 +195,31 @@ const UserProfileModal: React.FC<UserProfileModalProps> = ({ isOpen, onRequestCl
                                         ]}
                                     />
                                 </Stack>
-                                <StyledTextInput source="postal_code" label="Postal Code" sx={{ maxWidth: "20em" }} />
+                                <StyledTextInput
+                                    source="postal_code"
+                                    label="Postal Code"
+                                    sx={{ maxWidth: "20em" }}
+                                    validate={maxLength(255)}
+                                />
                             </Stack>
-                            <Stack direction="column" spacing={2}>
-                                <h3>
-                                    Workplace Address{" "}
-                                    <span style={{ fontWeight: "normal" }}>(if different from above)</span>
-                                </h3>
+                            <h3>
+                                Workplace Address{" "}
+                                <span style={{ fontWeight: "normal" }}>(if different from above)</span>
+                            </h3>
+                            <Stack direction="column" spacing={2} sx={{ paddingTop: "1em" }}>
                                 <StyledTextInput
                                     source="workplace_street_address"
                                     label="Address"
                                     sx={{ minWidth: "43em" }}
+                                    validate={maxLength(255)}
                                 />
                                 <Stack direction="row" spacing={6}>
-                                    <StyledTextInput source="workplace_city" label="City" sx={{ minWidth: "20em" }} />
+                                    <StyledTextInput
+                                        source="workplace_city"
+                                        label="City"
+                                        sx={{ minWidth: "20em" }}
+                                        validate={maxLength(255)}
+                                    />
                                     <StyledSelectInput
                                         source="workplace_province"
                                         label="Province"
@@ -178,6 +231,7 @@ const UserProfileModal: React.FC<UserProfileModalProps> = ({ isOpen, onRequestCl
                                     source="workplace_postal_code"
                                     label="Postal Code"
                                     sx={{ maxWidth: "20em" }}
+                                    validate={maxLength(255)}
                                 />
                                 <Stack direction="row" spacing={6}>
                                     <StyledSelectInput

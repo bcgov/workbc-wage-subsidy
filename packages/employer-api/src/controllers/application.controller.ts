@@ -278,11 +278,11 @@ const computeApplicationPrefillFields = (employer: any) => ({
 })
 
 const firstApplicationSubmitted = (applicationsOld: any, applicationsNew: any) => {
-    const submittedApplicationsNew = applicationsNew.data.filter((application: any) => application.status === "New")
+    const submittedApplicationsNew = applicationsNew.data.filter((application: any) => application.status !== "Draft")
     if (submittedApplicationsNew.length !== 1) {
         return null
     }
-    const submittedApplicationsOld = applicationsOld.data.filter((application: any) => application.status === "New")
+    const submittedApplicationsOld = applicationsOld.data.filter((application: any) => application.status !== "Draft")
     if (submittedApplicationsOld.length !== 0) {
         return null
     }
