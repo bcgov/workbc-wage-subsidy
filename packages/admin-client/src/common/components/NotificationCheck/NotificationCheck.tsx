@@ -1,9 +1,10 @@
-import { useEffect } from "react"
-import { useAuthProvider, useDataProvider } from "react-admin"
+import { useEffect, useState } from "react"
+import { useAuthProvider, useDataProvider, Loading } from "react-admin"
 
 const NotificationCheck = () => {
     const dataProvider = useDataProvider()
     const authProvider = useAuthProvider()
+    const [loading, setLoading] = useState(false)
 
     useEffect(() => {
         const check = async () => {
@@ -15,11 +16,16 @@ const NotificationCheck = () => {
                 return res
             })
             if (auth !== false && permissions.length !== 0) {
-                await dataProvider.checkNotifcation()
+                setLoading(true)
+                await dataProvider.checkNotifcation().then(() => setLoading(false))
             }
         }
         check()
     }, [])
+
+    if (loading) {
+        return <Loading />
+    }
 
     return <></>
 }

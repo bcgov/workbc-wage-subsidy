@@ -1,6 +1,6 @@
 import { useEffect, useState, useContext } from "react"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { Loading, useListContext } from "react-admin"
+import { LoadingIndicator, useListContext } from "react-admin"
 import { CatchmentContext } from "../../contexts/CatchmentContext/CatchmentContext"
 import { faFlag } from "@fortawesome/pro-solid-svg-icons"
 import { COLOURS } from "../../../Colours"
@@ -66,7 +66,9 @@ const NotifyButton: React.FC = () => {
             })
     }, [cc.catchment.id])
 
-    if (loading) return <Loading sx={{ marginTop: 20 }}></Loading>
+    if (loading) {
+        return <LoadingIndicator sx={{ color: COLOURS.MEDIUMGREY, maxWidth: "300px", marginRight: "4em" }} />
+    }
 
     return (
         <Button
@@ -86,6 +88,7 @@ const NotifyButton: React.FC = () => {
             aria-label={ariaLabel}
         >
             <span aria-hidden={true}>
+                {" "}
                 <FontAwesomeIcon icon={faFlag} size="lg" style={{ marginRight: 12 }} scale="2" />
                 NOTIFY
             </span>
