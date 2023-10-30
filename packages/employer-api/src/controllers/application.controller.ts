@@ -5,6 +5,7 @@ import { insertApplication } from "../lib/transactions"
 import * as applicationService from "../services/application.service"
 import * as employerService from "../services/employer.service"
 import * as formService from "../services/form.service"
+import * as formAPIservice from "../services/formAPI.service"
 
 export const getAllApplications = async (req: any, res: express.Response) => {
     try {
@@ -26,55 +27,27 @@ export const getAllApplications = async (req: any, res: express.Response) => {
             sortOrders,
             bceid_guid
         )
-
+        // create a new list of applications with updated status
+        let applicationsNew = applications
         if (filter.status == null && perPage > 1) {
             // only update applications once each call cycle
-            // update users applications as needed //
-            const containsNeedEmployee = applications.data.some((a: any) => a.form_type === "Need Employee")
-            const containsHaveEmployee = applications.data.some((a: any) => a.form_type === "Have Employee")
-            const containsNonComplete = applications.data.some((a: any) => a.status !== "Complete")
-            const params = {
-                fields: "userInfo,internalId,catchmentNo,positionTitle0,numberOfPositions0,operatingName",
-                // eslint-disable-next-line camelcase
-                // createdBy: `${bceid_guid}@bceid`, //TODO: use guid from applications object
-                deleted: false
-            }
-
-            if (containsNonComplete) {
-                // only query the forms service if we might need to update something
-                const updateApplications = async (formID: string | undefined, formPass: string | undefined) => {
-                    const submissions = await formService.getFormSubmissions(formID ?? "", formPass ?? "", params)
-                    submissions.forEach(async (submission: any) => {
-                        const app = applications.data.find(
-                            (application: any) => application.id === submission.internalId
-                        )
-                        if (app) {
-                            if (submission.formSubmissionStatusCode === "SUBMITTED") {
-                                if (
-                                    app.status !== "New" &&
-                                    app.status !== "In Progress" &&
-                                    app.status !== "Completed" &&
-                                    app.status !== "Cancelled"
-                                ) {
-                                    applicationService.updateApplication(app.id, "New", submission)
-                                }
-                            } else if (app.status === "Draft") {
-                                await applicationService.updateApplication(app.id, "Draft", submission)
-                            }
-                        }
-                    })
-                }
-                if (containsNeedEmployee)
-                    updateApplications(process.env.NEED_EMPLOYEE_ID, process.env.NEED_EMPLOYEE_PASS)
-                if (containsHaveEmployee)
-                    updateApplications(process.env.HAVE_EMPLOYEE_ID, process.env.HAVE_EMPLOYEE_PASS)
-            }
+            // updates the status of applications that have been submitted or in draft
+            await Promise.all(applications.data.map(updateApplicationFromForm))
+            applicationsNew = await applicationService.getAllApplications(
+                Number(perPage),
+                Number(page),
+                filter,
+                sortFields,
+                sortOrders,
+                bceid_guid
+            )
         }
+
         res.set({
             "Access-Control-Expose-Headers": "Content-Range",
-            "Content-Range": `0 - ${applications.pagination.to} / ${applications.pagination.total}`
+            "Content-Range": `0 - ${applicationsNew.pagination.to} / ${applicationsNew.pagination.total}`
         })
-        return res.status(200).send(applications.data)
+        return res.status(200).send(applicationsNew.data)
     } catch (e: any) {
         console.log(e?.message)
         return res.status(500).send("Server Error")
@@ -175,6 +148,33 @@ export const updateApplication = async (req: any, res: express.Response) => {
     } catch (e: any) {
         console.log(e?.message)
         return res.status(500).send("Internal Server Error")
+    }
+}
+
+// updates the status of applications that have been submitted or in draft
+const updateApplicationFromForm = async (application: any) => {
+    if (application.status === "Draft") {
+        let formID
+        let formPass
+        if (application.form_type === "Have Employee") {
+            formID = process.env.HAVE_EMPLOYEE_ID
+            formPass = process.env.HAVE_EMPLOYEE_PASS
+        } else if (application.form_type === "Need Employee") {
+            formID = process.env.NEED_EMPLOYEE_ID
+            formPass = process.env.NEED_EMPLOYEE_PASS
+        }
+        if (formID && formPass && application.form_submission_id) {
+            const submissionResponse = await formService.getSubmission(formID, formPass, application.form_submission_id)
+            if (submissionResponse.submission.draft === false) {
+                console.log("form submitted event")
+                // submitted
+                await applicationService.updateApplication(application.id, "New", submissionResponse.submission)
+                await formAPIservice.sendNotifications(submissionResponse.submission.submission)
+            } else if (submissionResponse.submission.draft === true) {
+                // draft
+                await applicationService.updateApplication(application.id, "Draft", submissionResponse.submission)
+            }
+        }
     }
 }
 

@@ -9,7 +9,7 @@ const applicationNotification = (catchmentNo: string, catchmentName: string, typ
         [
             ` Hello `,
             ` You are receiving this email because you enabled notifications on Wage Subsidy ${
-                type === "claim" && "Claim"
+                type === "claim" ? "Claim" : ""
             } Applications for Catchment ${catchmentNo} - ${catchmentName}.`
         ],
         [

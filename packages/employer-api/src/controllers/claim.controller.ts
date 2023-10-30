@@ -28,36 +28,26 @@ export const getAllClaims = async (req: any, res: express.Response) => {
             bceid_guid
         )
 
+        let claimsUpdated = claims
+        // create a new list of applications with updated status
         if (filter.status == null && perPage > 1) {
             // only update applications once each call cycle
-            // update users claims as needed //
-            const containsNonComplete = claims.data.some((a: any) => a.status !== "Completed")
-            const params = {
-                fields: `formHandler, storefrontId, catchmentNo, userInfo, applicationId, internalId, container`,
-                // eslint-disable-next-line camelcase
-                // createdBy: bceid_guid,
-                deleted: false
-            }
-            if (containsNonComplete) {
-                // only query the forms service if we might need to update something
-                const submissions = await formService.getFormSubmissions(
-                    process.env.CLAIM_FORM_ID || "",
-                    process.env.CLAIM_FORM_PASS || "",
-                    params
-                )
-                submissions.forEach(async (submission: any) => {
-                    const claim = claims.data.find((c: any) => c.id === submission.internalId)
-                    if (claim && claim.status === "Draft") {
-                        await claimService.updateClaim(claim.id, "Draft", submission)
-                    }
-                })
-            }
+            // updates the status of applications that have been submitted or in draft
+            await Promise.all(claims.data.map(updateClaimFromForm))
+            claimsUpdated = await claimService.getAllClaims(
+                Number(perPage),
+                Number(page),
+                filter,
+                sortFields,
+                sortOrders,
+                bceid_guid
+            )
         }
         res.set({
             "Access-Control-Expose-Headers": "Content-Range",
-            "Content-Range": `0 - ${claims.pagination.to} / ${claims.pagination.total}`
+            "Content-Range": `0 - ${claimsUpdated.pagination.to} / ${claimsUpdated.pagination.total}`
         })
-        return res.status(200).send(claims.data)
+        return res.status(200).send(claimsUpdated.data)
     } catch (e: any) {
         console.log(e?.message)
         return res.status(500).send("Server Error")
@@ -150,6 +140,25 @@ export const updateClaim = async (req: any, res: express.Response) => {
     } catch (e: any) {
         console.log(e?.message)
         return res.status(500).send("Internal Server Error")
+    }
+}
+
+// Helper function to update the status of an claim, if it is in draft
+// and the form is still in draft, then update the claim status to draft
+const updateClaimFromForm = async (employerClaimRecord: any) => {
+    if (employerClaimRecord.status === "Draft") {
+        const formID = process.env.CLAIM_FORM_ID
+        const formPass = process.env.CLAIM_FORM_PASS
+        if (formID && formPass && employerClaimRecord.form_submission_id) {
+            const submissionResponse = await formService.getSubmission(
+                formID,
+                formPass,
+                employerClaimRecord.form_submission_id
+            )
+            if (submissionResponse.submission.draft === true) {
+                await claimService.updateClaim(employerClaimRecord.id, "Draft", submissionResponse.submission)
+            }
+        }
     }
 }
 
