@@ -12,10 +12,8 @@ import notificationTemplate from "../templates/notification.template"
 
 const createEmailHTMLBasedOnType = (data: NeedEmployeeData) => {
     let emailHTML = ""
-    // in case of employee email, it is have employee application
     if (data.applicationType === "HaveEmployee") {
         emailHTML = received.receivedHaveEmployee()
-        // in case of no employee email, it is need employee application
     } else if (data.applicationType === "NeedEmployee") {
         emailHTML = received.receivedNeedEmployee()
     }
@@ -71,13 +69,16 @@ export const sendEmail = async (req: express.Request, res: express.Response) => 
                 Number(data.catchmentNo),
                 data.applicationType === "Claims" ? "claim" : "application"
             )
-            notificationList.map(async (notification: Notification) => {
-                await emailService.sendEmail(
-                    notificationHTML,
-                    `New Wage Subsidy ${data.applicationType === "Claims" && "Claims"} Application Submitted`,
-                    [notification.email]
-                )
-            })
+            // Send notifications emails to clients with notifications enabled (entry in notifications table)
+            await Promise.all(
+                notificationList.map(async (notification: Notification) => {
+                    await emailService.sendEmail(
+                        notificationHTML,
+                        `New Wage Subsidy ${data.applicationType === "Claims" && "Claims"} Application Submitted`,
+                        [notification.email]
+                    )
+                })
+            )
         }
 
         // console.log(email)
