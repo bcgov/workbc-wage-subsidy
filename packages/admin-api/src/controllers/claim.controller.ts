@@ -40,6 +40,7 @@ export const getAllClaims = async (req: any, res: express.Response) => {
         })
         return res.status(200).send(claims.data)
     } catch (e: unknown) {
+        console.log(e)
         return res.status(500).send("Internal Server Error")
     }
 }
@@ -62,6 +63,7 @@ export const getClaimCounts = async (req: any, res: express.Response) => {
         const claimCounts = await claimService.getClaimCounts(filter.catchmentno)
         return res.status(200).send(claimCounts)
     } catch (e: unknown) {
+        console.log(e)
         return res.status(500).send("Internal Server Error")
     }
 }
@@ -87,6 +89,7 @@ export const getOneClaim = async (req: any, res: express.Response) => {
 
         return res.status(200).send(claim)
     } catch (e: unknown) {
+        console.log(e)
         return res.status(500).send("Internal Server Error")
     }
 }
@@ -117,6 +120,7 @@ export const updateClaim = async (req: any, res: express.Response) => {
         await updateClaimWithSideEffects(claim, bceid_user_guid || idir_user_guid, req.body)
         return res.status(200).send({ id })
     } catch (e: unknown) {
+        console.log(e)
         return res.status(500).send("Internal Server Error")
     }
 }
@@ -148,6 +152,7 @@ export const deleteClaim = async (req: any, res: express.Response) => {
         }
         return res.status(200).send({ id })
     } catch (e: unknown) {
+        console.log(e)
         return res.status(500).send("Internal Server Error")
     }
 }
@@ -172,9 +177,9 @@ const formatPDFData = (submission: any, submittedDate: string) => {
         dateTo5: formatDateMmmDDYYYY(submission.data.container?.dateTo5),
         dateFrom1: formatDateMmmDDYYYY(submission.data.container?.dateFrom1),
         dateFrom2: formatDateMmmDDYYYY(submission.data.container?.dateFrom2),
-        dateFrom3: formatDateMmmDDYYYY(submission.data.container.dateFrom3),
-        dateFrom4: formatDateMmmDDYYYY(submission.data.container.dateFrom4),
-        dateFrom5: formatDateMmmDDYYYY(submission.data.container.dateFrom5),
+        dateFrom3: formatDateMmmDDYYYY(submission.data.container?.dateFrom3),
+        dateFrom4: formatDateMmmDDYYYY(submission.data.container?.dateFrom4),
+        dateFrom5: formatDateMmmDDYYYY(submission.data.container?.dateFrom5),
         hoursWorked1: submission.data.container?.hoursWorked1,
         hoursWorked2: submission.data.container?.hoursWorked2,
         hoursWorked3: submission.data.container?.hoursWorked3,
@@ -185,64 +190,64 @@ const formatPDFData = (submission: any, submittedDate: string) => {
         eligibleHoursWorked3: submission.data.container?.eligibleHoursWorked3,
         eligibleHoursWorked4: submission.data.container?.eligibleHoursWorked4,
         eligibleHoursWorked5: submission.data.container?.eligibleHoursWorked5,
-        hourlyWage1: formatCurrency(submission.data.container.hourlyWage1),
-        hourlyWage2: formatCurrency(submission.data.container.hourlyWage2),
-        hourlyWage3: formatCurrency(submission.data.container.hourlyWage3),
-        hourlyWage4: formatCurrency(submission.data.container.hourlyWage4),
-        hourlyWage5: formatCurrency(submission.data.container.hourlyWage5),
-        eligibleHourlyWage1: formatCurrency(submission.data.container.eligibleHourlyWage1),
-        eligibleHourlyWage2: formatCurrency(submission.data.container.eligibleHourlyWage2),
-        eligibleHourlyWage3: formatCurrency(submission.data.container.eligibleHourlyWage3),
-        eligibleHourlyWage4: formatCurrency(submission.data.container.eligibleHourlyWage4),
-        eligibleHourlyWage5: formatCurrency(submission.data.container.eligibleHourlyWage5),
-        totalWages1: formatCurrency(submission.data.container.totalWages1),
-        totalWages2: formatCurrency(submission.data.container.totalWages2),
-        totalWages3: formatCurrency(submission.data.container.totalWages3),
-        totalWages4: formatCurrency(submission.data.container.totalWages4),
-        totalWages5: formatCurrency(submission.data.container.totalWages5),
-        eligibleWages1: formatCurrency(submission.data.container.eligibleWages1),
-        eligibleWages2: formatCurrency(submission.data.container.eligibleWages2),
-        eligibleWages3: formatCurrency(submission.data.container.eligibleWages3),
-        eligibleWages4: formatCurrency(submission.data.container.eligibleWages4),
-        eligibleWages5: formatCurrency(submission.data.container.eligibleWages5),
-        totalMercs1: formatCurrency(submission.data.container.totalMercs1),
-        totalMercs2: formatCurrency(submission.data.container.totalMercs2),
-        totalMercs3: formatCurrency(submission.data.container.totalMercs3),
-        totalMercs4: formatCurrency(submission.data.container.totalMercs4),
-        totalMercs5: formatCurrency(submission.data.container.totalMercs5),
-        eligibleMercs1: formatCurrency(submission.data.container.eligibleMercs1),
-        eligibleMercs2: formatCurrency(submission.data.container.eligibleMercs2),
-        eligibleMercs3: formatCurrency(submission.data.container.eligibleMercs3),
-        eligibleMercs4: formatCurrency(submission.data.container.eligibleMercs4),
-        eligibleMercs5: formatCurrency(submission.data.container.eligibleMercs5),
-        totalWages: formatCurrency(submission.data.container.totalWages),
-        totalEligibleWages: formatCurrency(submission.data.container.totalEligibleWages),
-        totalMercs: formatCurrency(submission.data.container.totalMercs),
-        totalEligibleMercs: formatCurrency(submission.data.container.totalEligibleMercs),
+        hourlyWage1: formatCurrency(submission.data.container?.hourlyWage1),
+        hourlyWage2: formatCurrency(submission.data.container?.hourlyWage2),
+        hourlyWage3: formatCurrency(submission.data.container?.hourlyWage3),
+        hourlyWage4: formatCurrency(submission.data.container?.hourlyWage4),
+        hourlyWage5: formatCurrency(submission.data.container?.hourlyWage5),
+        eligibleHourlyWage1: formatCurrency(submission.data.container?.eligibleHourlyWage1),
+        eligibleHourlyWage2: formatCurrency(submission.data.container?.eligibleHourlyWage2),
+        eligibleHourlyWage3: formatCurrency(submission.data.container?.eligibleHourlyWage3),
+        eligibleHourlyWage4: formatCurrency(submission.data.container?.eligibleHourlyWage4),
+        eligibleHourlyWage5: formatCurrency(submission.data.container?.eligibleHourlyWage5),
+        totalWages1: formatCurrency(submission.data.container?.totalWages1),
+        totalWages2: formatCurrency(submission.data.container?.totalWages2),
+        totalWages3: formatCurrency(submission.data.container?.totalWages3),
+        totalWages4: formatCurrency(submission.data.container?.totalWages4),
+        totalWages5: formatCurrency(submission.data.container?.totalWages5),
+        eligibleWages1: formatCurrency(submission.data.container?.eligibleWages1),
+        eligibleWages2: formatCurrency(submission.data.container?.eligibleWages2),
+        eligibleWages3: formatCurrency(submission.data.container?.eligibleWages3),
+        eligibleWages4: formatCurrency(submission.data.container?.eligibleWages4),
+        eligibleWages5: formatCurrency(submission.data.container?.eligibleWages5),
+        totalMercs1: formatCurrency(submission.data.container?.totalMercs1),
+        totalMercs2: formatCurrency(submission.data.container?.totalMercs2),
+        totalMercs3: formatCurrency(submission.data.container?.totalMercs3),
+        totalMercs4: formatCurrency(submission.data.container?.totalMercs4),
+        totalMercs5: formatCurrency(submission.data.container?.totalMercs5),
+        eligibleMercs1: formatCurrency(submission.data.container?.eligibleMercs1),
+        eligibleMercs2: formatCurrency(submission.data.container?.eligibleMercs2),
+        eligibleMercs3: formatCurrency(submission.data.container?.eligibleMercs3),
+        eligibleMercs4: formatCurrency(submission.data.container?.eligibleMercs4),
+        eligibleMercs5: formatCurrency(submission.data.container?.eligibleMercs5),
+        totalWages: formatCurrency(submission.data.container?.totalWages),
+        totalEligibleWages: formatCurrency(submission.data.container?.totalEligibleWages),
+        totalMercs: formatCurrency(submission.data.container?.totalMercs),
+        totalEligibleMercs: formatCurrency(submission.data.container?.totalEligibleMercs),
         clientIssues1: submission.data.container?.clientIssues1,
-        workbcCentre: submission.data.container?.workbcCentre,
+        workbcCentre: submission.data?.workBcCentre,
         signatory1: submission.data.container?.signatory1,
-        subsidyRateDateFrom1: formatDateMmmDDYYYY(submission.data.container.subsidyRateDateFrom1),
-        subsidyRateDateTo1: formatDateMmmDDYYYY(submission.data.container.subsidyRateDateTo1),
+        subsidyRateDateFrom1: formatDateMmmDDYYYY(submission.data.container?.subsidyRateDateFrom1),
+        subsidyRateDateTo1: formatDateMmmDDYYYY(submission.data.container?.subsidyRateDateTo1),
         totalWeeks1: submission.data.container?.totalWeeks1,
-        subsidyRatePercentage1: formatPercentage(submission.data.container.subsidyRatePercentage1),
-        totalEligibleWagesPaid1: formatCurrency(submission.data.container.totalEligibleWagesPaid1),
-        wagesEligibleForSubsidy1: formatCurrency(submission.data.container.wagesEligibleForSubsidy1),
-        wagesToBeReimbursed1: formatCurrency(submission.data.container.wagesToBeReimbursed1),
-        totalEligibleMercsPaid1: formatCurrency(submission.data.container.totalEligibleMercsPaid1),
-        mercsToBeReimbursed1: formatCurrency(submission.data.container.mercsToBeReimbursed1),
-        totalAmountToBeReimbursed1: formatCurrency(submission.data.container.totalAmountToBeReimbursed1),
-        subsidyRateDateFrom2: formatDateMmmDDYYYY(submission.data.container.subsidyRateDateFrom2),
-        subsidyRateDateTo2: formatDateMmmDDYYYY(submission.data.container.subsidyRateDateTo2),
+        subsidyRatePercentage1: formatPercentage(submission.data.container?.subsidyRatePercentage1),
+        totalEligibleWagesPaid1: formatCurrency(submission.data.container?.totalEligibleWagesPaid1),
+        wagesEligibleForSubsidy1: formatCurrency(submission.data.container?.wagesEligibleForSubsidy1),
+        wagesToBeReimbursed1: formatCurrency(submission.data.container?.wagesToBeReimbursed1),
+        totalEligibleMercsPaid1: formatCurrency(submission.data.container?.totalEligibleMercsPaid1),
+        mercsToBeReimbursed1: formatCurrency(submission.data.container?.mercsToBeReimbursed1),
+        totalAmountToBeReimbursed1: formatCurrency(submission.data.container?.totalAmountToBeReimbursed1),
+        subsidyRateDateFrom2: formatDateMmmDDYYYY(submission.data.container?.subsidyRateDateFrom2),
+        subsidyRateDateTo2: formatDateMmmDDYYYY(submission.data.container?.subsidyRateDateTo2),
         totalWeeks2: submission.data.container?.totalWeeks2,
-        subsidyRatePercentage2: formatPercentage(submission.data.container.subsidyRatePercentage2),
-        totalEligibleWagesPaid2: formatCurrency(submission.data.container.totalEligibleWagesPaid2),
-        wagesEligibleForSubsidy2: formatCurrency(submission.data.container.wagesEligibleForSubsidy2),
-        wagesToBeReimbursed2: formatCurrency(submission.data.container.wagesToBeReimbursed2),
-        totalEligibleMercsPaid2: formatCurrency(submission.data.container.totalEligibleMercsPaid2),
-        mercsToBeReimbursed2: formatCurrency(submission.data.container.mercsToBeReimbursed2),
-        totalAmountToBeReimbursed2: formatCurrency(submission.data.container.totalAmountToBeReimbursed2),
-        totalSubsidyClaimed: formatCurrency(submission.data.container.totalSubsidyClaimed),
+        subsidyRatePercentage2: formatPercentage(submission.data.container?.subsidyRatePercentage2),
+        totalEligibleWagesPaid2: formatCurrency(submission.data.container?.totalEligibleWagesPaid2),
+        wagesEligibleForSubsidy2: formatCurrency(submission.data.container?.wagesEligibleForSubsidy2),
+        wagesToBeReimbursed2: formatCurrency(submission.data.container?.wagesToBeReimbursed2),
+        totalEligibleMercsPaid2: formatCurrency(submission.data.container?.totalEligibleMercsPaid2),
+        mercsToBeReimbursed2: formatCurrency(submission.data.container?.mercsToBeReimbursed2),
+        totalAmountToBeReimbursed2: formatCurrency(submission.data.container?.totalAmountToBeReimbursed2),
+        totalSubsidyClaimed: formatCurrency(submission.data.container?.totalSubsidyClaimed),
         comments: submission.data.container?.comments,
         approvedBy: submission.data.container?.approvedBy,
         approvedDate: submission.data.container?.approvedDate,
@@ -272,11 +277,13 @@ export const generatePDF = async (req: any, res: express.Response) => {
         const submissionId = claim?.service_provider_form_submission_id
         const submittedDate = claim?.form_submitted_date
         if (!formId || !formPass || !templateHash || !submissionId || !submittedDate) {
+            console.log("Missing required fields for claim PDF.")
             return res.status(500).send("Internal Server Error")
         }
         const submissionResponse = await formService.getSubmission(formId, formPass, submissionId)
         const submission = submissionResponse?.submission?.submission
         if (!submission) {
+            console.log("Failed to obtain claim submission.")
             return res.status(500).send("Internal Server Error")
         }
         const data = formatPDFData(submission, submittedDate)
@@ -322,6 +329,7 @@ export const generatePDF = async (req: any, res: express.Response) => {
                 })
             }
             if (attachmentData.length !== attachments.length) {
+                console.log("Failed to obtain claim attachments.")
                 return res.status(500).send("Internal Server Error")
             }
         }
