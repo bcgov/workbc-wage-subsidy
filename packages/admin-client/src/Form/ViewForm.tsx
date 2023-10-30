@@ -7,8 +7,39 @@ import { COLOURS } from "../Colours"
 import BackButton from "../common/components/BackButton/BackButton"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faUpRightFromSquare } from "@fortawesome/pro-solid-svg-icons"
-import { useRef, useState } from "react"
+import { useRef, useState, useEffect } from "react"
 import React from "react"
+
+function useRecursiveTimeout(callback, delay) {
+    const savedCallback = useRef(callback)
+
+    useEffect(() => {
+        savedCallback.current = callback
+    }, [callback])
+
+    useEffect(() => {
+        let id
+        function tick() {
+            const ret = savedCallback.current()
+
+            if (ret instanceof Promise) {
+                ret.then(() => {
+                    if (delay !== null) {
+                        id = setTimeout(tick, delay)
+                    }
+                })
+            } else {
+                if (delay !== null) {
+                    id = setTimeout(tick, delay)
+                }
+            }
+        }
+        if (delay !== null) {
+            id = setTimeout(tick, delay)
+            return () => id && clearTimeout(id)
+        }
+    }, [delay])
+}
 
 export const ViewForm = () => {
     const { identity } = useGetIdentity()
@@ -28,6 +59,13 @@ export const ViewForm = () => {
             setNumLoads(0)
         }
     }, [numLoads])
+
+    // refresh periodically while the form is editable to automatically pick up any status changes caused by the calculator "Approve" button workflow //
+    useRecursiveTimeout(() => {
+        if (record.status === "In Progress") {
+            refresh()
+        }
+    }, 5000) // https://stackoverflow.com/questions/61399283/how-to-refresh-the-react-admin-list-data-every-x-seconds
 
     if (error || !urlType || !resource || !formId || !recordId || !identity) {
         return <span />
