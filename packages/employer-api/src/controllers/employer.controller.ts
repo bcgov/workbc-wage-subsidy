@@ -39,11 +39,15 @@ export const createEmployer = async (req: any, res: express.Response) => {
         if (bceid_guid === undefined) {
             return res.status(403).send("Not Authorized")
         }
-        if (!req.body?.id || !req.body?.contactName || !req.body.contactEmail || bceid_guid !== req.body.id) {
+        if (!req.body?.id || !req.body?.contact_name || !req.body.contact_email || bceid_guid !== req.body.id) {
             return res.status(403).send("Forbidden")
         }
-        const insertResult = await employerService.insertEmployer(req.body)
-        return res.status(200).send({ data: insertResult })
+        const employer = await employerService.getEmployerByID(req.body.id)
+        if (!employer) {
+            const insertResult = await employerService.insertEmployer(req.body)
+            return res.status(200).send({ data: insertResult })
+        }
+        return res.status(200).send({ data: {} })
     } catch (e: any) {
         console.log(e?.message)
         return res.status(500).send("Server Error")

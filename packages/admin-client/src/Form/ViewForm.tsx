@@ -67,10 +67,6 @@ export const ViewForm = () => {
         )
     }
 
-    const timeout = (delay: number) => {
-        return new Promise((res) => setTimeout(res, delay))
-    }
-
     return (
         <div>
             {loading && <Loading sx={{ marginTop: 20 }}></Loading>}
@@ -81,13 +77,25 @@ export const ViewForm = () => {
                             borderBottom: "solid 2px " + COLOURS.MEDIUMGREY,
                             backgroundColor: "white",
                             width: "100%",
-                            height: identity.idp === "idir" ? "8em" : "5em",
+                            height:
+                                identity.idp !== "idir" || (resource === "claims" && record.status === "In Progress")
+                                    ? "5em"
+                                    : "8em",
                             position: "absolute",
                             zIndex: 1
                         }}
                     >
                         {record ? (
-                            <Box style={{ display: "flex", marginTop: identity.idp === "idir" ? "4em" : "1em" }}>
+                            <Box
+                                style={{
+                                    display: "flex",
+                                    marginTop:
+                                        identity.idp !== "idir" ||
+                                        (resource === "claims" && record.status === "In Progress")
+                                            ? "1em"
+                                            : "4em"
+                                }}
+                            >
                                 <BackButton resource={resource} />
                                 <StatusDropdown record={record} resource={resource} onChange={handleStatusChange} />
                                 <Box style={{ display: "flex", width: "100%", justifyContent: "right" }}>
@@ -119,12 +127,12 @@ export const ViewForm = () => {
                         &nbsp;
                     </div>
                 )}
-                {loading && <Loading sx={{ marginTop: 20 }}></Loading>}
+                {(loading || !record) && <Loading sx={{ marginTop: 20 }}></Loading>}
                 <iframe
                     src={formUrl}
                     ref={iframeRef}
                     style={{ border: "solid 2px " + COLOURS.MEDIUMGREY, width: "100%", height: "55em" }}
-                    hidden={loading}
+                    hidden={loading || !record}
                     onLoad={(e) => {
                         setNumLoads((numLoads) => numLoads + 1)
                     }}

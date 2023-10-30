@@ -6,6 +6,7 @@ import { insertClaim } from "../lib/transactions"
 import * as claimService from "../services/claim.service"
 import * as employerService from "../services/employer.service"
 import * as formService from "../services/form.service"
+import { getApplicationByConfirmationID, getFormId, getFormPass } from "../services/application.service"
 
 export const getAllClaims = async (req: any, res: express.Response) => {
     try {
@@ -70,19 +71,44 @@ export const getClaimCounts = async (req: any, res: express.Response) => {
 export const createClaim = async (req: any, res: express.Response) => {
     try {
         const bceid_guid = req.kauth.grant.access_token.content?.bceid_user_guid
+        const { application_id: appConfirmationId } = req.body
         if (bceid_guid === undefined) {
             return res.status(403).send("Not Authorized")
         }
         if (!req.body?.guid || req.body.guid !== bceid_guid) {
             return res.status(403).send("Forbidden")
         }
+
+        // Obtain associated application.
+        const associatedApplication = appConfirmationId ? await getApplicationByConfirmationID(appConfirmationId) : null
+        if (!associatedApplication) {
+            return res.status(403).send("Forbidden")
+        }
+        const formID = getFormId(associatedApplication.form_type)
+        const formPass = getFormPass(associatedApplication.form_type)
+        let associatedApplicationForm
+        if (formID && formPass && associatedApplication.form_submission_id) {
+            associatedApplicationForm = await formService.getSubmission(
+                formID,
+                formPass,
+                associatedApplication.form_submission_id
+            )
+        }
+        if (!associatedApplicationForm || !associatedApplicationForm.submission.submission?.data) {
+            return res.status(500).send("Internal Server Error")
+        }
+
+        // Prepare pre-fill data.
+        const appFormData = associatedApplicationForm.submission.submission.data
+        const prefillFields = computeClaimPrefillFields(appFormData)
+
         // Create a new form draft //
         const createDraftResult = await formService.createLoginProtectedDraft(
             req.kauth.grant.access_token,
             process.env.CLAIM_FORM_ID as string,
             process.env.CLAIM_FORM_VERSION_ID as string,
             req.body.formKey,
-            {}
+            prefillFields
         )
         if (createDraftResult?.id) {
             const insertResult = await insertClaim(
@@ -218,3 +244,25 @@ export const deleteClaim = async (req: any, res: express.Response) => {
         return res.status(500).send("Internal Server Error")
     }
 }
+
+// Prepare pre-fill data.
+// Use data from associated application.
+// Use workplace address if it exists, otherwise use business address.
+const computeClaimPrefillFields = (appFormData: any) => ({
+    container: {
+        ...(appFormData?.catchmentNoStoreFront && { catchmentNoStoreFront: appFormData.catchmentNoStoreFront }),
+        ...(appFormData?.operatingName && { employerName: appFormData.operatingName }),
+        ...(appFormData?.signatory1 && { employerContact: appFormData.signatory1 }),
+        ...(appFormData?.businessPhone && { employerPhone: appFormData.businessPhone }),
+        ...(appFormData.container?.addressAlt && {
+            ...(appFormData.container?.addressAlt && { businessAddress1: appFormData.container.addressAlt }),
+            ...(appFormData.container?.cityAlt && { employerCity: appFormData.container.cityAlt }),
+            ...(appFormData.container?.postalAlt && { employerPostal: appFormData.container.postalAlt })
+        }),
+        ...(!appFormData.container?.addressAlt && {
+            ...(appFormData?.businessAddress && { businessAddress1: appFormData.businessAddress }),
+            ...(appFormData?.businessCity && { employerCity: appFormData.businessCity }),
+            ...(appFormData?.businessPostal && { employerPostal: appFormData.businessPostal })
+        })
+    }
+})

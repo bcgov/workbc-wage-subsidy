@@ -55,6 +55,11 @@ export const getApplicationByID = async (id: string) => {
     return application.length > 0 ? application[0] : null
 }
 
+export const getApplicationByConfirmationID = async (confirmationId: string) => {
+    const application = await knex("applications").where("form_confirmation_id", confirmationId)
+    return application.length > 0 ? application[0] : null
+}
+
 export const insertApplication = async (
     id: string,
     userGuid: string,
@@ -136,4 +141,34 @@ export const insertEmployerApplicationRecord = async (employerId: string, applic
         }
     })
     return result
+}
+
+export const getFormId = (formType: string) => {
+    if (formType === "Have Employee") {
+        return process.env.HAVE_EMPLOYEE_ID as string
+    }
+    if (formType === "Need Employee") {
+        return process.env.NEED_EMPLOYEE_ID as string
+    }
+    return ""
+}
+
+export const getFormPass = (formType: string) => {
+    if (formType === "Have Employee") {
+        return process.env.HAVE_EMPLOYEE_PASS as string
+    }
+    if (formType === "Need Employee") {
+        return process.env.NEED_EMPLOYEE_PASS as string
+    }
+    return ""
+}
+
+export const getFormVersionId = (formType: string) => {
+    if (formType === "Have Employee") {
+        return process.env.HAVE_EMPLOYEE_VERSION_ID as string
+    }
+    if (formType === "Need Employee") {
+        return process.env.NEED_EMPLOYEE_VERSION_ID as string
+    }
+    return ""
 }

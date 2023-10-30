@@ -1,14 +1,15 @@
 import { SxProps, Theme } from "@mui/material"
-import { TextInput } from "react-admin"
+import { TextInput, Validator } from "react-admin"
 
 interface StyledTextInputProps {
     source: string
     label: string
     disabled?: boolean | undefined
     sx?: SxProps<Theme> | undefined
+    validate?: Validator | Validator[] | undefined
 }
 
-const StyledTextInput: React.FC<StyledTextInputProps> = ({ source, label, disabled, sx }) => {
+const StyledTextInput: React.FC<StyledTextInputProps> = ({ source, label, disabled, sx, validate }) => {
     return (
         <TextInput
             source={source}
@@ -25,7 +26,13 @@ const StyledTextInput: React.FC<StyledTextInputProps> = ({ source, label, disabl
                     transform: "translate(0em, -1.5em) scale(1)"
                 }
             }}
+            FormHelperTextProps={{
+                style: {
+                    color: "#E5412C"
+                }
+            }}
             sx={sx}
+            validate={validate}
         />
     )
 }

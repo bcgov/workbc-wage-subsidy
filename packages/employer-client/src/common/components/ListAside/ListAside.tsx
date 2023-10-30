@@ -1,5 +1,5 @@
 import { Box, ListItemText, MenuItem, MenuList } from "@mui/material"
-import { useDataProvider, useListContext, useRedirect } from "react-admin"
+import { LoadingIndicator, useDataProvider, useListContext, useRedirect } from "react-admin"
 import isEqual from "lodash/isEqual"
 import { ScreenReaderOnly } from "../../styles/ScreenReaderOnly"
 import { useEffect, useState } from "react"
@@ -108,11 +108,13 @@ export const ListAside: React.FC<ListAsideProps> = ({ statusFilters, statusFilte
                         <ListItemText aria-hidden={true}>{statusFilters[key].label}</ListItemText>
                         <span style={ScreenReaderOnly}>{"status: " + statusFilters[key].label + ", count: "}</span>
                         <span style={{ color: COLOURS.MEDIUMGREY }}>
-                            {statusFilters[key].label === "All"
-                                ? counts["All"]
-                                : statusFilters[key].label in counts
-                                ? counts[statusFilters[key].label]
-                                : "0"}
+                            {isFetching && <LoadingIndicator sx={{ color: COLOURS.MEDIUMGREY, maxWidth: "30px" }} />}
+                            {!isFetching &&
+                                (statusFilters[key].label === "All"
+                                    ? counts["All"]
+                                    : statusFilters[key].label in counts
+                                    ? counts[statusFilters[key].label]
+                                    : "0")}
                         </span>
                         <span style={ScreenReaderOnly}>
                             {isEqual(statusFilter, statusFilters[key]) ? ", selected" : ", not selected"}

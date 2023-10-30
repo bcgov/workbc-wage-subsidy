@@ -1,7 +1,7 @@
 import { Box, ListItemText, MenuItem, MenuList } from "@mui/material"
 import { useContext, useEffect, useState } from "react"
 import { CatchmentContext } from "../../contexts/CatchmentContext/CatchmentContext"
-import { useDataProvider, useListContext } from "react-admin"
+import { LoadingIndicator, useDataProvider, useListContext } from "react-admin"
 import isEqual from "lodash/isEqual"
 import { ScreenReaderOnly } from "../../styles/ScreenReaderOnly"
 import { COLOURS } from "../../../Colours"
@@ -76,11 +76,13 @@ export const ListAside: React.FC<ListAsideProps> = ({ statusFilters, statusFilte
                         <ListItemText aria-hidden={true}>{statusFilters[key].label}</ListItemText>
                         <span style={ScreenReaderOnly}>{"status: " + statusFilters[key].label + ", count: "}</span>
                         <span style={{ color: COLOURS.MEDIUMGREY }}>
-                            {statusFilters[key].label === "All"
-                                ? counts["All"]
-                                : statusFilters[key].status in counts
-                                ? counts[statusFilters[key].status]
-                                : "0"}
+                            {isFetching && <LoadingIndicator sx={{ color: COLOURS.MEDIUMGREY, maxWidth: "30px" }} />}
+                            {!isFetching &&
+                                (statusFilters[key].label === "All"
+                                    ? counts["All"]
+                                    : statusFilters[key].label in counts
+                                    ? counts[statusFilters[key].label]
+                                    : "0")}
                         </span>
                         <span style={ScreenReaderOnly}>
                             {isEqual(statusFilter, statusFilters[key]) ? ", selected" : ", not selected"}
