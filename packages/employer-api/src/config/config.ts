@@ -5,6 +5,7 @@ const formsBaseUrl = process.env.FORMS_API_URL || ""
 const cdogsBaseUrl = process.env.CDOGS_HOST || ""
 const authBaseUrl = process.env.AUTH_KEYCLOAK_SERVER_URL || ""
 const oesBaseUrl = process.env.OES_URL || ""
+const fromAPI = process.env.FORMS_API_URL || ""
 
 export const chefsApi: AxiosInstance = axios.create({
     baseURL: chefsBaseUrl
@@ -24,4 +25,8 @@ export const authApi: AxiosInstance = axios.create({
 
 export const oesApi: AxiosInstance = axios.create({
     baseURL: oesBaseUrl
+})
+
+export const wageSubFormApi: AxiosInstance = axios.create({
+    baseURL: fromAPI
 })

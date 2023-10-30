@@ -8,6 +8,7 @@ export interface UserInfo {
 }
 
 export interface NeedEmployeeData {
+    applicationType: string
     lateEntry: boolean
     userInfo: UserInfo
     internalId: string

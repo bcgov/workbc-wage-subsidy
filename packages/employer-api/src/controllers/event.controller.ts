@@ -3,6 +3,7 @@
 import * as express from "express"
 import * as formService from "../services/form.service"
 import * as claimService from "../services/claim.service"
+import * as wageSubFormApiService from "../services/formAPI.service"
 
 export const submission = async (req: any, res: express.Response) => {
     try {
@@ -57,6 +58,16 @@ export const submission = async (req: any, res: express.Response) => {
                 )
                 if (addResult === 1) {
                     console.log("claim record update successful")
+                    // Send notifications to clients with Claims notifications enabled
+                    const { catchmentNo } = submission.data
+                    const sendNotificationsResult = await wageSubFormApiService.sendNotifications({
+                        catchmentNo,
+                        applicationType: "Claims"
+                    })
+                    if (sendNotificationsResult.status !== 200) {
+                        console.log("Error sending notifications")
+                        return res.status(500).send("Notifications Error")
+                    }
                     return res.status(200).send()
                 }
 
