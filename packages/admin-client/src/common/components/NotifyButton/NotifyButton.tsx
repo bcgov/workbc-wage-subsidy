@@ -1,17 +1,15 @@
 import { useEffect, useState, useContext } from "react"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { LoadingIndicator, useListContext } from "react-admin"
+import { LoadingIndicator, useListContext, useDataProvider } from "react-admin"
 import { CatchmentContext } from "../../contexts/CatchmentContext/CatchmentContext"
 import { faFlag } from "@fortawesome/pro-solid-svg-icons"
 import { COLOURS } from "../../../Colours"
 import { Button } from "@mui/material"
-import { useDataProvider } from "react-admin"
 
 const NotifyButton: React.FC = () => {
     const cc = useContext(CatchmentContext)
     const dataProvider = useDataProvider()
     const listContext = useListContext()
-    // TODO: this variable should correspond to a value persisted in the user's settings.
     const [notifications, setNotifications] = useState(false)
     const [loading, setLoading] = useState(true)
     const [ariaLabel, setAriaLabel] = useState("Turn off notifications")
@@ -45,13 +43,13 @@ const NotifyButton: React.FC = () => {
                     alert("There was an error turning on notifications.")
                 })
         }
-        setNotifications(!notifications)
     }
 
     useEffect(() => {
         setAriaLabel("Turn " + (notifications ? "off" : "on") + " notifications")
     }, [notifications])
 
+    // On first load or catchment change, check if the user has notifications enabled for this catchment.
     useEffect(() => {
         setLoading(true)
         dataProvider
