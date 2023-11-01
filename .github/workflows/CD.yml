@@ -21,6 +21,7 @@ on:
         - '.github/workflows/**'
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
+# if we use the matrix strategy
 jobs:
   get-branch-name:
     runs-on: ubuntu-latest
@@ -31,7 +32,6 @@ jobs:
         shell: bash
         run: echo "branch=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_OUTPUT
         id: extract_branch
-  # This workflow contains a single job called "build"
   build:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
@@ -48,11 +48,9 @@ jobs:
             env: false
           - imagename: "workbc-wage-subsidy-v2-admin-client"
             context: "./packages/admin-client"
-            packagelock: "./package-lock.json"
             env: true
           - imagename: "workbc-wage-subsidy-v2-employer-client"
             context: "./packages/employer-client"
-            packagelock: "./packages/employer-client/package-lock.json"
             env: true
           - imagename: "workbc-wage-subsidy-v2-employer-api"
             context: "./packages/employer-api"
@@ -60,7 +58,6 @@ jobs:
           - imagename: "workbc-wage-subsidy-v2-form-api"
             context: "./packages/form-api"
             env: false
-    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       - name: Extract branch name
         shell: bash
@@ -87,7 +84,9 @@ jobs:
         with:
           node-version: '18.x'
           cache: 'npm'
-          cache-dependency-path: ${{ matrix.packagelock }}
+          # Since all node modules is stored in the main directory, we need to
+          # use the package-lock.json from the main directory
+          cache-dependency-path: "./package-lock.json"
       - name: Install oc v3
         uses: redhat-actions/openshift-tools-installer@v1
         with:
@@ -108,7 +107,8 @@ jobs:
 
           # Optional - this sets your Kubernetes context's current namespace after logging in.
           namespace: ${{secrets.PROJECT_TOOLS_4}}
-      - name: Building images
+      # Build image
+      - name: Building image
         id: build-static-image
         uses: redhat-actions/buildah-build@v2
         with:
@@ -133,6 +133,7 @@ jobs:
             VITE_EMPLOYER_URL=${{ vars.VITE_EMPLOYER_URL }}
             VITE_SERVICE_PROVIDER_URL=${{ vars.VITE_SERVICE_PROVIDER_URL }}
             VITE_MINISTRY_URL=${{ vars.VITE_MINISTRY_URL }}
+      # Push to specified registry
       - name: Push Static To OpenShift Image repo
         id: push-to-os-static
         uses: redhat-actions/push-to-registry@v2
