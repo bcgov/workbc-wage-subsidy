@@ -5,7 +5,7 @@ const router = express.Router()
 
 router.get("/", employerController.getAllEmployers)
 router.post("/", employerController.createEmployer)
-router.get("/:id", employerController.getOneEmployer)
+router.post("/getOne", employerController.getOneEmployer)
 router.put("/:id", employerController.updateEmployer)
 router.patch("/:id", employerController.createOrUpdateEmployer)
 

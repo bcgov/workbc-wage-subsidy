@@ -33,22 +33,6 @@ const useAuthProvider = (clientID: string) => {
             if (localStorage.getItem("token")) {
                 return true
             }
-
-            /*
-            if (keycloak.token) {
-                const decoded : any = jwt_decode(keycloak.token);
-                decoded.resource_access[clientID].roles.forEach((el: string) => {
-                    if (el === "admin") {
-                        hasRole = true;
-                        return
-                    }
-                });
-            }
-            if (hasRole) {
-                return Promise.resolve(true);
-            }
-            return Promise.resolve(false);
-            */
         }
     }
 }

@@ -132,6 +132,19 @@ export const dataProvider = {
             }
         })
     },
+    getOneEmployer: (
+        params: { id: any } // custom retrieval for employers to avoid GUIDs being passed in the url
+    ) =>
+        httpClient(`${apiUrl}/employers/getOne`, {
+            method: "POST",
+            body: JSON.stringify({ id: params.id }),
+            headers: new Headers({
+                Accept: "application/json",
+                Authorization: `Bearer ${localStorage.getItem("token")}`
+            })
+        }).then(({ json }) => ({
+            data: json
+        })),
     create: (resource: any, params: { data: any }) =>
         httpClient(`${apiUrl}/${resource}`, {
             method: "POST",
