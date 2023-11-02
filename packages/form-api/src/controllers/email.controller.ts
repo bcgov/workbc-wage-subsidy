@@ -27,7 +27,7 @@ export const sendEmail = async (req: express.Request, res: express.Response) => 
         const applicationType = String(data.applicationType)
         let recipients: string[] = []
         if (String(applicationType) === "HaveEmployee") {
-            Object.keys(data).map((key: string) => {
+            Object.keys(data).forEach((key: string) => {
                 if (key.includes("employeeEmail")) {
                     if (!recipients.includes(data[key])) {
                         recipients.push(data[key])
@@ -43,7 +43,6 @@ export const sendEmail = async (req: express.Request, res: express.Response) => 
                         }
                     })
                 }
-                return null
             })
             // if it is a Need Employee email, only send the employer a confirmation email
         } else if (String(applicationType) === "needEmployee") {
