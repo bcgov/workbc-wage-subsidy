@@ -62,7 +62,7 @@ export const ViewForm = () => {
 
     // refresh periodically while the form is editable to automatically pick up any status changes caused by the calculator "Approve" button workflow //
     useRecursiveTimeout(() => {
-        if (record.status === "In Progress") {
+        if (record.status === "In Progress" && resource === "claims") {
             refresh()
         }
     }, 5000) // https://stackoverflow.com/questions/61399283/how-to-refresh-the-react-admin-list-data-every-x-seconds
