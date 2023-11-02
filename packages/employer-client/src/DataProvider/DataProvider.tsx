@@ -188,6 +188,15 @@ export const dataProvider = {
                 })
             )
         ).then((responses) => ({ data: responses.map(({ json }) => json.id) })),
+    updateEmployer: (params: { id: any; data: any }) =>
+        httpClient(`${apiUrl}/employers`, {
+            method: "PUT",
+            body: JSON.stringify({ ...params.data, id: params.id }),
+            headers: new Headers({
+                Accept: "application/json",
+                Authorization: `Bearer ${localStorage.getItem("token")}`
+            })
+        }).then(({ json }) => ({ data: json })),
     share: (resource: any, params: { id: any; data: any }) =>
         httpClient(`${apiUrl}/${resource}/share/${params.id}`, {
             method: "PUT",

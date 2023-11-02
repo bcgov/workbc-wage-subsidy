@@ -56,7 +56,7 @@ const UserProfileModal: React.FC<UserProfileModalProps> = ({ isOpen, onRequestCl
 
     const { mutate: saveProfile } = useMutation((data: any) => {
         const { id: userGuid, ...formData } = data
-        return dataProvider.update("employers", { id: userGuid, data: formData, previousData: undefined })
+        return dataProvider.updateEmployer({ id: userGuid, data: formData, previousData: undefined })
     })
 
     const { mutate: createProfileIfNotExists } = useMutation((identity: any) => {
