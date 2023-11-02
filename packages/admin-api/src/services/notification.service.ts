@@ -6,7 +6,7 @@ export const getAllNotificationsFromUser = async (username: string) => {
     return notifications
 }
 
-export const getNotification = async (email: string, catchmentNo: number, type: string, username: string) => {
+export const getNotifications = async (email: string, catchmentNo: number, type: string, username: string) => {
     const notifications = await knex("notifications")
         .where("email", email)
         .andWhere("catchmentno", catchmentNo)

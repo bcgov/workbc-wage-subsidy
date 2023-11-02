@@ -231,7 +231,7 @@ export const dataProvider = {
         }).then(({ json }) => json),
     checkNotifcation: () =>
         httpClient(`${apiUrl}/notification/check`, {
-            method: "GET",
+            method: "PUT",
             headers: new Headers({
                 Accept: "application/json",
                 Authorization: `Bearer ${localStorage.getItem("token")}`

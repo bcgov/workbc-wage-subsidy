@@ -237,12 +237,10 @@ function App() {
                 onTokenExpired
             }}
         >
-            <>
-                <CatchmentProvider>
-                    <CustomAdminWithKeycloak />
-                    <Footer />
-                </CatchmentProvider>
-            </>
+            <CatchmentProvider>
+                <CustomAdminWithKeycloak />
+                <Footer />
+            </CatchmentProvider>
         </ReactKeycloakProvider>
     )
 }
