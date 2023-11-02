@@ -76,13 +76,11 @@ export const ListAside: React.FC<ListAsideProps> = ({ statusFilters, statusFilte
                         <ListItemText aria-hidden={true}>{statusFilters[key].label}</ListItemText>
                         <span style={ScreenReaderOnly}>{"status: " + statusFilters[key].label + ", count: "}</span>
                         <span style={{ color: COLOURS.MEDIUMGREY }}>
-                            {isFetching && <LoadingIndicator sx={{ color: COLOURS.MEDIUMGREY, maxWidth: "30px" }} />}
-                            {!isFetching &&
-                                (statusFilters[key].label === "All"
-                                    ? counts["All"]
-                                    : statusFilters[key].label in counts
-                                    ? counts[statusFilters[key].label]
-                                    : "0")}
+                            {statusFilters[key].label === "All"
+                                ? counts["All"]
+                                : statusFilters[key].label in counts
+                                ? counts[statusFilters[key].label]
+                                : "0"}
                         </span>
                         <span style={ScreenReaderOnly}>
                             {isEqual(statusFilter, statusFilters[key]) ? ", selected" : ", not selected"}

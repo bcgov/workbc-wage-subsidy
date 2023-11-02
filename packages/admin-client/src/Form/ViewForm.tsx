@@ -75,12 +75,12 @@ export const ViewForm = () => {
     const idirViewUrl = process.env.REACT_APP_MINISTRY_VIEW_URL + formId
     const bceidViewUrl = process.env.REACT_APP_VIEW_URL + formId
     const draftUrl = `${process.env.REACT_APP_DRAFT_URL}${formId}&initialTab=${location?.initialTab}`
-    if (urlType === "View" && identity.idp === "idir") {
-        formUrl = idirViewUrl
-    } else if (urlType === "View" && identity.idp === "bceid") {
-        formUrl = bceidViewUrl
-    } else if (urlType === "Draft") {
+    if (urlType === "Draft") {
         formUrl = draftUrl
+    } else if (urlType === "View" && (resource === "claims" || identity.idp === "bceid")) {
+        formUrl = bceidViewUrl
+    } else if (urlType === "View" && resource === "applications" && identity.idp === "idir") {
+        formUrl = idirViewUrl
     } else {
         return <span />
     }
@@ -107,65 +107,53 @@ export const ViewForm = () => {
 
     return (
         <div>
-            {loading && <Loading sx={{ marginTop: 20 }}></Loading>}
-            <Box hidden={loading} style={{ position: "relative", marginTop: 7 }}>
-                {record && (
+            {(loading || !record) && <Loading sx={{ marginTop: 20 }}></Loading>}
+            <Box hidden={loading || !record} style={{ position: "relative", marginTop: 7 }}>
+                {!loading && record && (
                     <div
                         style={{
                             borderBottom: "solid 2px " + COLOURS.MEDIUMGREY,
                             backgroundColor: "white",
                             width: "100%",
-                            height:
-                                identity.idp !== "idir" || (resource === "claims" && record.status === "In Progress")
-                                    ? "5em"
-                                    : "8em",
+                            height: formUrl === idirViewUrl ? "8em" : "5em",
                             position: "absolute",
                             zIndex: 1
                         }}
                     >
-                        {record ? (
-                            <Box
-                                style={{
-                                    display: "flex",
-                                    marginTop:
-                                        identity.idp !== "idir" ||
-                                        (resource === "claims" && record.status === "In Progress")
-                                            ? "1em"
-                                            : "4em"
-                                }}
-                            >
-                                <BackButton resource={resource} />
-                                <StatusDropdown record={record} resource={resource} onChange={handleStatusChange} />
-                                <Box style={{ display: "flex", width: "100%", justifyContent: "right" }}>
-                                    <Tooltip title={"Open form in new tab"}>
-                                        <span>
-                                            <Button
-                                                onClick={(event) => {
-                                                    window.open(formUrl)
+                        <Box
+                            style={{
+                                display: "flex",
+                                marginTop: formUrl === idirViewUrl ? "4em" : "1em"
+                            }}
+                        >
+                            <BackButton resource={resource} />
+                            <StatusDropdown record={record} resource={resource} onChange={handleStatusChange} />
+                            <Box style={{ display: "flex", width: "100%", justifyContent: "right" }}>
+                                <Tooltip title={"Open form in new tab"}>
+                                    <span>
+                                        <Button
+                                            onClick={(event) => {
+                                                window.open(formUrl)
+                                            }}
+                                            sx={{ minWidth: "4em" }}
+                                            aria-label="Open form in new tab"
+                                        >
+                                            <FontAwesomeIcon
+                                                icon={faUpRightFromSquare}
+                                                style={{
+                                                    color: COLOURS.LIGHTBLUE_TEXT,
+                                                    padding: "0.65em 0em",
+                                                    height: "21px"
                                                 }}
-                                                sx={{ minWidth: "4em" }}
-                                                aria-label="Open form in new tab"
-                                            >
-                                                <FontAwesomeIcon
-                                                    icon={faUpRightFromSquare}
-                                                    style={{
-                                                        color: COLOURS.LIGHTBLUE_TEXT,
-                                                        padding: "0.65em 0em",
-                                                        height: "21px"
-                                                    }}
-                                                />
-                                            </Button>
-                                        </span>
-                                    </Tooltip>
-                                </Box>
+                                            />
+                                        </Button>
+                                    </span>
+                                </Tooltip>
                             </Box>
-                        ) : (
-                            <span />
-                        )}
+                        </Box>
                         &nbsp;
                     </div>
                 )}
-                {(loading || !record) && <Loading sx={{ marginTop: 20 }}></Loading>}
                 <iframe
                     src={formUrl}
                     ref={iframeRef}
