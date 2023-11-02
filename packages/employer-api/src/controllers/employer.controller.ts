@@ -60,7 +60,7 @@ export const getOneEmployer = async (req: any, res: express.Response) => {
         if (bceid_guid === undefined) {
             return res.status(403).send("Not Authorized")
         }
-        const { id } = req.params
+        const { id } = req.body
         if (bceid_guid !== id) {
             return res.status(403).send("Forbidden")
         }

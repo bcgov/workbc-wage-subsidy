@@ -48,7 +48,7 @@ const UserProfileModal: React.FC<UserProfileModalProps> = ({ isOpen, onRequestCl
 
     // When used in React Admin, useMutation() activates the loading indicator during queries.
     const { mutate: getProfile } = useMutation((userGuid: string) => {
-        return dataProvider.getOne("employers", { id: userGuid }).then(({ data }) => {
+        return dataProvider.getOneEmployer({ id: userGuid }).then(({ data }) => {
             setUserProfile(data)
             setLoading(false)
         })
