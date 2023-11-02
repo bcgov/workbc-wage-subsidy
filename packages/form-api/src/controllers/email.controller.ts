@@ -22,20 +22,29 @@ const createEmailHTMLBasedOnType = (applicationType: string) => {
 
 export const sendEmail = async (req: express.Request, res: express.Response) => {
     try {
-        // console.log(req.body)
+        console.log(req.body)
         const { data } = req.body
-        const applicationType = String(req.body.applicationType)
+        const applicationType = String(data.applicationType)
         let recipients: string[] = []
         if (String(applicationType) === "HaveEmployee") {
-            recipients = Object.keys(data)
-                .map((key: string) => {
-                    if (key.includes("employeeEmail")) {
-                        return data[key]
+            Object.keys(data).map((key: string) => {
+                if (key.includes("employeeEmail")) {
+                    if (!recipients.includes(data[key])) {
+                        recipients.push(data[key])
                     }
-                    return null
-                })
-                .filter((email: string) => email !== null)
-                .filter((v: string, i: number, a: string[]) => a.indexOf(v) === i)
+                }
+                if (key.includes("position2")) {
+                    Object.keys(data[key]).forEach((k: string) => {
+                        if (k.includes("employeeEmail")) {
+                            // check if email in recipients array already
+                            if (!recipients.includes(data[key][k])) {
+                                recipients.push(data[key][k])
+                            }
+                        }
+                    })
+                }
+                return null
+            })
             // if it is a Need Employee email, only send the employer a confirmation email
         } else if (String(applicationType) === "needEmployee") {
             recipients = [data.employerEmail]

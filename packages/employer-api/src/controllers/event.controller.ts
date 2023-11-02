@@ -58,15 +58,20 @@ export const submission = async (req: any, res: express.Response) => {
                 )
                 if (addResult === 1) {
                     console.log("claim record update successful")
+                    // Get the newly added record
+                    const newSPClaim = await claimService.getServiceProviderClaimByInternalId(serviceProviderInternalID)
+                    if (newSPClaim === null) {
+                        console.log("Error retrieving new claim")
+                        return res.status(500).send("Internal Server Error")
+                    }
                     // Send notifications to clients with Claims notifications enabled
-                    const { catchmentNo } = submission.data
                     const sendNotificationsResult = await formApiService.sendNotifications({
-                        catchmentNo,
+                        catchmentNo: newSPClaim.catchmentno,
                         applicationType: "Claims"
                     })
                     if (sendNotificationsResult.status !== 200) {
                         console.log("Error sending notifications")
-                        return res.status(500).send("Notifications Error")
+                        return res.status(500).send("Internal Server Error")
                     }
                     return res.status(200).send()
                 }

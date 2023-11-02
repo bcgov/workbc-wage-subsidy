@@ -114,6 +114,11 @@ export const shareClaim = async (id: string, userGuids: string[]) => {
     return result
 }
 
+export const getServiceProviderClaimByInternalId = async (internalId: string) => {
+    const claims = await knex("claims").where("service_provider_form_internal_id", internalId)
+    return claims.length > 0 ? claims[0] : null
+}
+
 export const addServiceProviderClaim = async (
     submissionResponse: any,
     serviceProviderInternalID: string,
@@ -149,6 +154,7 @@ export const addServiceProviderClaim = async (
                     updated_by: submissionResponse.submission.updatedBy ?? submissionResponse.submission.createdBy,
                     updated_date: new Date()
                 })
+                .returning(["catchmentno", "id"])
         } catch (e: any) {
             console.log(e.message)
             throw new Error("Database update failed")
