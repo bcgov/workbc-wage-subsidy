@@ -1,14 +1,15 @@
-import { AppBar, AppBarProps, Box, Link, Toolbar } from "@mui/material"
+import { AppBar, AppBarProps, Box, Link, MenuItem, Toolbar } from "@mui/material"
 import { styled } from "@mui/material/styles"
+import ExitIcon from "@mui/icons-material/PowerSettingsNew"
 import { HorizontalMenu, useContainerLayout } from "@react-admin/ra-navigation"
 import React from "react"
-import { LoadingIndicator, LocalesMenuButton, TitleComponent, UserMenu, useLocales } from "react-admin"
+import { LoadingIndicator, LocalesMenuButton, TitleComponent, UserMenu, useLocales, useLogout } from "react-admin"
 import { Link as RouterLink } from "react-router-dom"
 import Logo from "./Logo"
 import Tag from "./Tag"
 
 export const Header = (props: HeaderProps) => {
-    const { menu = defaultMenu, toolbar = defaultToolbar, userMenu = defaultUserMenu } = useContainerLayout(props)
+    const { menu = defaultMenu, toolbar = defaultToolbar, userMenu = CustomUserMenu() } = useContainerLayout(props)
 
     return (
         <>
@@ -32,7 +33,7 @@ export const Header = (props: HeaderProps) => {
                     </Box>
                     <Box display="flex">
                         {toolbar}
-                        {typeof userMenu === "boolean" ? userMenu === true ? <UserMenu /> : null : userMenu}
+                        {typeof userMenu === "boolean" ? userMenu === true ? <CustomUserMenu /> : null : userMenu}
                     </Box>
                 </Toolbar>
             </Root1>
@@ -90,7 +91,26 @@ const Root2 = styled(AppBar, {
 })
 
 const defaultMenu = <HorizontalMenu />
-const defaultUserMenu = <UserMenu />
+
+const CustomUserMenu = () => {
+    const logout = useLogout()
+    return (
+        <UserMenu>
+            <MenuItem
+                onClick={() => {
+                    localStorage.removeItem("token")
+                    localStorage.removeItem("refresh_token")
+                    localStorage.removeItem("permissions")
+                    localStorage.removeItem("access")
+                    localStorage.clear()
+                    logout()
+                }}
+            >
+                <ExitIcon /> Logout
+            </MenuItem>
+        </UserMenu>
+    )
+}
 
 const sanitizeRestProps = ({ title, menu, userMenu, toolbar, ...props }: any) => props
 
