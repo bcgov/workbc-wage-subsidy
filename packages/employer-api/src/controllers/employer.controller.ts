@@ -64,7 +64,6 @@ export const getOneEmployer = async (req: any, res: express.Response) => {
         if (bceid_guid !== id) {
             return res.status(403).send("Forbidden")
         }
-        console.log(id)
         const employer = await employerService.getEmployerByID(id)
         if (!employer) {
             return res.status(404).send("Not Found")
