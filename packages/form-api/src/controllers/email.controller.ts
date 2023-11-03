@@ -45,7 +45,7 @@ export const sendEmail = async (req: express.Request, res: express.Response) => 
                 }
             })
             // if it is a Need Employee email, only send the employer a confirmation email
-        } else if (String(applicationType) === "needEmployee") {
+        } else if (String(applicationType) === "NeedEmployee") {
             recipients = [data.employerEmail]
         }
 
@@ -58,7 +58,7 @@ export const sendEmail = async (req: express.Request, res: express.Response) => 
         // Get catchment number and then proceed to send notifications to all users who have enabled notifications on that catchment's applications
         if (
             String(applicationType) === "HaveEmployee" ||
-            String(applicationType) === "needEmployee" ||
+            String(applicationType) === "NeedEmployee" ||
             String(applicationType) === "Claims"
         ) {
             const catchmentName = pins.find((pin) => Number(pin.CatchmentNo) === Number(data.catchmentNo))?.Title
