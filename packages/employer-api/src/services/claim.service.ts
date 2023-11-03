@@ -154,7 +154,6 @@ export const addServiceProviderClaim = async (
                     updated_by: submissionResponse.submission.updatedBy ?? submissionResponse.submission.createdBy,
                     updated_date: new Date()
                 })
-                .returning(["catchmentno", "id"])
         } catch (e: any) {
             console.log(e.message)
             throw new Error("Database update failed")

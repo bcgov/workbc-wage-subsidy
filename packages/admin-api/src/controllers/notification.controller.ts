@@ -98,7 +98,6 @@ export const checkNotificationEmail = async (req: any, res: express.Response) =>
             })
         )
         const updatedNotifications = await notificationService.getAllNotificationsFromUser(username)
-        console.log(updatedNotifications)
         return res.status(200).send(updatedNotifications)
     } catch (e: unknown) {
         console.error(e)

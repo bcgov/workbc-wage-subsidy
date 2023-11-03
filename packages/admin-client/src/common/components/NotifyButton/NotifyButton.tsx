@@ -20,26 +20,22 @@ const NotifyButton: React.FC = () => {
             dataProvider
                 .deleteNotifications(listContext.resource.split("s")[0], { catchment: cc.catchment.id })
                 .then((response: any) => {
-                    console.log(response)
                     setLoading(false)
                     setNotifications(false)
                 })
                 .catch((error: any) => {
                     setLoading(false)
-                    console.log(error)
                     alert("There was an error turning off notifications.")
                 })
         } else {
             dataProvider
                 .addNotifications(listContext.resource.split("s")[0], { catchment: cc.catchment.id })
                 .then((response: any) => {
-                    console.log(response)
                     setLoading(false)
                     setNotifications(true)
                 })
                 .catch((error: any) => {
                     setLoading(false)
-                    console.log(error)
                     alert("There was an error turning on notifications.")
                 })
         }
