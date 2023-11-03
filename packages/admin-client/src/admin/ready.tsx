@@ -1,14 +1,15 @@
-import React from "react"
+import { useEffect, useState } from "react"
 import { useLogout } from "react-admin"
 import BCEID_LOGO from "../assets/logo-banner.png"
 import "./ready.css"
+import NotificationCheck from "../common/components/NotificationCheck/NotificationCheck"
 
 const Ready = () => {
-    const [access, setAccess] = React.useState(false)
-    const [loading, setLoading] = React.useState(true)
+    const [access, setAccess] = useState(false)
+    const [loading, setLoading] = useState(true)
     const logout = useLogout()
     const handleClick = () => logout()
-    React.useEffect(() => {
+    useEffect(() => {
         // checking storage for events when storage is changed
         window.addEventListener("storage", () => {
             const storageAccess = localStorage.getItem("access") === "true"
@@ -18,6 +19,7 @@ const Ready = () => {
     }, [])
     return (
         <div>
+            <NotificationCheck />
             <header>
                 <div className="banner">
                     <a href="https://gov.bc.ca">

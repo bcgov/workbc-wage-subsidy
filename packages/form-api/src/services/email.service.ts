@@ -1,10 +1,13 @@
 /* eslint-disable import/prefer-default-export */
 import { AxiosResponse } from "axios"
 
+import { getToken } from "./common.service"
+
 import { chesApi } from "../config/config"
 
-export const sendEmail = async (token: string, body: string, subject: string, to: string[]) => {
+export const sendEmail = async (body: string, subject: string, to: string[]) => {
     try {
+        const token = await getToken()
         console.log(body)
         const request = {
             // bcc: [],

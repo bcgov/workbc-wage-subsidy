@@ -1,28 +1,75 @@
-import React, { useEffect, useState } from "react"
+import { useEffect, useState, useContext } from "react"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { LoadingIndicator, useListContext, useDataProvider } from "react-admin"
+import { CatchmentContext } from "../../contexts/CatchmentContext/CatchmentContext"
 import { faFlag } from "@fortawesome/pro-solid-svg-icons"
 import { COLOURS } from "../../../Colours"
 import { Button } from "@mui/material"
 
 const NotifyButton: React.FC = () => {
-    // TODO: this variable should correspond to a value persisted in the user's settings.
-    const [notificationsOn, setNotificationsOn] = useState(true)
+    const cc = useContext(CatchmentContext)
+    const dataProvider = useDataProvider()
+    const listContext = useListContext()
+    const [notifications, setNotifications] = useState(false)
+    const [loading, setLoading] = useState(true)
     const [ariaLabel, setAriaLabel] = useState("Turn off notifications")
 
-    const handleClick = (event) => {
-        setNotificationsOn(!notificationsOn)
+    const handleClick = () => {
+        setLoading(true)
+        if (notifications === true) {
+            dataProvider
+                .deleteNotifications(listContext.resource.slice(0, -1), { catchment: cc.catchment.id })
+                .then((response: any) => {
+                    setLoading(false)
+                    setNotifications(false)
+                })
+                .catch((error: any) => {
+                    setLoading(false)
+                    alert("There was an error turning off notifications.")
+                })
+        } else {
+            dataProvider
+                .addNotifications(listContext.resource.slice(0, -1), { catchment: cc.catchment.id })
+                .then((response: any) => {
+                    setLoading(false)
+                    setNotifications(true)
+                })
+                .catch((error: any) => {
+                    setLoading(false)
+                    alert("There was an error turning on notifications.")
+                })
+        }
     }
 
     useEffect(() => {
-        setAriaLabel("Turn " + (notificationsOn ? "off" : "on") + " notifications")
-    }, [notificationsOn])
+        setAriaLabel("Turn " + (notifications ? "off" : "on") + " notifications")
+    }, [notifications])
+
+    // On first load or catchment change, check if the user has notifications enabled for this catchment.
+    useEffect(() => {
+        setLoading(true)
+        dataProvider
+            .getNotifications(listContext.resource.slice(0, -1), { catchment: cc.catchment.id })
+            .then((response: any) => {
+                setLoading(false)
+                if (response.length > 0) {
+                    setNotifications(true)
+                } else {
+                    setNotifications(false)
+                }
+            })
+    }, [cc.catchment.id])
+
+    if (loading) {
+        return <LoadingIndicator sx={{ color: COLOURS.MEDIUMGREY, maxWidth: "300px", marginRight: "4em" }} />
+    }
 
     return (
         <Button
             type="button"
             onClick={handleClick}
             sx={{
-                color: notificationsOn ? COLOURS.LIGHTBLUE_TEXT : COLOURS.MEDIUMGREY,
+                color: notifications ? COLOURS.LIGHTBLUE_TEXT : COLOURS.MEDIUMGREY,
                 padding: "0.65em 1em",
                 marginRight: "2em",
                 backgroundColor: "transparent",
@@ -35,6 +82,7 @@ const NotifyButton: React.FC = () => {
             aria-label={ariaLabel}
         >
             <span aria-hidden={true}>
+                {" "}
                 <FontAwesomeIcon icon={faFlag} size="lg" style={{ marginRight: 12 }} scale="2" />
                 NOTIFY
             </span>

@@ -11,7 +11,7 @@ export const insertClaim = async (req: any, res: express.Response) => {
         const claims = await claimService.insertClaim(data, user)
         // console.log(claims)
         return res.status(200).send(claims)
-    } catch (e: any) {
+    } catch (e: unknown) {
         console.log(e)
         return res.status(500).send("Server Error")
     }

@@ -6,6 +6,7 @@ import morgan from "morgan"
 import applicationRoute from "./routes/application.route"
 import claimRoute from "./routes/claim.route"
 import permissionRoute from "./routes/permission.route"
+import notificationRoute from "./routes/notification.route"
 
 const corsOptions = {
     origin: process.env.ORIGIN_URL || process.env.OPENSHIFT_NODEJS_ORIGIN_URL || "http://localhost:3006",
@@ -38,6 +39,7 @@ app.use(keycloak.middleware())
 app.use("/permission", keycloak.protect(), permissionRoute)
 app.use("/applications", keycloak.protect(), applicationRoute)
 app.use("/claims", keycloak.protect(), claimRoute)
+app.use("/notification", keycloak.protect(), notificationRoute)
 
 const port = process.env.PORT || "8002"
 app.listen(port, () => {

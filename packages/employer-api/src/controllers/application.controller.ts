@@ -5,6 +5,7 @@ import { insertApplication } from "../lib/transactions"
 import * as applicationService from "../services/application.service"
 import * as employerService from "../services/employer.service"
 import * as formService from "../services/form.service"
+import * as formAPIservice from "../services/formAPI.service"
 
 export const getAllApplications = async (req: any, res: express.Response) => {
     try {
@@ -178,8 +179,10 @@ const updateApplicationFromForm = async (application: any) => {
         if (formID && formPass && application.form_submission_id) {
             const submissionResponse = await formService.getSubmission(formID, formPass, application.form_submission_id)
             if (submissionResponse.submission.draft === false) {
+                console.log("form submitted event")
                 // submitted
                 await applicationService.updateApplication(application.id, "New", submissionResponse.submission)
+                await formAPIservice.sendNotifications(submissionResponse.submission.submission)
             } else if (submissionResponse.submission.draft === true) {
                 // draft
                 await applicationService.updateApplication(application.id, "Draft", submissionResponse.submission)

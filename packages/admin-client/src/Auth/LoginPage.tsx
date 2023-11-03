@@ -1,4 +1,3 @@
-import * as React from "react"
 import { Button } from "@mui/material"
 import { useKeycloak } from "@react-keycloak/web"
 
@@ -11,6 +10,7 @@ const LoginPage = () => {
                 localStorage.removeItem("token")
                 localStorage.removeItem("refresh_token")
                 localStorage.removeItem("permissions")
+                localStorage.removeItem("access")
             }}
         >
             Logout
