@@ -319,7 +319,9 @@ export const generatePDF = async (req: any, res: express.Response) => {
                             .getFile(url)
                             .then((fileres) => {
                                 if (fileres) {
+                                    console.log("pushing attachment...")
                                     attachments.push(fileres)
+                                    console.log("attachment pushed!")
                                 }
                             })
                             .catch((err) => {
@@ -330,9 +332,10 @@ export const generatePDF = async (req: any, res: express.Response) => {
                 )
                     .then(() => {
                         attachments.forEach((attachment) => {
+                            console.log("combining pdf buffers...")
                             mergedPDF = combinePDFBuffers(mergedPDF, attachment)
+                            console.log("successfully combined!")
                         })
-                        return mergedPDF
                     })
                     .catch((err) => {
                         console.log("error mapping attachments: ", err)
