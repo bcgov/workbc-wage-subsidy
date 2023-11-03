@@ -105,7 +105,6 @@ export const getFile = async (url: string) => {
                 Connection: "keep-alive"
             }
         })
-        console.log("getFile response: ", res.data)
         return res.data
     } catch (error: any) {
         throw new Error(error.message)
