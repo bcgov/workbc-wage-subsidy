@@ -14,7 +14,7 @@ const createEmailHTMLBasedOnType = (applicationType: string) => {
     let emailHTML = ""
     if (String(applicationType) === "HaveEmployee") {
         emailHTML = received.receivedHaveEmployee()
-    } else if (String(applicationType) === "needEmployee") {
+    } else if (String(applicationType) === "NeedEmployee") {
         emailHTML = received.receivedNeedEmployee()
     }
     return emailHTML

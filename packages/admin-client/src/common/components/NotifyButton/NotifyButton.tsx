@@ -18,7 +18,7 @@ const NotifyButton: React.FC = () => {
         setLoading(true)
         if (notifications === true) {
             dataProvider
-                .deleteNotifications(listContext.resource.split("s")[0], { catchment: cc.catchment.id })
+                .deleteNotifications(listContext.resource.slice(0, -1), { catchment: cc.catchment.id })
                 .then((response: any) => {
                     setLoading(false)
                     setNotifications(false)
@@ -29,7 +29,7 @@ const NotifyButton: React.FC = () => {
                 })
         } else {
             dataProvider
-                .addNotifications(listContext.resource.split("s")[0], { catchment: cc.catchment.id })
+                .addNotifications(listContext.resource.slice(0, -1), { catchment: cc.catchment.id })
                 .then((response: any) => {
                     setLoading(false)
                     setNotifications(true)
@@ -49,7 +49,7 @@ const NotifyButton: React.FC = () => {
     useEffect(() => {
         setLoading(true)
         dataProvider
-            .getNotifications(listContext.resource.split("s")[0], { catchment: cc.catchment.id })
+            .getNotifications(listContext.resource.slice(0, -1), { catchment: cc.catchment.id })
             .then((response: any) => {
                 setLoading(false)
                 if (response.length > 0) {
