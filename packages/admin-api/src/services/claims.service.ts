@@ -89,7 +89,6 @@ export const deleteClaim = async (id: string) => {
 }
 
 export const getFile = async (url: string) => {
-    // TODO: rework when we implement attachments.
     try {
         const token = await getCHEFSToken()
         const res = await axios({
@@ -106,6 +105,7 @@ export const getFile = async (url: string) => {
                 Connection: "keep-alive"
             }
         })
+        console.log("getFile response: ", res.data)
         return res.data
     } catch (error: any) {
         throw new Error(error.message)

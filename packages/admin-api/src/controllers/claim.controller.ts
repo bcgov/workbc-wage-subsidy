@@ -315,18 +315,29 @@ export const generatePDF = async (req: any, res: express.Response) => {
             if (attachmentUrls.length > 0) {
                 await Promise.all(
                     attachmentUrls.map(async (url: string) => {
-                        await claimService.getFile(url).then((fileres) => {
-                            if (fileres) {
-                                attachments.push(fileres)
-                            }
+                        await claimService
+                            .getFile(url)
+                            .then((fileres) => {
+                                if (fileres) {
+                                    attachments.push(fileres)
+                                }
+                            })
+                            .catch((err) => {
+                                console.log("getFile service returned error: ", err)
+                                return res.status(500).send("Internal Server Error")
+                            })
+                    })
+                )
+                    .then(() => {
+                        attachments.forEach((attachment) => {
+                            mergedPDF = combinePDFBuffers(mergedPDF, attachment)
                         })
+                        return mergedPDF
                     })
-                ).then(() => {
-                    attachments.forEach((attachment) => {
-                        mergedPDF = combinePDFBuffers(mergedPDF, attachment)
+                    .catch((err) => {
+                        console.log("error mapping attachments: ", err)
+                        return res.status(500).send("Internal Server Error")
                     })
-                    return mergedPDF
-                })
             }
             if (attachmentData.length !== attachments.length) {
                 console.log("Failed to obtain claim attachments.")
