@@ -2,7 +2,7 @@
 import * as express from "express"
 
 // eslint-disable-next-line import/no-relative-packages
-import { Notification } from "../../../typings/emailData"
+import { Notification } from "../typings/emailData"
 import pins from "../constants/centres.json"
 
 import notificationService from "../services/notification.service"
