@@ -45,12 +45,13 @@ export const ViewForm = () => {
     const { identity } = useGetIdentity()
     const [update] = useUpdate()
     const refresh = useRefresh()
-    const { urlType, resource, formId, recordId } = useParams()
+    const { resource, recordId } = useParams()
     const { state: location } = useLocation()
     const { data: record, error } = useGetOne(resource ? resource : "", { id: recordId })
     const iframeRef = useRef<HTMLIFrameElement>(null)
     const [numLoads, setNumLoads] = useState(0)
     const [loading, setLoading] = useState(true)
+    const [formUrl, setFormUrl] = useState("")
 
     React.useEffect(() => {
         if (numLoads === 2) {
@@ -67,21 +68,21 @@ export const ViewForm = () => {
         }
     }, 5000) // https://stackoverflow.com/questions/61399283/how-to-refresh-the-react-admin-list-data-every-x-seconds
 
-    if (error || !urlType || !resource || !formId || !recordId || !identity) {
-        return <span />
-    }
+    useEffect(() => {
+        if (record && resource && identity?.idp) {
+            if (resource === "applications" && record?.form_submission_id) {
+                const idirViewUrl = process.env.REACT_APP_MINISTRY_VIEW_URL + record.form_submission_id
+                const bceidViewUrl = process.env.REACT_APP_VIEW_URL + record.form_submission_id
+                setFormUrl(identity.idp === "bceid" ? bceidViewUrl : identity.idp === "idir" ? idirViewUrl : "")
+            } else if (resource === "claims" && record?.service_provider_form_submission_id && record?.status) {
+                const bceidViewUrl = process.env.REACT_APP_VIEW_URL + record.service_provider_form_submission_id
+                const draftUrl = `${process.env.REACT_APP_DRAFT_URL}${record.service_provider_form_submission_id}&initialTab=${location?.initialTab}`
+                setFormUrl(record.status === "In Progress" ? draftUrl : bceidViewUrl)
+            }
+        }
+    }, [record])
 
-    let formUrl
-    const idirViewUrl = process.env.REACT_APP_MINISTRY_VIEW_URL + formId
-    const bceidViewUrl = process.env.REACT_APP_VIEW_URL + formId
-    const draftUrl = `${process.env.REACT_APP_DRAFT_URL}${formId}&initialTab=${location?.initialTab}`
-    if (urlType === "Draft") {
-        formUrl = draftUrl
-    } else if (urlType === "View" && (resource === "claims" || identity.idp === "bceid")) {
-        formUrl = bceidViewUrl
-    } else if (urlType === "View" && resource === "applications" && identity.idp === "idir") {
-        formUrl = idirViewUrl
-    } else {
+    if (error || !resource || !recordId || !identity) {
         return <span />
     }
 
@@ -93,13 +94,6 @@ export const ViewForm = () => {
             {
                 onSuccess: () => {
                     refresh()
-                    // also refresh the iframe based on status (changing src triggers an iframe refresh) //
-                    if (resource === "claims" && iframeRef?.current?.src) {
-                        if (newStatus === "Completed" || newStatus === "Cancelled") {
-                            if (identity.idp === "idir") iframeRef.current.src = idirViewUrl
-                            else if (identity.idp === "bceid") iframeRef.current.src = bceidViewUrl
-                        } else if (newStatus === "In Progress") iframeRef.current.src = draftUrl
-                    }
                 }
             }
         )
@@ -107,15 +101,15 @@ export const ViewForm = () => {
 
     return (
         <div>
-            {(loading || !record) && <Loading sx={{ marginTop: 20 }}></Loading>}
-            <Box hidden={loading || !record} style={{ position: "relative", marginTop: 7 }}>
-                {!loading && record && (
+            {(loading || !record || !formUrl) && <Loading sx={{ marginTop: 20 }}></Loading>}
+            <Box hidden={loading || !record || !formUrl} style={{ position: "relative", marginTop: 7 }}>
+                {!loading && record && formUrl && (
                     <div
                         style={{
                             borderBottom: "solid 2px " + COLOURS.MEDIUMGREY,
                             backgroundColor: "white",
                             width: "100%",
-                            height: formUrl === idirViewUrl ? "8em" : "5em",
+                            height: resource === "applications" && identity?.idp === "idir" ? "8em" : "5em",
                             position: "absolute",
                             zIndex: 1
                         }}
@@ -123,7 +117,7 @@ export const ViewForm = () => {
                         <Box
                             style={{
                                 display: "flex",
-                                marginTop: formUrl === idirViewUrl ? "4em" : "1em"
+                                marginTop: resource === "applications" && identity?.idp === "idir" ? "4em" : "1em"
                             }}
                         >
                             <BackButton resource={resource} />
@@ -154,15 +148,17 @@ export const ViewForm = () => {
                         &nbsp;
                     </div>
                 )}
-                <iframe
-                    src={formUrl}
-                    ref={iframeRef}
-                    style={{ border: "solid 2px " + COLOURS.MEDIUMGREY, width: "100%", height: "55em" }}
-                    hidden={loading || !record}
-                    onLoad={(e) => {
-                        setNumLoads((numLoads) => numLoads + 1)
-                    }}
-                />
+                {formUrl && (
+                    <iframe
+                        src={formUrl}
+                        ref={iframeRef}
+                        style={{ border: "solid 2px " + COLOURS.MEDIUMGREY, width: "100%", height: "55em" }}
+                        hidden={loading || !record}
+                        onLoad={(e) => {
+                            setNumLoads((numLoads) => numLoads + 1)
+                        }}
+                    />
+                )}
                 <div
                     className="bottom-hider"
                     style={{

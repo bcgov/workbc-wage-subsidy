@@ -12,13 +12,7 @@ const CalculatorButtonField: React.FC = () => {
         <Button
             onClick={(event) => {
                 event?.stopPropagation()
-                redirect(
-                    `/ViewForm/Draft/claims/${record.service_provider_form_submission_id}/${record.id}`,
-                    "",
-                    "",
-                    {},
-                    { initialTab: "calculator" }
-                )
+                redirect(`/ViewForm/claims/${record.id}`, "", "", {}, { initialTab: "calculator" })
             }}
             sx={{ minWidth: "2.5em" }}
             aria-label="Open calculator"
