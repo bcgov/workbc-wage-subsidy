@@ -72,10 +72,8 @@ objects:
             value: ${COMMON_SERVICES_AUTH_REALM}
           - name: CHES_HOST
             value: ${CHES_HOST}
-          - name: CHEF_DEV_URL
-            value: ${CHEF_ENV_URL}
-          - name: CHEF_TEST_URL
-            value: ${CHEF_ENV_URL}
+          - name: CHEFS_URL
+            value: ${CHEFS_URL}
           - name: STATIC_URL
             value: ${STATIC_URL}
           - name: S3_STATIC_IMG_URL
