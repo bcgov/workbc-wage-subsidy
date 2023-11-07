@@ -63,10 +63,8 @@ export const createLoginProtectedDraft = async (
                 data: {
                     lateEntry: false,
                     internalId: internalID, // TODO: do we need internalId as a concept?
-                    employerEmail: accessToken.content.email,
-                    businessEmail: accessToken.content.email,
-                    operatingName: accessToken.content.bceid_business_name,
-                    submit: false
+                    submit: false,
+                    ...prefillFields
                 }
             }
         }

@@ -45,6 +45,7 @@ export const getAllApplications = async (req: any, res: express.Response) => {
         })
         return res.status(200).send(applications.data)
     } catch (e: unknown) {
+        console.log(e)
         return res.status(500).send("Internal Server Error")
     }
 }
@@ -67,6 +68,7 @@ export const getApplicationCounts = async (req: any, res: express.Response) => {
         const applicationCounts = await applicationService.getApplicationCounts(filter.catchmentno)
         return res.status(200).send(applicationCounts)
     } catch (e: unknown) {
+        console.log(e)
         return res.status(500).send("Internal Server Error")
     }
 }
@@ -88,6 +90,7 @@ export const getOneApplication = async (req: any, res: express.Response) => {
         }
         return res.status(200).send(application)
     } catch (e: unknown) {
+        console.log(e)
         return res.status(500).send("Internal Server Error")
     }
 }
@@ -118,6 +121,7 @@ export const updateApplication = async (req: any, res: express.Response) => {
         await updateApplicationWithSideEffects(application, bceid_user_guid || idir_user_guid, req.body)
         return res.status(200).send({ id })
     } catch (e: unknown) {
+        console.log(e)
         return res.status(500).send("Internal Server Error")
     }
 }
@@ -150,6 +154,7 @@ export const deleteApplication = async (req: any, res: express.Response) => {
         }
         return res.status(200).send({ id })
     } catch (e: unknown) {
+        console.log(e)
         return res.status(500).send("Internal Server Error")
     }
 }
@@ -226,7 +231,7 @@ export const generatePDF = async (req: any, res: express.Response) => {
             employeeEmail4: submission.data?.employeeEmail4,
             positionTitle1: submission.data.position2?.positionTitle1,
             numberOfPositions1: submission.data.position2?.numberOfPositions1,
-            startDate1: submission.data.position2?.startDate1,
+            startDate1: formatDateMmmDDYYYY(submission.data.position2?.startDate1),
             hours1: submission.data.position2?.hours1,
             wage1: submission.data.position2?.wage1,
             duties1: submission.data.position2?.duties1,
@@ -239,7 +244,8 @@ export const generatePDF = async (req: any, res: express.Response) => {
             employeeEmail9: submission.data.position2?.employeeEmail4,
             signatory1: submission.data?.signatory1,
             signatoryTitle: submission.data?.signatoryTitle,
-            submittedDate: formatDateMmmDDYYYY(submittedDate)
+            submittedDate: formatDateMmmDDYYYY(submittedDate),
+            workBcCentre: submission.data?.workBcCentre
         }
         const templateConfig = {
             // eslint-disable-next-line object-shorthand

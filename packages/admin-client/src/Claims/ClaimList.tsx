@@ -27,12 +27,7 @@ export const ClaimList = (props: any) => {
 
     const handleRowClick = (id: Identifier, resource: string, record: any) => {
         if (record.service_provider_form_submission_id) {
-            //TODO: cancelled status
-            if (record.status === "In Progress") {
-                redirect("/ViewForm/Draft/claims/" + record.service_provider_form_submission_id + "/" + record.id, "")
-            } else {
-                redirect("/ViewForm/View/claims/" + record.service_provider_form_submission_id + "/" + record.id, "")
-            }
+            redirect("/ViewForm/claims/" + record.id, "")
         } else {
             return "" // rowClick expects a path to be returned
         }

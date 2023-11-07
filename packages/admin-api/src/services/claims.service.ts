@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable import/prefer-default-export */
 import axios from "axios"
 import { knex } from "../config/db-config"
@@ -89,7 +90,6 @@ export const deleteClaim = async (id: string) => {
 }
 
 export const getFile = async (url: string) => {
-    // TODO: rework when we implement attachments.
     try {
         const token = await getCHEFSToken()
         const res = await axios({

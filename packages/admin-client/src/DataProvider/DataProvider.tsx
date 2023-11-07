@@ -202,5 +202,39 @@ export const dataProvider = {
                 Accept: "application/json",
                 Authorization: `Bearer ${localStorage.getItem("token")}`
             })
+        }).then(({ json }) => json),
+    getNotifications: (resource: string, body: { catchment: number }) =>
+        httpClient(`${apiUrl}/notification?catchmentNo=${body.catchment}&type=${resource}`, {
+            method: "GET",
+            headers: new Headers({
+                Accept: "application/json",
+                Authorization: `Bearer ${localStorage.getItem("token")}`
+            })
+        }).then(({ json }) => json),
+    addNotifications: (resource: string, body: { catchment: number }) =>
+        httpClient(`${apiUrl}/notification`, {
+            method: "POST",
+            body: JSON.stringify({ catchmentNo: body.catchment, type: resource }),
+            headers: new Headers({
+                Accept: "application/json",
+                Authorization: `Bearer ${localStorage.getItem("token")}`
+            })
+        }).then(({ json }) => json),
+    deleteNotifications: (resource: string, body: { catchment: number }) =>
+        httpClient(`${apiUrl}/notification`, {
+            method: "DELETE",
+            body: JSON.stringify({ catchmentNo: body.catchment, type: resource }),
+            headers: new Headers({
+                Accept: "application/json",
+                Authorization: `Bearer ${localStorage.getItem("token")}`
+            })
+        }).then(({ json }) => json),
+    checkNotifcation: () =>
+        httpClient(`${apiUrl}/notification/check`, {
+            method: "PUT",
+            headers: new Headers({
+                Accept: "application/json",
+                Authorization: `Bearer ${localStorage.getItem("token")}`
+            })
         }).then(({ json }) => json)
 }

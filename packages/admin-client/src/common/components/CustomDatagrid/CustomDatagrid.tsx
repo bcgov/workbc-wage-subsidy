@@ -1,4 +1,4 @@
-import { Datagrid, DatagridBody } from "react-admin"
+import { Datagrid, DatagridBody, useGetIdentity } from "react-admin"
 import CustomDatagridRow from "../CustomDatagridRow/CustomDatagridRow"
 import { CustomDatagridHeader } from "../CustomDatagridHeader/CustomDatagridHeader"
 import { FormBulkActionButtons } from "../FormBulkActionButtons/FormBulkActionButtons"
@@ -25,12 +25,12 @@ const CustomDatagridBody = <T,>({ showCalculatorButton, ...props }: CustomDatagr
 }
 
 const CustomDatagrid = <T,>({ ariaLabel, showCalculatorButton, ...props }: CustomDatagridProps<T>) => {
+    const { identity } = useGetIdentity()
     const [hasBulkActions, setHasBulkActions] = useState<boolean>(false)
 
     useEffect(() => {
-        const provider = localStorage.getItem("provider")
-        setHasBulkActions(provider !== null && provider === "IDIR")
-    }, [])
+        setHasBulkActions(identity && identity?.idp && identity.idp === "idir")
+    }, [identity])
 
     const skipToListAside = (event: any) => {
         if (event.key === "ArrowLeft" || event.key === "ArrowRight") {

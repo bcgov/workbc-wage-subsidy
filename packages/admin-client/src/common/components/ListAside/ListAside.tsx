@@ -1,7 +1,7 @@
 import { Box, ListItemText, MenuItem, MenuList } from "@mui/material"
 import { useContext, useEffect, useState } from "react"
 import { CatchmentContext } from "../../contexts/CatchmentContext/CatchmentContext"
-import { useDataProvider, useListContext } from "react-admin"
+import { LoadingIndicator, useDataProvider, useListContext } from "react-admin"
 import isEqual from "lodash/isEqual"
 import { ScreenReaderOnly } from "../../styles/ScreenReaderOnly"
 import { COLOURS } from "../../../Colours"
@@ -78,8 +78,8 @@ export const ListAside: React.FC<ListAsideProps> = ({ statusFilters, statusFilte
                         <span style={{ color: COLOURS.MEDIUMGREY }}>
                             {statusFilters[key].label === "All"
                                 ? counts["All"]
-                                : statusFilters[key].status in counts
-                                ? counts[statusFilters[key].status]
+                                : statusFilters[key].label in counts
+                                ? counts[statusFilters[key].label]
                                 : "0"}
                         </span>
                         <span style={ScreenReaderOnly}>

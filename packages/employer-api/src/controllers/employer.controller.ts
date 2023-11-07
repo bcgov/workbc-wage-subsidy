@@ -39,11 +39,15 @@ export const createEmployer = async (req: any, res: express.Response) => {
         if (bceid_guid === undefined) {
             return res.status(403).send("Not Authorized")
         }
-        if (!req.body?.id || !req.body?.contactName || !req.body.contactEmail || bceid_guid !== req.body.id) {
+        if (!req.body?.id || !req.body?.contact_name || !req.body.contact_email || bceid_guid !== req.body.id) {
             return res.status(403).send("Forbidden")
         }
-        const insertResult = await employerService.insertEmployer(req.body)
-        return res.status(200).send({ data: insertResult })
+        const employer = await employerService.getEmployerByID(req.body.id)
+        if (!employer) {
+            const insertResult = await employerService.insertEmployer(req.body)
+            return res.status(200).send({ data: insertResult })
+        }
+        return res.status(200).send({ data: {} })
     } catch (e: any) {
         console.log(e?.message)
         return res.status(500).send("Server Error")
@@ -56,7 +60,10 @@ export const getOneEmployer = async (req: any, res: express.Response) => {
         if (bceid_guid === undefined) {
             return res.status(403).send("Not Authorized")
         }
-        const { id } = req.params
+        const { id } = req.body
+        if (id == null) {
+            return res.status(400).send("id is required")
+        }
         if (bceid_guid !== id) {
             return res.status(403).send("Forbidden")
         }
@@ -77,7 +84,10 @@ export const updateEmployer = async (req: any, res: express.Response) => {
         if (bceid_guid === undefined) {
             return res.status(403).send("Not Authorized")
         }
-        const { id } = req.params
+        const { id } = req.body
+        if (id == null) {
+            return res.status(400).send("id is required")
+        }
         const employer = await employerService.getEmployerByID(id)
         if (id !== bceid_guid) {
             return res.status(403).send("Forbidden")
@@ -86,29 +96,6 @@ export const updateEmployer = async (req: any, res: express.Response) => {
             return res.status(404).send("Not Found")
         }
         await employerService.updateEmployer(id, req.body)
-        return res.status(200).send({ id })
-    } catch (e: any) {
-        console.log(e?.message)
-        return res.status(500).send("Server Error")
-    }
-}
-
-export const createOrUpdateEmployer = async (req: any, res: express.Response) => {
-    try {
-        const bceid_guid = req.kauth.grant.access_token.content?.bceid_user_guid
-        if (bceid_guid === undefined) {
-            return res.status(403).send("Not Authorized")
-        }
-        const { id } = req.params
-        const employer = await employerService.getEmployerByID(id)
-        if (id !== bceid_guid) {
-            return res.status(403).send("Forbidden")
-        }
-        if (!employer) {
-            await employerService.insertEmployer({ id, ...req.body })
-        } else {
-            await employerService.updateEmployer(id, req.body)
-        }
         return res.status(200).send({ id })
     } catch (e: any) {
         console.log(e?.message)
