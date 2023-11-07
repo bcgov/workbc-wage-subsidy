@@ -28,7 +28,7 @@ export const ApplicationList = (props: any) => {
     const handleRowClick = (id: Identifier, resource: string, record: any) => {
         // In admin client, applications are never in draft.
         if (record.form_submission_id) {
-            redirect("/ViewForm/View/applications/" + record.form_submission_id + "/" + record.id, "")
+            redirect("/ViewForm/applications/" + record.id, "")
         } else {
             return "" // rowClick expects a path to be returned
         }
