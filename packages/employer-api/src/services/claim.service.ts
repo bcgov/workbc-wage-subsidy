@@ -16,7 +16,7 @@ export const getAllClaims = async (
         .whereIn("c.id", claimIds)
         .select("c.*")
         .groupBy("c.id")
-        .select(knex.raw("ARRAY_AGG(e.contact_name) as shared_with"))
+        .select(knex.raw("COALESCE( ARRAY_AGG(e.contact_name) FILTER (WHERE e.id!=?), '{}') as shared_with", user))
         .modify((queryBuilder: any) => {
             if (filters.id) {
                 queryBuilder.where("id", filters.id)
