@@ -16,7 +16,8 @@ export const getAllApplications = async (
         .whereIn("a.id", applicationIds)
         .select("a.*")
         .groupBy("a.id")
-        .select(knex.raw("ARRAY_AGG(e.contact_name) as shared_with"))
+        // Compute 'Shared With' column. Do not include the name of the requestor, and do not include NULL in its place.
+        .select(knex.raw("COALESCE( ARRAY_AGG(e.contact_name) FILTER (WHERE e.id!=?), '{}') as shared_with", user))
         .modify((queryBuilder: any) => {
             if (filters.id) {
                 queryBuilder.where("id", filters.id)
