@@ -1,5 +1,5 @@
 import { Box, ListItemText, MenuItem, MenuList } from "@mui/material"
-import { LoadingIndicator, useDataProvider, useListContext, useRedirect } from "react-admin"
+import { useDataProvider, useListContext, useRedirect } from "react-admin"
 import isEqual from "lodash/isEqual"
 import { ScreenReaderOnly } from "../../styles/ScreenReaderOnly"
 import { useEffect, useState } from "react"
@@ -9,10 +9,9 @@ interface ListAsideProps {
     statusFilters: { [key: string]: any }
     statusFilter: any
     setStatusFilter: React.Dispatch<any>
-    user: string
 }
 
-export const ListAside: React.FC<ListAsideProps> = ({ statusFilters, statusFilter, setStatusFilter, user }) => {
+export const ListAside: React.FC<ListAsideProps> = ({ statusFilters, statusFilter, setStatusFilter }) => {
     const { resource, total, isFetching } = useListContext()
     const dataProvider = useDataProvider()
     const redirect = useRedirect()

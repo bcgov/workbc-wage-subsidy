@@ -54,14 +54,13 @@ export const ClaimList = (props: any) => {
                         <List
                             {...props}
                             actions={<ListActions createButtonLabel="New Claim Form" />}
-                            filter={{ ...statusFilter, user: identity.guid }}
-                            filterDefaultValues={{ ...statusFilter, user: identity.guid }}
+                            filter={statusFilter}
+                            filterDefaultValues={statusFilter}
                             aside={
                                 <ListAside
                                     statusFilters={claimStatusFilters}
                                     statusFilter={statusFilter}
                                     setStatusFilter={setStatusFilter}
-                                    user={identity.guid}
                                 />
                             }
                             sort={{

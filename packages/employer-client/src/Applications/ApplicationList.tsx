@@ -55,14 +55,13 @@ export const ApplicationList = (props: any) => {
                         <List
                             {...props}
                             actions={<ListActions createButtonLabel="New Application" />}
-                            filter={{ ...statusFilter, user: identity.guid }}
-                            filterDefaultValues={{ ...statusFilter, user: identity.guid }}
+                            filter={statusFilter}
+                            filterDefaultValues={statusFilter}
                             aside={
                                 <ListAside
                                     statusFilters={applicationStatusFilters}
                                     statusFilter={statusFilter}
                                     setStatusFilter={setStatusFilter}
-                                    user={identity.guid}
                                 />
                             }
                             sort={{
