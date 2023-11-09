@@ -79,9 +79,7 @@ export const sendEmail = async (req: express.Request, res: express.Response) => 
                 notificationList.map(async (notification: Notification) => {
                     await emailService.sendEmail(
                         notificationHTML,
-                        `New Wage Subsidy ${
-                            String(applicationType) === "Claims" ? "Claims" : ""
-                        } Application Submitted`,
+                        `New Wage Subsidy${String(applicationType) === "Claims" ? " Claim" : ""} Application Submitted`,
                         [notification.email]
                     )
                 })

@@ -5,11 +5,11 @@ const applicationNotification = (catchmentNo: string, catchmentName: string, typ
     const claimsUrl = `${process.env.SP_URL}/#/claims`
     const applicationsUrl = `${process.env.SP_URL}/#/applications`
     const email = generateHTMLEmail(
-        "A Wage Subsidy Claim Application has been submitted",
+        `A Wage Subsidy${type === "claim" ? " Claim" : ""} Application has been submitted`,
         [
             ` Hello `,
-            ` You are receiving this email because you enabled notifications on Wage Subsidy ${
-                type === "claim" ? "Claim" : ""
+            ` You are receiving this email because you enabled notifications on Wage Subsidy${
+                type === "claim" ? " Claim" : ""
             } Applications for Catchment ${catchmentNo} - ${catchmentName}.`
         ],
         [

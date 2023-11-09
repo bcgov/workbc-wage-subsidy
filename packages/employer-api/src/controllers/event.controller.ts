@@ -66,8 +66,11 @@ export const submission = async (req: any, res: express.Response) => {
                     }
                     // Send notifications to clients with Claims notifications enabled
                     const sendNotificationsResult = await formApiService.sendNotifications({
-                        catchmentNo: newSPClaim.catchmentno,
-                        applicationType: "Claims"
+                        // form API expects the data to be wrapped in a data object
+                        data: {
+                            catchmentNo: newSPClaim.catchmentno,
+                            applicationType: "Claims"
+                        }
                     })
                     if (sendNotificationsResult.status !== 200) {
                         console.log("Error sending notifications")
