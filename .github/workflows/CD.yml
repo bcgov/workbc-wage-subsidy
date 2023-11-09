@@ -1,13 +1,8 @@
+name: CD builds and push to registry
 
 
-# This is a basic workflow that will start a build with every push
-
-
-name: CI/CD Runtests and build on TEST
-
-
-# Controls when the action will run. Triggers the workflow on push or pull request
-# events but only for the master branch
+# Controls when the action will run. Triggers the workflow on pull requestor push
+# events but only for the dev,test,prod branch
 on:
   workflow_dispatch:
     inputs:
@@ -20,29 +15,30 @@ on:
         - info
         - warning
         - debug
-      tags:
-        description: 'Test scenario tags'
-        required: false
-        type: boolean
-      environment:
-        description: 'Environment to run tests against'
-        type: environment
-        required: true
   push:
-    branches: [ test ]
+    branches: [ dev,test,prod ]
     paths-ignore:
         - '.github/workflows/**'
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
+# if we use the matrix strategy
 jobs:
-  # This workflow contains a single job called "build"
+  get-branch-name:
+    runs-on: ubuntu-latest
+    outputs:
+      branch: ${{ steps.extract_branch.outputs.branch }}
+    steps:
+      - name: Extract branch name
+        shell: bash
+        run: echo "branch=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_OUTPUT
+        id: extract_branch
   build:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
-    environment: test
+    needs: get-branch-name
+    environment: ${{ needs.get-branch-name.outputs.branch }}
     strategy:
       matrix:
-        imagename: ["workbc-wage-subsidy-v2-static","workbc-wage-subsidy-v2-admin-api"]
         include:
           - imagename: "workbc-wage-subsidy-v2-static"
             context: "./packages/static"
@@ -52,11 +48,9 @@ jobs:
             env: false
           - imagename: "workbc-wage-subsidy-v2-admin-client"
             context: "./packages/admin-client"
-            packagelock: "./package-lock.json"
             env: true
           - imagename: "workbc-wage-subsidy-v2-employer-client"
             context: "./packages/employer-client"
-            packagelock: "./packages/employer-client/package-lock.json"
             env: true
           - imagename: "workbc-wage-subsidy-v2-employer-api"
             context: "./packages/employer-api"
@@ -64,18 +58,35 @@ jobs:
           - imagename: "workbc-wage-subsidy-v2-form-api"
             context: "./packages/form-api"
             env: false
-    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
+      - name: Extract branch name
+        shell: bash
+        run: echo "branch=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_OUTPUT
+        id: extract_branch
       - uses: actions/checkout@v3
         with:
-          ref: 'test'
-      
+          ref: ${{ steps.extract_branch.outputs.branch }}
+      - name: Cache node modules
+        id: cache-npm
+        uses: actions/cache@v3
+        env:
+          cache-name: cache-node-modules
+        with:
+          # npm cache files are stored in `~/.npm` on Linux/macOS
+          path: ~/.npm
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-
+            ${{ runner.os }}-build-
+            ${{ runner.os }}-
       - name: Use Node.js
         uses: actions/setup-node@v3
         with:
           node-version: '18.x'
           cache: 'npm'
-          cache-dependency-path: ${{ matrix.packagelock }}
+          # Since all node modules is stored in the main directory, we need to
+          # use the package-lock.json from the main directory
+          cache-dependency-path: "./package-lock.json"
       - name: Install oc v3
         uses: redhat-actions/openshift-tools-installer@v1
         with:
@@ -96,19 +107,19 @@ jobs:
 
           # Optional - this sets your Kubernetes context's current namespace after logging in.
           namespace: ${{secrets.PROJECT_TOOLS_4}}
-      #static openshift
-      - name: Build for pushing static image to OpenShift registry
-        id: build-static-image-os
+      # Build image
+      - name: Building image
+        id: build-static-image
         uses: redhat-actions/buildah-build@v2
         with:
           image: ${{ matrix.imagename }}
-          tags: test
+          tags: ${{ steps.extract_branch.outputs.branch == 'dev' && 'latest' || steps.extract_branch.outputs.branch}}
           context: ${{ matrix.context }}
           containerfiles: ${{ matrix.context }}/Dockerfile
           tls-verify: false
           build-args: |
-            VITE_REACT_ENVIRONMENT=TEST
-            REACT_APP_ENVIRONMENT=TEST
+            VITE_REACT_ENVIRONMENT=${{ vars.REACT_APP_ENVIRONMENT }}
+            REACT_APP_ENVIRONMENT=${{ vars.REACT_APP_ENVIRONMENT }}
             REACT_ADMIN_TOKEN=${{ secrets.REACT_ADMIN_TOKEN }}
             FONT_AWESOME_TOKEN=${{ secrets.FONT_AWESOME_TOKEN }}
             REACT_APP_DATA_PROVIDER_URL=${{ vars.REACT_APP_DATA_PROVIDER_URL }}
@@ -122,37 +133,13 @@ jobs:
             VITE_EMPLOYER_URL=${{ vars.VITE_EMPLOYER_URL }}
             VITE_SERVICE_PROVIDER_URL=${{ vars.VITE_SERVICE_PROVIDER_URL }}
             VITE_MINISTRY_URL=${{ vars.VITE_MINISTRY_URL }}
-      - name: Build for pushing static image to Docker hub
-        id: build-static-image-docker
-        uses: redhat-actions/buildah-build@v2
-        with:
-          image: elmsd/${{ matrix.imagename }}
-          tags: test
-          context: ${{ matrix.context }}
-          containerfiles: ${{ matrix.context }}/Dockerfile
-          tls-verify: false
-          build-args: |
-            VITE_REACT_ENVIRONMENT=TEST
-            REACT_APP_ENVIRONMENT=TEST
-            REACT_ADMIN_TOKEN=${{ secrets.REACT_ADMIN_TOKEN }}
-            FONT_AWESOME_TOKEN=${{ secrets.FONT_AWESOME_TOKEN }}
-            REACT_APP_DATA_PROVIDER_URL=${{ vars.REACT_APP_DATA_PROVIDER_URL }}
-            REACT_APP_ADMIN_API_URL=${{ vars.REACT_APP_ADMIN_API_URL }}
-            REACT_APP_KEYCLOAK_REALM=${{ vars.REACT_APP_KEYCLOAK_REALM }}
-            REACT_APP_KEYCLOAK_URL=${{ vars.REACT_APP_KEYCLOAK_URL }}
-            REACT_APP_KEYCLOAK_CLIENT_ID=${{ vars.REACT_APP_KEYCLOAK_CLIENT_ID }}
-            REACT_APP_DRAFT_URL=${{ vars.REACT_APP_DRAFT_URL }}
-            REACT_APP_VIEW_URL=${{ vars.REACT_APP_VIEW_URL }}
-            REACT_APP_MINISTRY_VIEW_URL=${{ vars.REACT_APP_MINISTRY_VIEW_URL }}
-            VITE_EMPLOYER_URL=${{ vars.VITE_EMPLOYER_URL }}
-            VITE_SERVICE_PROVIDER_URL=${{ vars.VITE_SERVICE_PROVIDER_URL }}
-            VITE_MINISTRY_URL=${{ vars.VITE_MINISTRY_URL }}
+      # Push to specified registry
       - name: Push Static To OpenShift Image repo
         id: push-to-os-static
         uses: redhat-actions/push-to-registry@v2
         with:
-          image: ${{ steps.build-static-image-os.outputs.image }}
-          tags: ${{ steps.build-static-image-os.outputs.tags }}
+          image: ${{ steps.build-static-image.outputs.image }}
+          tags: ${{ steps.build-static-image.outputs.tags }}
           registry: image-registry.apps.silver.devops.gov.bc.ca/1c4f9c-tools
           username: ${{ secrets.API_TOKEN_4 }}
           password: ${{ secrets.API_TOKEN_4 }}
@@ -160,8 +147,8 @@ jobs:
         id: push-to-docker-static
         uses: redhat-actions/push-to-registry@v2
         with:
-          image: ${{ steps.build-static-image-docker.outputs.image }}
-          tags: ${{ steps.build-static-image-docker.outputs.tags }}
-          registry: docker.io
+          image: ${{ steps.build-static-image.outputs.image }}
+          tags: ${{ steps.build-static-image.outputs.tags }}
+          registry: docker.io/elmsd
           username: ${{ secrets.DOCKER_USER }}
           password: ${{ secrets.DOCKER_TOKEN }}
