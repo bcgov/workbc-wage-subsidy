@@ -1,5 +1,5 @@
 import { Box, Chip } from "@mui/material"
-import { useCallback, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 import { FunctionField, Identifier, List, TextField, useGetIdentity, useRedirect } from "react-admin"
 import CustomDatagrid from "../common/components/CustomDatagrid/CustomDatagrid"
 import { FormBulkActionButtons } from "../common/components/FormBulkActionButtons/FormBulkActionButtons"
@@ -23,6 +23,7 @@ export const ClaimList = (props: any) => {
     const [modalIsOpen, setModalIsOpen] = useState(false)
     const [sharedUsers, setSharedUsers] = useState([])
     const [sharedFormId, setSharedFormId] = useState("")
+    const [allowSharing, setAllowSharing] = useState(false)
 
     const handleRowClick = (id: Identifier, resource: string, record: any) => {
         if (record.status === "Draft" && record.form_submission_id) {
@@ -45,6 +46,10 @@ export const ClaimList = (props: any) => {
         setSharedUsers([])
         setModalIsOpen(false)
     }, [])
+
+    useEffect(() => {
+        setAllowSharing(identity && identity.businessGuid && identity.businessName)
+    }, [identity])
 
     return (
         <>
@@ -96,7 +101,7 @@ export const ClaimList = (props: any) => {
                                     source="associated_application_id"
                                     emptyText="-"
                                 />
-                                <SharedWithField label="Shared With" openModal={openModal} />
+                                {allowSharing && <SharedWithField label="Shared With" openModal={openModal} />}
                                 <FunctionField
                                     label={
                                         <Box display="flex" width="100%" justifyContent="center">
@@ -130,16 +135,18 @@ export const ClaimList = (props: any) => {
                             </CustomDatagrid>
                         </List>
                     </Box>
-                    <Box>
-                        <SharedWithModal
-                            isOpen={modalIsOpen}
-                            onRequestClose={closeModal}
-                            contentLabel="shared users"
-                            formId={sharedFormId}
-                            sharedUsers={sharedUsers}
-                            resource="claims"
-                        />
-                    </Box>
+                    {allowSharing && (
+                        <Box>
+                            <SharedWithModal
+                                isOpen={modalIsOpen}
+                                onRequestClose={closeModal}
+                                contentLabel="shared users"
+                                formId={sharedFormId}
+                                sharedUsers={sharedUsers}
+                                resource="claims"
+                            />
+                        </Box>
+                    )}
                 </>
             )}
         </>
