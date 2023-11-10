@@ -92,15 +92,11 @@ export const ClaimCreateSelectApplication = (props: any) => {
                             }
                         />
                         <FunctionField
-                            label="Shared With"
-                            render={(record: any) => {
-                                return record["shared_with"].length > 1
-                                    ? record["shared_with"].filter((fullName) => fullName !== identity?.fullName)
-                                    : "-"
-                            }}
-                        />
-                        <FunctionField
-                            label=""
+                            label={
+                                <Box display="flex" width="100%" justifyContent="center">
+                                    Status
+                                </Box>
+                            }
                             render={(record: any) => (
                                 <Box display="flex" width="100%" justifyContent="center">
                                     <Chip
@@ -113,10 +109,16 @@ export const ClaimCreateSelectApplication = (props: any) => {
                         />
                     </CustomDatagrid>
                 </List>
+                {/* Pad the bottom of this box to account for the translation applied to the image. */}
+                <Box display="flex" justifyContent="right" style={{ paddingBottom: "3em" }}>
+                    <img
+                        width="110em"
+                        src="/woman-checkmark.svg"
+                        alt=""
+                        style={{ transform: "translate(-2em, 2.5em)" }}
+                    />
+                </Box>
             </>
-            <Box display="flex" justifyContent="right">
-                <img width="110em" src="/woman-checkmark.svg" alt="" style={{ transform: "translate(-2em, 2.5em)" }} />
-            </Box>
         </Box>
     )
 }
