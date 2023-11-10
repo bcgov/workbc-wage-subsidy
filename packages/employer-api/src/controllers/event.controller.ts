@@ -5,7 +5,7 @@ import * as formService from "../services/form.service"
 import * as claimService from "../services/claim.service"
 import * as formApiService from "../services/formAPI.service"
 
-export const submission = async (req: any, res: express.Response) => {
+export const submission = async (req: express.Request, res: express.Response) => {
     try {
         const { formType } = req.params
         const passedKey = req.headers["x-api-key"]
@@ -65,17 +65,18 @@ export const submission = async (req: any, res: express.Response) => {
                         return res.status(500).send("Internal Server Error")
                     }
                     // Send notifications to clients with Claims notifications enabled
-                    const sendNotificationsResult = await formApiService.sendNotifications({
-                        // form API expects the data to be wrapped in a data object
-                        data: {
-                            catchmentNo: newSPClaim.catchmentno,
-                            applicationType: "Claims"
-                        }
-                    })
-                    if (sendNotificationsResult.status !== 200) {
-                        console.log("Error sending notifications")
-                        return res.status(500).send("Internal Server Error")
-                    }
+                    await formApiService
+                        .sendNotifications({
+                            // form API expects the data to be wrapped in a data object
+                            data: {
+                                catchmentNo: newSPClaim.catchmentno,
+                                applicationType: "Claims"
+                            }
+                        })
+                        .catch((e) => {
+                            console.log("Error sending notifications", e)
+                            return res.status(500).send("Internal Server Error")
+                        })
                     return res.status(200).send()
                 }
 
@@ -108,7 +109,7 @@ export const submission = async (req: any, res: express.Response) => {
             return res.status(500).send("Internal Server Error")
         }
         return res.status(200).send()
-    } catch (e: any) {
+    } catch (e: unknown) {
         console.log(e)
         return res.status(500).send("Server Error")
     }
