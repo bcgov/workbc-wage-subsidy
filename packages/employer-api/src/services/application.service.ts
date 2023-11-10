@@ -6,7 +6,7 @@ export const getAllApplications = async (
     currPage: number,
     filters: any,
     sortFields: string[],
-    sortOrders: string[],
+    sortOrder: string,
     user: string
 ) => {
     const applicationIds = knex("employers_applications").select("application_id").where("employer_id", user)
@@ -28,9 +28,11 @@ export const getAllApplications = async (
             if (filters.form_confirmation_id) {
                 queryBuilder.where("form_confirmation_id", filters.form_confirmation_id)
             }
-            if (sortFields?.length > 0 && sortOrders?.length > 0) {
+            if (sortFields?.length > 0 && sortOrder) {
                 sortFields.forEach((field, i) => {
-                    queryBuilder.orderByRaw(`${field} ${sortOrders[i]} NULLS LAST`)
+                    sortOrder === "DESC"
+                        ? queryBuilder.orderByRaw(`${field} ${sortOrder} NULLS LAST`)
+                        : queryBuilder.orderByRaw(`${field} ${sortOrder} NULLS FIRST`)
                 })
             } else {
                 // default sort

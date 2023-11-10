@@ -72,9 +72,9 @@ export const ClaimCreateSelectApplication = (props: any) => {
                     <CustomDatagrid
                         sx={DatagridStyles}
                         rowClick={handleClick}
-                        bulkActionButtons={false}
                         ariaLabel="list of completed applications"
                         rowAriaLabel="create a claim form for application"
+                        disableBulkActions={true}
                         empty={
                             <p style={{ padding: "16px" }}>
                                 You must have at least one completed application in order to submit a claim
@@ -86,6 +86,8 @@ export const ClaimCreateSelectApplication = (props: any) => {
                         <TextField label="Number of Positions" source="num_positions" emptyText="-" />{" "}
                         <FunctionField
                             label="Submitted Date"
+                            sortBy="form_submitted_date,updated_date,created_date"
+                            sortByOrder="DESC"
                             render={
                                 (record: any) =>
                                     record.form_submitted_date ? record.form_submitted_date.split("T")[0] : "-" // remove timestamp
