@@ -1,5 +1,5 @@
 import { Box, Chip } from "@mui/material"
-import { useState, useCallback } from "react"
+import { useState, useCallback, useEffect } from "react"
 import { FunctionField, Identifier, List, TextField, useGetIdentity, useRedirect } from "react-admin"
 import CustomDatagrid from "../common/components/CustomDatagrid/CustomDatagrid"
 import { ListActions } from "../common/components/ListActions/ListActions"
@@ -24,6 +24,7 @@ export const ApplicationList = (props: any) => {
     const [modalIsOpen, setModalIsOpen] = useState(false)
     const [sharedUsers, setSharedUsers] = useState([])
     const [sharedFormId, setSharedFormId] = useState("")
+    const [allowSharing, setAllowSharing] = useState(false)
 
     const handleRowClick = (id: Identifier, resource: string, record: any) => {
         if (record.status === "Draft" && record.form_submission_id) {
@@ -46,6 +47,10 @@ export const ApplicationList = (props: any) => {
         setSharedUsers([])
         setModalIsOpen(false)
     }, [])
+
+    useEffect(() => {
+        setAllowSharing(identity && identity.businessGuid && identity.businessName)
+    }, [identity])
 
     return (
         <>
@@ -80,7 +85,7 @@ export const ApplicationList = (props: any) => {
                                             record.form_submitted_date ? record.form_submitted_date.split("T")[0] : "-" // remove timestamp
                                     }
                                 />
-                                <SharedWithField label="Shared With" openModal={openModal} />
+                                {allowSharing && <SharedWithField label="Shared With" openModal={openModal} />}
                                 <FunctionField
                                     label={
                                         <Box display="flex" width="100%" justifyContent="center">
@@ -124,16 +129,18 @@ export const ApplicationList = (props: any) => {
                             </CustomDatagrid>
                         </List>
                     </Box>
-                    <Box>
-                        <SharedWithModal
-                            isOpen={modalIsOpen}
-                            onRequestClose={closeModal}
-                            contentLabel="shared users"
-                            formId={sharedFormId}
-                            sharedUsers={sharedUsers}
-                            resource="applications"
-                        />
-                    </Box>
+                    {allowSharing && (
+                        <Box>
+                            <SharedWithModal
+                                isOpen={modalIsOpen}
+                                onRequestClose={closeModal}
+                                contentLabel="shared users"
+                                formId={sharedFormId}
+                                sharedUsers={sharedUsers}
+                                resource="applications"
+                            />
+                        </Box>
+                    )}
                 </>
             )}
         </>
