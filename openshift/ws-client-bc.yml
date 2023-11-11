@@ -62,12 +62,6 @@ objects:
             value: ${REACT_APP_KEYCLOAK_URL}
           - name: REACT_APP_KEYCLOAK_CLIENT_ID
             value: ${REACT_APP_KEYCLOAK_CLIENT_ID}
-          - name: REACT_APP_HAVE_EMPLOYEE_URL
-            value: ${REACT_APP_HAVE_EMPLOYEE_URL}
-          - name: REACT_APP_NEED_EMPLOYEE_URL
-            value: ${REACT_APP_NEED_EMPLOYEE_URL}
-          - name: REACT_APP_CLAIM_URL
-            value: ${REACT_APP_CLAIM_URL}
           - name: REACT_APP_DRAFT_URL
             value: ${REACT_APP_DRAFT_URL}
           - name: REACT_APP_VIEW_URL
@@ -150,21 +144,6 @@ parameters:
 - description: REACT_APP_KEYCLOAK_CLIENT_ID
   displayName: REACT_APP_KEYCLOAK_CLIENT_ID
   name: REACT_APP_KEYCLOAK_CLIENT_ID
-  required: true
-  value: ""
-- description: REACT_APP_HAVE_EMPLOYEE_URL
-  displayName: REACT_APP_HAVE_EMPLOYEE_URL
-  name: REACT_APP_HAVE_EMPLOYEE_URL
-  required: true
-  value: ""
-- description: REACT_APP_NEED_EMPLOYEE_URL
-  displayName: REACT_APP_NEED_EMPLOYEE_URL
-  name: REACT_APP_NEED_EMPLOYEE_URL
-  required: true
-  value: ""
-- description: REACT_APP_CLAIM_URL
-  displayName: REACT_APP_CLAIM_URL
-  name: REACT_APP_CLAIM_URL
   required: true
   value: ""
 - description: REACT_APP_DRAFT_URL

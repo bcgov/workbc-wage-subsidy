@@ -1,11 +1,21 @@
+import { useEffect } from "react"
 import Box from "@mui/material/Box"
 import Grid from "@mui/material/Grid"
-import { useRedirect } from "react-admin"
+import { useGetList, useRedirect } from "react-admin"
 import BCGovPrimaryButton from "../common/components/BCGovPrimaryButton/BCGovPrimaryButton"
 import Card from "../common/components/Card/Card"
+import { useSearchParams } from "react-router-dom"
 
 export const ClaimCreate = () => {
     const redirect = useRedirect()
+    const { total, isLoading } = useGetList("claims", { pagination: { page: 1, perPage: 1 } })
+    const [searchParams] = useSearchParams()
+
+    useEffect(() => {
+        if (searchParams.get("redirectType") === "firstload" && typeof total === "number" && total !== 0) {
+            redirect("list", "claims")
+        }
+    }, [isLoading, redirect, searchParams, total])
 
     return (
         <Box paddingTop="6em" paddingBottom="3em" width="100%" display="flex" justifyContent="center" minWidth="58em">
@@ -18,7 +28,7 @@ export const ClaimCreate = () => {
                                 <Box paddingLeft="0.75em">
                                     <p>
                                         In order to receive your wage subsidy reimbursement, you must{<br />}
-                                        submit a claim for which is associated to a previously{<br />}
+                                        submit a claim form which is associated to a previously{<br />}
                                         completed application
                                     </p>
                                 </Box>

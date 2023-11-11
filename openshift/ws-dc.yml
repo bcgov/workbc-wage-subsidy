@@ -72,10 +72,8 @@ objects:
             value: ${COMMON_SERVICES_AUTH_REALM}
           - name: CHES_HOST
             value: ${CHES_HOST}
-          - name: CHEF_DEV_URL
-            value: ${CHEF_ENV_URL}
-          - name: CHEF_TEST_URL
-            value: ${CHEF_ENV_URL}
+          - name: CHEFS_URL
+            value: ${CHEFS_URL}
           - name: STATIC_URL
             value: ${STATIC_URL}
           - name: S3_STATIC_IMG_URL
@@ -435,6 +433,16 @@ objects:
             value: ${REACT_APP_KEYCLOAK_REALM}
           - name: REACT_APP_ADMIN_API_URL
             value: ${REACT_APP_ADMIN_API_URL}
+          - name: REACT_ADMIN_TOKEN
+            valueFrom:
+              secretKeyRef:
+                key: ${NPM_INSTALL_TOKENS_SECRET_NAME}
+                name: REACT_ADMIN_TOKEN
+          - name: FONT_AWESOME_TOKEN
+            valueFrom:
+              secretKeyRef:
+                key: ${NPM_INSTALL_TOKENS_SECRET_NAME}
+                name: FONT_AWESOME_TOKEN
           image: ${NAME}-admin-client:${TAG}
           livenessProbe:
             failureThreshold: 3
@@ -512,14 +520,18 @@ objects:
             value: ${REACT_APP_KEYCLOAK_URL}
           - name: REACT_APP_KEYCLOAK_REALM
             value: ${REACT_APP_KEYCLOAK_REALM}
-          - name: REACT_APP_HAVE_EMPLOYEE_URL
-            value: ${REACT_APP_HAVE_EMPLOYEE_URL}
-          - name: REACT_APP_NEED_EMPLOYEE_URL
-            value: ${REACT_APP_NEED_EMPLOYEE_URL}
-          - name: REACT_APP_CLAIM_URL
-            value: ${REACT_APP_CLAIM_URL}
           - name: REACT_APP_VIEW_URL
             value: ${REACT_APP_VIEW_URL}
+          - name: REACT_ADMIN_TOKEN
+            valueFrom:
+              secretKeyRef:
+                key: ${NPM_INSTALL_TOKENS_SECRET_NAME}
+                name: REACT_ADMIN_TOKEN
+          - name: FONT_AWESOME_TOKEN
+            valueFrom:
+              secretKeyRef:
+                key: ${NPM_INSTALL_TOKENS_SECRET_NAME}
+                name: FONT_AWESOME_TOKEN
           image: ${NAME}-employer-client:${TAG}
           livenessProbe:
             failureThreshold: 3
@@ -821,18 +833,6 @@ parameters:
   displayName: Data Provider URL
   name: REACT_APP_DATA_PROVIDER_URL
   value: ""
-- description: React App Have Employee URL
-  displayName: React App Have Employee URL
-  name: REACT_APP_HAVE_EMPLOYEE_URL
-  value: ""
-- description: React App Need Employee URL
-  displayName: React App Need Employee URL
-  name: REACT_APP_NEED_EMPLOYEE_URL
-  value: ""
-- description: React App Claim URL
-  displayName: React App Claim URL
-  name: REACT_APP_CLAIM_URL
-  value: ""
 - description: React App Draft URL
   displayName: React App Draft URL
   name: REACT_APP_DRAFT_URL
@@ -844,4 +844,8 @@ parameters:
 - description: S3 Static Image URL
   displayName: S3 Static Image URL
   name: S3_STATIC_IMG_URL
+  value: ""
+- description: Secret containing the npm install tokens (react-admin, fontawesome, etc)
+  displayName: NPM Install Tokens Secret Name
+  name: NPM_INSTALL_TOKENS_SECRET_NAME
   value: ""

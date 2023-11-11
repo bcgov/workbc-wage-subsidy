@@ -50,6 +50,15 @@ export const dataProvider = {
             }
         })
     },
+    getCounts: (resource: any) =>
+        httpClient(`${apiUrl}/${resource}/counts`, {
+            headers: new Headers({
+                Accept: "application/json",
+                Authorization: `Bearer ${localStorage.getItem("token")}`
+            })
+        }).then(({ json }) => ({
+            data: json
+        })),
     getOne: (resource: any, params: { id: any }) =>
         httpClient(`${apiUrl}/${resource}/${params.id}`, {
             headers: new Headers({
@@ -123,6 +132,19 @@ export const dataProvider = {
             }
         })
     },
+    getOneEmployer: (
+        params: { id: any } // custom retrieval for employers to avoid GUIDs being passed in the url
+    ) =>
+        httpClient(`${apiUrl}/employers/getOne`, {
+            method: "POST",
+            body: JSON.stringify({ id: params.id }),
+            headers: new Headers({
+                Accept: "application/json",
+                Authorization: `Bearer ${localStorage.getItem("token")}`
+            })
+        }).then(({ json }) => ({
+            data: json
+        })),
     create: (resource: any, params: { data: any }) =>
         httpClient(`${apiUrl}/${resource}`, {
             method: "POST",
@@ -132,8 +154,17 @@ export const dataProvider = {
                 Authorization: `Bearer ${localStorage.getItem("token")}`
             })
         }).then(({ json }) => ({
-            data: { ...params.data, id: json.id }
+            data: { ...params.data, id: json.submissionId }
         })),
+    createOrUpdate: (resource: any, params: { id: any; data: any }) =>
+        httpClient(`${apiUrl}/${resource}/${params.id}`, {
+            method: "PATCH",
+            body: JSON.stringify(params.data),
+            headers: new Headers({
+                Accept: "application/json",
+                Authorization: `Bearer ${localStorage.getItem("token")}`
+            })
+        }).then(({ json }) => ({ data: json })),
     update: (resource: any, params: { id: any; data: any }) =>
         httpClient(`${apiUrl}/${resource}/${params.id}`, {
             method: "PUT",
@@ -148,6 +179,37 @@ export const dataProvider = {
         Promise.all(
             params.ids.map((id: any) =>
                 httpClient(`${apiUrl}/${resource}/${id}`, {
+                    method: "PUT",
+                    body: JSON.stringify(params.data),
+                    headers: new Headers({
+                        Accept: "application/json",
+                        Authorization: `Bearer ${localStorage.getItem("token")}`
+                    })
+                })
+            )
+        ).then((responses) => ({ data: responses.map(({ json }) => json.id) })),
+    updateEmployer: (params: { id: any; data: any }) =>
+        httpClient(`${apiUrl}/employers`, {
+            method: "PUT",
+            body: JSON.stringify({ ...params.data, id: params.id }),
+            headers: new Headers({
+                Accept: "application/json",
+                Authorization: `Bearer ${localStorage.getItem("token")}`
+            })
+        }).then(({ json }) => ({ data: json })),
+    share: (resource: any, params: { id: any; data: any }) =>
+        httpClient(`${apiUrl}/${resource}/share/${params.id}`, {
+            method: "PUT",
+            body: JSON.stringify(params.data),
+            headers: new Headers({
+                Accept: "application/json",
+                Authorization: `Bearer ${localStorage.getItem("token")}`
+            })
+        }).then(({ json }) => ({ data: json })),
+    shareMany: (resource: any, params: { ids: any[]; data: any }) =>
+        Promise.all(
+            params.ids.map((id: any) =>
+                httpClient(`${apiUrl}/${resource}/share/${id}`, {
                     method: "PUT",
                     body: JSON.stringify(params.data),
                     headers: new Headers({

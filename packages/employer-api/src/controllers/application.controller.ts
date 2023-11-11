@@ -1,159 +1,240 @@
 /* eslint-disable camelcase */
 /* eslint-disable import/prefer-default-export */
 import * as express from "express"
+import { insertApplication } from "../lib/transactions"
 import * as applicationService from "../services/application.service"
+import * as employerService from "../services/employer.service"
 import * as formService from "../services/form.service"
+import * as formAPIservice from "../services/formAPI.service"
 
 export const getAllApplications = async (req: any, res: express.Response) => {
     try {
-        const { bceid_username } = req.kauth.grant.access_token.content
-        if (bceid_username === undefined) {
-            return res.status(403).send("Not Authorized")
+        const bceid_guid = req.kauth.grant.access_token.content?.bceid_user_guid
+        if (bceid_guid === undefined) {
+            return res.status(401).send("Not Authorized")
         }
         const filter = req.query.filter ? JSON.parse(req.query.filter) : {}
-        const sort: string[] = req.query.sort ? JSON.parse(req.query.sort) : ["id", "ASC"]
+        const sort: string[] = req.query.sort ? JSON.parse(req.query.sort) : []
+        const sortFields = sort?.length > 0 ? sort[0].split(",") : []
+        const sortOrder = sort?.length > 1 ? sort[1] : ""
         const page = req.query.page ?? 1
         const perPage = req.query.perPage ?? 1
         const applications = await applicationService.getAllApplications(
             Number(perPage),
             Number(page),
             filter,
-            sort,
-            bceid_username
+            sortFields,
+            sortOrder,
+            bceid_guid
         )
-
+        // create a new list of applications with updated status
+        let applicationsNew = applications
         if (filter.status == null && perPage > 1) {
             // only update applications once each call cycle
-            // update users applications as needed //
-            const containsNeedEmployee = applications.data.some((a: any) => a.form_type === "Need Employee")
-            const containsHaveEmployee = applications.data.some((a: any) => a.form_type === "Have Employee")
-            const containsNonComplete = applications.data.some((a: any) => a.status !== "Complete")
-            const params = {
-                fields: "userInfo,internalId,catchmentNo,positionTitle0,numberOfPositions0",
-                // eslint-disable-next-line camelcase
-                // createdBy: `${bceid_username}@bceid`, //TODO: use guid from applications object
-                deleted: false
-            }
-
-            if (containsNonComplete) {
-                // only query the forms service if we might need to update something
-                const updateApplications = async (formID: string | undefined, formPass: string | undefined) => {
-                    const forms = await formService.getFormSubmissions(formID ?? "", formPass ?? "", params)
-                    forms.forEach(async (form: any) => {
-                        const app = applications.data.find((application: any) => application.id === form.internalId)
-                        if (app) {
-                            if (form.formSubmissionStatusCode === "SUBMITTED") {
-                                // if form is complete
-                                if (app.status !== "Submitted") {
-                                    applicationService.updateApplication(app.id, "Submitted", form)
-                                }
-                            } else if (app.status === "Draft") {
-                                // else form is in draft
-                                await applicationService.updateApplication(app.id, "Draft", form)
-                            }
-                        }
-                    })
+            // updates the status of applications that have been submitted or in draft
+            await Promise.all(applications.data.map(updateApplicationFromForm))
+            applicationsNew = await applicationService.getAllApplications(
+                Number(perPage),
+                Number(page),
+                filter,
+                sortFields,
+                sortOrder,
+                bceid_guid
+            )
+            // If the user just submitted their first application, update their profile from the application data.
+            const firstApplication = firstApplicationSubmitted(applications, applicationsNew)
+            if (firstApplication) {
+                const employer = await employerService.getEmployerByID(bceid_guid)
+                if (!employer || employer?.id !== bceid_guid) {
+                    return res.status(403).send("Forbidden")
                 }
-                if (containsNeedEmployee)
-                    updateApplications(process.env.NEED_EMPLOYEE_ID, process.env.NEED_EMPLOYEE_PASS)
-                if (containsHaveEmployee)
-                    updateApplications(process.env.HAVE_EMPLOYEE_ID, process.env.HAVE_EMPLOYEE_PASS)
+                const formId = applicationService.getFormId(firstApplication.form_type)
+                const formPass = applicationService.getFormPass(firstApplication.form_type)
+                const submissionResponse = await formService.getSubmission(
+                    formId,
+                    formPass,
+                    firstApplication.form_submission_id
+                )
+                await employerService.updateEmployerFromApplicationForm(
+                    employer,
+                    submissionResponse.submission.submission.data
+                )
             }
         }
+
         res.set({
             "Access-Control-Expose-Headers": "Content-Range",
-            "Content-Range": `0 - ${applications.pagination.to} / ${applications.pagination.total}`
+            "Content-Range": `0 - ${applicationsNew.pagination.to} / ${applicationsNew.pagination.total}`
         })
-        return res.status(200).send(applications.data)
-    } catch (e: unknown) {
-        console.log(e)
+        return res.status(200).send(applicationsNew.data)
+    } catch (e: any) {
+        console.log(e?.message)
         return res.status(500).send("Server Error")
+    }
+}
+
+export const getApplicationCounts = async (req: any, res: express.Response) => {
+    try {
+        const bceid_guid = req.kauth.grant.access_token.content?.bceid_user_guid
+        if (bceid_guid === undefined) {
+            return res.status(401).send("Not Authorized")
+        }
+        const applicationCounts = await applicationService.getApplicationCounts(bceid_guid)
+        return res.status(200).send(applicationCounts)
+    } catch (e: unknown) {
+        return res.status(500).send("Internal Server Error")
     }
 }
 
 export const createApplication = async (req: any, res: express.Response) => {
     try {
-        const { bceid_username } = req.kauth.grant.access_token.content // **TODO: Can't use standard realm token to create a form for the user, this needs to wait till CHEFS & Wage Sub are on the same realm
-        if (bceid_username === undefined) {
-            return res.status(403).send("Not Authorized")
+        const bceid_guid = req.kauth.grant.access_token.content?.bceid_user_guid
+        if (bceid_guid === undefined) {
+            return res.status(401).send("Not Authorized")
         }
-        const insertResult = await applicationService.insertApplication(
+        if (!req.body?.guid || req.body.guid !== bceid_guid) {
+            return res.status(403).send("Forbidden")
+        }
+
+        // Prepare pre-fill data.
+        const employer = await employerService.getEmployerByID(bceid_guid)
+        if (!employer || employer?.id !== bceid_guid) {
+            return res.status(403).send("Forbidden")
+        }
+        const prefillFields = computeApplicationPrefillFields(employer)
+
+        // Create a new form draft //
+        const formID = applicationService.getFormId(req.body.formType)
+        const formVersionID = applicationService.getFormVersionId(req.body.formType)
+        const createDraftResult = await formService.createLoginProtectedDraft(
+            req.kauth.grant.access_token,
+            formID,
+            formVersionID,
             req.body.formKey,
-            req.body.userName,
-            req.body.formType,
-            req.body.guid
+            prefillFields
         )
-        // TODO: create a new draft version of the form with pre-filled fields //
-        // if (insertResult?.rowCount === 1) { // successful insertion
-        //     // create a new form draft //
-        //     let formID: string = ""
-        //     let formPass: string = ""
-        //     let formVersionID: string = ""
-        //     if (req.body.formType === "Have Employee"){
-        //         formID = process.env.HAVE_EMPLOYEE_ID as string
-        //         formPass = process.env.HAVE_EMPLOYEE_PASS as string
-        //         formVersionID = process.env.HAVE_EMPLOYEE_VERSION_ID as string
-        //     }
-        //     else if (req.body.formType === "Need Employee"){
-        //         formID = process.env.NEED_EMPLOYEE_ID as string
-        //         formPass = process.env.NEED_EMPLOYEE_PASS as string
-        //         formVersionID = process.env.NEED_EMPLOYEE_VERSION_ID as string
-        //     }
-        //     const createDraftResult = await formService.createDraft(req.kauth.grant.access_token.token, formID, formPass, formVersionID, {}) //**TODO: should probably try to create the draft before  */
-        //     return res.status(200).send({ data: insertResult })
-        // }
-        return res.status(200).send({ data: insertResult })
-    } catch (e: unknown) {
-        console.log(e)
+        if (createDraftResult?.id) {
+            const insertResult = await insertApplication(
+                req.body.formKey,
+                req.body.guid,
+                req.body.formType,
+                createDraftResult.id
+            )
+            if (insertResult?.rowCount === 1) {
+                // successful insertion
+                return res.status(200).send({ submissionId: createDraftResult.id })
+            }
+        } else {
+            return res.status(500).send("Internal Server Error")
+        }
+        return res.status(500).send("Internal Server Error")
+    } catch (e: any) {
+        console.log(e?.message)
         return res.status(500).send("Internal Server Error")
     }
 }
 
 export const getOneApplication = async (req: any, res: express.Response) => {
     try {
-        const { bceid_username } = req.kauth.grant.access_token.content
-        if (bceid_username === undefined) {
-            return res.status(403).send("Not Authorized")
+        const bceid_guid = req.kauth.grant.access_token.content?.bceid_user_guid
+        if (bceid_guid === undefined) {
+            return res.status(401).send("Not Authorized")
         }
         const { id } = req.params
-        const applications = await applicationService.getApplicationByID(id)
-        return res.status(200).send(applications)
+        const employerApplicationRecord = await applicationService.getEmployerApplicationRecord(bceid_guid, id)
+        if (!employerApplicationRecord) {
+            return res.status(403).send("Forbidden or Not Found")
+        }
+        const application = await applicationService.getApplicationByID(id)
+        return res.status(200).send(application)
     } catch (e: unknown) {
-        console.log(e)
         return res.status(500).send("Internal Server Error")
     }
 }
 
 export const updateApplication = async (req: any, res: express.Response) => {
     try {
-        const { bceid_username } = req.kauth.grant.access_token.content
-        if (bceid_username === undefined) {
+        const bceid_guid = req.kauth.grant.access_token.content?.bceid_user_guid
+        if (bceid_guid === undefined) {
             return res.status(403).send("Not Authorized")
         }
         const { id } = req.params
-        const updated = await applicationService.updateApplication(id, null, req.body)
-        if (updated !== 0) {
-            // eslint-disable-next-line object-shorthand
-            return res.status(200).send({ id: id })
+        const employerApplicationRecord = await applicationService.getEmployerApplicationRecord(bceid_guid, id)
+        if (!employerApplicationRecord) {
+            return res.status(403).send("Forbidden or Not Found")
         }
-        return res.status(401).send("Not Found or Not Authorized")
-    } catch (e: unknown) {
-        console.log(e)
+        await applicationService.updateApplication(id, null, req.body)
+        return res.status(200).send({ id })
+    } catch (e: any) {
+        console.log(e?.message)
+        return res.status(500).send("Internal Server Error")
+    }
+}
+
+// updates the status of applications that have been submitted or in draft
+const updateApplicationFromForm = async (application: any) => {
+    if (application.status === "Draft") {
+        const formID = applicationService.getFormId(application.form_type)
+        const formPass = applicationService.getFormPass(application.form_type)
+        if (formID && formPass && application.form_submission_id) {
+            const submissionResponse = await formService.getSubmission(formID, formPass, application.form_submission_id)
+            if (submissionResponse.submission.draft === false) {
+                console.log("form submitted event")
+                // submitted
+                await applicationService.updateApplication(application.id, "New", submissionResponse.submission)
+                await formAPIservice.sendNotifications(submissionResponse.submission.submission)
+            } else if (submissionResponse.submission.draft === true) {
+                // draft
+                await applicationService.updateApplication(application.id, "Draft", submissionResponse.submission)
+            }
+        }
+    }
+}
+
+export const shareApplication = async (req: any, res: express.Response) => {
+    try {
+        const { bceid_user_guid, bceid_business_guid } = req.kauth.grant.access_token.content
+        if (bceid_user_guid === undefined) {
+            return res.status(401).send("Not Authorized")
+        }
+        const { id } = req.params
+        const { users } = req.body
+        const targetUsers = await employerService.getEmployersByIDs(users)
+        const employerApplicationRecord = await applicationService.getEmployerApplicationRecord(bceid_user_guid, id)
+        if (
+            !employerApplicationRecord ||
+            bceid_business_guid === undefined ||
+            !targetUsers.every((user: any) => user.bceid_business_guid === bceid_business_guid)
+        ) {
+            return res.status(403).send("Forbidden or Not Found")
+        }
+        const application = await applicationService.getApplicationByID(id)
+        const shareResult = await formService.shareForm(
+            req.kauth.grant.access_token.token,
+            application.form_submission_id,
+            users
+        )
+        if (shareResult) {
+            await applicationService.shareApplication(id, users)
+        }
+        return res.status(200).send({ id })
+    } catch (e: any) {
+        console.log(e?.message)
         return res.status(500).send("Internal Server Error")
     }
 }
 
 export const deleteApplication = async (req: any, res: express.Response) => {
     try {
-        const { bceid_username } = req.kauth.grant.access_token.content
-        if (bceid_username === undefined) {
+        const bceid_guid = req.kauth.grant.access_token.content?.bceid_user_guid
+        if (bceid_guid === undefined) {
             return res.status(403).send("Not Authorized")
         }
         const { id } = req.params
         const wage = await applicationService.getApplicationByID(id)
         /* Only applications created by the user who sent the request
         or if the status is Awaiting Submission can be deleted */
-        if (wage.createdby !== bceid_username || wage.status !== null) {
+        if (wage.createdby !== bceid_guid || wage.status !== null) {
             return res.status(401).send("Not Authorized")
         }
         const deleted = await applicationService.deleteApplication(id)
@@ -161,8 +242,52 @@ export const deleteApplication = async (req: any, res: express.Response) => {
             return res.status(200).send({ id })
         }
         return res.status(401).send("Not Found or Not Authorized")
-    } catch (e: unknown) {
-        console.log(e)
+    } catch (e: any) {
+        console.log(e?.message)
         return res.status(500).send("Internal Server Error")
     }
+}
+
+const computeApplicationPrefillFields = (employer: any) => ({
+    ...(employer?.workbc_center && {
+        areYouCurrentlyWorkingWithAWorkBcCentre: "Yes",
+        catchmentNoStoreFront: employer.workbc_center
+    }),
+    ...(!employer?.workbc_center && { areYouCurrentlyWorkingWithAWorkBcCentre: "No" }),
+    ...(employer?.bceid_business_name && { operatingName: employer.bceid_business_name }),
+    ...(employer?.cra_business_number && { businessNumber: employer.cra_business_number }),
+    ...(employer?.street_address && { businessAddress: employer.street_address }),
+    ...(employer?.city && { businessCity: employer.city }),
+    ...(employer?.province && { businessProvince: employer.province }),
+    ...(employer?.postal_code && { businessPostal: employer.postal_code }),
+    ...(employer?.phone_number && { businessPhone: employer.phone_number }),
+    ...(employer?.fax_number && { businessFax: employer.fax_number }),
+    ...(employer?.contact_email && { employerEmail: employer.contact_email }),
+    ...((employer?.workplace_street_address || employer?.workplace_city || employer?.workplace_postal_code) && {
+        otherWorkAddress: true
+    }),
+    ...(!employer?.workplace_street_address &&
+        !employer?.workplace_city &&
+        !employer?.workplace_postal_code && {
+            otherWorkAddress: false
+        }),
+    container: {
+        ...(employer?.workplace_street_address && { addressAlt: employer.workplace_street_address }),
+        ...(employer?.workplace_city && { cityAlt: employer.workplace_city }),
+        ...(employer?.workplace_province && { provinceAlt: employer.workplace_province }),
+        ...(employer?.workplace_postal_code && { postalAlt: employer.workplace_postal_code })
+    },
+    ...(employer?.contact_name && { signatory1: employer.contact_name })
+})
+
+const firstApplicationSubmitted = (applicationsOld: any, applicationsNew: any) => {
+    const submittedApplicationsNew = applicationsNew.data.filter((application: any) => application.status !== "Draft")
+    if (submittedApplicationsNew.length !== 1) {
+        return null
+    }
+    const submittedApplicationsOld = applicationsOld.data.filter((application: any) => application.status !== "Draft")
+    if (submittedApplicationsOld.length !== 0) {
+        return null
+    }
+    return submittedApplicationsNew[0]
 }

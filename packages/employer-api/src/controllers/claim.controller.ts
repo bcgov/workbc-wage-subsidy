@@ -2,84 +2,130 @@
 /* eslint-disable import/prefer-default-export */
 import * as express from "express"
 
+import { insertClaim } from "../lib/transactions"
 import * as claimService from "../services/claim.service"
+import * as employerService from "../services/employer.service"
 import * as formService from "../services/form.service"
-
-// import type kAuthRequest from "../interfaces/kauth-request.d"
+import { getApplicationByConfirmationID, getFormId, getFormPass } from "../services/application.service"
 
 export const getAllClaims = async (req: any, res: express.Response) => {
     try {
-        const { sort, filter, page, perPage } = req.query
-        // eslint-disable-next-line camelcase
-        const { bceid_username } = req.kauth.grant.access_token.content
-        if (bceid_username === undefined) {
+        const bceid_guid = req.kauth.grant.access_token.content?.bceid_user_guid
+        if (bceid_guid === undefined) {
             return res.status(403).send("Not Authorized")
         }
-        const filters = filter ? JSON.parse(filter) : {}
-        const sorted = sort ? sort.replace(/[^a-zA-Z0-9,]/g, "").split(",") : ["id", "ASC"]
-        const claims = await claimService.getAllClaims(Number(perPage), Number(page), filters, sorted, bceid_username)
-        const hasNonComplete = claims.data.some((a: any) => a.status !== "complete")
+        const filter = req.query.filter ? JSON.parse(req.query.filter) : {}
+        const sort: string[] = req.query.sort ? JSON.parse(req.query.sort) : []
+        const sortFields = sort?.length > 0 ? sort[0].split(",") : []
+        const sortOrder = sort?.length > 1 ? sort[1] : ""
+        const page = req.query.page ?? 1
+        const perPage = req.query.perPage ?? 1
+        const claims = await claimService.getAllClaims(
+            Number(perPage),
+            Number(page),
+            filter,
+            sortFields,
+            sortOrder,
+            bceid_guid
+        )
 
-        const params = {
-            fields: `formHandler, storefrontId, catchmentNo, userInfo, applicationId, internalId, container`,
-            // eslint-disable-next-line camelcase
-            // createdBy: bceid_username,
-            deleted: false
-        }
-
-        if (hasNonComplete) {
-            const hasClaimApplications = await formService.getFormSubmissions(
-                process.env.CLAIM_FORM_ID || "",
-                process.env.CLAIM_FORM_PASS || "",
-                params
+        let claimsUpdated = claims
+        // create a new list of applications with updated status
+        if (filter.status == null && perPage > 1) {
+            // only update applications once each call cycle
+            // updates the status of applications that have been submitted or in draft
+            await Promise.all(claims.data.map(updateClaimFromForm))
+            claimsUpdated = await claimService.getAllClaims(
+                Number(perPage),
+                Number(page),
+                filter,
+                sortFields,
+                sortOrder,
+                bceid_guid
             )
-            hasClaimApplications.forEach(async (h: any) => {
-                const app = claims.data.find((a: any) => a.internalid === h.internalId) || null
-                if (app) {
-                    // if form is complete
-                    if (h.formSubmissionStatusCode === "SUBMITTED" && app.status !== "submitted") {
-                        // update ALL fields of content
-                        claimService.updateClaimsData(h, app.id)
-                        // else form is in draft
-                    } else if (app.status === null) {
-                        // set status to draft
-                        await claimService.updateClaims(app.id, h.confirmationId, h.submissionId, "draft", null)
-                    }
-                    // update the DB
-                }
-            })
         }
         res.set({
             "Access-Control-Expose-Headers": "Content-Range",
-            "Content-Range": `0 - ${claims.pagination.to} / ${claims.pagination.total}`
+            "Content-Range": `0 - ${claimsUpdated.pagination.to} / ${claimsUpdated.pagination.total}`
         })
-        return res.status(200).send(claims.data)
-    } catch (e: unknown) {
-        console.error(e)
+        return res.status(200).send(claimsUpdated.data)
+    } catch (e: any) {
+        console.log(e?.message)
         return res.status(500).send("Server Error")
+    }
+}
+
+export const getClaimCounts = async (req: any, res: express.Response) => {
+    try {
+        const bceid_guid = req.kauth.grant.access_token.content?.bceid_user_guid
+        if (bceid_guid === undefined) {
+            return res.status(401).send("Not Authorized")
+        }
+        const claimCounts = await claimService.getClaimCounts(bceid_guid)
+        return res.status(200).send(claimCounts)
+    } catch (e: unknown) {
+        return res.status(500).send("Internal Server Error")
     }
 }
 
 export const createClaim = async (req: any, res: express.Response) => {
     try {
-        const { bceid_username } = req.kauth.grant.access_token.content
-        if (bceid_username === undefined) {
+        const bceid_guid = req.kauth.grant.access_token.content?.bceid_user_guid
+        const { application_id: appConfirmationId } = req.body
+        if (bceid_guid === undefined) {
             return res.status(403).send("Not Authorized")
         }
-        const created = await claimService.insertClaim(
+        if (!req.body?.guid || req.body.guid !== bceid_guid) {
+            return res.status(403).send("Forbidden")
+        }
+
+        // Obtain associated application.
+        const associatedApplication = appConfirmationId ? await getApplicationByConfirmationID(appConfirmationId) : null
+        if (!associatedApplication) {
+            return res.status(403).send("Forbidden")
+        }
+        const formID = getFormId(associatedApplication.form_type)
+        const formPass = getFormPass(associatedApplication.form_type)
+        let associatedApplicationForm
+        if (formID && formPass && associatedApplication.form_submission_id) {
+            associatedApplicationForm = await formService.getSubmission(
+                formID,
+                formPass,
+                associatedApplication.form_submission_id
+            )
+        }
+        if (!associatedApplicationForm || !associatedApplicationForm.submission.submission?.data) {
+            return res.status(500).send("Internal Server Error")
+        }
+
+        // Prepare pre-fill data.
+        const appFormData = associatedApplicationForm.submission.submission.data
+        const prefillFields = computeClaimPrefillFields(appFormData)
+
+        // Create a new form draft //
+        const createDraftResult = await formService.createLoginProtectedDraft(
+            req.kauth.grant.access_token,
+            process.env.CLAIM_FORM_ID as string,
+            process.env.CLAIM_FORM_VERSION_ID as string,
             req.body.formKey,
-            req.body.userName,
-            req.body.formtype,
-            req.body.guid,
-            req.body.applicationid
+            prefillFields
         )
-        // console.log("created is")
-        // console.log(created)
-        if (created) {
-            return res.status(200).send({ data: created })
+        if (createDraftResult?.id) {
+            const insertResult = await insertClaim(
+                req.body.formKey,
+                req.body.guid,
+                req.body.application_id,
+                createDraftResult.id
+            )
+            if (insertResult?.rowCount === 1) {
+                // successful insertion
+                return res.status(200).send({ submissionId: createDraftResult.id })
+            }
+        } else {
+            return res.status(500).send("Internal Server Error")
         }
         return res.status(500).send("Internal Server Error")
-    } catch (e: unknown) {
+    } catch (e: any) {
         console.log(e)
         return res.status(500).send("Internal Server Error")
     }
@@ -87,50 +133,105 @@ export const createClaim = async (req: any, res: express.Response) => {
 
 export const getOneClaim = async (req: any, res: express.Response) => {
     try {
-        const { bceid_username } = req.kauth.grant.access_token.content
-        if (bceid_username === undefined) {
+        const bceid_guid = req.kauth.grant.access_token.content?.bceid_user_guid
+        if (bceid_guid === undefined) {
             return res.status(403).send("Not Authorized")
         }
         const { id } = req.params
+        const employerClaimRecord = await claimService.getEmployerClaimRecord(bceid_guid, id)
+        if (!employerClaimRecord) {
+            return res.status(403).send("Forbidden or Not Found")
+        }
         const claims = await claimService.getClaimByID(id)
         return res.status(200).send(claims)
-    } catch (e: unknown) {
-        console.log(e)
+    } catch (e: any) {
+        console.log(e?.message)
         return res.status(500).send("Internal Server Error")
     }
 }
 
 export const updateClaim = async (req: any, res: express.Response) => {
     try {
-        const { bceid_username } = req.kauth.grant.access_token.content
-        if (bceid_username === undefined) {
+        const bceid_guid = req.kauth.grant.access_token.content?.bceid_user_guid
+        if (bceid_guid === undefined) {
             return res.status(403).send("Not Authorized")
         }
         const { id } = req.params
-        const updated = await claimService.updateClaims(id, "", "", "", req.body)
-        if (updated !== 0) {
-            // eslint-disable-next-line object-shorthand
-            return res.status(200).send({ id: id })
+        const employerClaimRecord = await claimService.getEmployerClaimRecord(bceid_guid, id)
+        if (!employerClaimRecord) {
+            return res.status(403).send("Forbidden or Not Found")
         }
-        return res.status(401).send("Not Found or Not Authorized")
-    } catch (e: unknown) {
-        console.log(e)
+        await claimService.updateClaim(id, null, req.body)
+        return res.status(200).send({ id })
+    } catch (e: any) {
+        console.log(e?.message)
+        return res.status(500).send("Internal Server Error")
+    }
+}
+
+// Helper function to update the status of an claim, if it is in draft
+// and the form is still in draft, then update the claim status to draft
+const updateClaimFromForm = async (employerClaimRecord: any) => {
+    if (employerClaimRecord.status === "Draft") {
+        const formID = process.env.CLAIM_FORM_ID
+        const formPass = process.env.CLAIM_FORM_PASS
+        if (formID && formPass && employerClaimRecord.form_submission_id) {
+            const submissionResponse = await formService.getSubmission(
+                formID,
+                formPass,
+                employerClaimRecord.form_submission_id
+            )
+            if (submissionResponse.submission.draft === true) {
+                await claimService.updateClaim(employerClaimRecord.id, "Draft", submissionResponse.submission)
+            }
+        }
+    }
+}
+
+export const shareClaim = async (req: any, res: express.Response) => {
+    try {
+        const { bceid_user_guid, bceid_business_guid } = req.kauth.grant.access_token.content
+        if (bceid_user_guid === undefined) {
+            return res.status(401).send("Not Authorized")
+        }
+        const { id } = req.params
+        const { users } = req.body
+        const targetUsers = await employerService.getEmployersByIDs(users)
+        const employerClaimRecord = await claimService.getEmployerClaimRecord(bceid_user_guid, id)
+        if (
+            !employerClaimRecord ||
+            bceid_business_guid === undefined ||
+            !targetUsers.every((user: any) => user.bceid_business_guid === bceid_business_guid)
+        ) {
+            return res.status(403).send("Forbidden or Not Found")
+        }
+        const claim = await claimService.getClaimByID(id)
+        const shareResult = await formService.shareForm(
+            req.kauth.grant.access_token.token,
+            claim.form_submission_id,
+            users
+        )
+        if (shareResult) {
+            await claimService.shareClaim(id, users)
+        }
+        return res.status(200).send({ id })
+    } catch (e: any) {
+        console.log(e?.message)
         return res.status(500).send("Internal Server Error")
     }
 }
 
 export const deleteClaim = async (req: any, res: express.Response) => {
     try {
-        const { bceid_username } = req.kauth.grant.access_token.content
-        if (bceid_username === undefined) {
+        const bceid_guid = req.kauth.grant.access_token.content?.bceid_user_guid
+        if (bceid_guid === undefined) {
             return res.status(403).send("Not Authorized")
         }
         const { id } = req.params
         const claim = await claimService.getClaimByID(id)
-        // console.log(claim)
         /* Only applications created by the user who sent the request
         or if the status is Awaiting Submission can be deleted */
-        if (claim.createdby !== bceid_username || claim.status !== null) {
+        if (claim.createdby !== bceid_guid || claim.status !== null) {
             return res.status(401).send("Not Authorized")
         }
         const deleted = await claimService.deleteClaim(id)
@@ -138,8 +239,30 @@ export const deleteClaim = async (req: any, res: express.Response) => {
             return res.status(200).send({ id })
         }
         return res.status(401).send("Not Found or Not Authorized")
-    } catch (e: unknown) {
-        console.log(e)
+    } catch (e: any) {
+        console.log(e?.message)
         return res.status(500).send("Internal Server Error")
     }
 }
+
+// Prepare pre-fill data.
+// Use data from associated application.
+// Use workplace address if it exists, otherwise use business address.
+const computeClaimPrefillFields = (appFormData: any) => ({
+    container: {
+        ...(appFormData?.catchmentNoStoreFront && { catchmentNoStoreFront: appFormData.catchmentNoStoreFront }),
+        ...(appFormData?.operatingName && { employerName: appFormData.operatingName }),
+        ...(appFormData?.signatory1 && { employerContact: appFormData.signatory1 }),
+        ...(appFormData?.businessPhone && { employerPhone: appFormData.businessPhone }),
+        ...(appFormData.container?.addressAlt && {
+            ...(appFormData.container?.addressAlt && { businessAddress1: appFormData.container.addressAlt }),
+            ...(appFormData.container?.cityAlt && { employerCity: appFormData.container.cityAlt }),
+            ...(appFormData.container?.postalAlt && { employerPostal: appFormData.container.postalAlt })
+        }),
+        ...(!appFormData.container?.addressAlt && {
+            ...(appFormData?.businessAddress && { businessAddress1: appFormData.businessAddress }),
+            ...(appFormData?.businessCity && { employerCity: appFormData.businessCity }),
+            ...(appFormData?.businessPostal && { employerPostal: appFormData.businessPostal })
+        })
+    }
+})

@@ -4,7 +4,13 @@ import { CustomContainerLayout } from "./CustomContainerLayout"
 
 // eslint-disable-next-line import/no-anonymous-default-export
 export default (props: any) => {
-    const itemStyle = { backgroundColor: "#5a7daa", height: "100%", paddingLeft: 35, paddingRight: 35 }
+    const itemStyle = {
+        backgroundColor: "#5a7daa",
+        height: "100%",
+        paddingLeft: 35,
+        paddingRight: 35,
+        fontSize: "14px"
+    }
     return (
         // use a custom ContainerLayout implementation in order to be able to display two headers
         <>
@@ -22,6 +28,7 @@ export default (props: any) => {
                         <HorizontalMenu.Item label="Claim Forms" to="/claims" value="claims" style={itemStyle} />
                     </HorizontalMenu>
                 }
+                userMenu={true}
             />
             <ReactQueryDevtools initialIsOpen={false} />
         </>

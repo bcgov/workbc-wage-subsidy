@@ -1,180 +1,292 @@
 /* eslint-disable import/prefer-default-export */
+/* eslint-disable camelcase */
 import * as express from "express"
 
 import memoryStreams from "memory-streams"
-// import muhammara from "muhammara"
 import * as claimService from "../services/claims.service"
-import { getCatchment } from "../lib/catchment"
-import { generateDocumentTemplate } from "../services/cdogs.service"
+import * as formService from "../services/form.service"
+import { getCatchments } from "../lib/catchment"
+import { generatePdf } from "../services/cdogs.service"
+import { updateClaimWithSideEffects } from "../lib/transactions"
+import { formatCurrency, formatDateMmmDDYYYY, formatPercentage } from "../utils/string-functions"
 
 // eslint-disable-next-line @typescript-eslint/no-require-imports, @typescript-eslint/no-var-requires
 const muhammara = require("muhammara")
 
-const claimHash = process.env.CLAIM_HASH || ""
-
 export const getAllClaims = async (req: any, res: express.Response) => {
     try {
-        let catchment
-        try {
-            catchment = await getCatchment(req.kauth.grant.access_token)
-        } catch (e: unknown) {
-            return res.status(403).send("Not Authorized")
+        const { bceid_user_guid, idir_username } = req.kauth.grant.access_token.content
+        if (bceid_user_guid === undefined && idir_username === undefined) {
+            return res.status(401).send("Not Authorized")
         }
-        const { filter, sort, page, perPage } = req.query
-        const filters = filter ? JSON.parse(filter) : {}
-        if (req.kauth.grant.access_token.content.bceid_user_guid && filters.catchmentno) {
-            // console.log("bceid", typeof filters.catchmentno, filters.catchmentno)
-            if (
-                catchment.length === 0 ||
-                !catchment.map((e: string) => Number(e)).includes(Number(filters.catchmentno))
-            ) {
-                return res.status(403).send("Not Authorized")
-            }
+        const filter = req.query.filter ? JSON.parse(req.query.filter) : {}
+        const catchments = await getCatchments(req.kauth.grant.access_token)
+        if (
+            catchments.length === 0 ||
+            !filter.catchmentno ||
+            (filter.catchmentno !== -1 && !catchments.includes(filter.catchmentno))
+        ) {
+            return res.status(403).send("Forbidden")
         }
-        const sorted = sort ? sort.replace(/[^a-zA-Z0-9,]/g, "").split(",") : ["id", "ASC"]
-        // console.log(sorted)
-        const claims = await claimService.getAllClaims(Number(perPage), Number(page), filters, sorted, catchment)
-        // console.log(claims)
+        const sort: string[] = req.query.sort ? JSON.parse(req.query.sort) : []
+        const sortFields = sort?.length > 0 ? sort[0].split(",") : []
+        const sortOrder = sort?.length > 1 ? sort[1] : ""
+        const page = req.query.page ?? 1
+        const perPage = req.query.perPage ?? 1
+        const claims = await claimService.getAllClaims(Number(perPage), Number(page), filter, sortFields, sortOrder)
         res.set({
             "Access-Control-Expose-Headers": "Content-Range",
             "Content-Range": `0 - ${claims.pagination.to} / ${claims.pagination.total}`
         })
         return res.status(200).send(claims.data)
     } catch (e: unknown) {
-        // console.log(e)
-        return res.status(500).send("Server Error")
+        console.log(e)
+        return res.status(500).send("Internal Server Error")
     }
 }
 
-export const getClaim = async (req: any, res: express.Response) => {
+export const getClaimCounts = async (req: any, res: express.Response) => {
     try {
-        let catchment
-        try {
-            catchment = await getCatchment(req.kauth.grant.access_token)
-        } catch (e: unknown) {
-            // console.log(e)
-            return res.status(403).send("Not Authorized")
+        const { bceid_user_guid, idir_user_guid } = req.kauth.grant.access_token.content
+        if (bceid_user_guid === undefined && idir_user_guid === undefined) {
+            return res.status(401).send("Not Authorized")
         }
-        // console.log(catchment)
-        // console.log(req.params.id)
-        // console.log(req.params)
-        const { id } = req.params
-        const claims = await claimService.getClaimByID(id, catchment)
-        if (claims.length === 0) {
-            return res.status(404).send("Not found or Not Authorized")
+        const filter = req.query.filter ? JSON.parse(req.query.filter) : {}
+        const catchments = await getCatchments(req.kauth.grant.access_token)
+        if (
+            catchments.length === 0 ||
+            !filter.catchmentno ||
+            (filter.catchmentno !== -1 && !catchments.includes(filter.catchmentno))
+        ) {
+            return res.status(403).send("Forbidden")
         }
-        return res.status(200).send(claims[0])
+        const claimCounts = await claimService.getClaimCounts(filter.catchmentno)
+        return res.status(200).send(claimCounts)
     } catch (e: unknown) {
-        // console.log(e)
-        return res.status(500).send("Server Error")
+        console.log(e)
+        return res.status(500).send("Internal Server Error")
+    }
+}
+
+export const getOneClaim = async (req: any, res: express.Response) => {
+    try {
+        const { bceid_user_guid, idir_username } = req.kauth.grant.access_token.content
+        if (bceid_user_guid === undefined && idir_username === undefined) {
+            return res.status(401).send("Not Authorized")
+        }
+        const { id } = req.params
+        const claim = await claimService.getClaimByID(id)
+        const catchments = await getCatchments(req.kauth.grant.access_token)
+        if (catchments.length === 0 || (claim && !catchments.includes(claim.catchmentno))) {
+            return res.status(403).send("Forbidden")
+        }
+        if (!claim) {
+            return res.status(404).send("Not Found")
+        }
+
+        // TODO: synchronize DB with CHEFS form as necessary.
+        // TODO: create service provider CHEFS form as necessary.
+
+        return res.status(200).send(claim)
+    } catch (e: unknown) {
+        console.log(e)
+        return res.status(500).send("Internal Server Error")
     }
 }
 
 export const updateClaim = async (req: any, res: express.Response) => {
     try {
-        let catchment
-        try {
-            catchment = await getCatchment(req.kauth.grant.access_token)
-        } catch (e: unknown) {
-            // console.log(e)
-            return res.status(403).send("Not Authorized")
+        const { bceid_user_guid, idir_user_guid } = req.kauth.grant.access_token.content
+        if (bceid_user_guid === undefined && idir_user_guid === undefined) {
+            return res.status(401).send("Not Authorized")
         }
-        // console.log(catchment)
         const { id } = req.params
-        // console.log(req.body, id)
+        const claim = await claimService.getClaimByID(id)
+        const catchments = await getCatchments(req.kauth.grant.access_token)
         if (
-            req.body.applicationstatus &&
-            req.body.applicationstatus === "Marked for Deletion" &&
-            req.kauth.grant.access_token.content.identity_provider !== "idir"
+            catchments.length === 0 ||
+            (claim && !catchments.includes(claim.catchmentno)) ||
+            (req.body.catchmentNo && !catchments.includes(req.body.catchmentNo)) ||
+            (claim &&
+                req.body.catchmentNo &&
+                claim.catchmentno !== req.body.catchmentNo &&
+                idir_user_guid === undefined)
         ) {
-            return res.status(403).send("Access denied")
+            return res.status(403).send("Forbidden")
         }
-        console.log(req.kauth.grant.access_token.content)
-        const user =
-            req.kauth.grant.access_token.content.identity_provider === "idir"
-                ? `idir:${req.kauth.grant.access_token.content.idir_username}`
-                : `bceid:${req.kauth.grant.access_token.content.bceid_username}`
-        const updated = await claimService.updateClaim(id, req.body, catchment, user)
-
-        if (updated !== 0) {
-            // eslint-disable-next-line object-shorthand
-            return res.status(200).send({ id: id })
+        if (!claim) {
+            return res.status(404).send("Not Found")
         }
-        return res.status(404).send("Not Found or Not Authorized")
+        await updateClaimWithSideEffects(claim, bceid_user_guid || idir_user_guid, req.body)
+        return res.status(200).send({ id })
     } catch (e: unknown) {
         console.log(e)
-        return res.status(500).send("Server Error")
+        return res.status(500).send("Internal Server Error")
     }
 }
 
 export const deleteClaim = async (req: any, res: express.Response) => {
     try {
-        let catchment
-        if (req.kauth.grant.access_token.content.identity_provider !== "idir") {
-            return res.status(403).send("Access denied")
-        }
-        try {
-            catchment = await getCatchment(req.kauth.grant.access_token)
-        } catch (e: unknown) {
-            // console.log(e)
-            return res.status(403).send("Not Authorized")
+        const { bceid_user_guid, idir_username } = req.kauth.grant.access_token.content
+        if (bceid_user_guid === undefined && idir_username === undefined) {
+            return res.status(401).send("Not Authorized")
         }
         const { id } = req.params
-        // console.log(req.body, id)
-        const deleted = await claimService.deleteClaim(id, catchment)
-
-        if (deleted !== 0) {
-            // eslint-disable-next-line object-shorthand
-            return res.status(200).send({ id: id })
+        const claim = await claimService.getClaimByID(id)
+        const catchments = await getCatchments(req.kauth.grant.access_token)
+        if (
+            idir_username === undefined ||
+            catchments.length === 0 ||
+            (claim && !catchments.includes(claim.catchmentno))
+        ) {
+            return res.status(403).send("Forbidden")
         }
-        return res.status(404).send("Not Found or Not Authorized")
+        if (!claim) {
+            return res.status(404).send("Not Found")
+        }
+        const numDeleted = await claimService.deleteClaim(id)
+        if (numDeleted === 1) {
+            // TODO: delete CHEFS form.
+        } else {
+            throw new Error("Delete failed")
+        }
+        return res.status(200).send({ id })
     } catch (e: unknown) {
         console.log(e)
-        return res.status(500).send("Server Error")
+        return res.status(500).send("Internal Server Error")
     }
 }
 
-export const getFile = async (req: any, res: express.Response) => {
-    try {
-        let catchment
-        try {
-            catchment = await getCatchment(req.kauth.grant.access_token)
-        } catch (e: unknown) {
-            // console.log(e)
-            return res.status(403).send("Not Authorized")
-        }
-        const { id, fileid } = req.params
-        const claim = await claimService.getClaimByID(id, catchment)
-        // console.log(claim)
-        if (claim.length === 0) {
-            return res.status(404).send("Not found")
-        }
-        const file = claim[0].files.files.find((f: any) => f.data.id === fileid)
-        // console.log(file)
-        const fileres = await claimService.getFile(file.url)
-        res.setHeader("Content-Disposition", `attachment; filename=pdf.pdf`)
-        return res.status(200).send(fileres)
-    } catch (e: unknown) {
-        // console.log(e)
-        return res.status(500).send("Server Error")
+const formatPDFData = (submission: any, submittedDate: string) => {
+    const formattedData = {
+        periodStart1: formatDateMmmDDYYYY(submission.data.container?.periodStart1),
+        periodStart2: formatDateMmmDDYYYY(submission.data.container?.periodStart2),
+        isFinalClaim: submission.data.container?.isFinalClaim,
+        employerName: submission.data.container?.employerName,
+        employerContact: submission.data.container?.employerContact,
+        employerPhone: submission.data.container?.employerPhone,
+        businessAddress1: submission.data.container?.businessAddress1,
+        employerCity: submission.data.container?.employerCity,
+        employerPostal: submission.data.container?.employerPostal,
+        employeeFirstName: submission.data.container?.employeeFirstName,
+        employeeLastName: submission.data.container?.employeeLastName,
+        dateTo1: formatDateMmmDDYYYY(submission.data.container?.dateTo1),
+        dateTo2: formatDateMmmDDYYYY(submission.data.container?.dateTo2),
+        dateTo3: formatDateMmmDDYYYY(submission.data.container?.dateTo3),
+        dateTo4: formatDateMmmDDYYYY(submission.data.container?.dateTo4),
+        dateTo5: formatDateMmmDDYYYY(submission.data.container?.dateTo5),
+        dateFrom1: formatDateMmmDDYYYY(submission.data.container?.dateFrom1),
+        dateFrom2: formatDateMmmDDYYYY(submission.data.container?.dateFrom2),
+        dateFrom3: formatDateMmmDDYYYY(submission.data.container?.dateFrom3),
+        dateFrom4: formatDateMmmDDYYYY(submission.data.container?.dateFrom4),
+        dateFrom5: formatDateMmmDDYYYY(submission.data.container?.dateFrom5),
+        hoursWorked1: submission.data.container?.hoursWorked1,
+        hoursWorked2: submission.data.container?.hoursWorked2,
+        hoursWorked3: submission.data.container?.hoursWorked3,
+        hoursWorked4: submission.data.container?.hoursWorked4,
+        hoursWorked5: submission.data.container?.hoursWorked5,
+        eligibleHoursWorked1: submission.data.container?.eligibleHoursWorked1,
+        eligibleHoursWorked2: submission.data.container?.eligibleHoursWorked2,
+        eligibleHoursWorked3: submission.data.container?.eligibleHoursWorked3,
+        eligibleHoursWorked4: submission.data.container?.eligibleHoursWorked4,
+        eligibleHoursWorked5: submission.data.container?.eligibleHoursWorked5,
+        hourlyWage1: formatCurrency(submission.data.container?.hourlyWage1),
+        hourlyWage2: formatCurrency(submission.data.container?.hourlyWage2),
+        hourlyWage3: formatCurrency(submission.data.container?.hourlyWage3),
+        hourlyWage4: formatCurrency(submission.data.container?.hourlyWage4),
+        hourlyWage5: formatCurrency(submission.data.container?.hourlyWage5),
+        eligibleHourlyWage1: formatCurrency(submission.data.container?.eligibleHourlyWage1),
+        eligibleHourlyWage2: formatCurrency(submission.data.container?.eligibleHourlyWage2),
+        eligibleHourlyWage3: formatCurrency(submission.data.container?.eligibleHourlyWage3),
+        eligibleHourlyWage4: formatCurrency(submission.data.container?.eligibleHourlyWage4),
+        eligibleHourlyWage5: formatCurrency(submission.data.container?.eligibleHourlyWage5),
+        totalWages1: formatCurrency(submission.data.container?.totalWages1),
+        totalWages2: formatCurrency(submission.data.container?.totalWages2),
+        totalWages3: formatCurrency(submission.data.container?.totalWages3),
+        totalWages4: formatCurrency(submission.data.container?.totalWages4),
+        totalWages5: formatCurrency(submission.data.container?.totalWages5),
+        eligibleWages1: formatCurrency(submission.data.container?.eligibleWages1),
+        eligibleWages2: formatCurrency(submission.data.container?.eligibleWages2),
+        eligibleWages3: formatCurrency(submission.data.container?.eligibleWages3),
+        eligibleWages4: formatCurrency(submission.data.container?.eligibleWages4),
+        eligibleWages5: formatCurrency(submission.data.container?.eligibleWages5),
+        totalMercs1: formatCurrency(submission.data.container?.totalMercs1),
+        totalMercs2: formatCurrency(submission.data.container?.totalMercs2),
+        totalMercs3: formatCurrency(submission.data.container?.totalMercs3),
+        totalMercs4: formatCurrency(submission.data.container?.totalMercs4),
+        totalMercs5: formatCurrency(submission.data.container?.totalMercs5),
+        eligibleMercs1: formatCurrency(submission.data.container?.eligibleMercs1),
+        eligibleMercs2: formatCurrency(submission.data.container?.eligibleMercs2),
+        eligibleMercs3: formatCurrency(submission.data.container?.eligibleMercs3),
+        eligibleMercs4: formatCurrency(submission.data.container?.eligibleMercs4),
+        eligibleMercs5: formatCurrency(submission.data.container?.eligibleMercs5),
+        totalWages: formatCurrency(submission.data.container?.totalWages),
+        totalEligibleWages: formatCurrency(submission.data.container?.totalEligibleWages),
+        totalMercs: formatCurrency(submission.data.container?.totalMercs),
+        totalEligibleMercs: formatCurrency(submission.data.container?.totalEligibleMercs),
+        clientIssues1: submission.data.container?.clientIssues1,
+        workbcCentre: submission.data?.workBcCentre,
+        signatory1: submission.data.container?.signatory1,
+        subsidyRateDateFrom1: formatDateMmmDDYYYY(submission.data.container?.subsidyRateDateFrom1),
+        subsidyRateDateTo1: formatDateMmmDDYYYY(submission.data.container?.subsidyRateDateTo1),
+        totalWeeks1: submission.data.container?.totalWeeks1,
+        subsidyRatePercentage1: formatPercentage(submission.data.container?.subsidyRatePercentage1),
+        totalEligibleWagesPaid1: formatCurrency(submission.data.container?.totalEligibleWagesPaid1),
+        wagesEligibleForSubsidy1: formatCurrency(submission.data.container?.wagesEligibleForSubsidy1),
+        wagesToBeReimbursed1: formatCurrency(submission.data.container?.wagesToBeReimbursed1),
+        totalEligibleMercsPaid1: formatCurrency(submission.data.container?.totalEligibleMercsPaid1),
+        mercsToBeReimbursed1: formatCurrency(submission.data.container?.mercsToBeReimbursed1),
+        totalAmountToBeReimbursed1: formatCurrency(submission.data.container?.totalAmountToBeReimbursed1),
+        subsidyRateDateFrom2: formatDateMmmDDYYYY(submission.data.container?.subsidyRateDateFrom2),
+        subsidyRateDateTo2: formatDateMmmDDYYYY(submission.data.container?.subsidyRateDateTo2),
+        totalWeeks2: submission.data.container?.totalWeeks2,
+        subsidyRatePercentage2: formatPercentage(submission.data.container?.subsidyRatePercentage2),
+        totalEligibleWagesPaid2: formatCurrency(submission.data.container?.totalEligibleWagesPaid2),
+        wagesEligibleForSubsidy2: formatCurrency(submission.data.container?.wagesEligibleForSubsidy2),
+        wagesToBeReimbursed2: formatCurrency(submission.data.container?.wagesToBeReimbursed2),
+        totalEligibleMercsPaid2: formatCurrency(submission.data.container?.totalEligibleMercsPaid2),
+        mercsToBeReimbursed2: formatCurrency(submission.data.container?.mercsToBeReimbursed2),
+        totalAmountToBeReimbursed2: formatCurrency(submission.data.container?.totalAmountToBeReimbursed2),
+        totalSubsidyClaimed: formatCurrency(submission.data.container?.totalSubsidyClaimed),
+        comments: submission.data.container?.comments,
+        approvedBy: submission.data.container?.approvedBy,
+        approvedDate: submission.data.container?.approvedDate,
+        submittedDate: formatDateMmmDDYYYY(submittedDate)
     }
+    return formattedData
 }
 
 export const generatePDF = async (req: any, res: express.Response) => {
     try {
-        let mergedPDF: Buffer | undefined
-        let catchment
-        try {
-            catchment = await getCatchment(req.kauth.grant.access_token)
-        } catch (e: unknown) {
-            // console.log(e)
-            return res.status(403).send("Not Authorized")
+        const { bceid_user_guid, idir_user_guid } = req.kauth.grant.access_token.content
+        if (bceid_user_guid === undefined && idir_user_guid === undefined) {
+            return res.status(401).send("Not Authorized")
         }
         const { id } = req.params
-        const claim = await claimService.getClaimByID(id, catchment)
-        // console.log(claim[0])
-        const data = claim[0].data ? claim[0].data : claim[0]
-        // console.log(data)
+        const claim = await claimService.getClaimByID(id)
+        const catchments = await getCatchments(req.kauth.grant.access_token)
+        if (catchments.length === 0 || (claim && !catchments.includes(claim.catchmentno))) {
+            return res.status(403).send("Forbidden")
+        }
+        if (!claim) {
+            return res.status(404).send("Not Found")
+        }
+        const formId = process.env.SP_CLAIM_FORM_ID
+        const formPass = process.env.SP_CLAIM_FORM_PASS
+        const templateHash = process.env.CLAIM_HASH
+        const submissionId = claim?.service_provider_form_submission_id
+        const submittedDate = claim?.form_submitted_date
+        if (!formId || !formPass || !templateHash || !submissionId || !submittedDate) {
+            console.log("Missing required fields for claim PDF.")
+            return res.status(500).send("Internal Server Error")
+        }
+        const submissionResponse = await formService.getSubmission(formId, formPass, submissionId)
+        const submission = submissionResponse?.submission?.submission
+        if (!submission) {
+            console.log("Failed to obtain claim submission.")
+            return res.status(500).send("Internal Server Error")
+        }
+        const data = formatPDFData(submission, submittedDate)
         const templateConfig = {
             // eslint-disable-next-line object-shorthand
             data: data,
@@ -188,21 +300,56 @@ export const generatePDF = async (req: any, res: express.Response) => {
                 reportName: `pdf.pdf`
             }
         }
-        const templateHash = claimHash
-        const pdf = await generateDocumentTemplate(templateHash, templateConfig)
-        mergedPDF = combinePDFBuffers(mergedPDF, pdf)
-        if (data.files && data.files.files.length > 0) {
-            await Promise.all(
-                data.files.files.map(async (file: { url: string }) => {
-                    const fileres = await claimService.getFile(file.url)
-                    mergedPDF = combinePDFBuffers(mergedPDF, fileres)
-                })
-            )
+        const pdf = await generatePdf(templateHash, templateConfig)
+        let mergedPDF = combinePDFBuffers(undefined, pdf)
+
+        const attachmentData = submission.data.container?.supportingDocuments
+        if (attachmentData) {
+            const attachmentUrls = attachmentData.reduce((result: string[], item: any) => {
+                if (item?.url) {
+                    result.push(item.url.substring(11))
+                }
+                return result
+            }, [])
+            const attachments: any[] = []
+            if (attachmentUrls.length > 0) {
+                await Promise.all(
+                    attachmentUrls.map(async (url: string) => {
+                        await claimService
+                            .getFile(url)
+                            .then((fileres) => {
+                                if (fileres) {
+                                    console.log("pushing attachment...")
+                                    attachments.push(fileres)
+                                    console.log("attachment pushed!")
+                                }
+                            })
+                            .catch((err) => {
+                                console.log("getFile service returned error: ", err)
+                                return res.status(500).send("Internal Server Error")
+                            })
+                    })
+                )
+                    .then(() => {
+                        attachments.forEach((attachment) => {
+                            console.log("combining pdf buffers...")
+                            mergedPDF = combinePDFBuffers(mergedPDF, attachment)
+                            console.log("successfully combined!")
+                        })
+                    })
+                    .catch((err) => {
+                        console.log("error mapping attachments: ", err)
+                        return res.status(500).send("Internal Server Error")
+                    })
+            }
+            if (attachmentData.length !== attachments.length) {
+                console.log("Failed to obtain claim attachments.")
+                return res.status(500).send("Internal Server Error")
+            }
         }
-        res.setHeader("Content-Disposition", `attachment; filename=pdf.pdf`)
-        return res.status(200).send(mergedPDF)
+        return res.status(200).send({ result: mergedPDF })
     } catch (e: unknown) {
-        // console.log(e)
+        console.log(e)
         return res.status(500).send("Internal Server Error")
     }
 }

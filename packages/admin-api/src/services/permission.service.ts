@@ -17,13 +17,7 @@ export const getPermission = async (guid: string, isIDIR: boolean) => {
                 password: `${process.env.SAM_API_PASSWORD}`
             }
         })
-        .then((response) => {
-            // console.log(response.data.filter((item: any) => item.Application === "WGS"))
-            return response.data.filter((item: any) => item.Application === "WGS")
-        })
-        .catch((error) => {
-            console.log(error)
-            return error
-        })
+        .then((response) => response.data.filter((item: any) => item.Application === "WGS"))
+        .catch((error) => error)
     return response
 }

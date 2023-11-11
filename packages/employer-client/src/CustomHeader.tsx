@@ -1,32 +1,57 @@
-import React from "react"
+import React, { useCallback, useState } from "react"
 import { Link as RouterLink } from "react-router-dom"
-import { Toolbar, AppBar, AppBarProps, Box, Link, IconButton } from "@mui/material"
+import { Toolbar, AppBar, AppBarProps, Box, Link, Button } from "@mui/material"
 import { styled } from "@mui/material/styles"
 import { UserMenu, LoadingIndicator, LocalesMenuButton, TitleComponent, useLocales } from "react-admin"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faBookOpenReader } from "@fortawesome/pro-solid-svg-icons"
 import { useContainerLayout, HorizontalMenu } from "@react-admin/ra-navigation"
+import Logo from "./Logo"
+import Tag from "./Tag"
+import { CustomUserMenu } from "./CustomUserMenu"
+import UserProfileModal from "./UserProfileModal"
 
 export const Header = (props: HeaderProps) => {
-    const {
-        title = "React-admin",
-        menu = defaultMenu,
-        toolbar = defaultToolbar,
-        userMenu = defaultUserMenu
-    } = useContainerLayout(props)
+    const { menu = defaultMenu, toolbar = defaultToolbar, userMenu = defaultUserMenu } = useContainerLayout(props)
+    const [modalIsOpen, setModalIsOpen] = useState(false)
+
+    const openModal = useCallback(() => {
+        setModalIsOpen(true)
+    }, [])
+
+    const closeModal = useCallback(() => {
+        setModalIsOpen(false)
+    }, [])
 
     return (
         <>
             <Root1 position="static" color="primary" className={HeaderClasses.root} {...sanitizeRestProps(props)}>
                 <Toolbar variant="dense" className={HeaderClasses.toolbar}>
                     <Box display="flex" alignItems="center">
-                        <Link component={RouterLink} to="/" variant="h6" color="primary.contrastText" underline="none">
-                            {title}
-                        </Link>
+                        <Box display="flex" gap={1} alignItems="center" minWidth="30em">
+                            <Logo />
+                            <Tag />
+                            <Link
+                                component={RouterLink}
+                                to="/"
+                                variant="h6"
+                                color="primary.contrastText"
+                                underline="none"
+                                aria-label="WorkBC Wage Subsidy Application"
+                            >
+                                <b>WorkBC Wage Subsidy</b>
+                            </Link>
+                        </Box>
                     </Box>
                     <Box display="flex">
                         {toolbar}
-                        {typeof userMenu === "boolean" ? userMenu === true ? <UserMenu /> : null : userMenu}
+                        {typeof userMenu === "boolean" ? (
+                            userMenu === true ? (
+                                <CustomUserMenu openModal={openModal} />
+                            ) : null
+                        ) : (
+                            userMenu
+                        )}
                     </Box>
                 </Toolbar>
             </Root1>
@@ -40,17 +65,40 @@ export const Header = (props: HeaderProps) => {
                 }}
                 {...sanitizeRestProps(props)}
             >
-                <Toolbar variant="dense" className={HeaderClasses.toolbar}>
+                <Toolbar
+                    variant="dense"
+                    className={HeaderClasses.toolbar}
+                    sx={{
+                        "& .MuiTab-root": {
+                            // Do not default to all uppercase.
+                            textTransform: "none"
+                        }
+                    }}
+                >
                     <Box>{menu}</Box>
-                    <div
-                        style={{ display: "flex", flexDirection: "row", alignItems: "center", cursor: "pointer" }}
+                    <Button
+                        sx={{
+                            display: "flex",
+                            flexDirection: "row",
+                            alignItems: "center",
+                            cursor: "pointer",
+                            fontSize: "14px",
+                            color: "rgb(255, 255, 255)",
+                            textTransform: "none",
+                            ":hover": {
+                                textDecoration: "underline"
+                            }
+                        }}
                         onClick={() => console.log("TODO!")}
                     >
                         <FontAwesomeIcon icon={faBookOpenReader} size="2x" style={{ marginRight: 15 }} />
                         Employer Handbook
-                    </div>
+                    </Button>
                 </Toolbar>
             </Root2>
+            {/* Mount modal outside of CustomUserMenu. */}
+            {/* Then menu can close when modal opens, allowing modal to receive focus. */}
+            <UserProfileModal isOpen={modalIsOpen} onRequestClose={closeModal} contentLabel="Update user profile" />
         </>
     )
 }

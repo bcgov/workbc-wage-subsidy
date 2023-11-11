@@ -3,11 +3,11 @@ import * as claimController from "../controllers/claim.controller"
 
 const router = express.Router()
 
-router.get("/claims", claimController.getAllClaims)
-router.get("/claims/:id", claimController.getClaim)
-router.put("/claims/:id", claimController.updateClaim)
-router.delete("/claims/:id", claimController.deleteClaim)
-router.get("/claims/:id/file/:fileid", claimController.getFile)
-router.get("/claims/pdf/:id", claimController.generatePDF)
+router.get("/", claimController.getAllClaims)
+router.get("/counts", claimController.getClaimCounts)
+router.get("/:id", claimController.getOneClaim)
+router.put("/:id", claimController.updateClaim)
+router.delete("/:id", claimController.deleteClaim)
+router.get("/pdf/:id/:formType", claimController.generatePDF)
 
 export default router
