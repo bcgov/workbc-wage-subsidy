@@ -14,6 +14,7 @@ type CustomDatagridProps<T> = T & {
     ariaLabel: string
     showCalculatorButton?: boolean
     rowAriaLabel?: string
+    disableBulkActions?: boolean
 }
 
 type CustomDatagridBodyProps<T> = T & {
@@ -30,12 +31,20 @@ const CustomDatagridBody = <T,>({ rowAriaLabel, showCalculatorButton, ...props }
     )
 }
 
-const CustomDatagrid = <T,>({ ariaLabel, showCalculatorButton, rowAriaLabel, ...props }: CustomDatagridProps<T>) => {
+const CustomDatagrid = <T,>({
+    ariaLabel,
+    showCalculatorButton,
+    rowAriaLabel,
+    disableBulkActions,
+    ...props
+}: CustomDatagridProps<T>) => {
     const { identity } = useGetIdentity()
     const [hasBulkActions, setHasBulkActions] = useState<boolean>(false)
 
     useEffect(() => {
-        setHasBulkActions(identity && identity.businessGuid && identity.businessName)
+        if (!disableBulkActions) {
+            setHasBulkActions(identity && identity.businessGuid && identity.businessName)
+        }
     }, [identity])
 
     const skipToListAside = (event: any) => {

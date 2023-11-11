@@ -10,13 +10,13 @@ const PAGE = 1
 
 const getAssociatedApplication = async (claim: any, trx: any) => {
     const filter = { form_confirmation_id: claim.associated_application_id }
-    return applicationService.getAllApplications(MAX_RESULTS, PAGE, filter, [], [], trx)
+    return applicationService.getAllApplications(MAX_RESULTS, PAGE, filter, [], "", trx)
 }
 
 const getAssociatedClaims = async (application: any, trx: any) => {
     const filter = { associated_application_id: application.form_confirmation_id }
     const getDrafts = false
-    return claimService.getAllClaims(MAX_RESULTS, PAGE, filter, [], [], getDrafts, trx)
+    return claimService.getAllClaims(MAX_RESULTS, PAGE, filter, [], "", getDrafts, trx)
 }
 
 const updateAssociatedClaims = async (application: any, data: any, username: string, trx: any) => {

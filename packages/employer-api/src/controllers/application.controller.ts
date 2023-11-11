@@ -16,7 +16,7 @@ export const getAllApplications = async (req: any, res: express.Response) => {
         const filter = req.query.filter ? JSON.parse(req.query.filter) : {}
         const sort: string[] = req.query.sort ? JSON.parse(req.query.sort) : []
         const sortFields = sort?.length > 0 ? sort[0].split(",") : []
-        const sortOrders = sort?.length > 0 ? sort[1].split(",") : []
+        const sortOrder = sort?.length > 1 ? sort[1] : ""
         const page = req.query.page ?? 1
         const perPage = req.query.perPage ?? 1
         const applications = await applicationService.getAllApplications(
@@ -24,7 +24,7 @@ export const getAllApplications = async (req: any, res: express.Response) => {
             Number(page),
             filter,
             sortFields,
-            sortOrders,
+            sortOrder,
             bceid_guid
         )
         // create a new list of applications with updated status
@@ -38,7 +38,7 @@ export const getAllApplications = async (req: any, res: express.Response) => {
                 Number(page),
                 filter,
                 sortFields,
-                sortOrders,
+                sortOrder,
                 bceid_guid
             )
             // If the user just submitted their first application, update their profile from the application data.

@@ -71,7 +71,7 @@ export const ApplicationList = (props: any) => {
                             }
                             sort={{
                                 field: "form_submitted_date,updated_date,created_date",
-                                order: "DESC,DESC,DESC"
+                                order: "DESC"
                             }}
                         >
                             <CustomDatagrid sx={DatagridStyles} rowClick={handleRowClick} ariaLabel="applications list">
@@ -80,6 +80,8 @@ export const ApplicationList = (props: any) => {
                                 <TextField label="Number of Positions" source="num_positions" emptyText="-" />{" "}
                                 <FunctionField
                                     label="Submitted Date"
+                                    sortBy="form_submitted_date,updated_date,created_date"
+                                    sortByOrder="DESC"
                                     render={
                                         (record: any) =>
                                             record.form_submitted_date ? record.form_submitted_date.split("T")[0] : "-" // remove timestamp

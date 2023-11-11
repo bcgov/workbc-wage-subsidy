@@ -30,10 +30,10 @@ export const getAllClaims = async (req: any, res: express.Response) => {
         }
         const sort: string[] = req.query.sort ? JSON.parse(req.query.sort) : []
         const sortFields = sort?.length > 0 ? sort[0].split(",") : []
-        const sortOrders = sort?.length > 0 ? sort[1].split(",") : []
+        const sortOrder = sort?.length > 1 ? sort[1] : ""
         const page = req.query.page ?? 1
         const perPage = req.query.perPage ?? 1
-        const claims = await claimService.getAllClaims(Number(perPage), Number(page), filter, sortFields, sortOrders)
+        const claims = await claimService.getAllClaims(Number(perPage), Number(page), filter, sortFields, sortOrder)
         res.set({
             "Access-Control-Expose-Headers": "Content-Range",
             "Content-Range": `0 - ${claims.pagination.to} / ${claims.pagination.total}`

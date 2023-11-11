@@ -52,7 +52,7 @@ export const ClaimList = (props: any) => {
                         }
                         sort={{
                             field: "form_submitted_date,updated_date,created_date",
-                            order: "DESC,DESC,DESC"
+                            order: "DESC"
                         }}
                     >
                         <CustomDatagrid showCalculatorButton={true} rowClick={handleRowClick} ariaLabel="claims list">
@@ -68,6 +68,8 @@ export const ClaimList = (props: any) => {
                             />
                             <FunctionField
                                 label="Submitted Date"
+                                sortBy="form_submitted_date,updated_date,created_date"
+                                sortByOrder="DESC"
                                 render={
                                     (record: any) =>
                                         record.form_submitted_date ? record.form_submitted_date.split("T")[0] : "-" // remove timestamp
