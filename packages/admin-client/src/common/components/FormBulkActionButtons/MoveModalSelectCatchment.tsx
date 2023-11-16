@@ -1,44 +1,40 @@
-import { Box, MenuItem, MenuList } from "@mui/material"
+import { Box, MenuItem, MenuList, Stack } from "@mui/material"
 import BCGovModal from "../BCGovModal/BCGovModal"
 import { COLOURS } from "../../../Colours"
 import ModalButton from "../BCGovModal/BCGovModalButton"
-import React, { useContext, useEffect, useState } from "react"
+import React, { useContext } from "react"
 import { CatchmentContext } from "../../contexts/CatchmentContext/CatchmentContext"
-import { useListContext, useRefresh, useUpdateMany } from "react-admin"
 import { ScreenReaderOnly } from "../../styles/ScreenReaderOnly"
 
 interface MoveModalProps {
     isOpen: boolean
     onRequestClose: (event: any) => void
     contentLabel: string
-    selectedIds: any[]
+    targetCatchment: number
+    setTargetCatchment: React.Dispatch<React.SetStateAction<number>>
+    openModalSelectWorkBcCentre: () => void
 }
 
-const MoveModal: React.FC<MoveModalProps> = ({ isOpen, onRequestClose, contentLabel, selectedIds }) => {
-    const refresh = useRefresh()
+const MoveModalSelectCatchment: React.FC<MoveModalProps> = ({
+    isOpen,
+    onRequestClose,
+    contentLabel,
+    targetCatchment,
+    setTargetCatchment,
+    openModalSelectWorkBcCentre
+}) => {
     const cc = useContext(CatchmentContext)
-    const { resource, onUnselectItems } = useListContext()
-    const [targetCatchment, setTargetCatchment] = useState(-1)
-    const [updateCatchment, { isLoading }] = useUpdateMany(resource, {
-        ids: selectedIds,
-        data: { catchmentNo: targetCatchment }
-    })
 
-    const moveToSelectedCatchment = (event: any) => {
+    const handleContinue = (event: any) => {
         if (targetCatchment !== -1) {
-            updateCatchment()
+            onRequestClose(event)
+            openModalSelectWorkBcCentre()
         }
-        onRequestClose(event)
     }
 
-    // After catchment update finishes, refresh UI data.
-    useEffect(() => {
-        if (!isLoading) {
-            setTargetCatchment(-1)
-            onUnselectItems()
-            refresh()
-        }
-    }, [isLoading])
+    const handleCancel = (event: any) => {
+        onRequestClose(event)
+    }
 
     return (
         <BCGovModal isOpen={isOpen} onRequestClose={onRequestClose} contentLabel={contentLabel}>
@@ -72,17 +68,21 @@ const MoveModal: React.FC<MoveModalProps> = ({ isOpen, onRequestClose, contentLa
                     </MenuList>
                 </Box>
             </Box>
-            <Box width="100%" textAlign="right" paddingTop="1em">
-                <ModalButton
-                    text="OK"
-                    showIcon={false}
-                    onClick={moveToSelectedCatchment}
-                    ariaLabel="Move selected forms to selected catchment and close dialog"
-                />
-                <ModalButton text="CANCEL" showIcon={false} onClick={onRequestClose} ariaLabel="Close dialog" />
+            <Box display="flex" width="100%" justifyContent="right" paddingTop="1em">
+                <Stack direction="row" gap={2}>
+                    <ModalButton
+                        text="CONTINUE"
+                        showIcon={false}
+                        onClick={handleContinue}
+                        ariaLabel="Continue to WorkBC Centre selection dialog"
+                        // Require valid catchment selection to proceed.
+                        disabled={targetCatchment < 1 || targetCatchment > 45}
+                    />
+                    <ModalButton text="CANCEL" showIcon={false} onClick={handleCancel} ariaLabel="Close dialog" />
+                </Stack>
             </Box>
         </BCGovModal>
     )
 }
 
-export default MoveModal
+export default MoveModalSelectCatchment
