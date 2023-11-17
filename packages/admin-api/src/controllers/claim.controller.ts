@@ -9,6 +9,9 @@ import { getCatchments } from "../lib/catchment"
 import { generatePdf } from "../services/cdogs.service"
 import { updateClaimWithSideEffects } from "../lib/transactions"
 import { formatCurrency, formatDateMmmDDYYYY, formatPercentage } from "../utils/string-functions"
+import WorkBcCentres from "../data/workbc-centres"
+
+const workBcCentreCodes = Object.keys(WorkBcCentres)
 
 // eslint-disable-next-line @typescript-eslint/no-require-imports, @typescript-eslint/no-var-requires
 const muhammara = require("muhammara")
@@ -106,7 +109,12 @@ export const updateClaim = async (req: any, res: express.Response) => {
         if (
             catchments.length === 0 ||
             (claim && !catchments.includes(claim.catchmentno)) ||
-            (req.body.catchmentNo && !catchments.includes(req.body.catchmentNo)) ||
+            (req.body.workBcCentre && !req.body.catchmentNo) ||
+            (req.body.catchmentNo &&
+                (!catchments.includes(req.body.catchmentNo) ||
+                    !req.body.workBcCentre ||
+                    Number(req.body.workBcCentre.split("-")[0]) !== req.body.catchmentNo ||
+                    !workBcCentreCodes.includes(req.body.workBcCentre))) ||
             (claim &&
                 req.body.catchmentNo &&
                 claim.catchmentno !== req.body.catchmentNo &&

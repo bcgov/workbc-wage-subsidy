@@ -33,7 +33,7 @@ const MoveModalSelectWorkBcCentre: React.FC<MoveModalSelectWorkBcCentreProps> = 
     const { resource, onUnselectItems } = useListContext()
     const [updateCatchment, { isLoading }] = useUpdateMany(resource, {
         ids: selectedIds,
-        data: { catchmentNo: targetCatchment }
+        data: { catchmentNo: targetCatchment, workBcCentre: targetCentre }
     })
 
     const handleBack = (event: any) => {
@@ -44,7 +44,7 @@ const MoveModalSelectWorkBcCentre: React.FC<MoveModalSelectWorkBcCentreProps> = 
     }
 
     const handleOK = (event: any) => {
-        if (targetCatchment !== -1) {
+        if (targetCatchment !== -1 && targetCentre !== "") {
             updateCatchment()
         }
         onRequestClose(event)
