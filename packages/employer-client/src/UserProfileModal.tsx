@@ -235,8 +235,8 @@ const UserProfileModal: React.FC<UserProfileModalProps> = ({ isOpen, onRequestCl
                                 />
                                 <Stack direction="row" spacing={6}>
                                     <StyledSelectInput
-                                        source="workbc_center"
-                                        label="WorkBC Center"
+                                        source="workbc_centre"
+                                        label="WorkBC Centre"
                                         sx={{ minWidth: "32em" }}
                                         choices={[
                                             { id: "1-1", name: "WorkBC Centre - Campbell River" },

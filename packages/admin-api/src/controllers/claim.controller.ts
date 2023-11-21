@@ -165,7 +165,7 @@ export const deleteClaim = async (req: any, res: express.Response) => {
     }
 }
 
-const formatPDFData = (submission: any, submittedDate: string) => {
+const formatPDFData = (submission: any, claim: any, submittedDate: string) => {
     const formattedData = {
         periodStart1: formatDateMmmDDYYYY(submission.data.container?.periodStart1),
         periodStart2: formatDateMmmDDYYYY(submission.data.container?.periodStart2),
@@ -233,7 +233,7 @@ const formatPDFData = (submission: any, submittedDate: string) => {
         totalMercs: formatCurrency(submission.data.container?.totalMercs),
         totalEligibleMercs: formatCurrency(submission.data.container?.totalEligibleMercs),
         clientIssues1: submission.data.container?.clientIssues1,
-        workbcCentre: submission.data?.workBcCentre,
+        workbcCentre: claim?.workbc_centre ? WorkBcCentres[claim.workbc_centre] : "",
         signatory1: submission.data.container?.signatory1,
         subsidyRateDateFrom1: formatDateMmmDDYYYY(submission.data.container?.subsidyRateDateFrom1),
         subsidyRateDateTo1: formatDateMmmDDYYYY(submission.data.container?.subsidyRateDateTo1),
@@ -294,7 +294,7 @@ export const generatePDF = async (req: any, res: express.Response) => {
             console.log("Failed to obtain claim submission.")
             return res.status(500).send("Internal Server Error")
         }
-        const data = formatPDFData(submission, submittedDate)
+        const data = formatPDFData(submission, claim, submittedDate)
         const templateConfig = {
             // eslint-disable-next-line object-shorthand
             data: data,

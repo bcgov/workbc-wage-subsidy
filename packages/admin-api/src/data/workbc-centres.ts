@@ -1,4 +1,4 @@
-const WorkBcCentres = {
+const WorkBcCentres: { [key: string]: string } = {
     "1-1": "WorkBC Centre - Campbell River",
     "1-2": "WorkBC Centre - Port Hardy",
     "2-1": "WorkBC Centre - Courtenay",

@@ -28,7 +28,7 @@ const updateAssociatedClaims = async (application: any, data: any, username: str
     const results = await Promise.all(
         assocClaims.data.map((claim: any) =>
             (claim.catchmentno && data.catchmentNo && claim.catchmentno !== data.catchmentNo) ||
-            (claim.workbc_center && data.workBcCentre && claim.workbc_center !== data.workBcCentre) ||
+            (claim.workbc_centre && data.workBcCentre && claim.workbc_centre !== data.workBcCentre) ||
             (claim.status && data.status && data.status === "Cancelled" && claim.status !== "Cancelled")
                 ? claimService.updateClaim(claim.id, username, data, trx)
                 : null
@@ -47,8 +47,8 @@ const updateApplicationAndAssociatedClaims = async (application: any, data: any,
         (data.catchmentNo && !application.catchmentno) ||
         (data.catchmentNo && application.catchmentno && data.catchmentNo !== application.catchmentno)
     const workBcCentreUpdated =
-        (data.workBcCentre && !application.workbc_center) ||
-        (data.workBcCentre && application.workbc_center && data.workBcCentre !== application.workbc_center)
+        (data.workBcCentre && !application.workbc_centre) ||
+        (data.workBcCentre && application.workbc_centre && data.workBcCentre !== application.workbc_centre)
     if (!catchmentUpdated && !workBcCentreUpdated && !applicationCancelled) {
         return numUpdated
     }

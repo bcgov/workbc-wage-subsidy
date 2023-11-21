@@ -106,6 +106,9 @@ export const updateApplication = async (id: number, status: string | null, body:
                     ? Number(body.submission.data.numberOfPositions0)
                     : null,
                 catchmentno: body.submission.data.catchmentNo ? Number(body.submission.data.catchmentNo) : null,
+                workbc_centre: body.submission.data.catchmentNoStoreFront
+                    ? body.submission.data.catchmentNoStoreFront
+                    : null,
                 status,
                 updated_by: "system",
                 updated_date: new Date(),
