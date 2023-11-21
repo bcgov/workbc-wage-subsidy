@@ -40,6 +40,7 @@ const MoveModalSelectCatchment: React.FC<MoveModalProps> = ({
         <BCGovModal isOpen={isOpen} onRequestClose={onRequestClose} contentLabel={contentLabel}>
             <h2>Move to another Catchment</h2>
             <p>Select the Catchment that you want to move the form to</p>
+            <span style={ScreenReaderOnly}>You must select a catchment to proceed.</span>
             <Box sx={{ display: "flex", width: "100%", justifyContent: "center" }}>
                 <Box sx={{ display: "flex", flexDirection: "column", width: "80%", lineHeight: "0.1em" }}>
                     <p>Available</p>

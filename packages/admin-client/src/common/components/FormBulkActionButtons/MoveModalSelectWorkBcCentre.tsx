@@ -68,6 +68,7 @@ const MoveModalSelectWorkBcCentre: React.FC<MoveModalSelectWorkBcCentreProps> = 
             {availableCentres.length > 0 ? (
                 <>
                     <p>Select the WorkBC Centre that you want to move the form to</p>
+                    <span style={ScreenReaderOnly}>You must select a WorkBC Centre to proceed.</span>
                     <Box sx={{ display: "flex", width: "100%", justifyContent: "center" }}>
                         <Box sx={{ display: "flex", flexDirection: "column", width: "90%", lineHeight: "0.1em" }}>
                             <p>Available for catchment {targetCatchment}</p>
@@ -116,7 +117,13 @@ const MoveModalSelectWorkBcCentre: React.FC<MoveModalSelectWorkBcCentreProps> = 
                             text="OK"
                             showIcon={false}
                             onClick={handleOK}
-                            ariaLabel="Move selected forms to selected catchment and WorkBC centre then close dialog"
+                            ariaLabel={
+                                "Move selected forms to catchment" +
+                                targetCatchment +
+                                ", " +
+                                availableCentres.find((centre) => centre.code === targetCentre)?.name +
+                                ", then close dialog"
+                            }
                             // Require valid catchment selection and workbc centre selection to proceed.
                             disabled={
                                 targetCatchment < 1 ||
