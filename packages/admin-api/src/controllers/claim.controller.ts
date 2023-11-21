@@ -117,7 +117,7 @@ export const updateClaim = async (req: any, res: express.Response) => {
                     !workBcCentreCodes.includes(req.body.workBcCentre))) ||
             (claim &&
                 req.body.catchmentNo &&
-                claim.catchmentno !== req.body.catchmentNo &&
+                (claim.catchmentno !== req.body.catchmentNo || claim.workbc_centre !== req.body.workBcCentre) &&
                 idir_user_guid === undefined)
         ) {
             return res.status(403).send("Forbidden")

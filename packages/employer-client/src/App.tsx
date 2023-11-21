@@ -167,6 +167,13 @@ export const lightTheme = {
                     }
                 }
             }
+        },
+        MuiTableCell: {
+            styleOverrides: {
+                root: {
+                    verticalAlign: "top"
+                }
+            }
         }
     },
     palette: {

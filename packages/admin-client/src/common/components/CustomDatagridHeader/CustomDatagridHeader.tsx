@@ -2,7 +2,7 @@ import * as React from "react"
 import { Children, isValidElement, useCallback } from "react"
 import PropTypes from "prop-types"
 import { useListContext, useResourceContext, Identifier, RaRecord, SortPayload, useTranslate } from "ra-core"
-import { Checkbox, TableCell, TableHead, TableRow } from "@mui/material"
+import { Box, Checkbox, TableCell, TableHead, TableRow } from "@mui/material"
 import clsx from "clsx"
 
 import { DatagridClasses } from "react-admin"
@@ -59,21 +59,25 @@ export const CustomDatagridHeader = (props: DatagridHeaderProps) => {
     return (
         <TableHead className={clsx(className, DatagridClasses.thead)}>
             <TableRow className={clsx(DatagridClasses.row, DatagridClasses.headerRow)}>
-                <TableCell padding="checkbox" className={DatagridClasses.headerCell}>
+                <TableCell padding="none">
                     {hasBulkActions && selectedIds && (
-                        <Checkbox
-                            aria-label={translate("ra.action.select_all", {
-                                _: "Select all"
-                            })}
-                            className="select-all"
-                            color="primary"
-                            checked={
-                                selectedIds.length > 0 &&
-                                selectableIds.length > 0 &&
-                                selectableIds.every((id) => selectedIds.includes(id))
-                            }
-                            onChange={handleSelectAll}
-                        />
+                        // Apply same padding that gets applied automatically to list row checkboxes.
+                        <Box paddingLeft="8.48px">
+                            <Checkbox
+                                aria-label={translate("ra.action.select_all", {
+                                    _: "Select all"
+                                })}
+                                className="select-all"
+                                color="primary"
+                                checked={
+                                    selectedIds.length > 0 &&
+                                    selectableIds.length > 0 &&
+                                    selectableIds.every((id) => selectedIds.includes(id))
+                                }
+                                onChange={handleSelectAll}
+                                sx={{ height: "42px", width: "42px" }}
+                            />
+                        </Box>
                     )}
                 </TableCell>
                 {Children.map(children, (field, index) =>

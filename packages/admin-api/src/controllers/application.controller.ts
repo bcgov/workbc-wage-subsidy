@@ -118,7 +118,8 @@ export const updateApplication = async (req: any, res: express.Response) => {
                     !workBcCentreCodes.includes(req.body.workBcCentre))) ||
             (application &&
                 req.body.catchmentNo &&
-                application.catchmentno !== req.body.catchmentNo &&
+                (application.catchmentno !== req.body.catchmentNo ||
+                    application.workbc_centre !== req.body.workBcCentre) &&
                 idir_user_guid === undefined)
         ) {
             return res.status(403).send("Forbidden")
