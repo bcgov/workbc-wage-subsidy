@@ -17,7 +17,13 @@ export const getPermission = async (guid: string, isIDIR: boolean) => {
                 password: `${process.env.SAM_API_PASSWORD}`
             }
         })
-        .then((response) => response.data.filter((item: any) => item.Application === "WGS"))
+        .then((response) =>
+            response.data.filter(
+                (item: any) =>
+                    // Only support catchments 1 - 45.
+                    item.Application === "WGS" && Number(item.Catchment) > 100 && Number(item.Catchment) < 146
+            )
+        )
         .catch((error) => error)
     return response
 }
