@@ -11,7 +11,7 @@ import { updateClaimWithSideEffects } from "../lib/transactions"
 import { formatCurrency, formatDateMmmDDYYYY, formatPercentage } from "../utils/string-functions"
 
 // eslint-disable-next-line @typescript-eslint/no-require-imports, @typescript-eslint/no-var-requires
-const muhammara = require("muhammara")
+const { PDFDocument } = require("pdf-lib")
 
 export const getAllClaims = async (req: any, res: express.Response) => {
     try {
@@ -301,7 +301,7 @@ export const generatePDF = async (req: any, res: express.Response) => {
             }
         }
         const pdf = await generatePdf(templateHash, templateConfig)
-        let mergedPDF = combinePDFBuffers(undefined, pdf)
+        let mergedPDF = await combinePDFBuffers(undefined, pdf)
 
         const attachmentData = submission.data.container?.supportingDocuments
         if (attachmentData) {
@@ -330,12 +330,12 @@ export const generatePDF = async (req: any, res: express.Response) => {
                             })
                     })
                 )
-                    .then(() => {
-                        attachments.forEach((attachment) => {
+                    .then(async () => {
+                        for (const attachment of attachments) {
                             console.log("combining pdf buffers...")
-                            mergedPDF = combinePDFBuffers(mergedPDF, attachment)
+                            mergedPDF = await combinePDFBuffers(mergedPDF, attachment)
                             console.log("successfully combined!")
-                        })
+                        }
                     })
                     .catch((err) => {
                         console.log("error mapping attachments: ", err)
@@ -347,7 +347,7 @@ export const generatePDF = async (req: any, res: express.Response) => {
                 return res.status(500).send("Internal Server Error")
             }
         }
-        return res.status(200).send({ result: mergedPDF })
+        return res.status(200).send({ result: Buffer.from(mergedPDF).toString("base64") })
     } catch (e: unknown) {
         console.log(e)
         return res.status(500).send("Internal Server Error")
@@ -356,22 +356,22 @@ export const generatePDF = async (req: any, res: express.Response) => {
 
 // HELPER FUNCTIONS //
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-const combinePDFBuffers = (firstBuffer: Buffer | undefined, secondBuffer: Buffer) => {
+const combinePDFBuffers = async (firstBuffer: Buffer | undefined, secondBuffer: Buffer) => {
     if (!firstBuffer) return secondBuffer
 
     const outStream = new memoryStreams.WritableStream()
 
     try {
-        const firstPDFStream = new muhammara.PDFRStreamForBuffer(firstBuffer)
-        const secondPDFStream = new muhammara.PDFRStreamForBuffer(secondBuffer)
-
-        const pdfWriter = muhammara.createWriterToModify(firstPDFStream, new muhammara.PDFStreamForResponse(outStream))
-        pdfWriter.appendPDFPagesFromPDF(secondPDFStream)
-        pdfWriter.end()
-        const newBuffer = outStream.toBuffer()
-        outStream.end()
-
-        return newBuffer
+        const mergedPdf = await PDFDocument.create()
+        for (const pdfBytes of [firstBuffer, secondBuffer]) {
+            const pdf = await PDFDocument.load(pdfBytes)
+            const copiedPages = await mergedPdf.copyPages(pdf, pdf.getPageIndices())
+            copiedPages.forEach((page: any) => {
+                mergedPdf.addPage(page)
+            })
+        }
+        const buf = await mergedPdf.save()
+        return buf
     } catch (e) {
         outStream.end()
         if (e instanceof Error) {

@@ -19,7 +19,7 @@ const PdfButtonField: React.FC = () => {
             .then(({ result }) => {
                 const filename =
                     (resource === "applications" ? "application_" : "claim_") + record.form_confirmation_id + ".pdf"
-                downloadPdf(result.data, filename)
+                downloadPdf(result, filename)
             })
     })
 
