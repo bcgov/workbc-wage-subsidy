@@ -74,7 +74,8 @@ export const insertClaim = async (
             created_date: new Date(),
             created_by: userGuid,
             status: "Draft",
-            catchmentno: application[0].catchmentno
+            catchmentno: application[0].catchmentno,
+            workbc_centre: application[0].workbc_centre
         }
         const result = await knex("claims").modify((queryBuilder: any) => {
             queryBuilder.insert(data)

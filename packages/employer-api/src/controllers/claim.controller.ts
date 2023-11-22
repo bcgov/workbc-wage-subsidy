@@ -250,7 +250,6 @@ export const deleteClaim = async (req: any, res: express.Response) => {
 // Use workplace address if it exists, otherwise use business address.
 const computeClaimPrefillFields = (appFormData: any) => ({
     container: {
-        ...(appFormData?.catchmentNoStoreFront && { catchmentNoStoreFront: appFormData.catchmentNoStoreFront }),
         ...(appFormData?.operatingName && { employerName: appFormData.operatingName }),
         ...(appFormData?.signatory1 && { employerContact: appFormData.signatory1 }),
         ...(appFormData?.businessPhone && { employerPhone: appFormData.businessPhone }),

@@ -9,6 +9,9 @@ import { getCatchments } from "../lib/catchment"
 import { generatePdf } from "../services/cdogs.service"
 import { updateClaimWithSideEffects } from "../lib/transactions"
 import { formatCurrency, formatDateMmmDDYYYY, formatPercentage } from "../utils/string-functions"
+import WorkBcCentres from "../data/workbc-centres"
+
+const workBcCentreCodes = Object.keys(WorkBcCentres)
 
 // eslint-disable-next-line @typescript-eslint/no-require-imports, @typescript-eslint/no-var-requires
 const { PDFDocument } = require("pdf-lib")
@@ -106,10 +109,15 @@ export const updateClaim = async (req: any, res: express.Response) => {
         if (
             catchments.length === 0 ||
             (claim && !catchments.includes(claim.catchmentno)) ||
-            (req.body.catchmentNo && !catchments.includes(req.body.catchmentNo)) ||
+            (req.body.workBcCentre && !req.body.catchmentNo) ||
+            (req.body.catchmentNo &&
+                (!catchments.includes(req.body.catchmentNo) ||
+                    !req.body.workBcCentre ||
+                    Number(req.body.workBcCentre.split("-")[0]) !== req.body.catchmentNo ||
+                    !workBcCentreCodes.includes(req.body.workBcCentre))) ||
             (claim &&
                 req.body.catchmentNo &&
-                claim.catchmentno !== req.body.catchmentNo &&
+                (claim.catchmentno !== req.body.catchmentNo || claim.workbc_centre !== req.body.workBcCentre) &&
                 idir_user_guid === undefined)
         ) {
             return res.status(403).send("Forbidden")
@@ -157,7 +165,7 @@ export const deleteClaim = async (req: any, res: express.Response) => {
     }
 }
 
-const formatPDFData = (submission: any, submittedDate: string) => {
+const formatPDFData = (submission: any, claim: any, submittedDate: string) => {
     const formattedData = {
         periodStart1: formatDateMmmDDYYYY(submission.data.container?.periodStart1),
         periodStart2: formatDateMmmDDYYYY(submission.data.container?.periodStart2),
@@ -225,7 +233,7 @@ const formatPDFData = (submission: any, submittedDate: string) => {
         totalMercs: formatCurrency(submission.data.container?.totalMercs),
         totalEligibleMercs: formatCurrency(submission.data.container?.totalEligibleMercs),
         clientIssues1: submission.data.container?.clientIssues1,
-        workbcCentre: submission.data?.workBcCentre,
+        workbcCentre: claim?.workbc_centre ? WorkBcCentres[claim.workbc_centre] : "",
         signatory1: submission.data.container?.signatory1,
         subsidyRateDateFrom1: formatDateMmmDDYYYY(submission.data.container?.subsidyRateDateFrom1),
         subsidyRateDateTo1: formatDateMmmDDYYYY(submission.data.container?.subsidyRateDateTo1),
@@ -286,7 +294,7 @@ export const generatePDF = async (req: any, res: express.Response) => {
             console.log("Failed to obtain claim submission.")
             return res.status(500).send("Internal Server Error")
         }
-        const data = formatPDFData(submission, submittedDate)
+        const data = formatPDFData(submission, claim, submittedDate)
         const templateConfig = {
             // eslint-disable-next-line object-shorthand
             data: data,

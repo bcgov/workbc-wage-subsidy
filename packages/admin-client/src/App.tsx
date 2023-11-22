@@ -164,6 +164,14 @@ export const lightTheme = {
                     }
                 }
             }
+        },
+        MuiTableCell: {
+            styleOverrides: {
+                root: {
+                    verticalAlign: "top",
+                    marginTop: "1em"
+                }
+            }
         }
     },
     palette: {

@@ -8,6 +8,9 @@ import * as formService from "../services/form.service"
 import { generatePdf } from "../services/cdogs.service"
 import { updateApplicationWithSideEffects } from "../lib/transactions"
 import { formatDateMmmDDYYYY } from "../utils/string-functions"
+import WorkBcCentres from "../data/workbc-centres"
+
+const workBcCentreCodes = Object.keys(WorkBcCentres)
 
 export const getAllApplications = async (req: any, res: express.Response) => {
     try {
@@ -107,10 +110,16 @@ export const updateApplication = async (req: any, res: express.Response) => {
         if (
             catchments.length === 0 ||
             (application && !catchments.includes(application.catchmentno)) ||
-            (req.body.catchmentNo && !catchments.includes(req.body.catchmentNo)) ||
+            (req.body.workBcCentre && !req.body.catchmentNo) ||
+            (req.body.catchmentNo &&
+                (!catchments.includes(req.body.catchmentNo) ||
+                    !req.body.workBcCentre ||
+                    Number(req.body.workBcCentre.split("-")[0]) !== req.body.catchmentNo ||
+                    !workBcCentreCodes.includes(req.body.workBcCentre))) ||
             (application &&
                 req.body.catchmentNo &&
-                application.catchmentno !== req.body.catchmentNo &&
+                (application.catchmentno !== req.body.catchmentNo ||
+                    application.workbc_centre !== req.body.workBcCentre) &&
                 idir_user_guid === undefined)
         ) {
             return res.status(403).send("Forbidden")

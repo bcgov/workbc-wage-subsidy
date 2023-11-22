@@ -280,6 +280,7 @@ describe("updateApplication", () => {
             identity_provider: "idir"
         }
         req.body.catchmentNo = 2
+        req.body.workBcCentre = "2-1"
         const catchments = [1, 2]
         const application = { id: "1", catchmentno: 1, status: "In Progress" }
         const applicationID = { id: "1" }
@@ -332,6 +333,7 @@ describe("updateApplication", () => {
     })
     it("returns 403 when bceid user attempts to update catchment", async () => {
         req.body.catchmentNo = 2
+        req.body.workBcCentre = "2-1"
         const catchments = [1, 2]
         const application = { id: "1", catchmentno: 1, status: "In Progress" }
         ;(getCatchments as jest.Mock).mockResolvedValue(catchments)
@@ -347,6 +349,7 @@ describe("updateApplication", () => {
             identity_provider: "idir"
         }
         req.body.catchmentNo = 2
+        req.body.workBcCentre = "2-1"
         const catchments = [1]
         const application = { id: "1", catchmentno: 1, status: "In Progress" }
         ;(getCatchments as jest.Mock).mockResolvedValue(catchments)

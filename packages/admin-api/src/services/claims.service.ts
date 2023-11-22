@@ -78,6 +78,9 @@ export const updateClaim = async (id: string, username: string, data: any, trx?:
                 if (data.catchmentNo) {
                     queryBuilder.update("catchmentno", data.catchmentNo)
                 }
+                if (data.workBcCentre) {
+                    queryBuilder.update("workbc_centre", data.workBcCentre)
+                }
                 if (trx) {
                     queryBuilder.transacting(trx)
                 }

@@ -6,6 +6,7 @@ import { CatchmentContext } from "../common/contexts/CatchmentContext/CatchmentC
 import CustomDatagrid from "../common/components/CustomDatagrid/CustomDatagrid"
 import { ListActions } from "../common/components/ListActions/ListActions"
 import { ListAside } from "../common/components/ListAside/ListAside"
+import { WorkBcCentres } from "../common/data/WorkBcCentres"
 
 export const applicationStatusFilters = {
     All: { label: "All" },
@@ -70,6 +71,22 @@ export const ApplicationList = (props: any) => {
                                 }
                             />
                             <TextField label="Form Type" source="form_type" emptyText="-" />
+                            <FunctionField
+                                label="WorkBC Centre"
+                                sortBy="workbc_centre"
+                                sortByOrder="DESC"
+                                render={(record: any) => {
+                                    const chipLabel =
+                                        record?.workbc_centre &&
+                                        Object.keys(WorkBcCentres).includes(record.workbc_centre)
+                                            ? // Remove 'WorkBC Centre -' prefix before rendering.
+                                              WorkBcCentres[record.workbc_centre].substring(
+                                                  WorkBcCentres[record.workbc_centre].indexOf("-") + 2
+                                              )
+                                            : "Unassigned"
+                                    return <Chip label={chipLabel} size="small" />
+                                }}
+                            />
                             <FunctionField
                                 label={
                                     <Box display="flex" width="100%" justifyContent="center">
