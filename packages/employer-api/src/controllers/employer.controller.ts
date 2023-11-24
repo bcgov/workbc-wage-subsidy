@@ -39,7 +39,7 @@ export const createEmployer = async (req: any, res: express.Response) => {
         if (bceid_guid === undefined) {
             return res.status(403).send("Not Authorized")
         }
-        if (!req.body?.id || !req.body?.contact_name || !req.body.contact_email || bceid_guid !== req.body.id) {
+        if (!req.body?.id || bceid_guid !== req.body.id) {
             return res.status(403).send("Forbidden")
         }
         const employer = await employerService.getEmployerByID(req.body.id)
