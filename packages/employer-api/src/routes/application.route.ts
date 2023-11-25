@@ -5,10 +5,12 @@ const router = express.Router()
 
 router.get("/", applicationController.getAllApplications)
 router.get("/counts", applicationController.getApplicationCounts)
-router.post("/", applicationController.createApplication)
 router.get("/:id", applicationController.getOneApplication)
-router.put("/:id", applicationController.updateApplication)
+router.post("/", applicationController.createApplication)
 router.put("/share/:id", applicationController.shareApplication)
+router.put("/mark/:id", applicationController.markApplication)
+router.put("/sync", applicationController.syncApplications)
+router.put("/:id", applicationController.updateApplication)
 router.delete("/:id", applicationController.deleteApplication)
 
 export default router

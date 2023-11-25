@@ -5,7 +5,7 @@ import { insertApplication } from "../lib/transactions"
 import * as applicationService from "../services/application.service"
 import * as employerService from "../services/employer.service"
 import * as formService from "../services/form.service"
-import * as formAPIservice from "../services/formAPI.service"
+// import * as formAPIservice from "../services/formAPI.service"
 
 export const getAllApplications = async (req: any, res: express.Response) => {
     try {
@@ -19,6 +19,7 @@ export const getAllApplications = async (req: any, res: express.Response) => {
         const sortOrder = sort?.length > 1 ? sort[1] : ""
         const page = req.query.page ?? 1
         const perPage = req.query.perPage ?? 1
+
         const applications = await applicationService.getAllApplications(
             Number(perPage),
             Number(page),
@@ -27,46 +28,12 @@ export const getAllApplications = async (req: any, res: express.Response) => {
             sortOrder,
             bceid_guid
         )
-        // create a new list of applications with updated status
-        let applicationsNew = applications
-        if (filter.status == null && perPage > 1) {
-            // only update applications once each call cycle
-            // updates the status of applications that have been submitted or in draft
-            await Promise.all(applications.data.map(updateApplicationFromForm))
-            applicationsNew = await applicationService.getAllApplications(
-                Number(perPage),
-                Number(page),
-                filter,
-                sortFields,
-                sortOrder,
-                bceid_guid
-            )
-            // If the user just submitted their first application, update their profile from the application data.
-            const firstApplication = firstApplicationSubmitted(applications, applicationsNew)
-            if (firstApplication) {
-                const employer = await employerService.getEmployerByID(bceid_guid)
-                if (!employer || employer?.id !== bceid_guid) {
-                    return res.status(403).send("Forbidden")
-                }
-                const formId = applicationService.getFormId(firstApplication.form_type)
-                const formPass = applicationService.getFormPass(firstApplication.form_type)
-                const submissionResponse = await formService.getSubmission(
-                    formId,
-                    formPass,
-                    firstApplication.form_submission_id
-                )
-                await employerService.updateEmployerFromApplicationForm(
-                    employer,
-                    submissionResponse.submission.submission.data
-                )
-            }
-        }
 
         res.set({
             "Access-Control-Expose-Headers": "Content-Range",
-            "Content-Range": `0 - ${applicationsNew.pagination.to} / ${applicationsNew.pagination.total}`
+            "Content-Range": `0 - ${applications.pagination.to} / ${applications.pagination.total}`
         })
-        return res.status(200).send(applicationsNew.data)
+        return res.status(200).send(applications.data)
     } catch (e: any) {
         console.log(e?.message)
         return res.status(500).send("Server Error")
@@ -122,7 +89,7 @@ export const createApplication = async (req: any, res: express.Response) => {
             )
             if (insertResult?.rowCount === 1) {
                 // successful insertion
-                return res.status(200).send({ submissionId: createDraftResult.id })
+                return res.status(200).send({ recordId: req.body.formKey })
             }
         } else {
             return res.status(500).send("Internal Server Error")
@@ -152,19 +119,21 @@ export const getOneApplication = async (req: any, res: express.Response) => {
     }
 }
 
-export const updateApplication = async (req: any, res: express.Response) => {
+// Update stale applications with latest data from CHEFS forms.
+export const syncApplications = async (req: any, res: express.Response) => {
     try {
         const bceid_guid = req.kauth.grant.access_token.content?.bceid_user_guid
         if (bceid_guid === undefined) {
             return res.status(403).send("Not Authorized")
         }
-        const { id } = req.params
-        const employerApplicationRecord = await applicationService.getEmployerApplicationRecord(bceid_guid, id)
-        if (!employerApplicationRecord) {
+        const employer = await employerService.getEmployerByID(bceid_guid)
+        if (!employer) {
             return res.status(403).send("Forbidden or Not Found")
         }
-        await applicationService.updateApplication(id, null, req.body)
-        return res.status(200).send({ id })
+        // Update any drafts that have changed.
+        const drafts = await applicationService.getStaleDrafts(bceid_guid)
+        await Promise.all(drafts.map(updateApplicationFromForm))
+        return res.status(200).send({})
     } catch (e: any) {
         console.log(e?.message)
         return res.status(500).send("Internal Server Error")
@@ -181,11 +150,11 @@ const updateApplicationFromForm = async (application: any) => {
             if (submissionResponse.submission.draft === false) {
                 console.log("form submitted event")
                 // submitted
-                await applicationService.updateApplication(application.id, "New", submissionResponse.submission)
-                await formAPIservice.sendNotifications(submissionResponse.submission.submission)
+                await applicationService.updateApplication(application.id, "New", submissionResponse.submission, true)
+                // await formAPIservice.sendNotifications(submissionResponse.submission.submission)
             } else if (submissionResponse.submission.draft === true) {
                 // draft
-                await applicationService.updateApplication(application.id, "Draft", submissionResponse.submission)
+                await applicationService.updateApplication(application.id, "Draft", submissionResponse.submission, true)
             }
         }
     }
@@ -248,6 +217,45 @@ export const deleteApplication = async (req: any, res: express.Response) => {
     }
 }
 
+export const updateApplication = async (req: any, res: express.Response) => {
+    try {
+        const bceid_guid = req.kauth.grant.access_token.content?.bceid_user_guid
+        if (bceid_guid === undefined) {
+            return res.status(403).send("Not Authorized")
+        }
+        const { id } = req.params
+        const employerApplicationRecord = await applicationService.getEmployerApplicationRecord(bceid_guid, id)
+        if (!employerApplicationRecord) {
+            return res.status(403).send("Forbidden or Not Found")
+        }
+        await applicationService.updateApplication(id, null, req.body)
+        return res.status(200).send({ id })
+    } catch (e: any) {
+        console.log(e?.message)
+        return res.status(500).send("Internal Server Error")
+    }
+}
+
+// Mark an application as stale.
+export const markApplication = async (req: any, res: express.Response) => {
+    try {
+        const bceid_guid = req.kauth.grant.access_token.content?.bceid_user_guid
+        if (bceid_guid === undefined) {
+            return res.status(403).send("Not Authorized")
+        }
+        const { id } = req.params
+        const employerApplicationRecord = await applicationService.getEmployerApplicationRecord(bceid_guid, id)
+        if (!employerApplicationRecord) {
+            return res.status(403).send("Forbidden or Not Found")
+        }
+        await applicationService.markApplication(id)
+        return res.status(200).send({ id })
+    } catch (e: any) {
+        console.log(e?.message)
+        return res.status(500).send("Internal Server Error")
+    }
+}
+
 const computeApplicationPrefillFields = (employer: any) => ({
     ...(employer?.workbc_centre && {
         areYouCurrentlyWorkingWithAWorkBcCentre: "Yes",
@@ -279,15 +287,3 @@ const computeApplicationPrefillFields = (employer: any) => ({
     },
     ...(employer?.contact_name && { signatory1: employer.contact_name })
 })
-
-const firstApplicationSubmitted = (applicationsOld: any, applicationsNew: any) => {
-    const submittedApplicationsNew = applicationsNew.data.filter((application: any) => application.status !== "Draft")
-    if (submittedApplicationsNew.length !== 1) {
-        return null
-    }
-    const submittedApplicationsOld = applicationsOld.data.filter((application: any) => application.status !== "Draft")
-    if (submittedApplicationsOld.length !== 0) {
-        return null
-    }
-    return submittedApplicationsNew[0]
-}
