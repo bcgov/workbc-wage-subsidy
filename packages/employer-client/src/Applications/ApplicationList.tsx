@@ -1,6 +1,15 @@
 import { Box, Chip } from "@mui/material"
 import { useState, useCallback, useEffect } from "react"
-import { FunctionField, Identifier, List, TextField, useGetIdentity, useRedirect } from "react-admin"
+import {
+    FunctionField,
+    Identifier,
+    List,
+    Loading,
+    TextField,
+    useDataProvider,
+    useGetIdentity,
+    useRedirect
+} from "react-admin"
 import CustomDatagrid from "../common/components/CustomDatagrid/CustomDatagrid"
 import { ListActions } from "../common/components/ListActions/ListActions"
 import { ListAside } from "../common/components/ListAside/ListAside"
@@ -25,12 +34,22 @@ export const ApplicationList = (props: any) => {
     const [sharedUsers, setSharedUsers] = useState([])
     const [sharedFormId, setSharedFormId] = useState("")
     const [allowSharing, setAllowSharing] = useState(false)
+    const dataProvider = useDataProvider()
+    const [synced, setSynced] = useState(false)
+    const [isFetching, setIsFetching] = useState(false)
+    const [ready, setReady] = useState(false)
+
+    const syncApplications = () => {
+        dataProvider.sync("applications").then(({ data }) => {
+            setSynced(true)
+        })
+    }
 
     const handleRowClick = (id: Identifier, resource: string, record: any) => {
-        if (record.status === "Draft" && record.form_submission_id) {
-            redirect("/ViewForm/Draft/applications/" + record.form_submission_id, "")
-        } else if (record.form_submission_id) {
-            redirect("/ViewForm/View/applications/" + record.form_submission_id, "")
+        if (record.status === "Draft" && record.id && record.form_submission_id) {
+            redirect("/ViewForm/applications/" + record.id, "")
+        } else if (record.id && record.form_submission_id) {
+            redirect("/ViewForm/applications/" + record.id, "")
         } else {
             return "" // rowClick expects a path to be returned
         }
@@ -50,86 +69,111 @@ export const ApplicationList = (props: any) => {
 
     useEffect(() => {
         setAllowSharing(identity && identity.businessGuid && identity.businessName)
+        if (identity && !synced) {
+            syncApplications()
+        }
     }, [identity])
+
+    useEffect(() => {
+        if (synced && !isFetching) {
+            setReady(true)
+        }
+    }, [isFetching])
 
     return (
         <>
             {identity !== undefined && (
                 <>
                     <Box id="main-content-custom" tabIndex={0} aria-label="main content">
-                        <List
-                            {...props}
-                            actions={<ListActions createButtonLabel="New Application" />}
-                            filter={statusFilter}
-                            filterDefaultValues={statusFilter}
-                            aside={
-                                <ListAside
-                                    statusFilters={applicationStatusFilters}
-                                    statusFilter={statusFilter}
-                                    setStatusFilter={setStatusFilter}
-                                />
-                            }
-                            sort={{
-                                field: "form_submitted_date,updated_date,created_date",
-                                order: "DESC"
-                            }}
-                        >
-                            <CustomDatagrid sx={DatagridStyles} rowClick={handleRowClick} ariaLabel="applications list">
-                                <TextField label="Submission ID" source="form_confirmation_id" emptyText="-" />
-                                <TextField label="Position Title" source="position_title" emptyText="-" />
-                                <TextField label="Number of Positions" source="num_positions" emptyText="-" />{" "}
-                                <FunctionField
-                                    label="Submitted Date"
-                                    sortBy="form_submitted_date,updated_date,created_date"
-                                    sortByOrder="DESC"
-                                    render={
-                                        (record: any) =>
-                                            record.form_submitted_date ? record.form_submitted_date.split("T")[0] : "-" // remove timestamp
+                        {!ready && <Loading sx={{ marginTop: 20 }}></Loading>}
+                        {synced && (
+                            <Box hidden={!ready}>
+                                <List
+                                    {...props}
+                                    actions={<ListActions createButtonLabel="New Application" />}
+                                    filter={statusFilter}
+                                    filterDefaultValues={statusFilter}
+                                    aside={
+                                        <ListAside
+                                            statusFilters={applicationStatusFilters}
+                                            statusFilter={statusFilter}
+                                            setStatusFilter={setStatusFilter}
+                                        />
                                     }
-                                />
-                                {allowSharing && <SharedWithField label="Shared With" openModal={openModal} />}
-                                <FunctionField
-                                    label={
-                                        <Box display="flex" width="100%" justifyContent="center">
-                                            Status
-                                        </Box>
-                                    }
-                                    render={(record: any) => {
-                                        return (
-                                            <Box display="flex" width="100%" justifyContent="center">
-                                                <Chip
-                                                    label={
-                                                        record.status === "Draft"
-                                                            ? "Draft"
-                                                            : record.status === "New"
-                                                            ? "Submitted"
-                                                            : record.status === "In Progress"
-                                                            ? "Processing"
-                                                            : record.status === "Completed"
-                                                            ? "Completed"
-                                                            : "Cancelled"
-                                                    }
-                                                    size="small"
-                                                    color={
-                                                        record.status === "Draft"
-                                                            ? "secondary"
-                                                            : record.status === "New"
-                                                            ? "info"
-                                                            : record.status === "In Progress"
-                                                            ? "warning"
-                                                            : record.status === "Completed"
-                                                            ? "success"
-                                                            : record.status === "Cancelled"
-                                                            ? "error"
-                                                            : "primary"
-                                                    }
-                                                />
-                                            </Box>
-                                        )
+                                    sort={{
+                                        field: "form_submitted_date,updated_date,created_date",
+                                        order: "DESC"
                                     }}
-                                />
-                            </CustomDatagrid>
-                        </List>
+                                >
+                                    <CustomDatagrid
+                                        sx={DatagridStyles}
+                                        rowClick={handleRowClick}
+                                        ariaLabel="applications list"
+                                        setIsFetching={setIsFetching}
+                                    >
+                                        <TextField label="Submission ID" source="form_confirmation_id" emptyText="-" />
+                                        <TextField label="Position Title" source="position_title" emptyText="-" />
+                                        <TextField
+                                            label="Number of Positions"
+                                            source="num_positions"
+                                            emptyText="-"
+                                        />{" "}
+                                        <FunctionField
+                                            label="Submitted Date"
+                                            sortBy="form_submitted_date,updated_date,created_date"
+                                            sortByOrder="DESC"
+                                            render={
+                                                (record: any) =>
+                                                    record.form_submitted_date
+                                                        ? record.form_submitted_date.split("T")[0]
+                                                        : "-" // remove timestamp
+                                            }
+                                        />
+                                        {allowSharing && <SharedWithField label="Shared With" openModal={openModal} />}
+                                        <FunctionField
+                                            label={
+                                                <Box display="flex" width="100%" justifyContent="center">
+                                                    Status
+                                                </Box>
+                                            }
+                                            render={(record: any) => {
+                                                return (
+                                                    <Box display="flex" width="100%" justifyContent="center">
+                                                        <Chip
+                                                            label={
+                                                                record.status === "Draft"
+                                                                    ? "Draft"
+                                                                    : record.status === "New"
+                                                                    ? "Submitted"
+                                                                    : record.status === "In Progress"
+                                                                    ? "Processing"
+                                                                    : record.status === "Completed"
+                                                                    ? "Completed"
+                                                                    : "Cancelled"
+                                                            }
+                                                            size="small"
+                                                            color={
+                                                                record.status === "Draft"
+                                                                    ? "secondary"
+                                                                    : record.status === "New"
+                                                                    ? "info"
+                                                                    : record.status === "In Progress"
+                                                                    ? "warning"
+                                                                    : record.status === "Completed"
+                                                                    ? "success"
+                                                                    : record.status === "Cancelled"
+                                                                    ? "error"
+                                                                    : "primary"
+                                                            }
+                                                        />
+                                                    </Box>
+                                                )
+                                            }}
+                                        />
+                                    </CustomDatagrid>
+                                </List>
+                            </Box>
+                        )}
                     </Box>
                     {allowSharing && (
                         <Box>

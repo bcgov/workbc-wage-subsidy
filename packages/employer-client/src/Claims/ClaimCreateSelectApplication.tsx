@@ -31,7 +31,7 @@ export const ClaimCreateSelectApplication = (props: any) => {
                 {
                     onSuccess: (data) => {
                         setLoading(false)
-                        redirect("/ViewForm/Draft/claims/" + data.id, "")
+                        redirect("/ViewForm/claims/" + data.id, "")
                     },
                     onError: () => {
                         setLoading(false)

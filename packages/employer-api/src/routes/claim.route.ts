@@ -7,8 +7,10 @@ router.get("/", claimController.getAllClaims)
 router.get("/counts", claimController.getClaimCounts)
 router.post("/", claimController.createClaim)
 router.get("/:id", claimController.getOneClaim)
-router.put("/:id", claimController.updateClaim)
 router.put("/share/:id", claimController.shareClaim)
+router.put("/mark/:id", claimController.markClaim)
+router.put("/sync", claimController.syncClaims)
+router.put("/:id", claimController.updateClaim)
 router.delete("/:id", claimController.deleteClaim)
 
 export default router

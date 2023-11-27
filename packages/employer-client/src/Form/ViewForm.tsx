@@ -6,13 +6,29 @@ import { COLOURS } from "../Colours"
 import BackButton from "../common/components/BackButton/BackButton"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faUpRightFromSquare } from "@fortawesome/pro-solid-svg-icons"
-import { Loading, useRefresh } from "react-admin"
+import { Loading, useDataProvider, useGetOne, useRefresh } from "react-admin"
 
 export const ViewForm = () => {
-    const { urlType, resource, formId } = useParams()
+    const { resource, recordId } = useParams()
     const [numLoads, setNumLoads] = useState(0)
     const [loading, setLoading] = useState(true)
     const refresh = useRefresh()
+    const { data: record, error } = useGetOne(resource ? resource : "", { id: recordId })
+    const dataProvider = useDataProvider()
+    const [stale, setStale] = useState(false)
+
+    const markAsStale = () => {
+        if (record?.id) {
+            dataProvider.mark(resource, { id: record.id })
+        }
+    }
+
+    useEffect(() => {
+        if (record && record.status === "Draft" && !stale) {
+            markAsStale()
+            setStale(true)
+        }
+    }, [record])
 
     useEffect(() => {
         if (numLoads === 2) {
@@ -22,13 +38,13 @@ export const ViewForm = () => {
         }
     }, [numLoads])
 
-    if (!urlType || !resource || !formId) {
+    if (!resource || !recordId || !record || !record?.form_submission_id) {
         return <span />
     }
 
     let formUrl
-    if (urlType === "View") formUrl = process.env.REACT_APP_VIEW_URL + formId
-    if (urlType === "Draft") formUrl = process.env.REACT_APP_DRAFT_URL + formId
+    if (record.status !== "Draft") formUrl = process.env.REACT_APP_VIEW_URL + record.form_submission_id
+    if (record.status === "Draft") formUrl = process.env.REACT_APP_DRAFT_URL + record.form_submission_id
 
     return (
         <div>

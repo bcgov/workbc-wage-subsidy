@@ -88,7 +88,7 @@ export const insertApplication = async (
     return result
 }
 
-export const updateApplication = async (id: number, status: string | null, body: any) => {
+export const updateApplication = async (id: number, status: string | null, body: any, requireStale?: boolean) => {
     const wages = await knex("applications").where("id", id)
     if (wages.length === 0) {
         return 0
@@ -98,6 +98,11 @@ export const updateApplication = async (id: number, status: string | null, body:
         const submitted = body.draft === false
         result = await knex("applications")
             .where("id", id)
+            .modify((queryBuilder: any) => {
+                if (requireStale) {
+                    queryBuilder.where("stale", true)
+                }
+            })
             .update({
                 form_confirmation_id: submitted ? body.confirmationId : null, // only store the confirmation ID when the form has been submitted
                 form_submitted_date: submitted ? body.createdAt : null,
@@ -112,9 +117,15 @@ export const updateApplication = async (id: number, status: string | null, body:
                 status,
                 updated_by: "system",
                 updated_date: new Date(),
-                organization: body.submission.data.operatingName
+                organization: body.submission.data.operatingName,
+                stale: false
             })
     }
+    return result
+}
+
+export const markApplication = async (id: string) => {
+    const result = await knex("applications").update("stale", true).where("id", id).where("status", "Draft")
     return result
 }
 
@@ -147,6 +158,22 @@ export const insertEmployerApplicationRecord = async (employerId: string, applic
         }
     })
     return result
+}
+
+export const getStaleDrafts = async (user: string) => {
+    const drafts = knex
+        .select("id", "form_type", "form_submission_id", "status")
+        .from(
+            knex
+                .select("*")
+                .from("employers_applications as ea")
+                .where("employer_id", user)
+                .join("applications as a1", "a1.id", "=", "ea.application_id")
+                .as("a2")
+        )
+        .where("status", "Draft")
+        .where("stale", true)
+    return drafts
 }
 
 export const getFormId = (formType: string) => {

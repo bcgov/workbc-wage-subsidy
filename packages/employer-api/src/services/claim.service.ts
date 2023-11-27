@@ -88,7 +88,7 @@ export const insertClaim = async (
     return false
 }
 
-export const updateClaim = async (id: number, status: string | null, body: any) => {
+export const updateClaim = async (id: number, status: string | null, body: any, requireStale?: boolean) => {
     const claims = await knex("claims").where("id", id)
     if (claims.length === 0) {
         return 0
@@ -98,6 +98,11 @@ export const updateClaim = async (id: number, status: string | null, body: any) 
         const submitted = body.draft === false
         result = await knex("claims")
             .where("id", id)
+            .modify((queryBuilder: any) => {
+                if (requireStale) {
+                    queryBuilder.where("stale", true)
+                }
+            })
             .update({
                 form_confirmation_id: submitted ? body.confirmationId : null, // only store the confirmation ID when the form has been submitted
                 form_submitted_date: submitted ? body.createdAt : null,
@@ -105,9 +110,15 @@ export const updateClaim = async (id: number, status: string | null, body: any) 
                 employee_last_name: body.submission?.data?.container?.employeeLastName,
                 status,
                 updated_by: "system",
-                updated_date: new Date()
+                updated_date: new Date(),
+                stale: false
             })
     }
+    return result
+}
+
+export const markClaim = async (id: string) => {
+    const result = await knex("claims").update("stale", true).where("id", id).where("status", "Draft")
     return result
 }
 
@@ -130,11 +141,9 @@ export const addServiceProviderClaim = async (
     let result
     try {
         const submission = submissionResponse?.submission?.submission
-        console.log("add SP Claim Submission: ", submission)
         if (!submission?.data?.internalId) {
             return null
         }
-        console.log("EMPLOYER CLAIM INTERNAL ID: ", submission.data.internalId)
         const claims = await knex("claims").where("id", submission.data.internalId)
         if (claims.length === 0) {
             console.log("claim record not found")
@@ -225,4 +234,20 @@ export const insertEmployerClaimRecord = async (employerId: string, claimId: str
         }
     })
     return result
+}
+
+export const getStaleDrafts = async (user: string) => {
+    const drafts = knex
+        .select("id", "form_submission_id", "status")
+        .from(
+            knex
+                .select("*")
+                .from("employers_claims as ec")
+                .where("employer_id", user)
+                .join("claims as c1", "c1.id", "=", "ec.claim_id")
+                .as("c2")
+        )
+        .where("status", "Draft")
+        .where("stale", true)
+    return drafts
 }
