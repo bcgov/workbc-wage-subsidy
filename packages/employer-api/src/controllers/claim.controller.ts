@@ -191,26 +191,31 @@ const updateClaimFromForm = async (employerClaimRecord: any) => {
                 await claimService.updateClaim(employerClaimRecord.id, "Draft", submissionResponse.submission, true)
             } else if (submissionResponse.submission.draft === false) {
                 console.log("form submitted event")
-                // Create SP claim form.
-                const submission = submissionResponse?.submission?.submission
-                const serviceProviderInternalID = `SPx${submission.data.internalId}` // create a new internal id for the SP form
-                const createDraftResult = await formService.createTeamProtectedDraft(
-                    process.env.SP_CLAIM_FORM_ID as string,
-                    process.env.SP_CLAIM_FORM_PASS as string,
-                    process.env.SP_CLAIM_FORM_VERSION_ID as string,
-                    serviceProviderInternalID,
-                    submission.data
-                )
-                // If SP claim form created, then update DB record.
-                if (createDraftResult?.id && createDraftResult.submission) {
-                    await claimService.addServiceProviderClaim(
-                        submissionResponse,
+                // Create SP claim form if it does not already exist.
+                if (
+                    !employerClaimRecord?.service_provider_form_submission_id ||
+                    !employerClaimRecord?.service_provider_form_internal_id
+                ) {
+                    const submission = submissionResponse?.submission?.submission
+                    const serviceProviderInternalID = `SPx${submission.data.internalId}` // create a new internal id for the SP form
+                    const createDraftResult = await formService.createTeamProtectedDraft(
+                        process.env.SP_CLAIM_FORM_ID as string,
+                        process.env.SP_CLAIM_FORM_PASS as string,
+                        process.env.SP_CLAIM_FORM_VERSION_ID as string,
                         serviceProviderInternalID,
-                        createDraftResult.id
+                        submission.data
                     )
-                    // TODO: send notification.
+                    // If SP claim form created, then update DB record.
+                    if (createDraftResult?.id && createDraftResult.submission) {
+                        await claimService.addServiceProviderClaim(
+                            submissionResponse,
+                            serviceProviderInternalID,
+                            createDraftResult.id
+                        )
+                        // TODO: send notification.
+                    }
+                    console.log("SP claim form created")
                 }
-                console.log("SP claim form created")
             }
         }
     }
