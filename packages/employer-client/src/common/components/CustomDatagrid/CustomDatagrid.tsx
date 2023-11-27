@@ -3,7 +3,6 @@ import CustomDatagridRow from "./CustomDatagridRow"
 import { CustomDatagridHeader } from "./CustomDatagridHeader"
 import { useEffect, useState } from "react"
 import { FormBulkActionButtons } from "../FormBulkActionButtons/FormBulkActionButtons"
-import { isFormElement } from "react-router-dom/dist/dom"
 
 // CustomDatagrid:
 // - Each row includes a PDF button.
