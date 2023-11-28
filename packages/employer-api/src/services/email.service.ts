@@ -8,7 +8,6 @@ import { chesApi } from "../config/config"
 export const sendEmail = async (body: string, subject: string, to: string[]) => {
     try {
         const token = await getToken()
-        console.log(body)
         const request = {
             // bcc: [],
             bodyType: "html",
@@ -33,7 +32,7 @@ export const sendEmail = async (body: string, subject: string, to: string[]) => 
         // console.log(sendEmailResult.data)
         return sendEmailResult
     } catch (error: any) {
-        console.log(JSON.stringify(error.response?.data))
-        throw new Error(error.response?.status)
+        console.log(error)
+        throw new Error(error)
     }
 }
