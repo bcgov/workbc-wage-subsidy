@@ -15,6 +15,7 @@ CREATE TABLE IF NOT EXISTS public.applications
     created_date date,
     updated_by character varying(255) COLLATE pg_catalog."default",
     updated_date date,
+    stale boolean,
     CONSTRAINT applications_pkey PRIMARY KEY (id)
 )
 
@@ -43,6 +44,7 @@ CREATE TABLE IF NOT EXISTS public.claims
     created_date date,
     updated_by character varying(255) COLLATE pg_catalog."default",
     updated_date date,
+    stale boolean,
     CONSTRAINT claims_pkey PRIMARY KEY (id)
 )
 

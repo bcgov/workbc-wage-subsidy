@@ -6,6 +6,7 @@ import {
     useCreate,
     useDataProvider,
     useGetIdentity,
+    useLogout,
     maxLength,
     email,
     regex
@@ -41,6 +42,7 @@ interface UserProfileModalProps {
 const UserProfileModal: React.FC<UserProfileModalProps> = ({ isOpen, onRequestClose, contentLabel }) => {
     const { identity } = useGetIdentity()
     const dataProvider = useDataProvider()
+    const logout = useLogout()
     const [profileExists, setProfileExists] = useState<boolean>(false)
     const [userProfile, setUserProfile] = useState<any>(null)
     const [create] = useCreate()
@@ -65,15 +67,18 @@ const UserProfileModal: React.FC<UserProfileModalProps> = ({ isOpen, onRequestCl
             {
                 data: {
                     id: identity.guid,
-                    contact_name: identity?.fullName || null,
-                    contact_email: identity?.email || null,
-                    bceid_business_guid: identity?.businessGuid || null,
-                    bceid_business_name: identity?.businessName || null
+                    contact_name: identity.fullName || null,
+                    contact_email: identity.email || null,
+                    bceid_business_guid: identity.businessGuid || null,
+                    bceid_business_name: identity.businessName || null
                 }
             },
             {
-                onSuccess: (result) => {
+                onSuccess: () => {
                     setProfileExists(true)
+                },
+                onError: () => {
+                    logout()
                 }
             }
         )
