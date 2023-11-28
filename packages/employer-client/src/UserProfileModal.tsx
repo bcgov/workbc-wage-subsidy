@@ -11,12 +11,13 @@ import {
     email,
     regex
 } from "react-admin"
-import { useEffect, useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import { Box } from "@mui/system"
 import { Stack } from "@mui/material"
 import StyledTextInput from "./common/components/Forms/Fields/StyledTextInput"
 import StyledSelectInput from "./common/components/Forms/Fields/StyledSelectInput"
 import { useMutation } from "react-query"
+import { EmployerContext } from "./common/contexts/EmployerContext"
 
 const SaveButtonStyles = {
     color: "#307FE2",
@@ -43,10 +44,10 @@ const UserProfileModal: React.FC<UserProfileModalProps> = ({ isOpen, onRequestCl
     const { identity } = useGetIdentity()
     const dataProvider = useDataProvider()
     const logout = useLogout()
-    const [profileExists, setProfileExists] = useState<boolean>(false)
     const [userProfile, setUserProfile] = useState<any>(null)
     const [create] = useCreate()
     const [loading, setLoading] = useState(false)
+    const ec = useContext(EmployerContext)
 
     // When used in React Admin, useMutation() activates the loading indicator during queries.
     const { mutate: getProfile } = useMutation((userGuid: string) => {
@@ -75,7 +76,7 @@ const UserProfileModal: React.FC<UserProfileModalProps> = ({ isOpen, onRequestCl
             },
             {
                 onSuccess: () => {
-                    setProfileExists(true)
+                    ec.setEmployerProfileExists(true)
                 },
                 onError: () => {
                     logout()
@@ -90,10 +91,10 @@ const UserProfileModal: React.FC<UserProfileModalProps> = ({ isOpen, onRequestCl
     }
 
     useEffect(() => {
-        if (isOpen && identity && profileExists) {
+        if (isOpen && identity && ec.profileExists) {
             getProfile(identity.guid)
         }
-    }, [isOpen, profileExists])
+    }, [isOpen, ec.profileExists])
 
     useEffect(() => {
         if (!isOpen) {
