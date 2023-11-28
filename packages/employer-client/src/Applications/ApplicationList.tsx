@@ -1,5 +1,5 @@
 import { Box, Chip } from "@mui/material"
-import { useState, useCallback, useEffect } from "react"
+import { useState, useCallback, useEffect, useContext } from "react"
 import {
     FunctionField,
     Identifier,
@@ -16,6 +16,7 @@ import { ListAside } from "../common/components/ListAside/ListAside"
 import { DatagridStyles } from "../common/styles/DatagridStyles"
 import { SharedWithModal } from "../common/components/SharedWithField/SharedWithModal"
 import { SharedWithField } from "../common/components/SharedWithField/SharedWithField"
+import { EmployerContext } from "../common/contexts/EmployerContext"
 
 export const applicationStatusFilters = {
     All: { label: "All" },
@@ -38,6 +39,7 @@ export const ApplicationList = (props: any) => {
     const [synced, setSynced] = useState(false)
     const [isFetching, setIsFetching] = useState(false)
     const [ready, setReady] = useState(false)
+    const ec = useContext(EmployerContext)
 
     const syncApplications = () => {
         dataProvider.sync("applications").then(({ data }) => {
@@ -69,9 +71,6 @@ export const ApplicationList = (props: any) => {
 
     useEffect(() => {
         setAllowSharing(identity && identity.businessGuid && identity.businessName)
-        if (identity && !synced) {
-            syncApplications()
-        }
     }, [identity])
 
     useEffect(() => {
@@ -80,12 +79,18 @@ export const ApplicationList = (props: any) => {
         }
     }, [isFetching])
 
+    useEffect(() => {
+        if (identity && ec.profileExists && !synced) {
+            syncApplications()
+        }
+    }, [identity, ec.profileExists])
+
     return (
         <>
-            {identity !== undefined && (
-                <>
-                    <Box id="main-content-custom" tabIndex={0} aria-label="main content">
-                        {!ready && <Loading sx={{ marginTop: 20 }}></Loading>}
+            <Box id="main-content-custom" tabIndex={0} aria-label="main content">
+                {!ready && <Loading sx={{ marginTop: 20 }}></Loading>}
+                {identity !== undefined && (
+                    <>
                         {synced && (
                             <Box hidden={!ready}>
                                 <List
@@ -174,20 +179,20 @@ export const ApplicationList = (props: any) => {
                                 </List>
                             </Box>
                         )}
-                    </Box>
-                    {allowSharing && (
-                        <Box>
-                            <SharedWithModal
-                                isOpen={modalIsOpen}
-                                onRequestClose={closeModal}
-                                contentLabel="shared users"
-                                formId={sharedFormId}
-                                sharedUsers={sharedUsers}
-                                resource="applications"
-                            />
-                        </Box>
-                    )}
-                </>
+                    </>
+                )}
+            </Box>
+            {allowSharing && (
+                <Box>
+                    <SharedWithModal
+                        isOpen={modalIsOpen}
+                        onRequestClose={closeModal}
+                        contentLabel="shared users"
+                        formId={sharedFormId}
+                        sharedUsers={sharedUsers}
+                        resource="applications"
+                    />
+                </Box>
             )}
         </>
     )
