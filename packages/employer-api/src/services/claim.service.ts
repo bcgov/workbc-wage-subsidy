@@ -91,6 +91,7 @@ export const insertClaim = async (
 export const updateClaim = async (id: number, status: string | null, body: any, requireStale?: boolean) => {
     const claims = await knex("claims").where("id", id)
     if (claims.length === 0) {
+        console.log("claim not found with id ", id)
         return 0
     }
     let result
