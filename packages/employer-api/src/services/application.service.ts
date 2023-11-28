@@ -63,6 +63,11 @@ export const getApplicationByConfirmationID = async (confirmationId: string) => 
     return application.length > 0 ? application[0] : null
 }
 
+export const getApplicationBySubmissionID = async (submissionId: string) => {
+    const application = await knex("applications").where("form_submission_id", submissionId)
+    return application.length > 0 ? application[0] : null
+}
+
 export const insertApplication = async (
     id: string,
     userGuid: string,
@@ -94,6 +99,7 @@ export const updateApplication = async (id: number, status: string | null, body:
         return 0
     }
     let result
+    console.log(1)
     if (body) {
         const submitted = body.draft === false
         result = await knex("applications")
