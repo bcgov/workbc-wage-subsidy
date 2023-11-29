@@ -4,7 +4,7 @@ import * as express from "express"
 import * as formService from "../services/form.service"
 import * as applicationService from "../services/application.service"
 import * as claimService from "../services/claim.service"
-import * as formApiService from "../services/formAPI.service"
+import * as emailController from "./email.controller"
 
 export const submission = async (req: express.Request, res: express.Response) => {
     try {
@@ -66,8 +66,8 @@ export const submission = async (req: express.Request, res: express.Response) =>
                         return res.status(500).send("Internal Server Error")
                     }
                     // Send notifications to clients with Claims notifications enabled
-                    await formApiService
-                        .sendNotifications({
+                    await emailController
+                        .sendEmail({
                             // form API expects the data to be wrapped in a data object
                             data: {
                                 catchmentNo: newSPClaim.catchmentno,
