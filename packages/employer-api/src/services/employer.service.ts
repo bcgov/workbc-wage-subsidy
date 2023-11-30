@@ -99,9 +99,6 @@ export const updateEmployer = async (userGuid: string, data: any) => {
                 if (data?.workplace_postal_code || data.workplace_postal_code === null) {
                     queryBuilder.update("workplace_postal_code", data.workplace_postal_code)
                 }
-                if (data?.workbc_centre || data.workbc_centre === null) {
-                    queryBuilder.update("workbc_centre", data.workbc_centre)
-                }
             })
     }
     return numUpdated
@@ -124,8 +121,6 @@ export const updateEmployerFromApplicationForm = async (employer: any, appFormDa
         ...(appFormData?.businessCity && !employer?.city && { city: appFormData.businessCity }),
         ...(appFormData?.businessProvince && !employer?.province && { province: appFormData.businessProvince }),
         ...(appFormData?.businessPostal && !employer?.postal_code && { postal_code: appFormData.businessPostal }),
-        ...(appFormData?.catchmentNoStoreFront &&
-            !employer?.workbc_centre && { workbc_centre: appFormData.catchmentNoStoreFront }),
         ...(appFormData.container?.addressAlt &&
             !employer.container?.workplace_street_address && {
                 workplace_street_address: appFormData.container.addressAlt

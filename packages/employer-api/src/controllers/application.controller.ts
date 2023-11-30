@@ -257,11 +257,6 @@ export const markApplication = async (req: any, res: express.Response) => {
 }
 
 const computeApplicationPrefillFields = (employer: any) => ({
-    ...(employer?.workbc_centre && {
-        areYouCurrentlyWorkingWithAWorkBcCentre: "Yes",
-        catchmentNoStoreFront: employer.workbc_centre
-    }),
-    ...(!employer?.workbc_centre && { areYouCurrentlyWorkingWithAWorkBcCentre: "No" }),
     ...(employer?.bceid_business_name && { operatingName: employer.bceid_business_name }),
     ...(employer?.cra_business_number && { businessNumber: employer.cra_business_number }),
     ...(employer?.street_address && { businessAddress: employer.street_address }),
