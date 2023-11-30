@@ -41,8 +41,23 @@ export const submission = async (req: express.Request, res: express.Response) =>
         // Claim Form submission events //
         if (formType === "ClaimForm") {
             if (submissionResponse.submission.draft === true) {
-                console.log("claim form draft submission event - ignoring") // TODO: claim form update on draft
-                return res.status(200).send("claim form draft submission event - ignoring")
+                const claim = await claimService.getClaimBySubmissionID(req.body.submissionId)
+                if (claim?.status !== "Draft") {
+                    return res.status(500).send("Internal Server Error")
+                }
+                console.log("updating saved claim for id ", claim.id)
+                const updateResult = await claimService.updateClaim(
+                    claim.id,
+                    "Draft",
+                    submissionResponse.submission,
+                    false
+                )
+                if (updateResult === 1) {
+                    console.log("claim record update successful for id ", claim.id)
+                    return res.status(200).send()
+                }
+                console.log("Unable to update claim database entry")
+                return res.status(500).send("Internal Server Error")
             }
             const serviceProviderInternalID = `SPx${submission.data.internalId}` // create a new internal id for the SP form
             const createDraftResult = await formService.createTeamProtectedDraft(
@@ -116,45 +131,36 @@ export const submission = async (req: express.Request, res: express.Response) =>
             const application = await applicationService.getApplicationBySubmissionID(req.body.submissionId)
             if (application?.status === "Draft") {
                 let updateResult
-                const formID = applicationService.getFormId(application.form_type)
-                const formPass = applicationService.getFormPass(application.form_type)
-                if (formID && formPass && application.form_submission_id) {
-                    const submissionResponse = await formService.getSubmission(
-                        formID,
-                        formPass,
-                        application.form_submission_id
+                if (submissionResponse.submission.draft === false) {
+                    console.log("updating submitted application for id ", application.id)
+                    updateResult = await applicationService.updateApplication(
+                        application.id,
+                        "New",
+                        submissionResponse.submission,
+                        false
                     )
-                    if (submissionResponse.submission.draft === false) {
-                        console.log("updating submitted application for id ", application.id)
-                        updateResult = await applicationService.updateApplication(
-                            application.id,
-                            "New",
-                            submissionResponse.submission,
-                            false
-                        )
-                        // If first application submitted, backfill employer profile from form data.
-                        const firstApplicationSubmitted = await applicationService.oneApplicationSubmitted(
-                            application.created_by
-                        )
-                        if (firstApplicationSubmitted) {
-                            const employer = await employerService.getEmployerByID(application.created_by)
-                            if (!employer) {
-                                throw new Error("Internal Server Error")
-                            }
-                            await employerService.updateEmployerFromApplicationForm(
-                                employer,
-                                submissionResponse.submission.submission.data
-                            )
+                    // If first application submitted, backfill employer profile from form data.
+                    const firstApplicationSubmitted = await applicationService.oneApplicationSubmitted(
+                        application.created_by
+                    )
+                    if (firstApplicationSubmitted) {
+                        const employer = await employerService.getEmployerByID(application.created_by)
+                        if (!employer) {
+                            throw new Error("Internal Server Error")
                         }
-                    } else if (submissionResponse.submission.draft === true) {
-                        console.log("updating saved application for id ", application.id)
-                        updateResult = await applicationService.updateApplication(
-                            application.id,
-                            "Draft",
-                            submissionResponse.submission,
-                            false
+                        await employerService.updateEmployerFromApplicationForm(
+                            employer,
+                            submissionResponse.submission.submission.data
                         )
                     }
+                } else if (submissionResponse.submission.draft === true) {
+                    console.log("updating saved application for id ", application.id)
+                    updateResult = await applicationService.updateApplication(
+                        application.id,
+                        "Draft",
+                        submissionResponse.submission,
+                        false
+                    )
                 }
                 if (updateResult === 1) {
                     console.log("application record update successful for id ", application.id)

@@ -252,3 +252,8 @@ export const getStaleDrafts = async (user: string) => {
         .where("stale", true)
     return drafts
 }
+
+export const getClaimBySubmissionID = async (submissionId: string) => {
+    const claim = await knex("claims").where("form_submission_id", submissionId)
+    return claim.length > 0 ? claim[0] : null
+}
