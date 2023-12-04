@@ -18,6 +18,7 @@ import { dataProvider } from "./DataProvider/DataProvider"
 import { ViewForm } from "./Form/ViewForm"
 import Layout from "./Layout"
 import Footer from "./footer"
+import { EmployerProvider } from "./common/contexts/EmployerContext"
 
 const initOptions = {
     url: process.env.REACT_APP_KEYCLOAK_URL || "",
@@ -271,8 +272,10 @@ function App() {
                 onTokenExpired: onTokenExpired
             }}
         >
-            <CustomAdminWithKeycloak />
-            <Footer />
+            <EmployerProvider>
+                <CustomAdminWithKeycloak />
+                <Footer />
+            </EmployerProvider>
         </ReactKeycloakProvider>
     )
 }

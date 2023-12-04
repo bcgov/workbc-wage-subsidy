@@ -2,6 +2,7 @@
 /* eslint-disable import/prefer-default-export */
 import * as express from "express"
 import * as formService from "../services/form.service"
+import * as applicationService from "../services/application.service"
 import * as claimService from "../services/claim.service"
 import * as emailController from "./email.controller"
 
@@ -13,9 +14,9 @@ export const submission = async (req: express.Request, res: express.Response) =>
             return res.status(400).send("Form type parameter required")
         }
         let formPass
-        if (formType === "HaveEmployee") {
+        if (formType === "HaveEmployeeForm") {
             formPass = process.env.HAVE_EMPLOYEE_PASS
-        } else if (formType === "NeedEmployee") {
+        } else if (formType === "NeedEmployeeForm") {
             formPass = process.env.NEED_EMPLOYEE_PASS
         } else if (formType === "ClaimForm") {
             formPass = process.env.CLAIM_FORM_PASS
@@ -108,6 +109,48 @@ export const submission = async (req: express.Request, res: express.Response) =>
             console.log("Unable to update claim database entry")
             return res.status(500).send("Internal Server Error")
         }
+
+        // Application forms //
+        if (formType === "HaveEmployeeForm" || formType === "NeedEmployeeForm") {
+            const application = await applicationService.getApplicationBySubmissionID(req.body.submissionId)
+            if (application?.status === "Draft") {
+                let updateResult
+                const formID = applicationService.getFormId(application.form_type)
+                const formPass = applicationService.getFormPass(application.form_type)
+                if (formID && formPass && application.form_submission_id) {
+                    const submissionResponse = await formService.getSubmission(
+                        formID,
+                        formPass,
+                        application.form_submission_id
+                    )
+                    if (submissionResponse.submission.draft === false) {
+                        console.log("updating submitted application for id ", application.id)
+                        updateResult = await applicationService.updateApplication(
+                            application.id,
+                            "New",
+                            submissionResponse.submission,
+                            false
+                        )
+                    } else if (submissionResponse.submission.draft === true) {
+                        console.log("updating saved application for id ", application.id)
+                        updateResult = await applicationService.updateApplication(
+                            application.id,
+                            "Draft",
+                            submissionResponse.submission,
+                            false
+                        )
+                    }
+                }
+                if (updateResult === 1) {
+                    console.log("application record update successful for id ", application.id)
+                    return res.status(200).send()
+                }
+
+                console.log("unable to update application database entry for id ", application.id)
+                return res.status(500).send("Internal Server Error")
+            }
+        }
+
         return res.status(200).send()
     } catch (e: unknown) {
         console.log(e)

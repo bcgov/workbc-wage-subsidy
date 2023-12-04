@@ -1,5 +1,5 @@
 import { Box, Chip } from "@mui/material"
-import { useCallback, useEffect, useState } from "react"
+import { useCallback, useContext, useEffect, useState } from "react"
 import {
     FunctionField,
     Identifier,
@@ -16,6 +16,7 @@ import { ListAside } from "../common/components/ListAside/ListAside"
 import { DatagridStyles } from "../common/styles/DatagridStyles"
 import { SharedWithModal } from "../common/components/SharedWithField/SharedWithModal"
 import { SharedWithField } from "../common/components/SharedWithField/SharedWithField"
+import { EmployerContext } from "../common/contexts/EmployerContext"
 
 export const claimStatusFilters = {
     All: { label: "All" },
@@ -36,6 +37,7 @@ export const ClaimList = (props: any) => {
     const [synced, setSynced] = useState(false)
     const [isFetching, setIsFetching] = useState(true)
     const [ready, setReady] = useState(false)
+    const ec = useContext(EmployerContext)
 
     const syncClaims = () => {
         dataProvider.sync("claims").then(({ data }) => {
@@ -67,9 +69,6 @@ export const ClaimList = (props: any) => {
 
     useEffect(() => {
         setAllowSharing(identity && identity.businessGuid && identity.businessName)
-        if (identity && !synced) {
-            syncClaims()
-        }
     }, [identity])
 
     useEffect(() => {
@@ -78,12 +77,18 @@ export const ClaimList = (props: any) => {
         }
     }, [isFetching])
 
+    useEffect(() => {
+        if (identity && ec.profileExists && !synced) {
+            syncClaims()
+        }
+    }, [identity, ec.profileExists])
+
     return (
         <>
-            {identity !== undefined && (
-                <>
-                    <Box id="main-content-custom" tabIndex={0} aria-label="main content">
-                        {!ready && <Loading sx={{ marginTop: 20 }}></Loading>}
+            <Box id="main-content-custom" tabIndex={0} aria-label="main content">
+                {!ready && <Loading sx={{ marginTop: 20 }}></Loading>}
+                {identity !== undefined && (
+                    <>
                         {synced && (
                             <Box hidden={!ready}>
                                 <List
@@ -172,20 +177,20 @@ export const ClaimList = (props: any) => {
                                 </List>
                             </Box>
                         )}
-                    </Box>
-                    {allowSharing && (
-                        <Box>
-                            <SharedWithModal
-                                isOpen={modalIsOpen}
-                                onRequestClose={closeModal}
-                                contentLabel="shared users"
-                                formId={sharedFormId}
-                                sharedUsers={sharedUsers}
-                                resource="claims"
-                            />
-                        </Box>
-                    )}
-                </>
+                    </>
+                )}
+            </Box>
+            {allowSharing && (
+                <Box>
+                    <SharedWithModal
+                        isOpen={modalIsOpen}
+                        onRequestClose={closeModal}
+                        contentLabel="shared users"
+                        formId={sharedFormId}
+                        sharedUsers={sharedUsers}
+                        resource="claims"
+                    />
+                </Box>
             )}
         </>
     )

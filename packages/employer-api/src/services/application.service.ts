@@ -63,6 +63,11 @@ export const getApplicationByConfirmationID = async (confirmationId: string) => 
     return application.length > 0 ? application[0] : null
 }
 
+export const getApplicationBySubmissionID = async (submissionId: string) => {
+    const application = await knex("applications").where("form_submission_id", submissionId)
+    return application.length > 0 ? application[0] : null
+}
+
 export const insertApplication = async (
     id: string,
     userGuid: string,
@@ -91,6 +96,7 @@ export const insertApplication = async (
 export const updateApplication = async (id: number, status: string | null, body: any, requireStale?: boolean) => {
     const wages = await knex("applications").where("id", id)
     if (wages.length === 0) {
+        console.log("application not found with id ", id)
         return 0
     }
     let result
