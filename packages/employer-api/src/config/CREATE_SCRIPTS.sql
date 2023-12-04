@@ -72,7 +72,6 @@ CREATE TABLE IF NOT EXISTS public.employers
     workplace_city character varying(255) COLLATE pg_catalog."default",
     workplace_province character varying(255) COLLATE pg_catalog."default",
     workplace_postal_code character varying(255) COLLATE pg_catalog."default",
-    workbc_centre character varying(4) COLLATE pg_catalog."default",
     created_by character varying(255) COLLATE pg_catalog."default",
     created_date date,
     updated_by character varying(255) COLLATE pg_catalog."default",
