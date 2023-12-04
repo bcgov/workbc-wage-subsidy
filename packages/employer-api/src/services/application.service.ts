@@ -167,8 +167,8 @@ export const insertEmployerApplicationRecord = async (employerId: string, applic
 }
 
 export const getStaleDrafts = async (user: string) => {
-    const drafts = knex
-        .select("id", "form_type", "form_submission_id", "status")
+    const drafts = await knex
+        .select("id", "form_type", "form_submission_id", "status", "created_by")
         .from(
             knex
                 .select("*")
@@ -180,6 +180,21 @@ export const getStaleDrafts = async (user: string) => {
         .where("status", "Draft")
         .where("stale", true)
     return drafts
+}
+
+export const oneApplicationSubmitted = async (user: string) => {
+    const submittedApplications = await knex
+        .select("status")
+        .from(
+            knex
+                .select("*")
+                .from("employers_applications as ea")
+                .where("employer_id", user)
+                .join("applications as a1", "a1.id", "=", "ea.application_id")
+                .as("a2")
+        )
+        .whereNot("status", "Draft")
+    return submittedApplications.length === 1
 }
 
 export const getFormId = (formType: string) => {

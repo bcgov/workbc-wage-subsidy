@@ -2,7 +2,6 @@
 /* eslint-disable import/prefer-default-export */
 import * as express from "express"
 import { insertApplication } from "../lib/transactions"
-import * as emailController from "./email.controller"
 import * as applicationService from "../services/application.service"
 import * as employerService from "../services/employer.service"
 import * as formService from "../services/form.service"
@@ -151,7 +150,6 @@ const updateApplicationFromForm = async (application: any) => {
                 console.log("form submitted event")
                 // submitted
                 await applicationService.updateApplication(application.id, "New", submissionResponse.submission, true)
-                await emailController.sendEmail(submissionResponse.submission.submission)
             } else if (submissionResponse.submission.draft === true) {
                 // draft
                 await applicationService.updateApplication(application.id, "Draft", submissionResponse.submission, true)
