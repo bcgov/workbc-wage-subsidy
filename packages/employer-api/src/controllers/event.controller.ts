@@ -139,6 +139,7 @@ export const submission = async (req: express.Request, res: express.Response) =>
                         submissionResponse.submission,
                         false
                     )
+                    await emailController.sendEmail(submissionResponse.submission.submission)
                     // If first application submitted, backfill employer profile from form data.
                     const firstApplicationSubmitted = await applicationService.oneApplicationSubmitted(
                         application.created_by
