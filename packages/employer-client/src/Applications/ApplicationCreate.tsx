@@ -24,7 +24,7 @@ export const ApplicationCreate = () => {
                 {
                     onSuccess: (data) => {
                         setLoading(false)
-                        redirect("/ViewForm/Draft/applications/" + data.id, "")
+                        redirect("/ViewForm/applications/" + data.id, "")
                     },
                     onError: () => {
                         setLoading(false)

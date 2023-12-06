@@ -8,7 +8,7 @@ const receivedHaveEmployee = () => {
         "WorkBC Wage Subsidy Application - Next Steps",
         [
             `Hello,`,
-            `You’re receiving this email because your future employer recently applied for a WorkBC Wage Subsidy.`,
+            `You're receiving this email because your future employer recently applied for a WorkBC Wage Subsidy.`,
             `WorkBC is a provincial government service that helps residents of B.C. improve their skills, explore career options, and find employment.`
         ],
         [

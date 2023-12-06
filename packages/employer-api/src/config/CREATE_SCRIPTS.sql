@@ -6,6 +6,7 @@ CREATE TABLE IF NOT EXISTS public.applications
     status character varying(255) COLLATE pg_catalog."default",
     form_type character varying(255) COLLATE pg_catalog."default",
     catchmentno integer,
+    workbc_centre character varying(4) COLLATE pg_catalog."default",
     num_positions integer,
     form_confirmation_id character varying(255) COLLATE pg_catalog."default",
     form_submission_id character varying(255) COLLATE pg_catalog."default",
@@ -14,6 +15,7 @@ CREATE TABLE IF NOT EXISTS public.applications
     created_date date,
     updated_by character varying(255) COLLATE pg_catalog."default",
     updated_date date,
+    stale boolean,
     CONSTRAINT applications_pkey PRIMARY KEY (id)
 )
 
@@ -28,6 +30,7 @@ CREATE TABLE IF NOT EXISTS public.claims
     position_title character varying(255) COLLATE pg_catalog."default",
     status character varying(255) COLLATE pg_catalog."default",
     catchmentno integer,
+    workbc_centre character varying(4) COLLATE pg_catalog."default",
     employee_first_name character varying(255) COLLATE pg_catalog."default",
     employee_last_name character varying(255) COLLATE pg_catalog."default",
     associated_application_id character varying(10) COLLATE pg_catalog."default",
@@ -41,6 +44,7 @@ CREATE TABLE IF NOT EXISTS public.claims
     created_date date,
     updated_by character varying(255) COLLATE pg_catalog."default",
     updated_date date,
+    stale boolean,
     CONSTRAINT claims_pkey PRIMARY KEY (id)
 )
 
@@ -68,7 +72,6 @@ CREATE TABLE IF NOT EXISTS public.employers
     workplace_city character varying(255) COLLATE pg_catalog."default",
     workplace_province character varying(255) COLLATE pg_catalog."default",
     workplace_postal_code character varying(255) COLLATE pg_catalog."default",
-    workbc_center character varying(255) COLLATE pg_catalog."default",
     created_by character varying(255) COLLATE pg_catalog."default",
     created_date date,
     updated_by character varying(255) COLLATE pg_catalog."default",

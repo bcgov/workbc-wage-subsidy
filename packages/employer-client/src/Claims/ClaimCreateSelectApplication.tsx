@@ -31,7 +31,7 @@ export const ClaimCreateSelectApplication = (props: any) => {
                 {
                     onSuccess: (data) => {
                         setLoading(false)
-                        redirect("/ViewForm/Draft/claims/" + data.id, "")
+                        redirect("/ViewForm/claims/" + data.id, "")
                     },
                     onError: () => {
                         setLoading(false)
@@ -72,9 +72,9 @@ export const ClaimCreateSelectApplication = (props: any) => {
                     <CustomDatagrid
                         sx={DatagridStyles}
                         rowClick={handleClick}
-                        bulkActionButtons={false}
                         ariaLabel="list of completed applications"
                         rowAriaLabel="create a claim form for application"
+                        disableBulkActions={true}
                         empty={
                             <p style={{ padding: "16px" }}>
                                 You must have at least one completed application in order to submit a claim
@@ -86,21 +86,19 @@ export const ClaimCreateSelectApplication = (props: any) => {
                         <TextField label="Number of Positions" source="num_positions" emptyText="-" />{" "}
                         <FunctionField
                             label="Submitted Date"
+                            sortBy="form_submitted_date,updated_date,created_date"
+                            sortByOrder="DESC"
                             render={
                                 (record: any) =>
                                     record.form_submitted_date ? record.form_submitted_date.split("T")[0] : "-" // remove timestamp
                             }
                         />
                         <FunctionField
-                            label="Shared With"
-                            render={(record: any) => {
-                                return record["shared_with"].length > 1
-                                    ? record["shared_with"].filter((fullName) => fullName !== identity?.fullName)
-                                    : "-"
-                            }}
-                        />
-                        <FunctionField
-                            label=""
+                            label={
+                                <Box display="flex" width="100%" justifyContent="center">
+                                    Status
+                                </Box>
+                            }
                             render={(record: any) => (
                                 <Box display="flex" width="100%" justifyContent="center">
                                     <Chip
@@ -113,10 +111,16 @@ export const ClaimCreateSelectApplication = (props: any) => {
                         />
                     </CustomDatagrid>
                 </List>
+                {/* Pad the bottom of this box to account for the translation applied to the image. */}
+                <Box display="flex" justifyContent="right" style={{ paddingBottom: "3em" }}>
+                    <img
+                        width="110em"
+                        src="/woman-checkmark.svg"
+                        alt=""
+                        style={{ transform: "translate(-2em, 2.5em)" }}
+                    />
+                </Box>
             </>
-            <Box display="flex" justifyContent="right">
-                <img width="110em" src="/woman-checkmark.svg" alt="" style={{ transform: "translate(-2em, 2.5em)" }} />
-            </Box>
         </Box>
     )
 }

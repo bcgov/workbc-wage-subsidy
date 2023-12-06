@@ -1,5 +1,5 @@
 import { Box, ListItemText, MenuItem, MenuList } from "@mui/material"
-import { LoadingIndicator, useDataProvider, useListContext, useRedirect } from "react-admin"
+import { useDataProvider, useListContext, useRedirect } from "react-admin"
 import isEqual from "lodash/isEqual"
 import { ScreenReaderOnly } from "../../styles/ScreenReaderOnly"
 import { useEffect, useState } from "react"
@@ -9,10 +9,9 @@ interface ListAsideProps {
     statusFilters: { [key: string]: any }
     statusFilter: any
     setStatusFilter: React.Dispatch<any>
-    user: string
 }
 
-export const ListAside: React.FC<ListAsideProps> = ({ statusFilters, statusFilter, setStatusFilter, user }) => {
+export const ListAside: React.FC<ListAsideProps> = ({ statusFilters, statusFilter, setStatusFilter }) => {
     const { resource, total, isFetching } = useListContext()
     const dataProvider = useDataProvider()
     const redirect = useRedirect()
@@ -80,19 +79,19 @@ export const ListAside: React.FC<ListAsideProps> = ({ statusFilters, statusFilte
     }, [])
 
     return (
-        <Box width={200} mr={1} mt={7} flexShrink={0} order={-1} style={{ transform: "translate(0em, -1.85em)" }}>
-            <Box
-                // width="11em"
-                style={{
-                    color: "#307FE2",
-                    padding: "0em 0.5em 0.0em 0.5em",
-                    borderBottom: "3px solid #307FE2",
-                    marginBottom: "0px",
-                    cursor: "default",
-                    fontSize: "18px"
-                }}
-            >
-                <span className="catchment-label" aria-hidden={true}>
+        <Box width={200} mr={1} mt={7} flexShrink={0} order={-1} style={{ transform: "translate(0em, -1.7em)" }}>
+            <Box style={{ transform: "translate(0em, -0.5em)" }}>
+                <span
+                    style={{
+                        color: "#307FE2",
+                        padding: "0em 0.5em 0.45em 0.5em",
+                        borderBottom: "3px solid #307FE2",
+                        marginBottom: "4px",
+                        cursor: "default",
+                        fontSize: "18px"
+                    }}
+                    aria-hidden={true}
+                >
                     Status Filter
                 </span>
             </Box>

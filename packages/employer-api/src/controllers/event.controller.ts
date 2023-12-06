@@ -2,10 +2,12 @@
 /* eslint-disable import/prefer-default-export */
 import * as express from "express"
 import * as formService from "../services/form.service"
+import * as applicationService from "../services/application.service"
 import * as claimService from "../services/claim.service"
-import * as formApiService from "../services/formAPI.service"
+import * as emailController from "./email.controller"
+import * as employerService from "../services/employer.service"
 
-export const submission = async (req: any, res: express.Response) => {
+export const submission = async (req: express.Request, res: express.Response) => {
     try {
         const { formType } = req.params
         const passedKey = req.headers["x-api-key"]
@@ -13,9 +15,9 @@ export const submission = async (req: any, res: express.Response) => {
             return res.status(400).send("Form type parameter required")
         }
         let formPass
-        if (formType === "HaveEmployee") {
+        if (formType === "HaveEmployeeForm") {
             formPass = process.env.HAVE_EMPLOYEE_PASS
-        } else if (formType === "NeedEmployee") {
+        } else if (formType === "NeedEmployeeForm") {
             formPass = process.env.NEED_EMPLOYEE_PASS
         } else if (formType === "ClaimForm") {
             formPass = process.env.CLAIM_FORM_PASS
@@ -39,8 +41,23 @@ export const submission = async (req: any, res: express.Response) => {
         // Claim Form submission events //
         if (formType === "ClaimForm") {
             if (submissionResponse.submission.draft === true) {
-                console.log("claim form draft submission event - ignoring") // TODO: claim form update on draft
-                return res.status(200).send("claim form draft submission event - ignoring")
+                const claim = await claimService.getClaimBySubmissionID(req.body.submissionId)
+                if (claim?.status !== "Draft") {
+                    return res.status(500).send("Internal Server Error")
+                }
+                console.log("updating saved claim for id ", claim.id)
+                const updateResult = await claimService.updateClaim(
+                    claim.id,
+                    "Draft",
+                    submissionResponse.submission,
+                    false
+                )
+                if (updateResult === 1) {
+                    console.log("claim record update successful for id ", claim.id)
+                    return res.status(200).send()
+                }
+                console.log("Unable to update claim database entry")
+                return res.status(500).send("Internal Server Error")
             }
             const serviceProviderInternalID = `SPx${submission.data.internalId}` // create a new internal id for the SP form
             const createDraftResult = await formService.createTeamProtectedDraft(
@@ -65,14 +82,18 @@ export const submission = async (req: any, res: express.Response) => {
                         return res.status(500).send("Internal Server Error")
                     }
                     // Send notifications to clients with Claims notifications enabled
-                    const sendNotificationsResult = await formApiService.sendNotifications({
-                        catchmentNo: newSPClaim.catchmentno,
-                        applicationType: "Claims"
-                    })
-                    if (sendNotificationsResult.status !== 200) {
-                        console.log("Error sending notifications")
-                        return res.status(500).send("Internal Server Error")
-                    }
+                    await emailController
+                        .sendEmail({
+                            // form API expects the data to be wrapped in a data object
+                            data: {
+                                catchmentNo: newSPClaim.catchmentno,
+                                applicationType: "Claims"
+                            }
+                        })
+                        .catch((e) => {
+                            console.log("Error sending notifications", e)
+                            return res.status(500).send("Internal Server Error")
+                        })
                     return res.status(200).send()
                 }
 
@@ -104,8 +125,56 @@ export const submission = async (req: any, res: express.Response) => {
             console.log("Unable to update claim database entry")
             return res.status(500).send("Internal Server Error")
         }
+
+        // Application forms //
+        if (formType === "HaveEmployeeForm" || formType === "NeedEmployeeForm") {
+            const application = await applicationService.getApplicationBySubmissionID(req.body.submissionId)
+            if (application?.status === "Draft") {
+                let updateResult
+                if (submissionResponse.submission.draft === false) {
+                    console.log("updating submitted application for id ", application.id)
+                    updateResult = await applicationService.updateApplication(
+                        application.id,
+                        "New",
+                        submissionResponse.submission,
+                        false
+                    )
+                    await emailController.sendEmail(submissionResponse.submission.submission)
+                    // If first application submitted, backfill employer profile from form data.
+                    const firstApplicationSubmitted = await applicationService.oneApplicationSubmitted(
+                        application.created_by
+                    )
+                    if (firstApplicationSubmitted) {
+                        const employer = await employerService.getEmployerByID(application.created_by)
+                        if (!employer) {
+                            throw new Error("Internal Server Error")
+                        }
+                        await employerService.updateEmployerFromApplicationForm(
+                            employer,
+                            submissionResponse.submission.submission.data
+                        )
+                    }
+                } else if (submissionResponse.submission.draft === true) {
+                    console.log("updating saved application for id ", application.id)
+                    updateResult = await applicationService.updateApplication(
+                        application.id,
+                        "Draft",
+                        submissionResponse.submission,
+                        false
+                    )
+                }
+                if (updateResult === 1) {
+                    console.log("application record update successful for id ", application.id)
+                    return res.status(200).send()
+                }
+
+                console.log("unable to update application database entry for id ", application.id)
+                return res.status(500).send("Internal Server Error")
+            }
+        }
+
         return res.status(200).send()
-    } catch (e: any) {
+    } catch (e: unknown) {
         console.log(e)
         return res.status(500).send("Server Error")
     }

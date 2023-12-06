@@ -2,14 +2,14 @@
 const generateHTMLEmail = require("../utils/htmlEmail")
 
 const applicationNotification = (catchmentNo: string, catchmentName: string, type: string) => {
-    const claimsUrl = `${process.env.SP_URL}/#/claims`
-    const applicationsUrl = `${process.env.SP_URL}/#/applications`
+    const claimsUrl = `${process.env.WAGE_SUB_URL}/#/claims`
+    const applicationsUrl = `${process.env.WAGE_SUB_URL}/#/applications`
     const email = generateHTMLEmail(
-        "A Wage Subsidy Claim Application has been submitted",
+        `A Wage Subsidy${type === "claim" ? " Claim" : ""} Application has been submitted`,
         [
             ` Hello `,
-            ` You are receiving this email because you enabled notifications on Wage Subsidy ${
-                type === "claim" ? "Claim" : ""
+            ` You are receiving this email because you enabled notifications on Wage Subsidy${
+                type === "claim" ? " Claim" : ""
             } Applications for Catchment ${catchmentNo} - ${catchmentName}.`
         ],
         [

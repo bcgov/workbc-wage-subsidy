@@ -9,7 +9,7 @@ export const getAllClaims = async (
     currPage: number,
     filters: any,
     sortFields: string[],
-    sortOrders: string[],
+    sortOrder: string,
     getDrafts?: boolean,
     trx?: any
 ) => {
@@ -30,9 +30,11 @@ export const getAllClaims = async (
             if (filters.associated_application_id) {
                 queryBuilder.where("associated_application_id", filters.associated_application_id)
             }
-            if (sortFields?.length > 0 && sortOrders?.length > 0) {
+            if (sortFields?.length > 0 && sortOrder) {
                 sortFields.forEach((field, i) => {
-                    queryBuilder.orderByRaw(`${field} ${sortOrders[i]} NULLS LAST`)
+                    sortOrder === "DESC"
+                        ? queryBuilder.orderByRaw(`${field} ${sortOrder} NULLS LAST`)
+                        : queryBuilder.orderByRaw(`${field} ${sortOrder} NULLS FIRST`)
                 })
             } else {
                 // default sort
@@ -75,6 +77,9 @@ export const updateClaim = async (id: string, username: string, data: any, trx?:
                 }
                 if (data.catchmentNo) {
                     queryBuilder.update("catchmentno", data.catchmentNo)
+                }
+                if (data.workBcCentre) {
+                    queryBuilder.update("workbc_centre", data.workBcCentre)
                 }
                 if (trx) {
                     queryBuilder.transacting(trx)

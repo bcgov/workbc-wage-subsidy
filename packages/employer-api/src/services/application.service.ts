@@ -6,7 +6,7 @@ export const getAllApplications = async (
     currPage: number,
     filters: any,
     sortFields: string[],
-    sortOrders: string[],
+    sortOrder: string,
     user: string
 ) => {
     const applicationIds = knex("employers_applications").select("application_id").where("employer_id", user)
@@ -16,7 +16,8 @@ export const getAllApplications = async (
         .whereIn("a.id", applicationIds)
         .select("a.*")
         .groupBy("a.id")
-        .select(knex.raw("ARRAY_AGG(e.contact_name) as shared_with"))
+        // Compute 'Shared With' column. Do not include the name of the requestor, and do not include NULL in its place.
+        .select(knex.raw("COALESCE( ARRAY_AGG(e.contact_name) FILTER (WHERE e.id!=?), '{}') as shared_with", user))
         .modify((queryBuilder: any) => {
             if (filters.id) {
                 queryBuilder.where("id", filters.id)
@@ -27,9 +28,11 @@ export const getAllApplications = async (
             if (filters.form_confirmation_id) {
                 queryBuilder.where("form_confirmation_id", filters.form_confirmation_id)
             }
-            if (sortFields?.length > 0 && sortOrders?.length > 0) {
+            if (sortFields?.length > 0 && sortOrder) {
                 sortFields.forEach((field, i) => {
-                    queryBuilder.orderByRaw(`${field} ${sortOrders[i]} NULLS LAST`)
+                    sortOrder === "DESC"
+                        ? queryBuilder.orderByRaw(`${field} ${sortOrder} NULLS LAST`)
+                        : queryBuilder.orderByRaw(`${field} ${sortOrder} NULLS FIRST`)
                 })
             } else {
                 // default sort
@@ -60,6 +63,11 @@ export const getApplicationByConfirmationID = async (confirmationId: string) => 
     return application.length > 0 ? application[0] : null
 }
 
+export const getApplicationBySubmissionID = async (submissionId: string) => {
+    const application = await knex("applications").where("form_submission_id", submissionId)
+    return application.length > 0 ? application[0] : null
+}
+
 export const insertApplication = async (
     id: string,
     userGuid: string,
@@ -85,9 +93,10 @@ export const insertApplication = async (
     return result
 }
 
-export const updateApplication = async (id: number, status: string | null, body: any) => {
+export const updateApplication = async (id: number, status: string | null, body: any, requireStale?: boolean) => {
     const wages = await knex("applications").where("id", id)
     if (wages.length === 0) {
+        console.log("application not found with id ", id)
         return 0
     }
     let result
@@ -95,6 +104,11 @@ export const updateApplication = async (id: number, status: string | null, body:
         const submitted = body.draft === false
         result = await knex("applications")
             .where("id", id)
+            .modify((queryBuilder: any) => {
+                if (requireStale) {
+                    queryBuilder.where("stale", true)
+                }
+            })
             .update({
                 form_confirmation_id: submitted ? body.confirmationId : null, // only store the confirmation ID when the form has been submitted
                 form_submitted_date: submitted ? body.createdAt : null,
@@ -103,12 +117,21 @@ export const updateApplication = async (id: number, status: string | null, body:
                     ? Number(body.submission.data.numberOfPositions0)
                     : null,
                 catchmentno: body.submission.data.catchmentNo ? Number(body.submission.data.catchmentNo) : null,
+                workbc_centre: body.submission.data.catchmentNoStoreFront
+                    ? body.submission.data.catchmentNoStoreFront
+                    : null,
                 status,
                 updated_by: "system",
                 updated_date: new Date(),
-                organization: body.submission.data.operatingName
+                organization: body.submission.data.operatingName,
+                stale: false
             })
     }
+    return result
+}
+
+export const markApplication = async (id: string) => {
+    const result = await knex("applications").update("stale", true).where("id", id).where("status", "Draft")
     return result
 }
 
@@ -141,6 +164,37 @@ export const insertEmployerApplicationRecord = async (employerId: string, applic
         }
     })
     return result
+}
+
+export const getStaleDrafts = async (user: string) => {
+    const drafts = await knex
+        .select("id", "form_type", "form_submission_id", "status", "created_by")
+        .from(
+            knex
+                .select("*")
+                .from("employers_applications as ea")
+                .where("employer_id", user)
+                .join("applications as a1", "a1.id", "=", "ea.application_id")
+                .as("a2")
+        )
+        .where("status", "Draft")
+        .where("stale", true)
+    return drafts
+}
+
+export const oneApplicationSubmitted = async (user: string) => {
+    const submittedApplications = await knex
+        .select("status")
+        .from(
+            knex
+                .select("*")
+                .from("employers_applications as ea")
+                .where("employer_id", user)
+                .join("applications as a1", "a1.id", "=", "ea.application_id")
+                .as("a2")
+        )
+        .whereNot("status", "Draft")
+    return submittedApplications.length === 1
 }
 
 export const getFormId = (formType: string) => {

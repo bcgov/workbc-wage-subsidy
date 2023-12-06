@@ -6,7 +6,7 @@ export const getAllApplications = async (
     currPage: number,
     filters: any,
     sortFields: string[],
-    sortOrders: string[],
+    sortOrder: string,
     trx?: any
 ) => {
     const applications = await knex("applications")
@@ -24,9 +24,11 @@ export const getAllApplications = async (
             if (filters.form_confirmation_id) {
                 queryBuilder.where("form_confirmation_id", filters.form_confirmation_id)
             }
-            if (sortFields?.length > 0 && sortOrders?.length > 0) {
+            if (sortFields?.length > 0 && sortOrder) {
                 sortFields.forEach((field, i) => {
-                    queryBuilder.orderByRaw(`${field} ${sortOrders[i]} NULLS LAST`)
+                    sortOrder === "DESC"
+                        ? queryBuilder.orderByRaw(`${field} ${sortOrder} NULLS LAST`)
+                        : queryBuilder.orderByRaw(`${field} ${sortOrder} NULLS FIRST`)
                 })
             } else {
                 // default sort
@@ -69,6 +71,9 @@ export const updateApplication = async (id: string, username: string, data: any,
                 }
                 if (data.catchmentNo) {
                     queryBuilder.update("catchmentno", data.catchmentNo)
+                }
+                if (data.workBcCentre) {
+                    queryBuilder.update("workbc_centre", data.workBcCentre)
                 }
                 if (trx) {
                     queryBuilder.transacting(trx)

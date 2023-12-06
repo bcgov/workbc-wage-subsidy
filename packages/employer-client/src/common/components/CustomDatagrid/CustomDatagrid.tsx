@@ -1,4 +1,4 @@
-import { Datagrid, DatagridBody, useGetIdentity } from "react-admin"
+import { Datagrid, DatagridBody, useGetIdentity, useListContext } from "react-admin"
 import CustomDatagridRow from "./CustomDatagridRow"
 import { CustomDatagridHeader } from "./CustomDatagridHeader"
 import { useEffect, useState } from "react"
@@ -14,6 +14,8 @@ type CustomDatagridProps<T> = T & {
     ariaLabel: string
     showCalculatorButton?: boolean
     rowAriaLabel?: string
+    disableBulkActions?: boolean
+    setIsFetching?: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 type CustomDatagridBodyProps<T> = T & {
@@ -30,13 +32,30 @@ const CustomDatagridBody = <T,>({ rowAriaLabel, showCalculatorButton, ...props }
     )
 }
 
-const CustomDatagrid = <T,>({ ariaLabel, showCalculatorButton, rowAriaLabel, ...props }: CustomDatagridProps<T>) => {
+const CustomDatagrid = <T,>({
+    ariaLabel,
+    showCalculatorButton,
+    rowAriaLabel,
+    disableBulkActions,
+    // Optional prop allowing parent to observe fetching state.
+    setIsFetching,
+    ...props
+}: CustomDatagridProps<T>) => {
     const { identity } = useGetIdentity()
     const [hasBulkActions, setHasBulkActions] = useState<boolean>(false)
+    const { isFetching } = useListContext()
 
     useEffect(() => {
-        setHasBulkActions(identity && identity.businessGuid && identity.businessName)
+        if (!disableBulkActions) {
+            setHasBulkActions(identity && identity.businessGuid && identity.businessName)
+        }
     }, [identity])
+
+    useEffect(() => {
+        if (setIsFetching) {
+            setIsFetching(isFetching)
+        }
+    }, [isFetching])
 
     const skipToListAside = (event: any) => {
         if (event.key === "ArrowLeft" || event.key === "ArrowRight") {

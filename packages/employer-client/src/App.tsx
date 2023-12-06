@@ -18,6 +18,7 @@ import { dataProvider } from "./DataProvider/DataProvider"
 import { ViewForm } from "./Form/ViewForm"
 import Layout from "./Layout"
 import Footer from "./footer"
+import { EmployerProvider } from "./common/contexts/EmployerContext"
 
 const initOptions = {
     url: process.env.REACT_APP_KEYCLOAK_URL || "",
@@ -167,6 +168,13 @@ export const lightTheme = {
                     }
                 }
             }
+        },
+        MuiTableCell: {
+            styleOverrides: {
+                root: {
+                    verticalAlign: "top"
+                }
+            }
         }
     },
     palette: {
@@ -244,7 +252,7 @@ const CustomAdminWithKeycloak = () => {
                         <Route path="create/SelectApplication" element={<ClaimCreateSelectApplication />} />
                     </Resource>
                     <CustomRoutes>
-                        <Route path="ViewForm/:urlType/:resource/:formId" element={<ViewForm />} />
+                        <Route path="ViewForm/:resource/:recordId" element={<ViewForm />} />
                     </CustomRoutes>
                 </>
             )}
@@ -264,8 +272,10 @@ function App() {
                 onTokenExpired: onTokenExpired
             }}
         >
-            <CustomAdminWithKeycloak />
-            <Footer />
+            <EmployerProvider>
+                <CustomAdminWithKeycloak />
+                <Footer />
+            </EmployerProvider>
         </ReactKeycloakProvider>
     )
 }
