@@ -133,7 +133,7 @@ export const ClaimList = (props: any) => {
                                             render={
                                                 (record: any) =>
                                                     record.form_submitted_date
-                                                        ? record.form_submitted_date.split("T")[0]
+                                                        ? new Date(record.form_submitted_date).toLocaleDateString()
                                                         : "-" // remove timestamp
                                             }
                                         />

@@ -71,7 +71,7 @@ export const insertClaim = async (
             form_submission_id: submissionID,
             position_title: application[0].position_title,
             associated_application_id: applicationID,
-            created_date: new Date(),
+            created_date: new Date().toISOString(),
             created_by: userGuid,
             status: "Draft",
             catchmentno: application[0].catchmentno,
@@ -111,7 +111,7 @@ export const updateClaim = async (id: number, status: string | null, body: any, 
                 employee_last_name: body.submission?.data?.container?.employeeLastName,
                 status,
                 updated_by: "system",
-                updated_date: new Date(),
+                updated_date: new Date().toISOString(),
                 stale: false
             })
     }
@@ -165,7 +165,7 @@ export const addServiceProviderClaim = async (
                     service_provider_form_submission_id: serviceProviderSubmissionID,
                     service_provider_form_internal_id: serviceProviderInternalID,
                     updated_by: submissionResponse.submission.updatedBy ?? submissionResponse.submission.createdBy,
-                    updated_date: new Date()
+                    updated_date: new Date().toISOString()
                 })
         } catch (e: any) {
             console.log(e.message)
@@ -200,7 +200,7 @@ export const updateServiceProviderClaim = async (submissionResponse: any) => {
                     status: "Completed",
                     calculator_approved: true,
                     updated_by: submissionResponse.submission.updatedBy ?? submissionResponse.submission.createdBy,
-                    updated_date: new Date()
+                    updated_date: new Date().toISOString()
                 })
         } catch (e: any) {
             console.log(e.message)

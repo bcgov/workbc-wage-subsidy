@@ -127,12 +127,11 @@ export const ApplicationList = (props: any) => {
                                             label="Submitted Date"
                                             sortBy="form_submitted_date,updated_date,created_date"
                                             sortByOrder="DESC"
-                                            render={
-                                                (record: any) =>
-                                                    record.form_submitted_date
-                                                        ? record.form_submitted_date.split("T")[0]
-                                                        : "-" // remove timestamp
-                                            }
+                                            render={(record: any) => {
+                                                return record.form_submitted_date
+                                                    ? new Date(record.form_submitted_date).toLocaleDateString()
+                                                    : "-" // remove timestamp
+                                            }}
                                         />
                                         {allowSharing && <SharedWithField label="Shared With" openModal={openModal} />}
                                         <FunctionField

@@ -90,7 +90,9 @@ export const ClaimCreateSelectApplication = (props: any) => {
                             sortByOrder="DESC"
                             render={
                                 (record: any) =>
-                                    record.form_submitted_date ? record.form_submitted_date.split("T")[0] : "-" // remove timestamp
+                                    record.form_submitted_date
+                                        ? new Date(record.form_submitted_date).toLocaleDateString()
+                                        : "-" // remove timestamp
                             }
                         />
                         <FunctionField

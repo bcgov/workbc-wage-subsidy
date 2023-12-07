@@ -10,11 +10,11 @@ CREATE TABLE IF NOT EXISTS public.applications
     num_positions integer,
     form_confirmation_id character varying(255) COLLATE pg_catalog."default",
     form_submission_id character varying(255) COLLATE pg_catalog."default",
-    form_submitted_date date,
+    form_submitted_date timestamptz,
     created_by character varying(255) COLLATE pg_catalog."default",
-    created_date date,
+    created_date timestamptz,
     updated_by character varying(255) COLLATE pg_catalog."default",
-    updated_date date,
+    updated_date timestamptz,
     stale boolean,
     CONSTRAINT applications_pkey PRIMARY KEY (id)
 )
@@ -36,14 +36,14 @@ CREATE TABLE IF NOT EXISTS public.claims
     associated_application_id character varying(10) COLLATE pg_catalog."default",
     form_confirmation_id character varying(255) COLLATE pg_catalog."default",
     form_submission_id character varying(255) COLLATE pg_catalog."default",
-    form_submitted_date date,
+    form_submitted_date timestamptz,
     service_provider_form_submission_id character varying(255) COLLATE pg_catalog."default",
     service_provider_form_internal_id character varying(255) COLLATE pg_catalog."default",
     calculator_approved boolean DEFAULT false,
     created_by character varying(255) COLLATE pg_catalog."default",
-    created_date date,
+    created_date timestamptz,
     updated_by character varying(255) COLLATE pg_catalog."default",
-    updated_date date,
+    updated_date timestamptz,
     stale boolean,
     CONSTRAINT claims_pkey PRIMARY KEY (id)
 )
@@ -73,9 +73,9 @@ CREATE TABLE IF NOT EXISTS public.employers
     workplace_province character varying(255) COLLATE pg_catalog."default",
     workplace_postal_code character varying(255) COLLATE pg_catalog."default",
     created_by character varying(255) COLLATE pg_catalog."default",
-    created_date date,
+    created_date timestamptz,
     updated_by character varying(255) COLLATE pg_catalog."default",
-    updated_date date,
+    updated_date timestamptz,
     CONSTRAINT employers_pkey PRIMARY KEY (id)
 )
 
