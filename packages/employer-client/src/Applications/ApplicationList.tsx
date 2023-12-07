@@ -130,7 +130,7 @@ export const ApplicationList = (props: any) => {
                                             render={(record: any) => {
                                                 return record.form_submitted_date
                                                     ? new Date(record.form_submitted_date).toLocaleDateString()
-                                                    : "-" // remove timestamp
+                                                    : "-"
                                             }}
                                         />
                                         {allowSharing && <SharedWithField label="Shared With" openModal={openModal} />}
