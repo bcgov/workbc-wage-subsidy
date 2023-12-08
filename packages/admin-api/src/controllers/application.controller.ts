@@ -210,7 +210,7 @@ export const generatePDF = async (req: any, res: express.Response) => {
             businessPostal: submission.data?.businessPostal,
             businessPhone: submission.data?.businessPhone,
             businessFax: submission.data?.businessFax,
-            businessEmail: submission.data?.businessEmail,
+            businessEmail: submission.data?.employerEmail,
             CEWSAndOrCRHP: submission.data?.CEWSAndOrCRHP,
             sectorType: submission.data?.sectorType,
             organizationSize: submission.data?.organizationSize,
