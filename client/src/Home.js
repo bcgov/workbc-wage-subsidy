@@ -12,7 +12,7 @@ function Home() {
             </h2>
             <p>
               A <strong>new Wage Subsidy platform</strong> will launch on{" "}
-              <strong>October 30th</strong>. It requires a{" "}
+              <strong>January 17th</strong>. It requires a{" "}
               <strong>Business</strong> or <strong>Basic BCeID</strong> to sign
               in. Your new Wage Subsidy account will give you access to the
               following:
