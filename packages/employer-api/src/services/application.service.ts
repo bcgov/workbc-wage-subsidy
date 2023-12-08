@@ -79,7 +79,7 @@ export const insertApplication = async (
         id,
         form_type: formType,
         form_submission_id: submissionID,
-        created_date: new Date(),
+        created_date: new Date().toISOString(),
         created_by: userGuid,
         status: "Draft",
         catchmentno: 5 // Temporary, for testing: set arbitrary catchment.
@@ -122,7 +122,7 @@ export const updateApplication = async (id: number, status: string | null, body:
                     : null,
                 status,
                 updated_by: "system",
-                updated_date: new Date(),
+                updated_date: new Date().toISOString(),
                 organization: body.submission.data.operatingName,
                 stale: false
             })

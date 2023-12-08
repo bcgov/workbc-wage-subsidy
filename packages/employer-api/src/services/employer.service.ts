@@ -23,7 +23,7 @@ export const insertEmployer = async (data: any) => {
     const employerData: any = {}
     employerData.id = data.id
     employerData.created_by = data.id
-    employerData.created_date = new Date()
+    employerData.created_date = new Date().toISOString()
     employerData.contact_name = data.contact_name
     employerData.contact_email = data.contact_email
     if (data.bceid_business_guid) {
@@ -53,7 +53,7 @@ export const updateEmployer = async (userGuid: string, data: any) => {
             .where("id", userGuid)
             .modify((queryBuilder: any) => {
                 queryBuilder.update("updated_by", userGuid)
-                queryBuilder.update("updated_date", new Date())
+                queryBuilder.update("updated_date", new Date().toISOString())
                 if (data?.bceid_business_guid || data.bceid_business_guid === null) {
                     queryBuilder.update("bceid_business_guid", data.bceid_business_guid)
                 }
