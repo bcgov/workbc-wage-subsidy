@@ -95,7 +95,7 @@ export const ClaimList = (props: any) => {
                                     {...props}
                                     actions={<ListActions createButtonLabel="New Claim Form" />}
                                     filter={statusFilter}
-                                    filterDefaultValues={statusFilter}
+                                    filterDefaultValues={claimStatusFilters["All"]}
                                     aside={
                                         <ListAside
                                             statusFilters={claimStatusFilters}
