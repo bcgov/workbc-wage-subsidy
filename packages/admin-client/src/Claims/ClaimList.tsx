@@ -43,7 +43,7 @@ export const ClaimList = (props: any) => {
                         {...props}
                         actions={<ListActions />}
                         filter={{ ...statusFilter, catchmentno: cc.catchment.id }}
-                        filterDefaultValues={{ ...statusFilter, catchmentno: cc.catchment.id }}
+                        filterDefaultValues={{ ...claimStatusFilters["All"], catchmentno: cc.catchment.id }}
                         aside={
                             <ListAside
                                 statusFilters={claimStatusFilters}

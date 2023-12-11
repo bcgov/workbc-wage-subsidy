@@ -44,7 +44,7 @@ export const ApplicationList = (props: any) => {
                         {...props}
                         actions={<ListActions />}
                         filter={{ ...statusFilter, catchmentno: cc.catchment.id }}
-                        filterDefaultValues={{ ...statusFilter, catchmentno: cc.catchment.id }}
+                        filterDefaultValues={{ ...applicationStatusFilters["All"], catchmentno: cc.catchment.id }}
                         aside={
                             <ListAside
                                 statusFilters={applicationStatusFilters}

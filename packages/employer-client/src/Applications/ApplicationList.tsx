@@ -97,7 +97,7 @@ export const ApplicationList = (props: any) => {
                                     {...props}
                                     actions={<ListActions createButtonLabel="New Application" />}
                                     filter={statusFilter}
-                                    filterDefaultValues={statusFilter}
+                                    filterDefaultValues={applicationStatusFilters["All"]}
                                     aside={
                                         <ListAside
                                             statusFilters={applicationStatusFilters}
