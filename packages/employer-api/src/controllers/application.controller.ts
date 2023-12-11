@@ -275,7 +275,7 @@ const computeApplicationPrefillFields = (employer: any) => ({
     container: {
         ...(employer?.workplace_street_address && { addressAlt: employer.workplace_street_address }),
         ...(employer?.workplace_city && { cityAlt: employer.workplace_city }),
-        ...(employer?.workplace_province && { provinceAlt: employer.workplace_province }),
+        provinceAlt: "BC",
         ...(employer?.workplace_postal_code && { postalAlt: employer.workplace_postal_code })
     },
     ...(employer?.contact_name && { signatory1: employer.contact_name })
