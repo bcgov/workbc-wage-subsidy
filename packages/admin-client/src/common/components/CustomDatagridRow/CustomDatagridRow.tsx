@@ -1,25 +1,23 @@
-import React, { isValidElement, useState, useEffect, useCallback, memo, FC, ReactElement } from "react"
-import PropTypes from "prop-types"
+import { Box, Button, Checkbox, TableCell, TableRow, TableRowProps } from "@mui/material"
 import clsx from "clsx"
-import { TableCell, TableRow, TableRowProps, Checkbox, Box, Button } from "@mui/material"
+import PropTypes from "prop-types"
 import {
     Identifier,
     RaRecord,
     RecordContextProvider,
     shallowEqual,
-    useExpanded,
-    useResourceContext,
-    useTranslate,
     useCreatePath,
-    useRecordContext
+    useExpanded,
+    useRecordContext,
+    useResourceContext,
+    useTranslate
 } from "ra-core"
+import React, { FC, ReactElement, isValidElement, memo, useCallback, useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 
-import { DatagridCell } from "react-admin"
-import { DatagridClasses } from "react-admin"
-import { useDatagridContext } from "react-admin"
-import PdfButtonField from "../PdfButtonField/PdfButtonField"
+import { DatagridCell, DatagridClasses, useDatagridContext } from "react-admin"
 import CalculatorButtonField from "../CalculatorButtonField/CalculatorButtonField"
+import PdfButtonField from "../PdfButtonField/PdfButtonField"
 
 const computeNbColumns = (expand, children, hasBulkActions) =>
     expand
@@ -168,6 +166,7 @@ const DatagridRow: FC<CustomDatagridRowProps> = React.forwardRef((props, ref) =>
                 {React.Children.map(children, (field, index) =>
                     isValidElement(field) ? (
                         <DatagridCell
+                            placeholder="—"
                             key={`${id}-${(field.props as any).source || index}`}
                             className={clsx(`column-${(field.props as any).source}`, DatagridClasses.rowCell)}
                             record={record}
