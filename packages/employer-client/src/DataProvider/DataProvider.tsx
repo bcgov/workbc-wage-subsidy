@@ -270,5 +270,14 @@ export const dataProvider = {
                 Accept: "application/json",
                 Authorization: `Bearer ${localStorage.getItem("token")}`
             })
-        }).then(({ json }) => ({ data: json }))
+        }).then(({ json }) => ({ data: json })),
+    createLegacyClaim: (params: { formKey: string; guid: string; address: string; city: string }) =>
+        httpClient(`${apiUrl}/claims/legacy/`, {
+            method: "POST",
+            body: JSON.stringify(params),
+            headers: new Headers({
+                Accept: "application/json",
+                Authorization: `Bearer ${localStorage.getItem("token")}`
+            })
+        }).then(({ json }) => ({ id: json.recordId }))
 }

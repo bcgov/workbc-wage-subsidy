@@ -88,6 +88,32 @@ export const insertClaim = async (
     return false
 }
 
+export const insertLegacyClaim = async (
+    id: string,
+    userGuid: string,
+    submissionID: string,
+    catchment: number,
+    storefront: number,
+    trx?: any
+) => {
+    const data = {
+        id,
+        form_submission_id: submissionID,
+        created_date: new Date(),
+        created_by: userGuid,
+        status: "Draft",
+        catchmentno: catchment,
+        workbc_centre: storefront
+    }
+    const result = await knex("claims").modify((queryBuilder: any) => {
+        queryBuilder.insert(data)
+        if (trx) {
+            queryBuilder.transacting(trx)
+        }
+    })
+    return result
+}
+
 export const updateClaim = async (id: number, status: string | null, body: any, requireStale?: boolean) => {
     const claims = await knex("claims").where("id", id)
     if (claims.length === 0) {

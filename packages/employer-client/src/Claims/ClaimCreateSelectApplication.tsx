@@ -40,6 +40,8 @@ export const ClaimCreateSelectApplication = (props: any) => {
     const [loading, setLoading] = useState(false)
     const [legacySelected, setLegacySelected] = useState(false)
     const [addressValidated, setAddressValidated] = useState(false)
+    const [validationData, setValidationData] = useState<any>(null)
+    const [validationMessage, setValidationMessage] = useState("")
 
     const handleClick = async (id, resource, record) => {
         if (identity?.guid && record?.form_confirmation_id && !loading) {
@@ -68,13 +70,37 @@ export const ClaimCreateSelectApplication = (props: any) => {
                 city: data.city,
                 province: "BC"
             })
-            console.log(validationResult)
-            setAddressValidated(true)
+            if (validationResult.data.Score >= 95) {
+                setAddressValidated(true)
+                setValidationData(validationResult.data)
+                setValidationMessage("Address Validated")
+            } else {
+                setAddressValidated(false)
+                setValidationData(null)
+                setValidationMessage("Invalid Address")
+            }
         } else {
-            // if address is already validated then create the claim //
-            console.log(data)
+            // address validated - create claim //
+            if (identity?.guid && validationData && !loading) {
+                setLoading(true)
+                await dataProvider
+                    .createLegacyClaim({
+                        formKey: uuidv4(),
+                        guid: identity.guid,
+                        catchment: validationData.Catchment,
+                        storefront: validationData.Storefront,
+                        address: data.address,
+                        city: data.city
+                    })
+                    .then((res) => {
+                        setLoading(false)
+                        redirect("/ViewForm/claims/" + res.id, "")
+                    })
+                    .catch((err) => {
+                        setLoading(false)
+                    })
+            }
         }
-        setAddressValidated(true)
     }
 
     const validateAddressForm = (values) => {
@@ -84,9 +110,6 @@ export const ClaimCreateSelectApplication = (props: any) => {
         }
         if (!values.city) {
             errors["city"] = "City is required"
-        }
-        if (!values.postal) {
-            errors["postal"] = "Postal Code is required"
         }
         return errors
     }
@@ -173,6 +196,7 @@ export const ClaimCreateSelectApplication = (props: any) => {
                                             onClick={() => {
                                                 setLegacySelected(!legacySelected)
                                                 setAddressValidated(false)
+                                                setValidationMessage("")
                                             }}
                                             size="small"
                                         />
@@ -215,13 +239,13 @@ export const ClaimCreateSelectApplication = (props: any) => {
                                                         validate={maxLength(255)}
                                                         disabled={addressValidated}
                                                     />
-                                                    <StyledTextInput
+                                                    {/* <StyledTextInput
                                                         source="postal"
                                                         label="Postal Code"
                                                         sx={{ minWidth: "20em" }}
                                                         validate={maxLength(255)}
                                                         disabled={addressValidated}
-                                                    />
+                                                    /> */}
                                                 </Stack>
                                                 <Stack direction="row" spacing={3}>
                                                     <SaveButton
@@ -237,6 +261,7 @@ export const ClaimCreateSelectApplication = (props: any) => {
                                                         disabled={!addressValidated}
                                                     />
                                                 </Stack>
+                                                <a>{validationMessage}</a>
                                             </SimpleForm>
                                         </>
                                     )}
