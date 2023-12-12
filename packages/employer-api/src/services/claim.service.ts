@@ -99,11 +99,12 @@ export const insertLegacyClaim = async (
     const data = {
         id,
         form_submission_id: submissionID,
+        associated_application_id: "LEGACY",
         created_date: new Date(),
         created_by: userGuid,
         status: "Draft",
         catchmentno: catchment,
-        workbc_centre: storefront
+        workbc_centre: `${catchment}-${storefront}`
     }
     const result = await knex("claims").modify((queryBuilder: any) => {
         queryBuilder.insert(data)
