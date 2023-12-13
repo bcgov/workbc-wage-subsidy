@@ -11,7 +11,10 @@ import eventRoute from "./routes/event.route"
 import addressRoute from "./routes/address.route"
 
 const corsOptions = {
-    origin: process.env.ORIGIN_URL || process.env.OPENSHIFT_NODEJS_ORIGIN_URL || "http://localhost:3000",
+    origin: [
+        process.env.ORIGIN_URL || process.env.OPENSHIFT_NODEJS_ORIGIN_URL || ("http://localhost:3000" as string),
+        process.env.CHEFS_URL as string
+    ],
     credentials: true,
     optionsSuccessStatus: 200
 }
