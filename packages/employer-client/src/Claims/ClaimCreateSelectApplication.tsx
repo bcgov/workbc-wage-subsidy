@@ -240,26 +240,19 @@ export const ClaimCreateSelectApplication = (props: any) => {
                                                         validate={maxLength(255)}
                                                         disabled={addressValidated}
                                                     />
-                                                    {/* <StyledTextInput
-                                                        source="postal"
-                                                        label="Postal Code"
-                                                        sx={{ minWidth: "20em" }}
-                                                        validate={maxLength(255)}
-                                                        disabled={addressValidated}
-                                                    /> */}
                                                 </Stack>
                                                 <Stack direction="row" spacing={3}>
                                                     <SaveButton
                                                         label="Validate"
                                                         icon={<></>}
                                                         style={{ marginTop: 5, minWidth: 150 }}
-                                                        disabled={addressValidated}
+                                                        disabled={addressValidated === true}
                                                     />
                                                     <SaveButton
                                                         label="Create"
                                                         icon={<></>}
                                                         style={{ marginTop: 5, minWidth: 150 }}
-                                                        disabled={!addressValidated}
+                                                        disabled={addressValidated === false}
                                                     />
                                                 </Stack>
                                                 <a>{validationMessage}</a>
