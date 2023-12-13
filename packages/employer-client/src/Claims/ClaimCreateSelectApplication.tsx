@@ -9,7 +9,8 @@ import {
     maxLength,
     SimpleForm,
     SaveButton,
-    useDataProvider
+    useDataProvider,
+    Button
 } from "react-admin"
 import { applicationStatusFilters } from "../Applications/ApplicationList"
 import { DatagridStyles } from "../common/styles/DatagridStyles"
@@ -78,27 +79,6 @@ export const ClaimCreateSelectApplication = (props: any) => {
                 setAddressValidated(false)
                 setValidationData(null)
                 setValidationMessage("Invalid Address")
-            }
-        } else {
-            // address validated - create claim //
-            if (identity?.guid && validationData && !loading) {
-                setLoading(true)
-                await dataProvider
-                    .createLegacyClaim({
-                        formKey: uuidv4(),
-                        guid: identity.guid,
-                        catchment: validationData.Catchment,
-                        storefront: validationData.Storefront,
-                        address: data.address,
-                        city: data.city
-                    })
-                    .then((res) => {
-                        setLoading(false)
-                        redirect("/ViewForm/claims/" + res.id, "")
-                    })
-                    .catch((err) => {
-                        setLoading(false)
-                    })
             }
         }
     }
@@ -246,13 +226,39 @@ export const ClaimCreateSelectApplication = (props: any) => {
                                                         label="Validate"
                                                         icon={<></>}
                                                         style={{ marginTop: 5, minWidth: 150 }}
-                                                        disabled={addressValidated === true}
+                                                        disabled={addressValidated}
                                                     />
-                                                    <SaveButton
+                                                    <Button
                                                         label="Create"
-                                                        icon={<></>}
+                                                        variant="contained"
                                                         style={{ marginTop: 5, minWidth: 150 }}
-                                                        disabled={addressValidated === false}
+                                                        disabled={!addressValidated}
+                                                        onClick={async () => {
+                                                            if (
+                                                                addressValidated &&
+                                                                identity?.guid &&
+                                                                validationData &&
+                                                                !loading
+                                                            ) {
+                                                                setLoading(true)
+                                                                await dataProvider
+                                                                    .createLegacyClaim({
+                                                                        formKey: uuidv4(),
+                                                                        guid: identity.guid,
+                                                                        catchment: validationData.Catchment,
+                                                                        storefront: validationData.Storefront,
+                                                                        address: validationData.FullAddress.address,
+                                                                        city: validationData.FullAddress.city
+                                                                    })
+                                                                    .then((res) => {
+                                                                        setLoading(false)
+                                                                        redirect("/ViewForm/claims/" + res.id, "")
+                                                                    })
+                                                                    .catch((err) => {
+                                                                        setLoading(false)
+                                                                    })
+                                                            }
+                                                        }}
                                                     />
                                                 </Stack>
                                                 <a>{validationMessage}</a>
