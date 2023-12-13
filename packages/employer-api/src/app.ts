@@ -8,6 +8,7 @@ import employerRoute from "./routes/employer.route"
 import claimRoute from "./routes/claim.route"
 import applicationRoute from "./routes/application.route"
 import eventRoute from "./routes/event.route"
+import addressRoute from "./routes/address.route"
 
 const corsOptions = {
     origin: process.env.ORIGIN_URL || process.env.OPENSHIFT_NODEJS_ORIGIN_URL || "http://localhost:3000",
@@ -41,6 +42,7 @@ app.use("/applications", keycloak.protect(), applicationRoute)
 app.use("/claims", keycloak.protect(), claimRoute)
 app.use("/events", eventRoute)
 app.use("/employers", keycloak.protect(), employerRoute)
+app.use("/address", keycloak.protect(), addressRoute)
 
 const port = process.env.PORT || "8000"
 app.listen(port, () => {

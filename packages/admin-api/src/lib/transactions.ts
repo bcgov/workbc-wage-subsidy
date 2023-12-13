@@ -70,14 +70,18 @@ export const updateApplicationWithSideEffects = async (application: any, usernam
 export const updateClaimWithSideEffects = async (claim: any, username: string, data: any) =>
     knex.transaction(async (trx: any) => {
         let numUpdated = 0
-        if (data.catchmentNo || data.workBcCentre) {
-            const assocApplications = await getAssociatedApplication(claim, trx)
-            if (assocApplications.data.length !== 1 || !data.catchmentNo || !data.workBcCentre) {
-                throw new Error("Updated failed")
+        if (data.catchmentNo && data.workBcCentre) {
+            if (claim.associated_application_id !== "LEGACY") {
+                const assocApplications = await getAssociatedApplication(claim, trx)
+                if (assocApplications.data.length !== 1) {
+                    throw new Error(
+                        `Claim update failed - unable to find associated application with ID ${claim.associated_application_id}`
+                    )
+                }
+                const assocApplication = assocApplications.data[0]
+                const catchmentData = { catchmentNo: data.catchmentNo, workBcCentre: data.workBcCentre }
+                numUpdated += await updateApplicationAndAssociatedClaims(assocApplication, catchmentData, username, trx)
             }
-            const assocApplication = assocApplications.data[0]
-            const catchmentData = { catchmentNo: data.catchmentNo, workBcCentre: data.workBcCentre }
-            numUpdated += await updateApplicationAndAssociatedClaims(assocApplication, catchmentData, username, trx)
         }
         numUpdated += await claimService.updateClaim(claim.id, username, data, trx)
         return numUpdated

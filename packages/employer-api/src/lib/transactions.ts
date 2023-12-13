@@ -30,3 +30,22 @@ export const insertClaim = async (id: string, userGuid: string, applicationID: s
         }
         return claimResult
     })
+
+export const insertLegacyClaim = async (
+    id: string,
+    userGuid: string,
+    submissionID: string,
+    catchment: number,
+    storefront: number
+) =>
+    knex.transaction(async (trx: any) => {
+        const claimResult = await claimService.insertLegacyClaim(id, userGuid, submissionID, catchment, storefront, trx)
+        if (claimResult.rowCount !== 1) {
+            throw new Error("Insert failed")
+        }
+        const employerClaimResult = await claimService.insertEmployerClaimRecord(userGuid, id, trx)
+        if (employerClaimResult.rowCount !== 1) {
+            throw new Error("Insert failed")
+        }
+        return claimResult
+    })
