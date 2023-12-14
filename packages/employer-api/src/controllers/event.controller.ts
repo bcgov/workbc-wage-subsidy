@@ -84,7 +84,7 @@ export const submission = async (req: express.Request, res: express.Response) =>
                     // Send notifications to clients with Claims notifications enabled
                     await emailController
                         .sendEmail({
-                            // form API expects the data to be wrapped in a data object
+                            // email controller expects the data to be wrapped in a data object
                             data: {
                                 catchmentNo: newSPClaim.catchmentno,
                                 applicationType: "Claims"
