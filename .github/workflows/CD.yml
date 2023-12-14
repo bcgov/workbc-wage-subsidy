@@ -55,9 +55,6 @@ jobs:
           - imagename: "workbc-wage-subsidy-v2-employer-api"
             context: "./packages/employer-api"
             env: false
-          - imagename: "workbc-wage-subsidy-v2-form-api"
-            context: "./packages/form-api"
-            env: false
     steps:
       - name: Extract branch name
         shell: bash
