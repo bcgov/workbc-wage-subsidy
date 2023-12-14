@@ -1,11 +1,11 @@
 /* eslint-disable camelcase */
 /* eslint-disable import/prefer-default-export */
 import * as express from "express"
-import * as formService from "../services/form.service"
 import * as applicationService from "../services/application.service"
 import * as claimService from "../services/claim.service"
-import * as emailController from "./email.controller"
 import * as employerService from "../services/employer.service"
+import * as formService from "../services/form.service"
+import * as emailController from "./email.controller"
 
 export const submission = async (req: express.Request, res: express.Response) => {
     try {
@@ -139,7 +139,6 @@ export const submission = async (req: express.Request, res: express.Response) =>
                         submissionResponse.submission,
                         false
                     )
-                    await emailController.sendEmail(submissionResponse.submission.submission)
                     // If first application submitted, backfill employer profile from form data.
                     const firstApplicationSubmitted = await applicationService.oneApplicationSubmitted(
                         application.created_by
@@ -154,6 +153,7 @@ export const submission = async (req: express.Request, res: express.Response) =>
                             submissionResponse.submission.submission.data
                         )
                     }
+                    await emailController.sendEmail(submissionResponse.submission.submission)
                 } else if (submissionResponse.submission.draft === true) {
                     console.log("updating saved application for id ", application.id)
                     updateResult = await applicationService.updateApplication(
