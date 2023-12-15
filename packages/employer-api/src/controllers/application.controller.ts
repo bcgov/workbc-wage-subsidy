@@ -273,6 +273,9 @@ const computeApplicationPrefillFields = (employer: any) => ({
             otherWorkAddress: false
         }),
     container: {
+        ...((employer?.workplace_street_address || employer?.workplace_city || employer?.workplace_postal_code) && {
+            addressValidationAlt: "Validation required to continue."
+        }),
         ...(employer?.workplace_street_address && { addressAlt: employer.workplace_street_address }),
         ...(employer?.workplace_city && { cityAlt: employer.workplace_city }),
         provinceAlt: "BC",
