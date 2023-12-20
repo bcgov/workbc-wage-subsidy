@@ -221,6 +221,7 @@ export const generatePDF = async (req: any, res: express.Response) => {
             liabilityCoverage: submission.data?.liabilityCoverage,
             wageSubsidy: submission.data?.wageSubsidy,
             WSBCCoverage: submission.data?.WSBCCoverage,
+            workSafeBcNumber: submission.data?.workSafeBcNumber,
             addressAlt: submission.data.container?.addressAlt,
             cityAlt: submission.data.container?.cityAlt,
             provinceAlt: submission.data.container?.provinceAlt,
