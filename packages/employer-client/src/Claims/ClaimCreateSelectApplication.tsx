@@ -1,4 +1,4 @@
-import { Box, Checkbox, Chip, Stack } from "@mui/material"
+import { Box, Checkbox, Chip, Stack, Tooltip } from "@mui/material"
 import {
     FunctionField,
     List,
@@ -182,11 +182,12 @@ export const ClaimCreateSelectApplication = (props: any) => {
                                             size="small"
                                         />
                                         <a style={{ marginRight: 5 }}>My application is not on this system</a>
-                                        <FontAwesomeIcon
-                                            icon={faInfoCircle}
-                                            style={{ color: COLOURS.LIGHTBLUE_TEXT }}
-                                            title="Check this box if your application was submitted through WorkBC.ca before January 17, 2024, or if you submitted your application by another method (e.g. email, paper submission)"
-                                        />
+                                        <Tooltip title="Check this box if your application was submitted through WorkBC.ca before January 17, 2024, or if you submitted your application by another method (e.g. email, paper submission)">
+                                            <FontAwesomeIcon
+                                                icon={faInfoCircle}
+                                                style={{ color: COLOURS.LIGHTBLUE_TEXT }}
+                                            />
+                                        </Tooltip>
                                     </Grid>
                                     {legacySelected && (
                                         <>
