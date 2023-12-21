@@ -11,9 +11,10 @@ interface ListAsideProps {
     statusFilters: { [key: string]: any }
     statusFilter: any
     setStatusFilter: React.Dispatch<any>
+    setIsLoading?: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-export const ListAside: React.FC<ListAsideProps> = ({ statusFilters, statusFilter, setStatusFilter }) => {
+export const ListAside: React.FC<ListAsideProps> = ({ statusFilters, statusFilter, setStatusFilter, setIsLoading }) => {
     const cc = useContext(CatchmentContext)
     const { resource, isFetching } = useListContext()
     const dataProvider = useDataProvider()
@@ -32,14 +33,21 @@ export const ListAside: React.FC<ListAsideProps> = ({ statusFilters, statusFilte
     }
 
     const getCounts = () => {
-        dataProvider.getCounts(resource, { filter: { catchmentno: cc.catchment.id } }).then(({ data }) => {
-            const total = data.reduce((acc, val) => acc + Number(Object(val).count), 0)
-            const byStatus = data.reduce((acc, val) => {
-                acc[val.status] = Number(val.count)
-                return acc
-            }, {} as Record<string, number>)
-            setCounts({ All: total, ...byStatus })
-        })
+        dataProvider
+            .getCounts(resource, { filter: { catchmentno: cc.catchment.id } })
+            .then(({ data }) => {
+                const total = data.reduce((acc, val) => acc + Number(Object(val).count), 0)
+                const byStatus = data.reduce((acc, val) => {
+                    acc[val.status] = Number(val.count)
+                    return acc
+                }, {} as Record<string, number>)
+                setCounts({ All: total, ...byStatus })
+            })
+            .then((response: any) => {
+                if (setIsLoading) {
+                    setIsLoading(false)
+                }
+            })
     }
 
     useEffect(() => {
