@@ -36,7 +36,7 @@ export const submission = async (req: express.Request, res: express.Response) =>
             console.log("formService getSubmission failed")
             return res.status(500).send("Internal Server Error")
         }
-        console.log("RETRIEVED SUBMISSION: ", submissionResponse)
+        console.log("RETRIEVED SUBMISSION")
 
         // Claim Form submission events //
         if (formType === "ClaimForm") {

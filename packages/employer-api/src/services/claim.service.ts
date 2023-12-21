@@ -208,7 +208,7 @@ export const addServiceProviderClaim = async (
 export const updateServiceProviderClaim = async (submissionResponse: any) => {
     let result = 0
     try {
-        console.log("update SP Claim submissionResponse: ", submissionResponse)
+        console.log("update SP Claim submissionResponse")
         const claimID = submissionResponse?.submission?.id
         console.log("SP CLAIM ID: ", claimID)
         if (!claimID) {
