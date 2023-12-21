@@ -82,7 +82,6 @@ export const sendEmail = async (formData: any) => {
             )
         }
 
-        // console.log(email)
         return "Email sent"
     } catch (e: unknown) {
         // eslint-disable-next-line no-console

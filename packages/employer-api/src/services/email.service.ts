@@ -22,14 +22,12 @@ export const sendEmail = async (body: string, subject: string, to: string[]) => 
             // tag: tag,
             attachments: []
         }
-        // console.log(request)
         const sendEmailResult: AxiosResponse = await chesApi.post("api/v1/email", request, {
             headers: {
                 Authorization: `Bearer ${token}`,
                 "Content-Type": "application/json"
             }
         })
-        // console.log(sendEmailResult.data)
         return sendEmailResult
     } catch (error: any) {
         console.log(error)
