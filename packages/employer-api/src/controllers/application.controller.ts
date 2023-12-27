@@ -168,8 +168,10 @@ export const shareApplication = async (req: any, res: express.Response) => {
         const { users } = req.body
         const targetUsers = await employerService.getEmployersByIDs(users)
         const employerApplicationRecord = await applicationService.getEmployerApplicationRecord(bceid_user_guid, id)
+        const applicationRecord = await applicationService.getApplicationByID(employerApplicationRecord?.application_id)
         if (
             !employerApplicationRecord ||
+            !applicationRecord ||
             bceid_business_guid === undefined ||
             !targetUsers.every((user: any) => user.bceid_business_guid === bceid_business_guid)
         ) {
@@ -177,12 +179,15 @@ export const shareApplication = async (req: any, res: express.Response) => {
         }
         const application = await applicationService.getApplicationByID(id)
         const shareResult = await formService.shareForm(
-            req.kauth.grant.access_token.token,
+            applicationRecord.status === "Draft" ? req.kauth.grant.access_token.token : null, // use users token for draft states
             application.form_submission_id,
             users
         )
         if (shareResult) {
             await applicationService.shareApplication(id, users)
+        } else {
+            console.log(`error sharing form for application ${id}`)
+            return res.status(500).send("Internal Server Error")
         }
         return res.status(200).send({ id })
     } catch (e: any) {
@@ -273,9 +278,12 @@ const computeApplicationPrefillFields = (employer: any) => ({
             otherWorkAddress: false
         }),
     container: {
+        ...((employer?.workplace_street_address || employer?.workplace_city || employer?.workplace_postal_code) && {
+            addressValidationAlt: "Validation required to continue."
+        }),
         ...(employer?.workplace_street_address && { addressAlt: employer.workplace_street_address }),
         ...(employer?.workplace_city && { cityAlt: employer.workplace_city }),
-        ...(employer?.workplace_province && { provinceAlt: employer.workplace_province }),
+        provinceAlt: "BC",
         ...(employer?.workplace_postal_code && { postalAlt: employer.workplace_postal_code })
     },
     ...(employer?.contact_name && { signatory1: employer.contact_name })

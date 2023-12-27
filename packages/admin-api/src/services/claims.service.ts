@@ -71,7 +71,7 @@ export const updateClaim = async (id: string, username: string, data: any, trx?:
             .where("id", id)
             .modify((queryBuilder: any) => {
                 queryBuilder.update("updated_by", username)
-                queryBuilder.update("updated_date", new Date())
+                queryBuilder.update("updated_date", new Date().toISOString())
                 if (data.status) {
                     queryBuilder.update("status", data.status)
                 }

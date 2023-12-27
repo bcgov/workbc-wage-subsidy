@@ -3,6 +3,6 @@ import * as addressController from "../controllers/address.controller"
 
 const router = express.Router()
 
-router.post("/validateAddress", addressController.getAddressValidation)
+router.post("/validate", addressController.getAddressValidation)
 
 export default router

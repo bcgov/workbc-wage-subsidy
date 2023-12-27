@@ -2,7 +2,7 @@
 /* eslint-disable import/prefer-default-export */
 import * as express from "express"
 
-import { insertClaim } from "../lib/transactions"
+import { insertClaim, insertLegacyClaim } from "../lib/transactions"
 import * as claimService from "../services/claim.service"
 import * as employerService from "../services/employer.service"
 import * as formService from "../services/form.service"
@@ -101,6 +101,54 @@ export const createClaim = async (req: any, res: express.Response) => {
                 req.body.guid,
                 req.body.application_id,
                 createDraftResult.id
+            )
+            if (insertResult?.rowCount === 1) {
+                // successful insertion
+                return res.status(200).send({ recordId: req.body.formKey })
+            }
+        } else {
+            return res.status(500).send("Internal Server Error")
+        }
+        return res.status(500).send("Internal Server Error")
+    } catch (e: any) {
+        console.log(e)
+        return res.status(500).send("Internal Server Error")
+    }
+}
+
+export const createLegacyClaim = async (req: any, res: express.Response) => {
+    try {
+        const bceid_guid = req.kauth.grant.access_token.content?.bceid_user_guid
+        if (bceid_guid === undefined) {
+            return res.status(403).send("Not Authorized")
+        }
+        if (!req.body?.guid || req.body.guid !== bceid_guid) {
+            return res.status(403).send("Forbidden")
+        }
+
+        const prefillFields = {
+            isLegacy: true,
+            container: {
+                businessAddress1: req.body.address,
+                employerCity: req.body.city
+            }
+        }
+
+        // Create a new form draft //
+        const createDraftResult = await formService.createLoginProtectedDraft(
+            req.kauth.grant.access_token,
+            process.env.CLAIM_FORM_ID as string,
+            process.env.CLAIM_FORM_VERSION_ID as string,
+            req.body.formKey,
+            prefillFields
+        )
+        if (createDraftResult?.id) {
+            const insertResult = await insertLegacyClaim(
+                req.body.formKey,
+                req.body.guid,
+                createDraftResult.id,
+                req.body.catchment,
+                req.body.storefront
             )
             if (insertResult?.rowCount === 1) {
                 // successful insertion

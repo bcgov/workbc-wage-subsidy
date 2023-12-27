@@ -71,7 +71,7 @@ export const insertClaim = async (
             form_submission_id: submissionID,
             position_title: application[0].position_title,
             associated_application_id: applicationID,
-            created_date: new Date(),
+            created_date: new Date().toISOString(),
             created_by: userGuid,
             status: "Draft",
             catchmentno: application[0].catchmentno,
@@ -86,6 +86,33 @@ export const insertClaim = async (
         return result
     }
     return false
+}
+
+export const insertLegacyClaim = async (
+    id: string,
+    userGuid: string,
+    submissionID: string,
+    catchment: number,
+    storefront: number,
+    trx?: any
+) => {
+    const data = {
+        id,
+        form_submission_id: submissionID,
+        associated_application_id: "LEGACY",
+        created_date: new Date(),
+        created_by: userGuid,
+        status: "Draft",
+        catchmentno: catchment,
+        workbc_centre: `${catchment}-${storefront}`
+    }
+    const result = await knex("claims").modify((queryBuilder: any) => {
+        queryBuilder.insert(data)
+        if (trx) {
+            queryBuilder.transacting(trx)
+        }
+    })
+    return result
 }
 
 export const updateClaim = async (id: number, status: string | null, body: any, requireStale?: boolean) => {
@@ -111,7 +138,7 @@ export const updateClaim = async (id: number, status: string | null, body: any, 
                 employee_last_name: body.submission?.data?.container?.employeeLastName,
                 status,
                 updated_by: "system",
-                updated_date: new Date(),
+                updated_date: new Date().toISOString(),
                 stale: false
             })
     }
@@ -165,7 +192,7 @@ export const addServiceProviderClaim = async (
                     service_provider_form_submission_id: serviceProviderSubmissionID,
                     service_provider_form_internal_id: serviceProviderInternalID,
                     updated_by: submissionResponse.submission.updatedBy ?? submissionResponse.submission.createdBy,
-                    updated_date: new Date()
+                    updated_date: new Date().toISOString()
                 })
         } catch (e: any) {
             console.log(e.message)
@@ -181,7 +208,7 @@ export const addServiceProviderClaim = async (
 export const updateServiceProviderClaim = async (submissionResponse: any) => {
     let result = 0
     try {
-        console.log("update SP Claim submissionResponse: ", submissionResponse)
+        console.log("update SP Claim submissionResponse")
         const claimID = submissionResponse?.submission?.id
         console.log("SP CLAIM ID: ", claimID)
         if (!claimID) {
@@ -200,7 +227,7 @@ export const updateServiceProviderClaim = async (submissionResponse: any) => {
                     status: "Completed",
                     calculator_approved: true,
                     updated_by: submissionResponse.submission.updatedBy ?? submissionResponse.submission.createdBy,
-                    updated_date: new Date()
+                    updated_date: new Date().toISOString()
                 })
         } catch (e: any) {
             console.log(e.message)
