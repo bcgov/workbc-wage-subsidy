@@ -295,6 +295,7 @@ export const generatePDF = async (req: any, res: express.Response) => {
             return res.status(500).send("Internal Server Error")
         }
         const data = formatPDFData(submission, claim, submittedDate)
+        console.log("formatted data: ", data)
         const templateConfig = {
             // eslint-disable-next-line object-shorthand
             data: data,
@@ -341,7 +342,12 @@ export const generatePDF = async (req: any, res: express.Response) => {
                     .then(async () => {
                         for (const attachment of attachments) {
                             console.log("combining pdf buffers...")
-                            mergedPDF = await combinePDFBuffers(mergedPDF, attachment)
+                            try {
+                                mergedPDF = await combinePDFBuffers(mergedPDF, attachment)
+                            } catch (err) {
+                                console.log("error combining pdf buffers: ", err)
+                                throw new Error("error combining pdf buffers")
+                            }
                             console.log("successfully combined!")
                         }
                     })
