@@ -8,9 +8,9 @@ const applicationNotification = (catchmentNo: string, catchmentName: string, typ
         `A Wage Subsidy${type === "claim" ? " Claim" : ""} Application has been submitted`,
         [
             ` Hello `,
-            ` You are receiving this email because you enabled notifications on Wage Subsidy${
-                type === "claim" ? " Claim" : ""
-            } Applications for Catchment ${catchmentNo} - ${catchmentName}.`
+            ` You are receiving this email because you enabled notifications on Wage Subsidy ${
+                type === "claim" ? "Claim Forms" : "Applications"
+            } for Catchment ${catchmentNo} - ${catchmentName}.`
         ],
         [
             `Please log into the <a href="${
