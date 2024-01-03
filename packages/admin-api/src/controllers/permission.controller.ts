@@ -23,6 +23,7 @@ export const getPermission = async (req: any, res: express.Response) => {
             .status(200)
             .send({ permissions: permission, access: permission.length > 0, provider: isIDIR ? "IDIR" : "BCEID" })
     } catch (e: unknown) {
+        console.log(e)
         return res.status(500).send("Server Error")
     }
 }
