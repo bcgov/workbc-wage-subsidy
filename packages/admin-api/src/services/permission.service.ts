@@ -24,6 +24,9 @@ export const getPermission = async (guid: string, isIDIR: boolean) => {
                     item.Application === "WGS" && Number(item.Catchment) > 100 && Number(item.Catchment) < 146
             )
         )
-        .catch((error) => error)
+        .catch((error) => {
+            console.log(error)
+            return error
+        })
     return response
 }
