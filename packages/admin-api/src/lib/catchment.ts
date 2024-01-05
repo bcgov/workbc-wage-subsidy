@@ -16,6 +16,7 @@ export const getCatchments = async (access_token: any) => {
             .map((item: any) => (item.Catchment !== "N/A" ? Number(item.Catchment.slice(1)) : null))
             .filter((item: any) => item !== null)
     } catch (e: unknown) {
+        console.log(e)
         return []
     }
 }
