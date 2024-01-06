@@ -118,6 +118,8 @@ export const ClaimList = (props: any) => {
                                         <TextField label="Position Title" source="position_title" emptyText="-" />
                                         <FunctionField
                                             label="Employee Name"
+                                            sortBy="employee_first_name,employee_last_name"
+                                            sortByOrder="DESC"
                                             render={(record: any) =>
                                                 record.employee_first_name || record.employee_last_name
                                                     ? `${record.employee_first_name ?? ""} ${
