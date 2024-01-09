@@ -4,18 +4,18 @@
 import axios from "axios"
 
 export const getPermission = async (guid: string, isIDIR: boolean) => {
-    const url = `${process.env.SAM_API_URL}`
+    const url = process.env.SAM_API_URL as string
     console.log("SAM API USERNAME: ", `${process.env.SAM_API_USERNAME}`)
     const response = await axios
-        .get(`${url}`, {
+        .get(url, {
             params: {
                 userGUID: guid,
                 // eslint-disable-next-line object-shorthand
                 isIDIR: isIDIR
             },
             auth: {
-                username: `${process.env.SAM_API_USERNAME}`,
-                password: `${process.env.SAM_API_PASSWORD}`
+                username: process.env.SAM_API_USERNAME as string,
+                password: process.env.SAM_API_PASSWORD as string
             }
         })
         .catch((error) => {
