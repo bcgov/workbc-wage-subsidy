@@ -18,6 +18,9 @@ export const getPermission = async (guid: string, isIDIR: boolean) => {
             username: process.env.SAM_API_USERNAME as string,
             password: process.env.SAM_API_PASSWORD as string
         }
+    }).catch((error) => {
+        console.log(error)
+        return error
     })
     return response.data
 }
