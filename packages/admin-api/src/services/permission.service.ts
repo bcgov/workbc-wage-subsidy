@@ -5,7 +5,9 @@ import axios from "axios"
 
 export const getPermission = async (guid: string, isIDIR: boolean) => {
     const url = process.env.SAM_API_URL as string
-    console.log("SAM API USERNAME: ", `${process.env.SAM_API_USERNAME}`)
+    const username = process.env.SAM_API_USERNAME as string
+    const password = process.env.SAM_API_PASSWORD as string
+    const token = Buffer.from(`${username}:${password}`, "utf8").toString("base64")
     const response = await axios
         .get(url, {
             params: {
@@ -13,9 +15,8 @@ export const getPermission = async (guid: string, isIDIR: boolean) => {
                 // eslint-disable-next-line object-shorthand
                 isIDIR: isIDIR
             },
-            auth: {
-                username: process.env.SAM_API_USERNAME as string,
-                password: process.env.SAM_API_PASSWORD as string
+            headers: {
+                Authorization: `Basic ${token}`
             }
         })
         .catch((error) => {
