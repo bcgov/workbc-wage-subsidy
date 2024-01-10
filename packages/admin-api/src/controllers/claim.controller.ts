@@ -324,6 +324,7 @@ export const generatePDF = async (req: any, res: express.Response) => {
             if (attachmentUrls.length > 0) {
                 await Promise.all(
                     attachmentUrls.map(async (url: string) => {
+                        console.log(`calling getFile for url ${url}`)
                         await claimService
                             .getFile(url)
                             .then((fileres) => {
@@ -335,7 +336,6 @@ export const generatePDF = async (req: any, res: express.Response) => {
                             })
                             .catch((err) => {
                                 console.log("getFile service returned error: ", err)
-                                return res.status(500).send("Internal Server Error")
                             })
                     })
                 )
@@ -353,7 +353,6 @@ export const generatePDF = async (req: any, res: express.Response) => {
                     })
                     .catch((err) => {
                         console.log("error mapping attachments: ", err)
-                        return res.status(500).send("Internal Server Error")
                     })
             }
             if (attachmentData.length !== attachments.length) {
