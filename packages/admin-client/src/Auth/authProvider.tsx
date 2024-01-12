@@ -34,13 +34,21 @@ const useAuthProvider = () => {
         },
         getPermissions: async () => {
             const apiUrl = process.env.REACT_APP_ADMIN_API_URL || "http://localhost:8002"
-            const res = await axios.get(`${apiUrl}/permission`, {
-                headers: {
-                    Accept: "application/json",
-                    Authorization: `Bearer ${localStorage.getItem("token")}`
-                }
-            })
-            return parseCatchments(res.data.permissions)
+            let ret
+            await axios
+                .get(`${apiUrl}/permission`, {
+                    headers: {
+                        Accept: "application/json",
+                        Authorization: `Bearer ${localStorage.getItem("token")}`
+                    }
+                })
+                .then((res) => {
+                    ret = parseCatchments(res.data.permissions)
+                })
+                .catch((err) => {
+                    console.log("error getting permissions")
+                })
+            return ret
         }
     }
 }

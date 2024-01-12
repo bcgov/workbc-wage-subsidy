@@ -19,7 +19,7 @@ export const getPermission = async (req: any, res: express.Response) => {
             return res.status(403).send("Access denied")
         }
         const permissionResponse = await permissionService.getPermission(guid, isIDIR)
-        if (!permissionResponse || !permissionResponse.length) {
+        if (!permissionResponse) {
             return res.status(500).send("Server Error")
         }
         permissionResponse.filter(
