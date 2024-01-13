@@ -32,6 +32,9 @@ export const insertEmployer = async (data: any) => {
     if (data.bceid_business_name) {
         employerData.bceid_business_name = data.bceid_business_name
     }
+    if (data.bceid_username) {
+        employerData.bceid_username = data.bceid_username
+    }
     const result = await knex("employers").insert(employerData)
     return result
 }
