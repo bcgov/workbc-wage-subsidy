@@ -62,6 +62,8 @@ export const insertClaim = async (
     userGuid: string,
     applicationID: string,
     submissionID: string,
+    idp: string,
+    idpUsername: string,
     trx?: any
 ) => {
     const application = await knex("applications").where("form_confirmation_id", applicationID)
@@ -73,6 +75,7 @@ export const insertClaim = async (
             associated_application_id: applicationID,
             created_date: new Date().toISOString(),
             created_by: userGuid,
+            created_by_idp: `${idpUsername}@${idp}`,
             status: "Draft",
             catchmentno: application[0].catchmentno,
             workbc_centre: application[0].workbc_centre
@@ -94,6 +97,8 @@ export const insertLegacyClaim = async (
     submissionID: string,
     catchment: number,
     storefront: number,
+    idp: string,
+    idpUsername: string,
     trx?: any
 ) => {
     const data = {
@@ -102,6 +107,7 @@ export const insertLegacyClaim = async (
         associated_application_id: "LEGACY",
         created_date: new Date(),
         created_by: userGuid,
+        created_by_idp: `${idpUsername}@${idp}`,
         status: "Draft",
         catchmentno: catchment,
         workbc_centre: `${catchment}-${storefront}`

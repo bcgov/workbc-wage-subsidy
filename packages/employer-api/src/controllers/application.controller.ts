@@ -84,7 +84,9 @@ export const createApplication = async (req: any, res: express.Response) => {
                 req.body.formKey,
                 req.body.guid,
                 req.body.formType,
-                createDraftResult.id
+                createDraftResult.id,
+                req.kauth.grant.access_token.content.idp,
+                req.kauth.grant.access_token.content.idp_username
             )
             if (insertResult?.rowCount === 1) {
                 // successful insertion

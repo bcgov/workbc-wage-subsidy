@@ -73,6 +73,8 @@ export const insertApplication = async (
     userGuid: string,
     formType: string,
     submissionID: string,
+    idp: string,
+    idpUsername: string,
     trx?: any
 ) => {
     const data = {
@@ -81,8 +83,8 @@ export const insertApplication = async (
         form_submission_id: submissionID,
         created_date: new Date().toISOString(),
         created_by: userGuid,
-        status: "Draft",
-        catchmentno: 5 // Temporary, for testing: set arbitrary catchment.
+        created_by_idp: `${idpUsername}@${idp}`,
+        status: "Draft"
     }
     const result = await knex("applications").modify((queryBuilder: any) => {
         queryBuilder.insert(data)

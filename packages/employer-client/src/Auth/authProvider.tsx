@@ -20,12 +20,13 @@ const useAuthProvider = (clientID: string) => {
                 const decoded: any = jwt_decode(keycloak.token)
                 const id = decoded.sub
                 const idp = decoded.identity_provider
+                const idpUsername = decoded.idp_username
                 const guid = decoded.bceid_user_guid || decoded.idir_guid || ""
                 const fullName = decoded.name
                 const email = decoded.email
                 const businessGuid = decoded?.bceid_business_guid || null
                 const businessName = decoded?.bceid_business_name || null
-                return Promise.resolve({ id, idp, fullName, guid, email, businessGuid, businessName })
+                return Promise.resolve({ id, idp, idpUsername, fullName, guid, email, businessGuid, businessName })
             }
             return Promise.reject("Failed to get identity")
         },

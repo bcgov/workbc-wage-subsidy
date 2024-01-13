@@ -71,7 +71,8 @@ const UserProfileModal: React.FC<UserProfileModalProps> = ({ isOpen, onRequestCl
                     contact_name: identity.fullName || null,
                     contact_email: identity.email || null,
                     bceid_business_guid: identity.businessGuid || null,
-                    bceid_business_name: identity.businessName || null
+                    bceid_business_name: identity.businessName || null,
+                    bceid_username: identity.idpUsername
                 }
             },
             {
