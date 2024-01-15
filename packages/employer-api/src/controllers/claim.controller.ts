@@ -100,7 +100,9 @@ export const createClaim = async (req: any, res: express.Response) => {
                 req.body.formKey,
                 req.body.guid,
                 req.body.application_id,
-                createDraftResult.id
+                createDraftResult.id,
+                req.kauth.grant.access_token.content.idp,
+                req.kauth.grant.access_token.content.idp_username
             )
             if (insertResult?.rowCount === 1) {
                 // successful insertion
@@ -148,7 +150,9 @@ export const createLegacyClaim = async (req: any, res: express.Response) => {
                 req.body.guid,
                 createDraftResult.id,
                 req.body.catchment,
-                req.body.storefront
+                req.body.storefront,
+                req.kauth.grant.access_token.content.idp,
+                req.kauth.grant.access_token.content.idp_username
             )
             if (insertResult?.rowCount === 1) {
                 // successful insertion

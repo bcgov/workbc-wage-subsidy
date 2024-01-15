@@ -5,9 +5,24 @@ import { knex } from "../config/db-config"
 import * as applicationService from "../services/application.service"
 import * as claimService from "../services/claim.service"
 
-export const insertApplication = async (id: string, userGuid: string, formType: string, submissionID: string) =>
+export const insertApplication = async (
+    id: string,
+    userGuid: string,
+    formType: string,
+    submissionID: string,
+    idp: string,
+    idpUsername: string
+) =>
     knex.transaction(async (trx: any) => {
-        const applicationResult = await applicationService.insertApplication(id, userGuid, formType, submissionID, trx)
+        const applicationResult = await applicationService.insertApplication(
+            id,
+            userGuid,
+            formType,
+            submissionID,
+            idp,
+            idpUsername,
+            trx
+        )
         if (applicationResult.rowCount !== 1) {
             throw new Error("Insert failed")
         }
@@ -18,9 +33,24 @@ export const insertApplication = async (id: string, userGuid: string, formType: 
         return applicationResult
     })
 
-export const insertClaim = async (id: string, userGuid: string, applicationID: string, submissionID: string) =>
+export const insertClaim = async (
+    id: string,
+    userGuid: string,
+    applicationID: string,
+    submissionID: string,
+    idp: string,
+    idpUsername: string
+) =>
     knex.transaction(async (trx: any) => {
-        const claimResult = await claimService.insertClaim(id, userGuid, applicationID, submissionID, trx)
+        const claimResult = await claimService.insertClaim(
+            id,
+            userGuid,
+            applicationID,
+            submissionID,
+            idp,
+            idpUsername,
+            trx
+        )
         if (claimResult.rowCount !== 1) {
             throw new Error("Insert failed")
         }
@@ -36,10 +66,21 @@ export const insertLegacyClaim = async (
     userGuid: string,
     submissionID: string,
     catchment: number,
-    storefront: number
+    storefront: number,
+    idp: string,
+    idpUsername: string
 ) =>
     knex.transaction(async (trx: any) => {
-        const claimResult = await claimService.insertLegacyClaim(id, userGuid, submissionID, catchment, storefront, trx)
+        const claimResult = await claimService.insertLegacyClaim(
+            id,
+            userGuid,
+            submissionID,
+            catchment,
+            storefront,
+            idp,
+            idpUsername,
+            trx
+        )
         if (claimResult.rowCount !== 1) {
             throw new Error("Insert failed")
         }
