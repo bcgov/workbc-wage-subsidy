@@ -1,5 +1,5 @@
 import React from "react"
-import "./BCGovModalButton.css"
+import { Button } from "@mui/material"
 
 interface ModalButtonProps {
     text: string
@@ -7,9 +7,10 @@ interface ModalButtonProps {
     onClick: (event: any) => void
     ariaLabel?: string
     ariaHasPopup?: boolean | "dialog" | "menu" | "grid" | "true" | "false" | "listbox" | "tree"
+    disabled?: boolean
 }
 
-const ModalButton: React.FC<ModalButtonProps> = ({ text, showIcon, onClick, ariaLabel, ariaHasPopup }) => {
+const ModalButton: React.FC<ModalButtonProps> = ({ text, showIcon, onClick, ariaLabel, ariaHasPopup, disabled }) => {
     let extLinkIcon
     if (showIcon) {
         extLinkIcon = (
@@ -25,22 +26,38 @@ const ModalButton: React.FC<ModalButtonProps> = ({ text, showIcon, onClick, aria
     }
 
     return (
-        <button
-            className="bc-gov-modal-button"
-            type="button"
+        <Button
             onClick={onClick}
             aria-label={ariaLabel}
             aria-haspopup={ariaHasPopup}
+            disabled={disabled}
+            sx={{
+                color: "#307FE2",
+                backgroundColor: "transparent",
+                border: "none",
+                cursor: "pointer",
+                fontSize: "16px",
+                fontFamily: "'BCSans', 'Noto Sans', Verdana, Arial, sans-serif",
+                fontWeight: "400",
+                minHeight: "2.75em",
+                minWidth: "2.75em",
+                padding: "0em 0em 0em 0em",
+                "&:hover": {
+                    opacity: "0.80",
+                    backgroundColor: "transparent"
+                }
+            }}
         >
             {text}
             {extLinkIcon}
-        </button>
+        </Button>
     )
 }
 
 ModalButton.defaultProps = {
     ariaLabel: "",
-    ariaHasPopup: "false"
+    ariaHasPopup: "false",
+    disabled: false
 }
 
 export default ModalButton

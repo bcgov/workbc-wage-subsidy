@@ -1,4 +1,5 @@
 import { chefsApi } from "../config/config"
+import { getCHEFSToken } from "./common.service"
 
 export const getFormSubmissions = async (formID: string, formPass: string, params: any) => {
     try {
@@ -109,18 +110,19 @@ export const createTeamProtectedDraft = async (
     }
 }
 
-export const shareForm = async (token: any, submissionID: string, userGUIDs: string[]) => {
+export const shareForm = async (userToken: any, submissionID: string, userGUIDs: string[]) => {
     try {
         const url = `rbac/submissions`
         const data = {
             permissions: ["submission_update", "submission_read"]
         }
+        const chefsToken = await getCHEFSToken()
         for (const userGUID of userGUIDs) {
             console.log(`sharing form submission ${submissionID} with guid ${userGUID}`)
-            let chefsUserID = await userLookup(token, userGUID)
+            let chefsUserID = await userLookup(chefsToken, userGUID)
             if (!chefsUserID) {
                 console.log(`user guid ${userGUID} not found in CHEFS - creating user`)
-                chefsUserID = await createUser(token, userGUID)
+                chefsUserID = await createUser(chefsToken, userGUID)
                 if (chefsUserID) {
                     console.log(`successfully created CHEFS user with id ${chefsUserID}`)
                 } else {
@@ -135,7 +137,7 @@ export const shareForm = async (token: any, submissionID: string, userGUIDs: str
                 },
                 headers: {
                     "Content-Type": "application/json",
-                    Authorization: `Bearer ${token}`
+                    Authorization: `Bearer ${userToken ?? chefsToken}`
                 }
             }
             await chefsApi

@@ -1,4 +1,4 @@
-# dockerfile for an image with the form api, express deployment
+# dockerfile for an image with the employer api, express deployment
 FROM node:lts-alpine3.16
 ENV NODE_ENV production
 

@@ -2,12 +2,15 @@
 /* eslint-disable import/prefer-default-export */
 import * as express from "express"
 
+import WorkBcCentres from "../data/workbc-centres"
 import { getCatchments } from "../lib/catchment"
-import * as applicationService from "../services/application.service"
-import * as formService from "../services/form.service"
-import { generatePdf } from "../services/cdogs.service"
 import { updateApplicationWithSideEffects } from "../lib/transactions"
-import { formatDateMmmDDYYYY } from "../utils/string-functions"
+import * as applicationService from "../services/application.service"
+import { generatePdf } from "../services/cdogs.service"
+import * as formService from "../services/form.service"
+import { formatCurrency, formatDateMmmDDYYYY } from "../utils/string-functions"
+
+const workBcCentreCodes = Object.keys(WorkBcCentres)
 
 export const getAllApplications = async (req: any, res: express.Response) => {
     try {
@@ -107,10 +110,16 @@ export const updateApplication = async (req: any, res: express.Response) => {
         if (
             catchments.length === 0 ||
             (application && !catchments.includes(application.catchmentno)) ||
-            (req.body.catchmentNo && !catchments.includes(req.body.catchmentNo)) ||
+            (req.body.workBcCentre && !req.body.catchmentNo) ||
+            (req.body.catchmentNo &&
+                (!catchments.includes(req.body.catchmentNo) ||
+                    !req.body.workBcCentre ||
+                    Number(req.body.workBcCentre.split("-")[0]) !== req.body.catchmentNo ||
+                    !workBcCentreCodes.includes(req.body.workBcCentre))) ||
             (application &&
                 req.body.catchmentNo &&
-                application.catchmentno !== req.body.catchmentNo &&
+                (application.catchmentno !== req.body.catchmentNo ||
+                    application.workbc_centre !== req.body.workBcCentre) &&
                 idir_user_guid === undefined)
         ) {
             return res.status(403).send("Forbidden")
@@ -201,7 +210,7 @@ export const generatePDF = async (req: any, res: express.Response) => {
             businessPostal: submission.data?.businessPostal,
             businessPhone: submission.data?.businessPhone,
             businessFax: submission.data?.businessFax,
-            businessEmail: submission.data?.businessEmail,
+            businessEmail: submission.data?.employerEmail,
             CEWSAndOrCRHP: submission.data?.CEWSAndOrCRHP,
             sectorType: submission.data?.sectorType,
             organizationSize: submission.data?.organizationSize,
@@ -212,6 +221,7 @@ export const generatePDF = async (req: any, res: express.Response) => {
             liabilityCoverage: submission.data?.liabilityCoverage,
             wageSubsidy: submission.data?.wageSubsidy,
             WSBCCoverage: submission.data?.WSBCCoverage,
+            workSafeBcNumber: submission.data?.workSafeBcNumber,
             addressAlt: submission.data.container?.addressAlt,
             cityAlt: submission.data.container?.cityAlt,
             provinceAlt: submission.data.container?.provinceAlt,
@@ -220,7 +230,7 @@ export const generatePDF = async (req: any, res: express.Response) => {
             numberOfPositions0: submission.data?.numberOfPositions0,
             startDate0: formatDateMmmDDYYYY(submission.data?.startDate0),
             hours0: submission.data?.hours0,
-            wage0: submission.data?.wage0,
+            wage0: formatCurrency(submission.data?.wage0),
             duties0: submission.data?.duties0,
             skills0: submission.data?.skills0,
             workExperience0: submission.data?.workExperience0,
@@ -233,7 +243,7 @@ export const generatePDF = async (req: any, res: express.Response) => {
             numberOfPositions1: submission.data.position2?.numberOfPositions1,
             startDate1: formatDateMmmDDYYYY(submission.data.position2?.startDate1),
             hours1: submission.data.position2?.hours1,
-            wage1: submission.data.position2?.wage1,
+            wage1: formatCurrency(submission.data.position2?.wage1),
             duties1: submission.data.position2?.duties1,
             skills1: submission.data.position2?.skills1,
             workExperience1: submission.data.position2?.workExperience1,

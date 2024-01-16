@@ -1,9 +1,11 @@
 /* eslint-disable camelcase */
 /* eslint-disable import/prefer-default-export */
 import * as express from "express"
-import * as formService from "../services/form.service"
+import * as applicationService from "../services/application.service"
 import * as claimService from "../services/claim.service"
-import * as formApiService from "../services/formAPI.service"
+import * as employerService from "../services/employer.service"
+import * as formService from "../services/form.service"
+import * as emailController from "./email.controller"
 
 export const submission = async (req: express.Request, res: express.Response) => {
     try {
@@ -13,9 +15,9 @@ export const submission = async (req: express.Request, res: express.Response) =>
             return res.status(400).send("Form type parameter required")
         }
         let formPass
-        if (formType === "HaveEmployee") {
+        if (formType === "HaveEmployeeForm") {
             formPass = process.env.HAVE_EMPLOYEE_PASS
-        } else if (formType === "NeedEmployee") {
+        } else if (formType === "NeedEmployeeForm") {
             formPass = process.env.NEED_EMPLOYEE_PASS
         } else if (formType === "ClaimForm") {
             formPass = process.env.CLAIM_FORM_PASS
@@ -34,58 +36,76 @@ export const submission = async (req: express.Request, res: express.Response) =>
             console.log("formService getSubmission failed")
             return res.status(500).send("Internal Server Error")
         }
-        console.log("RETRIEVED SUBMISSION: ", submissionResponse)
+        console.log("RETRIEVED SUBMISSION")
 
         // Claim Form submission events //
         if (formType === "ClaimForm") {
+            let claim = await claimService.getClaimBySubmissionID(req.body.submissionId)
             if (submissionResponse.submission.draft === true) {
-                console.log("claim form draft submission event - ignoring") // TODO: claim form update on draft
-                return res.status(200).send("claim form draft submission event - ignoring")
-            }
-            const serviceProviderInternalID = `SPx${submission.data.internalId}` // create a new internal id for the SP form
-            const createDraftResult = await formService.createTeamProtectedDraft(
-                process.env.SP_CLAIM_FORM_ID as string,
-                process.env.SP_CLAIM_FORM_PASS as string,
-                process.env.SP_CLAIM_FORM_VERSION_ID as string,
-                serviceProviderInternalID,
-                submission.data
-            )
-            if (createDraftResult?.id && createDraftResult.submission) {
-                const addResult = await claimService.addServiceProviderClaim(
-                    submissionResponse,
-                    serviceProviderInternalID,
-                    createDraftResult.id
+                if (claim?.status !== "Draft") {
+                    return res.status(500).send("Internal Server Error")
+                }
+                console.log("updating saved claim for id ", claim.id)
+                const updateResult = await claimService.updateClaim(
+                    claim.id,
+                    "Draft",
+                    submissionResponse.submission,
+                    false
                 )
-                if (addResult === 1) {
-                    console.log("claim record update successful")
-                    // Get the newly added record
-                    const newSPClaim = await claimService.getServiceProviderClaimByInternalId(serviceProviderInternalID)
-                    if (newSPClaim === null) {
-                        console.log("Error retrieving new claim")
-                        return res.status(500).send("Internal Server Error")
-                    }
-                    // Send notifications to clients with Claims notifications enabled
-                    await formApiService
-                        .sendNotifications({
-                            // form API expects the data to be wrapped in a data object
-                            data: {
-                                catchmentNo: newSPClaim.catchmentno,
-                                applicationType: "Claims"
-                            }
-                        })
-                        .catch((e) => {
-                            console.log("Error sending notifications", e)
-                            return res.status(500).send("Internal Server Error")
-                        })
+                if (updateResult === 1) {
+                    console.log("claim record update successful for id ", claim.id)
                     return res.status(200).send()
                 }
-
                 console.log("Unable to update claim database entry")
                 return res.status(500).send("Internal Server Error")
             }
-
-            console.log("Unable to create new service provider claim form")
-            return res.status(500).send("Internal Server Error")
+            // Create service provider claim form if one does not already exist.
+            if (!claim?.service_provider_form_submission_id || !claim?.service_provider_form_internal_id) {
+                const serviceProviderInternalID = `SPx${submission.data.internalId}` // create a new internal id for the SP form
+                const createDraftResult = await formService.createTeamProtectedDraft(
+                    process.env.SP_CLAIM_FORM_ID as string,
+                    process.env.SP_CLAIM_FORM_PASS as string,
+                    process.env.SP_CLAIM_FORM_VERSION_ID as string,
+                    serviceProviderInternalID,
+                    submission.data
+                )
+                if (createDraftResult?.id && createDraftResult.submission) {
+                    const addResult = await claimService.addServiceProviderClaim(
+                        submissionResponse,
+                        serviceProviderInternalID,
+                        createDraftResult.id
+                    )
+                    if (addResult === 1) {
+                        console.log("claim record update successful")
+                        // Get the newly added record
+                        claim = await claimService.getServiceProviderClaimByInternalId(serviceProviderInternalID)
+                        if (claim === null) {
+                            console.log("Error retrieving new claim")
+                            return res.status(500).send("Internal Server Error")
+                        }
+                    } else {
+                        console.log("Unable to update claim database entry")
+                        return res.status(500).send("Internal Server Error")
+                    }
+                } else {
+                    console.log("Unable to create new service provider claim form")
+                    return res.status(500).send("Internal Server Error")
+                }
+            }
+            // Send notifications to clients with Claims notifications enabled
+            await emailController
+                .sendEmail({
+                    // email controller expects the data to be wrapped in a data object
+                    data: {
+                        catchmentNo: claim.catchmentno,
+                        applicationType: "Claims"
+                    }
+                })
+                .catch((e) => {
+                    console.log("Error sending notifications", e)
+                    return res.status(500).send("Internal Server Error")
+                })
+            return res.status(200).send()
         }
 
         // Service Provider Claim Form draft submission events - triggered on calculator approval //
@@ -108,6 +128,54 @@ export const submission = async (req: express.Request, res: express.Response) =>
             console.log("Unable to update claim database entry")
             return res.status(500).send("Internal Server Error")
         }
+
+        // Application forms //
+        if (formType === "HaveEmployeeForm" || formType === "NeedEmployeeForm") {
+            const application = await applicationService.getApplicationBySubmissionID(req.body.submissionId)
+            if (application?.status === "Draft") {
+                let updateResult
+                if (submissionResponse.submission.draft === false) {
+                    console.log("updating submitted application for id ", application.id)
+                    updateResult = await applicationService.updateApplication(
+                        application.id,
+                        "New",
+                        submissionResponse.submission,
+                        false
+                    )
+                    // If first application submitted, backfill employer profile from form data.
+                    const firstApplicationSubmitted = await applicationService.oneApplicationSubmitted(
+                        application.created_by
+                    )
+                    if (firstApplicationSubmitted) {
+                        const employer = await employerService.getEmployerByID(application.created_by)
+                        if (!employer) {
+                            throw new Error("Internal Server Error")
+                        }
+                        await employerService.updateEmployerFromApplicationForm(
+                            employer,
+                            submissionResponse.submission.submission.data
+                        )
+                    }
+                    await emailController.sendEmail(submissionResponse.submission.submission)
+                } else if (submissionResponse.submission.draft === true) {
+                    console.log("updating saved application for id ", application.id)
+                    updateResult = await applicationService.updateApplication(
+                        application.id,
+                        "Draft",
+                        submissionResponse.submission,
+                        false
+                    )
+                }
+                if (updateResult === 1) {
+                    console.log("application record update successful for id ", application.id)
+                    return res.status(200).send()
+                }
+
+                console.log("unable to update application database entry for id ", application.id)
+                return res.status(500).send("Internal Server Error")
+            }
+        }
+
         return res.status(200).send()
     } catch (e: unknown) {
         console.log(e)

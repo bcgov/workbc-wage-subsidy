@@ -23,7 +23,7 @@ export const insertEmployer = async (data: any) => {
     const employerData: any = {}
     employerData.id = data.id
     employerData.created_by = data.id
-    employerData.created_date = new Date()
+    employerData.created_date = new Date().toISOString()
     employerData.contact_name = data.contact_name
     employerData.contact_email = data.contact_email
     if (data.bceid_business_guid) {
@@ -31,6 +31,9 @@ export const insertEmployer = async (data: any) => {
     }
     if (data.bceid_business_name) {
         employerData.bceid_business_name = data.bceid_business_name
+    }
+    if (data.bceid_username) {
+        employerData.bceid_username = data.bceid_username
     }
     const result = await knex("employers").insert(employerData)
     return result
@@ -53,7 +56,7 @@ export const updateEmployer = async (userGuid: string, data: any) => {
             .where("id", userGuid)
             .modify((queryBuilder: any) => {
                 queryBuilder.update("updated_by", userGuid)
-                queryBuilder.update("updated_date", new Date())
+                queryBuilder.update("updated_date", new Date().toISOString())
                 if (data?.bceid_business_guid || data.bceid_business_guid === null) {
                     queryBuilder.update("bceid_business_guid", data.bceid_business_guid)
                 }
@@ -99,9 +102,6 @@ export const updateEmployer = async (userGuid: string, data: any) => {
                 if (data?.workplace_postal_code || data.workplace_postal_code === null) {
                     queryBuilder.update("workplace_postal_code", data.workplace_postal_code)
                 }
-                if (data?.workbc_center || data.workbc_center === null) {
-                    queryBuilder.update("workbc_center", data.workbc_center)
-                }
             })
     }
     return numUpdated
@@ -124,8 +124,6 @@ export const updateEmployerFromApplicationForm = async (employer: any, appFormDa
         ...(appFormData?.businessCity && !employer?.city && { city: appFormData.businessCity }),
         ...(appFormData?.businessProvince && !employer?.province && { province: appFormData.businessProvince }),
         ...(appFormData?.businessPostal && !employer?.postal_code && { postal_code: appFormData.businessPostal }),
-        ...(appFormData?.catchmentNoStoreFront &&
-            !employer?.workbc_center && { workbc_center: appFormData.catchmentNoStoreFront }),
         ...(appFormData.container?.addressAlt &&
             !employer.container?.workplace_street_address && {
                 workplace_street_address: appFormData.container.addressAlt

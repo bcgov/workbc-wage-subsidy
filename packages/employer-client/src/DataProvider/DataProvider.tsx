@@ -154,7 +154,7 @@ export const dataProvider = {
                 Authorization: `Bearer ${localStorage.getItem("token")}`
             })
         }).then(({ json }) => ({
-            data: { ...params.data, id: json.submissionId }
+            data: { ...params.data, id: json.recordId }
         })),
     createOrUpdate: (resource: any, params: { id: any; data: any }) =>
         httpClient(`${apiUrl}/${resource}/${params.id}`, {
@@ -243,5 +243,41 @@ export const dataProvider = {
             )
         ).then((responses) => ({
             data: responses.map(({ json }) => json.id)
-        }))
+        })),
+    sync: (resource: any) =>
+        httpClient(`${apiUrl}/${resource}/sync`, {
+            method: "PUT",
+            headers: new Headers({
+                Accept: "application/json",
+                Authorization: `Bearer ${localStorage.getItem("token")}`
+            })
+        }).then(({ json }) => ({
+            data: json
+        })),
+    mark: (resource: any, params: { id: any }) =>
+        httpClient(`${apiUrl}/${resource}/mark/${params.id}`, {
+            method: "PUT",
+            headers: new Headers({
+                Accept: "application/json",
+                Authorization: `Bearer ${localStorage.getItem("token")}`
+            })
+        }).then(({ json }) => ({ data: json })),
+    validateAddress: (params: { address: string; city: string; postal: string }) =>
+        httpClient(`${apiUrl}/address/validate/`, {
+            method: "POST",
+            body: JSON.stringify(params),
+            headers: new Headers({
+                Accept: "application/json",
+                Authorization: `Bearer ${localStorage.getItem("token")}`
+            })
+        }).then(({ json }) => ({ data: json })),
+    createLegacyClaim: (params: { formKey: string; guid: string; address: string; city: string }) =>
+        httpClient(`${apiUrl}/claims/legacy/`, {
+            method: "POST",
+            body: JSON.stringify(params),
+            headers: new Headers({
+                Accept: "application/json",
+                Authorization: `Bearer ${localStorage.getItem("token")}`
+            })
+        }).then(({ json }) => ({ id: json.recordId }))
 }

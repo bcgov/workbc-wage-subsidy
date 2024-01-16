@@ -1,4 +1,4 @@
-import { Datagrid, DatagridBody, useGetIdentity } from "react-admin"
+import { Datagrid, DatagridBody, useGetIdentity, useListContext } from "react-admin"
 import CustomDatagridRow from "../CustomDatagridRow/CustomDatagridRow"
 import { CustomDatagridHeader } from "../CustomDatagridHeader/CustomDatagridHeader"
 import { FormBulkActionButtons } from "../FormBulkActionButtons/FormBulkActionButtons"
@@ -14,6 +14,7 @@ import { useEffect, useState } from "react"
 type CustomDatagridProps<T> = T & {
     ariaLabel: string
     showCalculatorButton?: boolean
+    setIsLoading?: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 type CustomDatagridBodyProps<T> = T & {
@@ -24,13 +25,20 @@ const CustomDatagridBody = <T,>({ showCalculatorButton, ...props }: CustomDatagr
     return <DatagridBody {...props} row={<CustomDatagridRow showCalculatorButton={showCalculatorButton} />} />
 }
 
-const CustomDatagrid = <T,>({ ariaLabel, showCalculatorButton, ...props }: CustomDatagridProps<T>) => {
+const CustomDatagrid = <T,>({ ariaLabel, showCalculatorButton, setIsLoading, ...props }: CustomDatagridProps<T>) => {
     const { identity } = useGetIdentity()
     const [hasBulkActions, setHasBulkActions] = useState<boolean>(false)
+    const { isLoading } = useListContext()
 
     useEffect(() => {
         setHasBulkActions(identity && identity?.idp && identity.idp === "idir")
     }, [identity])
+
+    useEffect(() => {
+        if (setIsLoading) {
+            setIsLoading(isLoading)
+        }
+    }, [isLoading])
 
     const skipToListAside = (event: any) => {
         if (event.key === "ArrowLeft" || event.key === "ArrowRight") {

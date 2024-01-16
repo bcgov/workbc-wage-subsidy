@@ -9,9 +9,12 @@ import { getCatchments } from "../lib/catchment"
 import { generatePdf } from "../services/cdogs.service"
 import { updateClaimWithSideEffects } from "../lib/transactions"
 import { formatCurrency, formatDateMmmDDYYYY, formatPercentage } from "../utils/string-functions"
+import WorkBcCentres from "../data/workbc-centres"
+
+const workBcCentreCodes = Object.keys(WorkBcCentres)
 
 // eslint-disable-next-line @typescript-eslint/no-require-imports, @typescript-eslint/no-var-requires
-const muhammara = require("muhammara")
+const { PDFDocument } = require("pdf-lib")
 
 export const getAllClaims = async (req: any, res: express.Response) => {
     try {
@@ -106,10 +109,15 @@ export const updateClaim = async (req: any, res: express.Response) => {
         if (
             catchments.length === 0 ||
             (claim && !catchments.includes(claim.catchmentno)) ||
-            (req.body.catchmentNo && !catchments.includes(req.body.catchmentNo)) ||
+            (req.body.workBcCentre && !req.body.catchmentNo) ||
+            (req.body.catchmentNo &&
+                (!catchments.includes(req.body.catchmentNo) ||
+                    !req.body.workBcCentre ||
+                    Number(req.body.workBcCentre.split("-")[0]) !== req.body.catchmentNo ||
+                    !workBcCentreCodes.includes(req.body.workBcCentre))) ||
             (claim &&
                 req.body.catchmentNo &&
-                claim.catchmentno !== req.body.catchmentNo &&
+                (claim.catchmentno !== req.body.catchmentNo || claim.workbc_centre !== req.body.workBcCentre) &&
                 idir_user_guid === undefined)
         ) {
             return res.status(403).send("Forbidden")
@@ -157,7 +165,7 @@ export const deleteClaim = async (req: any, res: express.Response) => {
     }
 }
 
-const formatPDFData = (submission: any, submittedDate: string) => {
+const formatPDFData = (submission: any, claim: any, submittedDate: string) => {
     const formattedData = {
         periodStart1: formatDateMmmDDYYYY(submission.data.container?.periodStart1),
         periodStart2: formatDateMmmDDYYYY(submission.data.container?.periodStart2),
@@ -225,7 +233,7 @@ const formatPDFData = (submission: any, submittedDate: string) => {
         totalMercs: formatCurrency(submission.data.container?.totalMercs),
         totalEligibleMercs: formatCurrency(submission.data.container?.totalEligibleMercs),
         clientIssues1: submission.data.container?.clientIssues1,
-        workbcCentre: submission.data?.workBcCentre,
+        workbcCentre: claim?.workbc_centre ? WorkBcCentres[claim.workbc_centre] : "",
         signatory1: submission.data.container?.signatory1,
         subsidyRateDateFrom1: formatDateMmmDDYYYY(submission.data.container?.subsidyRateDateFrom1),
         subsidyRateDateTo1: formatDateMmmDDYYYY(submission.data.container?.subsidyRateDateTo1),
@@ -286,7 +294,8 @@ export const generatePDF = async (req: any, res: express.Response) => {
             console.log("Failed to obtain claim submission.")
             return res.status(500).send("Internal Server Error")
         }
-        const data = formatPDFData(submission, submittedDate)
+        const data = formatPDFData(submission, claim, submittedDate)
+        console.log("formatted data: ", data)
         const templateConfig = {
             // eslint-disable-next-line object-shorthand
             data: data,
@@ -301,7 +310,7 @@ export const generatePDF = async (req: any, res: express.Response) => {
             }
         }
         const pdf = await generatePdf(templateHash, templateConfig)
-        let mergedPDF = combinePDFBuffers(undefined, pdf)
+        let mergedPDF = await combinePDFBuffers(undefined, pdf)
 
         const attachmentData = submission.data.container?.supportingDocuments
         if (attachmentData) {
@@ -315,6 +324,7 @@ export const generatePDF = async (req: any, res: express.Response) => {
             if (attachmentUrls.length > 0) {
                 await Promise.all(
                     attachmentUrls.map(async (url: string) => {
+                        console.log(`calling getFile for url ${url}`)
                         await claimService
                             .getFile(url)
                             .then((fileres) => {
@@ -326,20 +336,23 @@ export const generatePDF = async (req: any, res: express.Response) => {
                             })
                             .catch((err) => {
                                 console.log("getFile service returned error: ", err)
-                                return res.status(500).send("Internal Server Error")
                             })
                     })
                 )
-                    .then(() => {
-                        attachments.forEach((attachment) => {
+                    .then(async () => {
+                        for (const attachment of attachments) {
                             console.log("combining pdf buffers...")
-                            mergedPDF = combinePDFBuffers(mergedPDF, attachment)
+                            try {
+                                mergedPDF = await combinePDFBuffers(mergedPDF, attachment)
+                            } catch (err) {
+                                console.log("error combining pdf buffers: ", err)
+                                throw new Error("error combining pdf buffers")
+                            }
                             console.log("successfully combined!")
-                        })
+                        }
                     })
                     .catch((err) => {
                         console.log("error mapping attachments: ", err)
-                        return res.status(500).send("Internal Server Error")
                     })
             }
             if (attachmentData.length !== attachments.length) {
@@ -347,7 +360,7 @@ export const generatePDF = async (req: any, res: express.Response) => {
                 return res.status(500).send("Internal Server Error")
             }
         }
-        return res.status(200).send({ result: mergedPDF })
+        return res.status(200).send({ result: Buffer.from(mergedPDF).toString("base64") })
     } catch (e: unknown) {
         console.log(e)
         return res.status(500).send("Internal Server Error")
@@ -356,22 +369,22 @@ export const generatePDF = async (req: any, res: express.Response) => {
 
 // HELPER FUNCTIONS //
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-const combinePDFBuffers = (firstBuffer: Buffer | undefined, secondBuffer: Buffer) => {
+const combinePDFBuffers = async (firstBuffer: Buffer | undefined, secondBuffer: Buffer) => {
     if (!firstBuffer) return secondBuffer
 
     const outStream = new memoryStreams.WritableStream()
 
     try {
-        const firstPDFStream = new muhammara.PDFRStreamForBuffer(firstBuffer)
-        const secondPDFStream = new muhammara.PDFRStreamForBuffer(secondBuffer)
-
-        const pdfWriter = muhammara.createWriterToModify(firstPDFStream, new muhammara.PDFStreamForResponse(outStream))
-        pdfWriter.appendPDFPagesFromPDF(secondPDFStream)
-        pdfWriter.end()
-        const newBuffer = outStream.toBuffer()
-        outStream.end()
-
-        return newBuffer
+        const mergedPdf = await PDFDocument.create()
+        for (const pdfBytes of [firstBuffer, secondBuffer]) {
+            const pdf = await PDFDocument.load(pdfBytes)
+            const copiedPages = await mergedPdf.copyPages(pdf, pdf.getPageIndices())
+            copiedPages.forEach((page: any) => {
+                mergedPdf.addPage(page)
+            })
+        }
+        const buf = await mergedPdf.save()
+        return buf
     } catch (e) {
         outStream.end()
         if (e instanceof Error) {

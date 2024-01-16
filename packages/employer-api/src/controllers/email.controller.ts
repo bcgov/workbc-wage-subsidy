@@ -1,6 +1,4 @@
 /* eslint-disable import/prefer-default-export */
-import * as express from "express"
-
 // eslint-disable-next-line import/no-relative-packages
 import { Notification } from "../typings/emailData"
 import pins from "../constants/centres.json"
@@ -20,10 +18,9 @@ const createEmailHTMLBasedOnType = (applicationType: string) => {
     return emailHTML
 }
 
-export const sendEmail = async (req: express.Request, res: express.Response) => {
+export const sendEmail = async (formData: any) => {
     try {
-        console.log(req.body)
-        const { data } = req.body
+        const { data } = formData
         const applicationType = String(data.applicationType)
         let recipients: string[] = []
         if (String(applicationType) === "HaveEmployee") {
@@ -50,7 +47,6 @@ export const sendEmail = async (req: express.Request, res: express.Response) => 
         }
 
         const emailHTML = createEmailHTMLBasedOnType(applicationType)
-        console.log(recipients, emailHTML)
         if (recipients.length !== 0) {
             await emailService.sendEmail(emailHTML, `Wage Subsidy Application Submitted`, recipients)
         }
@@ -72,7 +68,7 @@ export const sendEmail = async (req: express.Request, res: express.Response) => 
                 String(applicationType) === "Claims" ? "claim" : "application"
             )
             if (notificationList.length === 0) {
-                return res.status(200).send("No notifications to send")
+                console.log("No notifications found for this catchment")
             }
             // Send notifications emails to clients with notifications enabled (entry in notifications table)
             await Promise.all(
@@ -86,11 +82,10 @@ export const sendEmail = async (req: express.Request, res: express.Response) => 
             )
         }
 
-        // console.log(email)
-        return res.status(200).send("Email sent")
+        return "Email sent"
     } catch (e: unknown) {
         // eslint-disable-next-line no-console
         console.error(e)
-        return res.status(500).send("Server Error")
+        throw new Error("Email failed to send")
     }
 }

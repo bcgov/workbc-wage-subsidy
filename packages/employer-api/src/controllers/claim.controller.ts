@@ -2,7 +2,7 @@
 /* eslint-disable import/prefer-default-export */
 import * as express from "express"
 
-import { insertClaim } from "../lib/transactions"
+import { insertClaim, insertLegacyClaim } from "../lib/transactions"
 import * as claimService from "../services/claim.service"
 import * as employerService from "../services/employer.service"
 import * as formService from "../services/form.service"
@@ -29,26 +29,11 @@ export const getAllClaims = async (req: any, res: express.Response) => {
             bceid_guid
         )
 
-        let claimsUpdated = claims
-        // create a new list of applications with updated status
-        if (filter.status == null && perPage > 1) {
-            // only update applications once each call cycle
-            // updates the status of applications that have been submitted or in draft
-            await Promise.all(claims.data.map(updateClaimFromForm))
-            claimsUpdated = await claimService.getAllClaims(
-                Number(perPage),
-                Number(page),
-                filter,
-                sortFields,
-                sortOrder,
-                bceid_guid
-            )
-        }
         res.set({
             "Access-Control-Expose-Headers": "Content-Range",
-            "Content-Range": `0 - ${claimsUpdated.pagination.to} / ${claimsUpdated.pagination.total}`
+            "Content-Range": `0 - ${claims.pagination.to} / ${claims.pagination.total}`
         })
-        return res.status(200).send(claimsUpdated.data)
+        return res.status(200).send(claims.data)
     } catch (e: any) {
         console.log(e?.message)
         return res.status(500).send("Server Error")
@@ -115,11 +100,63 @@ export const createClaim = async (req: any, res: express.Response) => {
                 req.body.formKey,
                 req.body.guid,
                 req.body.application_id,
-                createDraftResult.id
+                createDraftResult.id,
+                req.kauth.grant.access_token.content.idp,
+                req.kauth.grant.access_token.content.idp_username
             )
             if (insertResult?.rowCount === 1) {
                 // successful insertion
-                return res.status(200).send({ submissionId: createDraftResult.id })
+                return res.status(200).send({ recordId: req.body.formKey })
+            }
+        } else {
+            return res.status(500).send("Internal Server Error")
+        }
+        return res.status(500).send("Internal Server Error")
+    } catch (e: any) {
+        console.log(e)
+        return res.status(500).send("Internal Server Error")
+    }
+}
+
+export const createLegacyClaim = async (req: any, res: express.Response) => {
+    try {
+        const bceid_guid = req.kauth.grant.access_token.content?.bceid_user_guid
+        if (bceid_guid === undefined) {
+            return res.status(403).send("Not Authorized")
+        }
+        if (!req.body?.guid || req.body.guid !== bceid_guid) {
+            return res.status(403).send("Forbidden")
+        }
+
+        const prefillFields = {
+            isLegacy: true,
+            container: {
+                businessAddress1: req.body.address,
+                employerCity: req.body.city
+            }
+        }
+
+        // Create a new form draft //
+        const createDraftResult = await formService.createLoginProtectedDraft(
+            req.kauth.grant.access_token,
+            process.env.CLAIM_FORM_ID as string,
+            process.env.CLAIM_FORM_VERSION_ID as string,
+            req.body.formKey,
+            prefillFields
+        )
+        if (createDraftResult?.id) {
+            const insertResult = await insertLegacyClaim(
+                req.body.formKey,
+                req.body.guid,
+                createDraftResult.id,
+                req.body.catchment,
+                req.body.storefront,
+                req.kauth.grant.access_token.content.idp,
+                req.kauth.grant.access_token.content.idp_username
+            )
+            if (insertResult?.rowCount === 1) {
+                // successful insertion
+                return res.status(200).send({ recordId: req.body.formKey })
             }
         } else {
             return res.status(500).send("Internal Server Error")
@@ -144,6 +181,27 @@ export const getOneClaim = async (req: any, res: express.Response) => {
         }
         const claims = await claimService.getClaimByID(id)
         return res.status(200).send(claims)
+    } catch (e: any) {
+        console.log(e?.message)
+        return res.status(500).send("Internal Server Error")
+    }
+}
+
+// Update stale claims with latest data from CHEFS forms.
+export const syncClaims = async (req: any, res: express.Response) => {
+    try {
+        const bceid_guid = req.kauth.grant.access_token.content?.bceid_user_guid
+        if (bceid_guid === undefined) {
+            return res.status(403).send("Not Authorized")
+        }
+        const employer = await employerService.getEmployerByID(bceid_guid)
+        if (!employer) {
+            return res.status(403).send("Forbidden or Not Found")
+        }
+        // Update any drafts that have changed.
+        const drafts = await claimService.getStaleDrafts(bceid_guid)
+        await Promise.all(drafts.map(updateClaimFromForm))
+        return res.status(200).send({})
     } catch (e: any) {
         console.log(e?.message)
         return res.status(500).send("Internal Server Error")
@@ -182,9 +240,56 @@ const updateClaimFromForm = async (employerClaimRecord: any) => {
                 employerClaimRecord.form_submission_id
             )
             if (submissionResponse.submission.draft === true) {
-                await claimService.updateClaim(employerClaimRecord.id, "Draft", submissionResponse.submission)
+                await claimService.updateClaim(employerClaimRecord.id, "Draft", submissionResponse.submission, true)
+            } else if (submissionResponse.submission.draft === false) {
+                console.log("form submitted event")
+                // Create SP claim form if it does not already exist.
+                if (
+                    !employerClaimRecord?.service_provider_form_submission_id ||
+                    !employerClaimRecord?.service_provider_form_internal_id
+                ) {
+                    const submission = submissionResponse?.submission?.submission
+                    const serviceProviderInternalID = `SPx${submission.data.internalId}` // create a new internal id for the SP form
+                    const createDraftResult = await formService.createTeamProtectedDraft(
+                        process.env.SP_CLAIM_FORM_ID as string,
+                        process.env.SP_CLAIM_FORM_PASS as string,
+                        process.env.SP_CLAIM_FORM_VERSION_ID as string,
+                        serviceProviderInternalID,
+                        submission.data
+                    )
+                    // If SP claim form created, then update DB record.
+                    if (createDraftResult?.id && createDraftResult.submission) {
+                        await claimService.addServiceProviderClaim(
+                            submissionResponse,
+                            serviceProviderInternalID,
+                            createDraftResult.id
+                        )
+                        // TODO: send notification.
+                    }
+                    console.log("SP claim form created")
+                }
             }
         }
+    }
+}
+
+// Mark a claim as stale.
+export const markClaim = async (req: any, res: express.Response) => {
+    try {
+        const bceid_guid = req.kauth.grant.access_token.content?.bceid_user_guid
+        if (bceid_guid === undefined) {
+            return res.status(403).send("Not Authorized")
+        }
+        const { id } = req.params
+        const employerClaimRecord = await claimService.getEmployerClaimRecord(bceid_guid, id)
+        if (!employerClaimRecord) {
+            return res.status(403).send("Forbidden or Not Found")
+        }
+        await claimService.markClaim(id)
+        return res.status(200).send({ id })
+    } catch (e: any) {
+        console.log(e?.message)
+        return res.status(500).send("Internal Server Error")
     }
 }
 
@@ -250,7 +355,6 @@ export const deleteClaim = async (req: any, res: express.Response) => {
 // Use workplace address if it exists, otherwise use business address.
 const computeClaimPrefillFields = (appFormData: any) => ({
     container: {
-        ...(appFormData?.catchmentNoStoreFront && { catchmentNoStoreFront: appFormData.catchmentNoStoreFront }),
         ...(appFormData?.operatingName && { employerName: appFormData.operatingName }),
         ...(appFormData?.signatory1 && { employerContact: appFormData.signatory1 }),
         ...(appFormData?.businessPhone && { employerPhone: appFormData.businessPhone }),
