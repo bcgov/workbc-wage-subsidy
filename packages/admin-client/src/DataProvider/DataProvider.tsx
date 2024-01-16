@@ -16,7 +16,6 @@ export const dataProvider = {
 
         const rangeStart = (page - 1) * perPage
         const rangeEnd = page * perPage - 1
-        console.log("rangeStart", rangeStart)
         const query = {
             sort: JSON.stringify([field, order]),
             page,
@@ -50,6 +49,19 @@ export const dataProvider = {
                 total: parseInt(total, 10)
             }
         })
+    },
+    getCounts: (resource: any, params: { filter: any }) => {
+        const query = {
+            filter: JSON.stringify(params.filter)
+        }
+        return httpClient(`${apiUrl}/${resource}/counts?${stringify(query)}`, {
+            headers: new Headers({
+                Accept: "application/json",
+                Authorization: `Bearer ${localStorage.getItem("token")}`
+            })
+        }).then(({ json }) => ({
+            data: json
+        }))
     },
     getOne: (resource: any, params: { id: any }) =>
         httpClient(`${apiUrl}/${resource}/${params.id}`, {
@@ -182,5 +194,47 @@ export const dataProvider = {
             )
         ).then((responses) => ({
             data: responses.map(({ json }) => json.id)
-        }))
+        })),
+    getPdf: (resource: any, params: { id: any; formType: any }) =>
+        httpClient(`${apiUrl}/${resource}/pdf/${params.id}/${params.formType}`, {
+            method: "GET",
+            headers: new Headers({
+                Accept: "application/json",
+                Authorization: `Bearer ${localStorage.getItem("token")}`
+            })
+        }).then(({ json }) => json),
+    getNotifications: (resource: string, body: { catchment: number }) =>
+        httpClient(`${apiUrl}/notification?catchmentNo=${body.catchment}&type=${resource}`, {
+            method: "GET",
+            headers: new Headers({
+                Accept: "application/json",
+                Authorization: `Bearer ${localStorage.getItem("token")}`
+            })
+        }).then(({ json }) => json),
+    addNotifications: (resource: string, body: { catchment: number }) =>
+        httpClient(`${apiUrl}/notification`, {
+            method: "POST",
+            body: JSON.stringify({ catchmentNo: body.catchment, type: resource }),
+            headers: new Headers({
+                Accept: "application/json",
+                Authorization: `Bearer ${localStorage.getItem("token")}`
+            })
+        }).then(({ json }) => json),
+    deleteNotifications: (resource: string, body: { catchment: number }) =>
+        httpClient(`${apiUrl}/notification`, {
+            method: "DELETE",
+            body: JSON.stringify({ catchmentNo: body.catchment, type: resource }),
+            headers: new Headers({
+                Accept: "application/json",
+                Authorization: `Bearer ${localStorage.getItem("token")}`
+            })
+        }).then(({ json }) => json),
+    checkNotifcation: () =>
+        httpClient(`${apiUrl}/notification/check`, {
+            method: "PUT",
+            headers: new Headers({
+                Accept: "application/json",
+                Authorization: `Bearer ${localStorage.getItem("token")}`
+            })
+        }).then(({ json }) => json)
 }

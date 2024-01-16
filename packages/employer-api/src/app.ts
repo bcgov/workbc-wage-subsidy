@@ -1,28 +1,34 @@
 import cors from "cors"
 import express from "express"
 import helmet from "helmet"
-import Keycloak, { KeycloakConfig } from "keycloak-connect"
+import Keycloak from "keycloak-connect"
 import morgan from "morgan"
 
+import employerRoute from "./routes/employer.route"
 import claimRoute from "./routes/claim.route"
-import wageRoute from "./routes/wage.route"
+import applicationRoute from "./routes/application.route"
+import eventRoute from "./routes/event.route"
+import addressRoute from "./routes/address.route"
 
 const corsOptions = {
-    origin: process.env.ORIGIN_URL || process.env.OPENSHIFT_NODEJS_ORIGIN_URL || "http://localhost:3000",
+    origin: [
+        process.env.ORIGIN_URL || process.env.OPENSHIFT_NODEJS_ORIGIN_URL || ("http://localhost:3000" as string),
+        process.env.CHEFS_FRONTEND_URL as string
+    ],
     credentials: true,
     optionsSuccessStatus: 200
 }
 
-const kcConfig: KeycloakConfig = {
+const kcConfig = {
     "confidential-port": process.env.AUTH_KEYCLOAK_CONFIDENTIAL_PORT || 0,
     "auth-server-url": process.env.AUTH_KEYCLOAK_SERVER_URL || "",
     resource: process.env.AUTH_KEYCLOAK_CLIENT || "",
     "ssl-required": process.env.AUTH_KEYCLOAK_SSL_REQUIRED || "",
     "bearer-only": false,
-    realm: process.env.AUTH_KEYCLOAK_REALM || ""
+    realm: process.env.AUTH_KEYCLOAK_REALM || "",
+    secret: process.env.AUTH_KEYCLOAK_CLIENT_SECRET || ""
 }
 
-console.log(kcConfig)
 const keycloak = new Keycloak({}, kcConfig)
 
 const app = express()
@@ -35,8 +41,11 @@ app.set("trust proxy", "loopback, linklocal, uniquelocal")
 app.use(helmet())
 app.use(keycloak.middleware())
 
-app.use("/", keycloak.protect(), claimRoute)
-app.use("/", keycloak.protect(), wageRoute)
+app.use("/applications", keycloak.protect(), applicationRoute)
+app.use("/claims", keycloak.protect(), claimRoute)
+app.use("/events", eventRoute)
+app.use("/employers", keycloak.protect(), employerRoute)
+app.use("/address", keycloak.protect(), addressRoute)
 
 const port = process.env.PORT || "8000"
 app.listen(port, () => {

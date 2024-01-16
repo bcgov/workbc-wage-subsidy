@@ -2,7 +2,7 @@ import axios, { AxiosResponse } from "axios"
 
 export const getCDOGSToken = async () => {
     try {
-        const authURL = `${process.env.COMMON_SERVICES_KEYCLOAK_AUTH}/realms/${process.env.COMMON_SERVICES_AUTH_REALM}/protocol/openid-connect/token`
+        const authURL = `${process.env.CDOGS_KEYCLOAK_AUTH}/realms/${process.env.COMMON_SERVICES_AUTH_REALM}/protocol/openid-connect/token`
         const params = new URLSearchParams()
         params.append("grant_type", "client_credentials")
         const config = {
@@ -23,15 +23,15 @@ export const getCDOGSToken = async () => {
     }
 }
 
-export const getCHESToken = async () => {
+export const getCHEFSToken = async () => {
     try {
-        const authURL = `${process.env.COMMON_SERVICES_KEYCLOAK_AUTH}/realms/${process.env.COMMON_SERVICES_AUTH_REALM}/protocol/openid-connect/token`
+        const authURL = `${process.env.COMMON_SERVICES_KEYCLOAK_AUTH}/realms/${process.env.CUSTOM_AUTH_REALM}/protocol/openid-connect/token`
         const params = new URLSearchParams()
         params.append("grant_type", "client_credentials")
         const config = {
             auth: {
-                username: process.env.CHES_CLIENT || "",
-                password: process.env.CHES_CLIENT_SECRET || ""
+                username: process.env.CHEFS_CLIENT || "",
+                password: process.env.CHEFS_CLIENT_SECRET || ""
             },
             headers: {
                 "Content-Type": "application/x-www-form-urlencoded"

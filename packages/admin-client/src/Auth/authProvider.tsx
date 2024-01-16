@@ -4,18 +4,20 @@
 import { useKeycloak } from "@react-keycloak/web"
 import jwt_decode from "jwt-decode"
 import axios from "axios"
+import { parseCatchments } from "../utils/parseCatchments"
 
 const useAuthProvider = () => {
     const { keycloak } = useKeycloak()
     return {
         login: () => keycloak.login(),
         checkError: () => Promise.resolve(),
-        checkAuth: () =>
-            localStorage.getItem("token") ? Promise.resolve() : Promise.reject("Failed to obtain access token."),
+        checkAuth: () => (keycloak.token ? Promise.resolve() : Promise.reject("Failed to obtain access token.")),
         logout: () => {
             localStorage.removeItem("token")
             localStorage.removeItem("refresh_token")
             localStorage.removeItem("permissions")
+            localStorage.removeItem("access")
+            localStorage.clear()
             return keycloak.logout()
         },
         getIdentity: () => {
@@ -32,49 +34,21 @@ const useAuthProvider = () => {
         },
         getPermissions: async () => {
             const apiUrl = process.env.REACT_APP_ADMIN_API_URL || "http://localhost:8002"
-            const res = await axios.get(`${apiUrl}/permission`, {
-                headers: {
-                    Accept: "application/json",
-                    Authorization: `Bearer ${localStorage.getItem("token")}`
-                }
-            })
-            console.log(res)
-            return res.data.access
-
-            // const request = new Request(`${apiUrl}/permission`, {
-            //     method: "GET",
-            //     headers: new Headers({
-            //         Accept: "application/json",
-            //         Authorization: `Bearer ${localStorage.getItem("token")}`
-            //     })
-            // })
-            // return fetch(request)
-            //     .then((response: any) => {
-            //         if (response.status < 200 || response.status >= 300) {
-            //             throw new Error(response.statusText)
-            //         }
-            //         console.log(response)
-            //         return response.data.permissions
-            //     })
-            //     .then((res) => {
-            //         localStorage.setItem("permissions", res)
-            //     })
-
-            /*
-            if (keycloak.token) {
-                const decoded : any = jwt_decode(keycloak.token);
-                decoded.resource_access[clientID].roles.forEach((el: string) => {
-                    if (el === "admin") {
-                        hasRole = true;
-                        return
+            let ret
+            await axios
+                .get(`${apiUrl}/permission`, {
+                    headers: {
+                        Accept: "application/json",
+                        Authorization: `Bearer ${localStorage.getItem("token")}`
                     }
-                });
-            }
-            if (hasRole) {
-                return Promise.resolve(true);
-            }
-            return Promise.resolve(false);
-            */
+                })
+                .then((res) => {
+                    ret = parseCatchments(res.data.permissions)
+                })
+                .catch((err) => {
+                    console.log("error getting permissions")
+                })
+            return ret
         }
     }
 }

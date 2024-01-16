@@ -18,13 +18,15 @@ const useAuthProvider = (clientID: string) => {
         getIdentity: () => {
             if (keycloak.token) {
                 const decoded: any = jwt_decode(keycloak.token)
-                console.log(decoded)
                 const id = decoded.sub
                 const idp = decoded.identity_provider
-                const username = decoded.bceid_username || decoded.idir_username || ""
+                const idpUsername = decoded.idp_username
                 const guid = decoded.bceid_user_guid || decoded.idir_guid || ""
                 const fullName = decoded.name
-                return Promise.resolve({ id, idp, fullName, username, guid })
+                const email = decoded.email
+                const businessGuid = decoded?.bceid_business_guid || null
+                const businessName = decoded?.bceid_business_name || null
+                return Promise.resolve({ id, idp, idpUsername, fullName, guid, email, businessGuid, businessName })
             }
             return Promise.reject("Failed to get identity")
         },
@@ -32,22 +34,6 @@ const useAuthProvider = (clientID: string) => {
             if (localStorage.getItem("token")) {
                 return true
             }
-
-            /*
-            if (keycloak.token) {
-                const decoded : any = jwt_decode(keycloak.token);
-                decoded.resource_access[clientID].roles.forEach((el: string) => {
-                    if (el === "admin") {
-                        hasRole = true;
-                        return
-                    }
-                });
-            }
-            if (hasRole) {
-                return Promise.resolve(true);
-            }
-            return Promise.resolve(false);
-            */
         }
     }
 }

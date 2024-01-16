@@ -1,0 +1,1631 @@
+[
+    {
+        "CatchmentNo": "1",
+        "AbbreviatedCode": "1-ES",
+        "CatchmentAreaCode": "101",
+        "Title": "Vancouver Island North",
+        "Contractor": "North Island Employment Foundations Society",
+        "Storefronts": [
+            {
+                "name": "Campbell River",
+                "id": 1,
+                "Address": "920 Alder Street, Campbell River, BC V9W 2P8",
+                "Phone": "250-286-3441",
+                "Fax": "250-286-3447",
+                "Email": "centre-campbellriver@workbc.ca",
+                "Website": "https://workbc.ca/WorkBC-Centres/Vancouver-Island-Coast/Campbell-River.aspx",
+                "BusinessWebsite": "http://workbccentre-campbellriver.ca",
+                "FrenchServices": "N",
+                "Coordinates": "-125.2434889,50.0240613"
+            },
+            {
+                "name": "Port Hardy",
+                "id": 2,
+                "Address": "129-8950 Granville Street, Port Hardy, BC V0N 2P0",
+                "Phone": "Toll-Free: 1-866-286-6788",
+                "Fax": "250-949-5797",
+                "Email": "centre-porthardy@workbc.ca",
+                "Website": "https://workbc.ca/WorkBC-Centres/Vancouver-Island-Coast/Port-Hardy.aspx",
+                "BusinessWebsite": "http://workbccentre-porthardy.ca",
+                "FrenchServices": "N",
+                "Coordinates": "-127.4978505,50.7205817"
+            }
+        ]
+    },
+    {
+        "CatchmentNo": "2",
+        "AbbreviatedCode": "2-ES",
+        "CatchmentAreaCode": "102",
+        "Title": "Comox Valley - Powell River",
+        "Contractor": "Creative Employment Access Society",
+        "Storefronts": [
+            {
+                "name": "Courtenay",
+                "id": 1,
+                "Address": "103 - 555 4th Street, Courtenay, BC  V9N 1H3",
+                "Phone": "250-334-3119",
+                "Fax": "250-338-7594",
+                "Email": "centre-courtenay@workbc.ca",
+                "Website": "https://workbc.ca/WorkBC-Centres/Vancouver-Island-Coast/Courtenay.aspx",
+                "BusinessWebsite": "http://workbccentre-courtenay.ca",
+                "FrenchServices": "Y",
+                "Coordinates": "-125.0034181,49.6903991"
+            },
+            {
+                "name": "Powell River",
+                "id": 2,
+                "Address": "103 - 4511 Marine Avenue, Powell River, BC V8A 2K5",
+                "Phone": "604-485-7958",
+                "Fax": "604-485-7997",
+                "Email": "centre-powellriver@workbc.ca",
+                "Website": "https://workbc.ca/WorkBC-Centres/Vancouver-Island-Coast/Powell-River.aspx",
+                "BusinessWebsite": "http://workbccentre-powellriver.ca",
+                "FrenchServices": "N",
+                "Coordinates": "-124.5279451,49.8380448"
+            }
+        ]
+    },
+    {
+        "CatchmentNo": "3",
+        "AbbreviatedCode": "3-ES",
+        "CatchmentAreaCode": "103",
+        "Title": "Parksville - Alberni",
+        "Contractor": "Central Vancouver Island Job Opportunities Building Society",
+        "Storefronts": [
+            {
+                "name": "Port Alberni",
+                "id": 1,
+                "Address": "4805 B Mar Street, Port Alberni, BC V9Y 8J5",
+                "Phone": "250-724-4560",
+                "Fax": "250-724-4565",
+                "Email": "centre-portalberni@workbc.ca",
+                "Website": "https://workbc.ca/WorkBC-Centres/Vancouver-Island-Coast/Port-Alberni.aspx",
+                "BusinessWebsite": "http://workbccentre-portalberni.ca",
+                "FrenchServices": "N",
+                "Coordinates": "-124.8051549,49.2321172"
+            },
+            {
+                "name": "Ucluelet",
+                "id": 2,
+                "Address": "101 - 1801 Bay Street, Ucluelet, BC V0R 3A0",
+                "Phone": "250-726-4243",
+                "Fax": "250-726-2975",
+                "Email": "centre-ucluelet@workbc.ca",
+                "Website": "https://workbc.ca/WorkBC-Centres/Vancouver-Island-Coast/Ucluelet.aspx",
+                "BusinessWebsite": "http://workbccentre-ucluelet.ca",
+                "FrenchServices": "N",
+                "Coordinates": "-125.550637,48.9428918"
+            },
+            {
+                "name": "Tofino",
+                "id": 3,
+                "Address": "381 Main Street, Tofino, BC V0R 2Z0",
+                "Phone": "250-725-8805",
+                "Fax": "250-725-2845",
+                "Email": "centre-tofino@workbc.ca",
+                "Website": "https://workbc.ca/WorkBC-Centres/Vancouver-Island-Coast/Tofino.aspx",
+                "BusinessWebsite": "http://workbccentre-tofino.ca",
+                "FrenchServices": "N",
+                "Coordinates": "-125.9049369,49.1533793"
+            },
+            {
+                "name": "Parksville",
+                "id": 4,
+                "Address": "110-198 East Island Hwy, Parksville, BC V9P 2H3",
+                "Phone": "250-248-3205",
+                "Fax": "250-248-4154",
+                "Email": "centre-parksville@workbc.ca",
+                "Website": "https://workbc.ca/WorkBC-Centres/Vancouver-Island-Coast/Parksville.aspx",
+                "BusinessWebsite": "http://workbccentre-parksville.ca",
+                "FrenchServices": "N",
+                "Coordinates": "-124.3099639,49.3205854"
+            }
+        ]
+    },
+    {
+        "CatchmentNo": "4",
+        "AbbreviatedCode": "4-ES",
+        "CatchmentAreaCode": "104",
+        "Title": "Nanaimo",
+        "Contractor": "MAXIMUS Canada Employment Services Inc.",
+        "Storefronts": [
+            {
+                "name": "Nanaimo",
+                "id": 1,
+                "Address": "101 - 155 Skinner Street, Nanaimo, BC V9R 5G9",
+                "Phone": "250-714-0085",
+                "Fax": "250-714-0093",
+                "Email": "centre-nanaimo@workbc.ca",
+                "Website": "https://workbc.ca/WorkBC-Centres/Vancouver-Island-Coast/Nanaimo.aspx",
+                "BusinessWebsite": "http://workbccentre-nanaimo.ca",
+                "FrenchServices": "Y",
+                "Coordinates": "-123.9379006,49.1663253"
+            }
+        ]
+    },
+    {
+        "CatchmentNo": "5",
+        "AbbreviatedCode": "5-ES",
+        "CatchmentAreaCode": "105",
+        "Title": "Cowichan Valley",
+        "Contractor": "ETHOS Career Management Group Ltd.",
+        "Storefronts": [
+            {
+                "name": "Duncan",
+                "id": 1,
+                "Address": "301 - 80 Station St., Duncan, BC V9L 1M4",
+                "Phone": "250-748-9880",
+                "Fax": "250-746-8986",
+                "Email": "centre-duncan@workbc.ca",
+                "Website": "https://workbc.ca/WorkBC-Centres/Vancouver-Island-Coast/Duncan.aspx",
+                "BusinessWebsite": "http://workbccentre-duncan.ca",
+                "FrenchServices": "N",
+                "Coordinates": "-123.7082191,48.7776938"
+            },
+            {
+                "name": "Ladysmith",
+                "id": 2,
+                "Address": "11 - 740 1st Ave, Ladysmith, BC V9G 1K7",
+                "Phone": "250-924-2884",
+                "Fax": "250-924-2885",
+                "Email": "centre-ladysmith@workbc.ca",
+                "Website": "https://workbc.ca/WorkBC-Centres/Vancouver-Island-Coast/Ladysmith.aspx",
+                "BusinessWebsite": "http://workbccentre-ladysmith.ca",
+                "FrenchServices": "N",
+                "Coordinates": "-123.8204236,48.9948203"
+            }
+        ]
+    },
+    {
+        "CatchmentNo": "6",
+        "AbbreviatedCode": "6-ES",
+        "CatchmentAreaCode": "106",
+        "Title": "Langford - Sooke",
+        "Contractor": "WorkLink Employment Society",
+        "Storefronts": [
+            {
+                "name": "Langford",
+                "id": 1,
+                "Address": "202 - 3179 Jacklin Road, Victoria, BC V9B 3Y7",
+                "Phone": "250-478-9525",
+                "Fax": "250-478-8664",
+                "Email": "centre-langford@workbc.ca",
+                "Website": "https://workbc.ca/WorkBC-Centres/Vancouver-Island-Coast/Langford.aspx",
+                "BusinessWebsite": "http://workbccentre-langford.ca",
+                "FrenchServices": "N",
+                "Coordinates": "-123.5142615,48.4345729"
+            },
+            {
+                "name": "Sooke",
+                "id": 2,
+                "Address": "Unit D 6625 Sooke Road, Sooke, BC V9Z 0A3",
+                "Phone": "250-642-3685",
+                "Fax": "250-642-3601",
+                "Email": "centre-sooke@workbc.ca",
+                "Website": "https://workbc.ca/WorkBC-Centres/Vancouver-Island-Coast/Sooke.aspx",
+                "BusinessWebsite": "http://workbccentre-sooke.ca",
+                "FrenchServices": "N",
+                "Coordinates": "-123.7193016,48.37844"
+            }
+        ]
+    },
+    {
+        "CatchmentNo": "7",
+        "AbbreviatedCode": "7-ES",
+        "CatchmentAreaCode": "107",
+        "Title": "Greater Victoria",
+        "Contractor": "MAXIMUS Canada Employment Services Inc.",
+        "Storefronts": [
+            {
+                "name": "Victoria - Douglas",
+                "id": 1,
+                "Address": "201-1483 Douglas St, Victoria, BC V8W 3K4",
+                "Phone": "250-388-0858",
+                "Fax": "250-388-0814",
+                "Email": "centre-victoria-douglas@workbc.ca",
+                "Website": "https://workbc.ca/WorkBC-Centres/Vancouver-Island-Coast/Victoria-Douglas.aspx",
+                "BusinessWebsite": "http://workbccentre-victoria-douglas.ca",
+                "FrenchServices": "Y",
+                "Coordinates": "-123.3644911,48.427452"
+            },
+            {
+                "name": "Victoria - Borden",
+                "id": 2,
+                "Address": "201-3962 Borden Street, Victoria, BC V8P 3H8",
+                "Phone": "250-479-9675",
+                "Fax": "250-479-9678",
+                "Email": "centre-victoria-borden@workbc.ca",
+                "Website": "https://workbc.ca/WorkBC-Centres/Vancouver-Island-Coast/Victoria-Borden.aspx",
+                "BusinessWebsite": "http://workbccentre-victoria-borden.ca",
+                "FrenchServices": "Y",
+                "Coordinates": "-123.3611325,48.4702305"
+            }
+        ]
+    },
+    {
+        "CatchmentNo": "8",
+        "AbbreviatedCode": "8-ES",
+        "CatchmentAreaCode": "108",
+        "Title": "Saanich Peninsula - Gulf Islands",
+        "Contractor": "Beacon Community Services",
+        "Storefronts": [
+            {
+                "name": "Sidney",
+                "id": 1,
+                "Address": "9860 Third Street, Sidney, BC V8L 4R2",
+                "Phone": "250-656-0134",
+                "Fax": "250-656-0139",
+                "Email": "centre-sidney@workbc.ca",
+                "Website": "https://workbc.ca/WorkBC-Centres/Vancouver-Island-Coast/Sidney.aspx",
+                "BusinessWebsite": "http://workbccentre-sidney.ca",
+                "FrenchServices": "N",
+                "Coordinates": "-123.3980211,48.6505803"
+            },
+            {
+                "name": "Salt Spring Island",
+                "id": 2,
+                "Address": "268 Fulford Ganges Road, Salt Spring Island, BC V8K 2K6",
+                "Phone": "250-931-7687",
+                "Fax": "250-931-7685",
+                "Email": "centre-fulford-ganges@workbc.ca",
+                "Website": "https://workbc.ca/WorkBC-Centres/Vancouver-Island-Coast/Salt-Spring-Island.aspx",
+                "BusinessWebsite": "http://workbccentre-fulford-ganges.ca",
+                "FrenchServices": "N",
+                "Coordinates": "-123.5006734,48.8472572"
+            }
+        ]
+    },
+    {
+        "CatchmentNo": "9",
+        "AbbreviatedCode": "9-ES",
+        "CatchmentAreaCode": "109",
+        "Title": "Sea to Sky",
+        "Contractor": "Open Door Social Services Society",
+        "Storefronts": [
+            {
+                "name": "Sechelt",
+                "id": 1,
+                "Address": "5674 Cowrie St, Sechelt, BC V0N 3A0",
+                "Phone": "604-885-3351",
+                "Fax": "604-885-3361",
+                "Email": "centre-sechelt@workbc.ca",
+                "Website": "https://workbc.ca/WorkBC-Centres/Mainland-Southwest/Sechelt.aspx",
+                "BusinessWebsite": "http://workbccentre-sechelt.ca",
+                "FrenchServices": "N",
+                "Coordinates": "-123.7571071,49.4724845"
+            },
+            {
+                "name": "Squamish",
+                "id": 2,
+                "Address": "302 - 37989 Cleveland Ave, Squamish, BC V8B 0A8",
+                "Phone": "604-639-1743",
+                "Fax": "604-898-1670",
+                "Email": "centre-squamish@workbc.ca",
+                "Website": "https://workbc.ca/WorkBC-Centres/Mainland-Southwest/Squamish.aspx",
+                "BusinessWebsite": "http://workbccentre-squamish.ca",
+                "FrenchServices": "N",
+                "Coordinates": "-123.1537505,49.6982072"
+            }
+        ]
+    },
+    {
+        "CatchmentNo": "10",
+        "AbbreviatedCode": "10-ES",
+        "CatchmentAreaCode": "110",
+        "Title": "North Vancouver",
+        "Contractor": "Young Women's Christian Association",
+        "Storefronts": [
+            {
+                "name": "North Vancouver",
+                "id": 1,
+                "Address": "Unit 106 - 980 West 1St Street, North Vancouver, V7P 3N4",
+                "Phone": "604-988-3766",
+                "Fax": "604-988-7153",
+                "Email": "centre-northvancouver@workbc.ca",
+                "Website": "https://workbc.ca/WorkBC-Centres/Mainland-Southwest/North-Vancouver.aspx",
+                "BusinessWebsite": "http://workbccentre-northvancouver.ca",
+                "FrenchServices": "N",
+                "Coordinates": "-123.1014122,49.3186719"
+            }
+        ]
+    },
+    {
+        "CatchmentNo": "11",
+        "AbbreviatedCode": "11-ES",
+        "CatchmentAreaCode": "111",
+        "Title": "Vancouver City Centre",
+        "Contractor": "Open Door Social Services Society",
+        "Storefronts": [
+            {
+                "name": "Vancouver - 134 East Hastings",
+                "id": 1,
+                "Address": "134 East Hastings Street, Vancouver, BC V6A 1N4",
+                "Phone": "604-334-6372",
+                "Fax": "604-873-1758",
+                "Email": "centre-vancouver-134easthastings@workbc.ca",
+                "Website": "https://workbc.ca/WorkBC-Centres/Mainland-Southwest/Vancouver-134-East-Hastings.aspx",
+                "BusinessWebsite": "http://workbccentre-vancouver-134easthastings.ca",
+                "FrenchServices": "Y",
+                "Coordinates": "-123.1012664,49.2813219"
+            },
+            {
+                "name": "Vancouver - Burrard",
+                "id": 2,
+                "Address": "900-1200 Burrard Street, Vancouver, BC V6Z 2C7",
+                "Phone": "604-334-6372",
+                "Fax": "604-873-1758",
+                "Email": "centre-vancouver-burrard@workbc.ca",
+                "Website": "https://workbc.ca/WorkBC-Centres/Mainland-Southwest/Vancouver-Burrard.aspx",
+                "BusinessWebsite": "http://workbccentre-vancouver-burrard.ca",
+                "FrenchServices": "Y",
+                "Coordinates": "-123.129286,49.278588"
+            },
+            {
+                "name": "Vancouver - W Pender",
+                "id": 3,
+                "Address": "200-250 W. Pender Street, Vancouver, BC V6B 1S9",
+                "Phone": "604-334-6372",
+                "Fax": "604-873-1758",
+                "Email": "centre-vancouver-westpender@workbc.ca",
+                "Website": "https://workbc.ca/WorkBC-Centres/Mainland-Southwest/Vancouver-WPender.aspx",
+                "BusinessWebsite": "http://workbccentre-vancouver-westpender.ca",
+                "FrenchServices": "Y",
+                "Coordinates": "-123.1112381,49.2813041"
+            }
+        ]
+    },
+    {
+        "CatchmentNo": "12",
+        "AbbreviatedCode": "12-ES",
+        "CatchmentAreaCode": "112",
+        "Title": "Vancouver Midtown",
+        "Contractor": "Pacific Community Resources Society",
+        "Storefronts": [
+            {
+                "name": "Vancouver - East 3rd",
+                "id": 1,
+                "Address": "110 East 3rd Avenue, Vancouver, BC V5T 1C8",
+                "Phone": "604-829-2300",
+                "Fax": "604-829-0900",
+                "Email": "centre-vancouver-east3rd@workbc.ca",
+                "Website": "https://workbc.ca/WorkBC-Centres/Mainland-Southwest/Vancouver-East-3rd-Ave.aspx",
+                "BusinessWebsite": "http://workbccentre-vancouvermidtown-east.ca",
+                "FrenchServices": "Y",
+                "Coordinates": "-123.1023658,49.268203"
+            },
+            {
+                "name": "Vancouver - Midtown West",
+                "id": 2,
+                "Address": "300 - 2150 West Broadway, Vancouver, BC V6K 4L9",
+                "Phone": "604-688-4666",
+                "Fax": "604-688-3774",
+                "Email": "centre-vancouver-westbroadway@workbc.ca",
+                "Website": "https://workbc.ca/WorkBC-Centres/Mainland-Southwest/Vancouver-West-Broadway.aspx",
+                "BusinessWebsite": "http://workbccentre-vancouvermidtown-west.ca",
+                "FrenchServices": "Y",
+                "Coordinates": "-123.154107,49.2635368"
+            }
+        ]
+    },
+    {
+        "CatchmentNo": "13",
+        "AbbreviatedCode": "13-ES",
+        "CatchmentAreaCode": "113",
+        "Title": "Vancouver Northeast",
+        "Contractor": "M.O.S.A.I.C. Multi-Lingual Orientation Service Association for Immigrant Communities",
+        "Storefronts": [
+            {
+                "name": "Vancouver - Commercial",
+                "id": 1,
+                "Address": "312 - 2555 Commercial Drive, Vancouver, BC V5N 4C1",
+                "Phone": "604-708-9300",
+                "Fax": "604-708-9314",
+                "Email": "centre-vancouver-commercial@workbc.ca",
+                "Website": "https://workbc.ca/WorkBC-Centres/Mainland-Southwest/Vancouver-Commercial.aspx",
+                "BusinessWebsite": "http://workbccentre-vancouver-commercial.ca",
+                "FrenchServices": "Y",
+                "Coordinates": "-123.0698957,49.2617874"
+            }
+        ]
+    },
+    {
+        "CatchmentNo": "14",
+        "AbbreviatedCode": "14-ES",
+        "CatchmentAreaCode": "114",
+        "Title": "Vancouver South",
+        "Contractor": "Young Women's Christian Association",
+        "Storefronts": [
+            {
+                "name": "Vancouver - South",
+                "id": 1,
+                "Address": "Ground Floor - 7575 Cambie Street, Vancouver, BC V6P 3H6",
+                "Phone": "604-263-5005",
+                "Fax": "604-263-5900",
+                "Email": "centre-vancouversouth@workbc.ca",
+                "Website": "https://workbc.ca/WorkBC-Centres/Mainland-Southwest/Vancouver-Cambie.aspx",
+                "BusinessWebsite": "http://workbccentre-vancouversouth.ca",
+                "FrenchServices": "Y",
+                "Coordinates": "-123.1172908,49.2162149"
+            }
+        ]
+    },
+    {
+        "CatchmentNo": "15",
+        "AbbreviatedCode": "15-ES",
+        "CatchmentAreaCode": "115",
+        "Title": "Richmond",
+        "Contractor": "S.U.C.C.E.S.S. (formerly United Chinese Community Enrichment Services Society)",
+        "Storefronts": [
+            {
+                "name": "Richmond - No 5",
+                "id": 1,
+                "Address": "1030 - 10820 No. 5 Road, Richmond, BC V6W 0B5",
+                "Phone": "778-732-4718",
+                "Fax": "778-732-4719",
+                "Email": "centre-richmond-no5@workbc.ca",
+                "Website": "https://workbc.ca/WorkBC-Centres/Mainland-Southwest/Richmond-No-5.aspx",
+                "BusinessWebsite": "http://workbccentre-richmond-no5.ca",
+                "FrenchServices": "N",
+                "Coordinates": "-123.091475,49.133941"
+            },
+            {
+                "name": "Richmond - Granville Ave",
+                "id": 2,
+                "Address": "8111 Granville Ave, Richmond, BC V6Y 1P5",
+                "Phone": "778-732-1529",
+                "Fax": "604-231-0345",
+                "Email": "centre-richmond-granville@workbc.ca",
+                "Website": "https://workbc.ca/WorkBC-Centres/Mainland-Southwest/Richmond-Granville-Ave.aspx",
+                "BusinessWebsite": "http://workbccentre-richmond-granville.ca",
+                "FrenchServices": "N",
+                "Coordinates": "-123.1349664,49.1628103"
+            }
+        ]
+    },
+    {
+        "CatchmentNo": "16",
+        "AbbreviatedCode": "16-ES",
+        "CatchmentAreaCode": "116",
+        "Title": "Maple Ridge",
+        "Contractor": "Douglas College",
+        "Storefronts": [
+            {
+                "name": "Maple Ridge",
+                "id": 1,
+                "Address": "22470 Dewdney Trunk Road, Maple Ridge, Suite 170, BC V2X 5Z6",
+                "Phone": "604-466-4600",
+                "Fax": "604-466-4620",
+                "Email": "centre-mapleridge@workbc.ca",
+                "Website": "https://workbc.ca/WorkBC-Centres/Mainland-Southwest/Maple-Ridge.aspx",
+                "BusinessWebsite": "http://workbccentre-mapleridge.ca",
+                "FrenchServices": "N",
+                "Coordinates": "-122.5997848,49.2199076"
+            }
+        ]
+    },
+    {
+        "CatchmentNo": "17",
+        "AbbreviatedCode": "17-ES",
+        "CatchmentAreaCode": "117",
+        "Title": "Tri-Cities",
+        "Contractor": "Young Women's Christian Association",
+        "Storefronts": [
+            {
+                "name": "Port Moody",
+                "id": 1,
+                "Address": "Suite 301 - 130 Brew Street, Port Moody, V3H 0E3",
+                "Phone": "604-917-0286",
+                "Fax": "604-917-0287",
+                "Email": "centre-portmoody@workbc.ca",
+                "Website": "https://workbc.ca/WorkBC-Centres/Mainland-Southwest/Port-Moody.aspx",
+                "BusinessWebsite": "http://workbccentre-portmoody.ca",
+                "FrenchServices": "N",
+                "Coordinates": "-122.8278265,49.2797703"
+            },
+            {
+                "name": "Coquitlam",
+                "id": 2,
+                "Address": "Suite 221 - 3030 Lincoln Avenue, Coquitlam, V3B 6B4",
+                "Phone": "778-730-0174",
+                "Fax": "778-374-0369",
+                "Email": "centre-coquitlam@workbc.ca",
+                "Website": "https://workbc.ca/WorkBC-Centres/Mainland-Southwest/Coquitlam.aspx",
+                "BusinessWebsite": "http://workbccentre-coquitlam.ca",
+                "FrenchServices": "N",
+                "Coordinates": "-122.7923852,49.2789694"
+            },
+            {
+                "name": "Port Coquitlam",
+                "id": 3,
+                "Address": "Suite 206 - 2540 Shaughnessy Street, Port Coquitlam, BC V3C 3W4",
+                "Phone": "778-730-0171",
+                "Fax": "778-730-0168",
+                "Email": "centre-portcoquitlam@workbc.ca",
+                "Website": "https://workbc.ca/WorkBC-Centres/Mainland-Southwest/Port-Coquitlam.aspx",
+                "BusinessWebsite": "http://workbccentre-portcoquitlam.ca",
+                "FrenchServices": "N",
+                "Coordinates": "-122.782,49.2615486"
+            }
+        ]
+    },
+    {
+        "CatchmentNo": "18",
+        "AbbreviatedCode": "18-ES",
+        "CatchmentAreaCode": "118",
+        "Title": "Delta",
+        "Contractor": "M.O.S.A.I.C. Multi-Lingual Orientation Service Association for Immigrant Communities",
+        "Storefronts": [
+            {
+                "name": "Delta - 88th",
+                "id": 1,
+                "Address": "11861 - 88th Avenue, Delta, Unit 310, V4C 3C6",
+                "Phone": "604-591-9116",
+                "Fax": "604-591-8971",
+                "Email": "centre-delta-88th@workbc.ca",
+                "Website": "https://workbc.ca/WorkBC-Centres/Mainland-Southwest/Delta-88.aspx",
+                "BusinessWebsite": "http://workbccentre-delta-88th.ca",
+                "FrenchServices": "N",
+                "Coordinates": "-122.8942151,49.1635909"
+            },
+            {
+                "name": "Delta - Delta St",
+                "id": 2,
+                "Address": "4899 Delta St, Delta, BC V4K 2T9",
+                "Phone": "604-591-9116",
+                "Fax": "604-591-8971",
+                "Email": "centre-delta-delta@workbc.ca",
+                "Website": "https://workbc.ca/WorkBC-Centres/Mainland-Southwest/Delta.aspx",
+                "BusinessWebsite": "http://workbccentre-delta-delta.ca",
+                "FrenchServices": "N",
+                "Coordinates": "-123.0870745,49.0921627"
+            }
+        ]
+    },
+    {
+        "CatchmentNo": "19",
+        "AbbreviatedCode": "19-ES",
+        "CatchmentAreaCode": "119",
+        "Title": "North Surrey",
+        "Contractor": "Options Community Services Society",
+        "Storefronts": [
+            {
+                "name": "Surrey - Guildford",
+                "id": 1,
+                "Address": "202 - 10334 152A St, Surrey, BC V3R 7P8",
+                "Phone": "604-580-9740",
+                "Fax": "604-580-9732",
+                "Email": "centre-surreyguildford@workbc.ca",
+                "Website": "https://workbc.ca/WorkBC-Centres/Mainland-Southwest/Surrey-Guildford.aspx",
+                "BusinessWebsite": "http://workbccentre-surreyguildford.ca",
+                "FrenchServices": "N",
+                "Coordinates": "-122.7995152,49.1901006"
+            },
+            {
+                "name": "Surrey - Whalley",
+                "id": 2,
+                "Address": "160- 10362 King George Boulevard, Surrey, BC V3T 2W5",
+                "Phone": "604-584-0003",
+                "Fax": "604-584-0002",
+                "Email": "centre-surreywhalley@workbc.ca",
+                "Website": "https://workbc.ca/WorkBC-Centres/Mainland-Southwest/Surrey-Whalley.aspx",
+                "BusinessWebsite": "http://workbccentre-surreywhalley.ca",
+                "FrenchServices": "N",
+                "Coordinates": "-122.8450575,49.1909576"
+            }
+        ]
+    },
+    {
+        "CatchmentNo": "20",
+        "AbbreviatedCode": "20-ES",
+        "CatchmentAreaCode": "120",
+        "Title": "Surrey Cloverdale",
+        "Contractor": "M.O.S.A.I.C. Multi-Lingual Orientation Service Association for Immigrant Communities",
+        "Storefronts": [
+            {
+                "name": "Surrey - 56 Ave",
+                "id": 1,
+                "Address": "Unit 202 - 17700 - 56 Avenue, Surrey, BC V3S 1C7",
+                "Phone": "778-547-5020",
+                "Fax": "778-547-4423",
+                "Email": "centre-surrey-56@workbc.ca",
+                "Website": "https://www.workbc.ca/WorkBC-Centres/Mainland-Southwest/Surrey-56.aspx",
+                "BusinessWebsite": "http://workbccentre-surrey-56.ca",
+                "FrenchServices": "N",
+                "Coordinates": "-122.7326567,49.1039472"
+            }
+        ]
+    },
+    {
+        "CatchmentNo": "21",
+        "AbbreviatedCode": "21-ES",
+        "CatchmentAreaCode": "121",
+        "Title": "Surrey Newton",
+        "Contractor": "Options Community Services Society",
+        "Storefronts": [
+            {
+                "name": "Surrey - Newton",
+                "id": 1,
+                "Address": "Unit 110 - 7525 King George Boulevard, Surrey, BC V3W 5A8",
+                "Phone": "778-728-0175",
+                "Fax": "TBA",
+                "Email": "centre-surreynewton@workbc.ca",
+                "Website": "https://workbc.ca/WorkBC-Centres/Mainland-Southwest/Surrey-Newton.aspx",
+                "BusinessWebsite": "http://workbccentre-surreynewton.ca",
+                "FrenchServices": "N",
+                "Coordinates": "-122.8460063,49.1395911"
+            }
+        ]
+    },
+    {
+        "CatchmentNo": "22",
+        "AbbreviatedCode": "22-ES",
+        "CatchmentAreaCode": "122",
+        "Title": "South Surrey - White Rock",
+        "Contractor": "M.O.S.A.I.C. Multi-Lingual Orientation Service Association for Immigrant Communities",
+        "Storefronts": [
+            {
+                "name": "Surrey - 152 St",
+                "id": 1,
+                "Address": "108 - 1688 152 Street, Surrey, BC V4A 4N2",
+                "Phone": "604-531-3331",
+                "Fax": "604-531-3340",
+                "Email": "centre-surrey-152@workbc.ca",
+                "Website": "https://www.workbc.ca/WorkBC-Centres/Mainland-Southwest/Surrey-152-St.aspx",
+                "BusinessWebsite": "http://workbccentre-surrey-152.ca",
+                "FrenchServices": "N",
+                "Coordinates": "-122.80089,49.0324361"
+            }
+        ]
+    },
+    {
+        "CatchmentNo": "23",
+        "AbbreviatedCode": "23-ES",
+        "CatchmentAreaCode": "123",
+        "Title": "Langley",
+        "Contractor": "Douglas College",
+        "Storefronts": [
+            {
+                "name": "Langley",
+                "id": 1,
+                "Address": "110-19925 Willowbrook Dr, Langley, BC V2Y 1A7",
+                "Phone": "604-360-4196",
+                "Fax": "604-677-6935",
+                "Email": "centre-langley-willowbrook@workbc.ca",
+                "Website": "https://workbc.ca/WorkBC-Centres/Mainland-Southwest/Langley.aspx",
+                "BusinessWebsite": "http://workbccentre-langley-willowbrook.ca",
+                "FrenchServices": "N",
+                "Coordinates": "-122.6710587,49.1171794"
+            },
+            {
+                "name": "Aldergrove",
+                "id": 2,
+                "Address": "D110 - 26426 Fraser Highway, Aldergrove, BC V4R 0C2 ",
+                "Phone": "604-360-4196",
+                "Fax": "604-677-7620",
+                "Email": "centre-aldergrove@workbc.ca",
+                "Website": "https://workbc.ca/WorkBC-Centres/Mainland-Southwest/Aldergrove.aspx",
+                "BusinessWebsite": "http://workbccentre-aldergrove.ca",
+                "FrenchServices": "N",
+                "Coordinates": "-122.494253,49.0591318"
+            }
+        ]
+    },
+    {
+        "CatchmentNo": "24",
+        "AbbreviatedCode": "24-ES",
+        "CatchmentAreaCode": "124",
+        "Title": "Burnaby",
+        "Contractor": "WCG International Consultants Ltd.",
+        "Storefronts": [
+            {
+                "name": "Burnaby - Metrotown",
+                "id": 1,
+                "Address": "601-4211 Kingsway, Burnaby, BC V5H 1Z6",
+                "Phone": "778-357-0566",
+                "Fax": "TBD",
+                "Email": "centre-burnaby-4211kingsway@workbc.ca",
+                "Website": "https://www.workbc.ca/WorkBC-Centres/Mainland-Southwest/Burnaby-4211-Kingsway.aspx",
+                "BusinessWebsite": "http://workbccentre-burnaby-metrotown.ca",
+                "FrenchServices": "N",
+                "Coordinates": "-123.009824,49.2322951"
+            },
+            {
+                "name": "Burnaby - Brentwood",
+                "id": 2,
+                "Address": "101-3999 Henning Drive, Burnaby, BC V5C 6P9",
+                "Phone": "778-357-0445",
+                "Fax": "TBD",
+                "Email": "centre-burnaby-brentwood@workbc.ca",
+                "Website": "https://workbc.ca/WorkBC-Centres/Mainland-Southwest/Burnaby-Henning.aspx",
+                "BusinessWebsite": "http://workbccentre-burnaby-brentwood.ca",
+                "FrenchServices": "N",
+                "Coordinates": "-123.0151079,49.2654203"
+            },
+            {
+                "name": "Burnaby - Edmonds",
+                "id": 3,
+                "Address": "7297 Kingsway, Burnaby, BC V5E 1G5",
+                "Phone": "604-636-1124",
+                "Fax": "TBD",
+                "Email": "centre-burnaby-7297kingsway@workbc.ca",
+                "Website": "https://www.workbc.ca/WorkBC-Centres/Mainland-Southwest/Burnaby-7297-Kingsway.aspx",
+                "BusinessWebsite": "http://workbccentre-burnaby-edmonds.ca",
+                "FrenchServices": "N",
+                "Coordinates": "-122.9528776,49.2184323"
+            }
+        ]
+    },
+    {
+        "CatchmentNo": "25",
+        "AbbreviatedCode": "25-ES",
+        "CatchmentAreaCode": "125",
+        "Title": "New Westminster",
+        "Contractor": "Fraser Works Co-operative",
+        "Storefronts": [
+            {
+                "name": "New Westminster",
+                "id": 1,
+                "Address": "2nd Floor - 519 Seventh Street, New Westminster, BC V3M 6A7",
+                "Phone": "604-522-9701",
+                "Fax": "604-522-4792",
+                "Email": "centre-newwestminster@workbc.ca",
+                "Website": "https://workbc.ca/WorkBC-Centres/Mainland-Southwest/New-Westminster.aspx",
+                "BusinessWebsite": "http://workbccentre-newwestminster.ca",
+                "FrenchServices": "N",
+                "Coordinates": "-122.9201554,49.2109692"
+            }
+        ]
+    },
+    {
+        "CatchmentNo": "26",
+        "AbbreviatedCode": "26-ES",
+        "CatchmentAreaCode": "126",
+        "Title": "Mission",
+        "Contractor": "MAXIMUS Canada Employment Services Inc.",
+        "Storefronts": [
+            {
+                "name": "Mission",
+                "id": 1,
+                "Address": "Unit 209 - 7336 James Street, Mission, BC V2V 1G2",
+                "Phone": "833-314-1042",
+                "Fax": "604-820-3124",
+                "Email": "centre-mission@workbc.ca",
+                "Website": "https://workbc.ca/WorkBC-Centres/Mainland-Southwest/Mission.aspx",
+                "BusinessWebsite": "http://workbccentre-mission.ca",
+                "FrenchServices": "N",
+                "Coordinates": "-122.3069397,49.1350972"
+            }
+        ]
+    },
+    {
+        "CatchmentNo": "27",
+        "AbbreviatedCode": "27-ES",
+        "CatchmentAreaCode": "127",
+        "Title": "Abbotsford",
+        "Contractor": "MAXIMUS Canada Employment Services Inc.",
+        "Storefronts": [
+            {
+                "name": "Abbotsford",
+                "id": 1,
+                "Address": "#103 - 33255 S Fraser Way  Abbotsford, BC, V2S 2B2",
+                "Phone": "833-314-1030 ",
+                "Fax": "604-852-5074",
+                "Email": "info-abbotsford@workbc.ca ",
+                "Website": "https://www.workbc.ca/WorkBC-Centres/Mainland-Southwest/AbbotsfordEnFrancais.aspx",
+                "BusinessWebsite": "https://workbccentre-abbotsford.ca/",
+                "FrenchServices": "Y",
+                "Coordinates": "-122.3028545,49.050256"
+            }
+        ]
+    },
+    {
+        "CatchmentNo": "28",
+        "AbbreviatedCode": "28-ES",
+        "CatchmentAreaCode": "128",
+        "Title": "Fraser Northeast",
+        "Contractor": "WCG International Consultants Ltd.",
+        "Storefronts": [
+            {
+                "name": "Chilliwack",
+                "id": 1,
+                "Address": "200-45905 Yale Road, Chilliwack, BC V2P 2M6",
+                "Phone": "778-860-5452",
+                "Fax": "604-792-1108",
+                "Email": "centre-chilliwack@workbc.ca",
+                "Website": "https://workbc.ca/WorkBC-Centres/Mainland-Southwest/Chilliwack.aspx",
+                "BusinessWebsite": "http://workbccentre-chilliwack.ca",
+                "FrenchServices": "Y",
+                "Coordinates": "-121.9583882,49.1675974"
+            },
+            {
+                "name": "Hope",
+                "id": 2,
+                "Address": "895 Third Ave, Hope, BC V0X 1L0",
+                "Phone": "604-869-2279",
+                "Fax": "604-869-8208",
+                "Email": "centre-hope@workbc.ca",
+                "Website": "https://workbc.ca/WorkBC-Centres/Mainland-Southwest/Hope.aspx",
+                "BusinessWebsite": "http://workbccentre-hope.ca",
+                "FrenchServices": "N",
+                "Coordinates": "-121.4402278,49.378354"
+            },
+            {
+                "name": "Agassiz",
+                "id": 3,
+                "Address": "7086 Pioneer Ave, Agassiz, BC V0M 1A0",
+                "Phone": "604-796-0266",
+                "Fax": "604-796-0267",
+                "Email": "centre-agassiz@workbc.ca",
+                "Website": "https://workbc.ca/WorkBC-Centres/Mainland-Southwest/Agassiz.aspx",
+                "BusinessWebsite": "http://workbccentre-agassiz.ca",
+                "FrenchServices": "N",
+                "Coordinates": "-121.7635746,49.2385779"
+            }
+        ]
+    },
+    {
+        "CatchmentNo": "29",
+        "AbbreviatedCode": "29-ES",
+        "CatchmentAreaCode": "129",
+        "Title": "Cariboo",
+        "Contractor": "Horton Ventures Inc.",
+        "Storefronts": [
+            {
+                "name": "Quesnel",
+                "id": 1,
+                "Address": "#100 - 488 McLean Street, Quesnel, BC V2J 2P2",
+                "Phone": "250-992-7691",
+                "Fax": "250-992-7692",
+                "Email": "centre-quesnel@workbc.ca",
+                "Website": "https://workbc.ca/WorkBC-Centres/Cariboo/Quesnel.aspx",
+                "BusinessWebsite": "http://workbccentre-quesnel.ca",
+                "FrenchServices": "N",
+                "Coordinates": "-122.4956138,52.9805982"
+            },
+            {
+                "name": "Williams Lake",
+                "id": 2,
+                "Address": "Suite 201 - 172 2nd Avenue North, Williams Lake, V2G 1Z6",
+                "Phone": "250-398-5133",
+                "Fax": "250-398-5103",
+                "Email": "centre-williamslake@workbc.ca",
+                "Website": "https://workbc.ca/WorkBC-Centres/Cariboo/Williams-Lake.aspx",
+                "BusinessWebsite": "http://workbccentre-williamslake.ca",
+                "FrenchServices": "N",
+                "Coordinates": "-122.144173,52.1307746"
+            },
+            {
+                "name": "100 Mile House",
+                "id": 3,
+                "Address": "808 Alpine Avenue, 100 Mile House, BC V0K 2E0",
+                "Phone": "250-395-5121",
+                "Fax": "250-395-5131",
+                "Email": "centre-100milehouse@workbc.ca",
+                "Website": "https://workbc.ca/WorkBC-Centres/Cariboo/100-Mile-House.aspx",
+                "BusinessWebsite": "http://workbccentre-100milehouse.ca",
+                "FrenchServices": "N",
+                "Coordinates": "-121.3001727,51.6346599"
+            },
+            {
+                "name": "Bella Coola",
+                "id": 4,
+                "Address": "750 Bentink Avenue, Bella Coola, BC V0T 1C0",
+                "Phone": "250-799-5743",
+                "Fax": "250 799-5818",
+                "Email": "centre-bellacoola@workbc.ca",
+                "Website": "https://workbc.ca/WorkBC-Centres/Cariboo/Bella-Coola.aspx",
+                "BusinessWebsite": "http://workbccentre-bellacoola.ca",
+                "FrenchServices": "N",
+                "Coordinates": "-126.7597315,52.3721502"
+            }
+        ]
+    },
+    {
+        "CatchmentNo": "30",
+        "AbbreviatedCode": "30-ES",
+        "CatchmentAreaCode": "130",
+        "Title": "Thompson - Nicola",
+        "Contractor": "Community Futures Development Corporation of Thompson Country",
+        "Storefronts": [
+            {
+                "name": "Merritt",
+                "id": 1,
+                "Address": "2099 Quilchena Ave, Merritt, BC V1K 1B8",
+                "Phone": "250-378-5151",
+                "Fax": "250-378-5156",
+                "Email": "centre-merritt@workbc.ca",
+                "Website": "https://workbc.ca/WorkBC-Centres/Thompson-Okanagan/Merritt.aspx",
+                "BusinessWebsite": "http://workbccentre-merritt.ca",
+                "FrenchServices": "N",
+                "Coordinates": "-120.7875664,50.1099558"
+            },
+            {
+                "name": "Lillooet",
+                "id": 2,
+                "Address": "639B Main St., Lillooet, V0K 1V0",
+                "Phone": "250-256-7758",
+                "Fax": "250-256-7928",
+                "Email": "centre-lillooet@workbc.ca",
+                "Website": "https://workbc.ca/WorkBC-Centres/Thompson-Okanagan/Lillooet.aspx",
+                "BusinessWebsite": "http://workbccentre-lillooet.ca",
+                "FrenchServices": "N",
+                "Coordinates": "-121.9347842,50.6932488"
+            },
+            {
+                "name": "Ashcroft",
+                "id": 3,
+                "Address": "308 - 304 Railway Avenue, Ashcroft BC V0K 1A0",
+                "Phone": "250-453-2499",
+                "Fax": "",
+                "Email": "centre-ashcroft@workbc.ca",
+                "Website": "https://workbc.ca/WorkBC-Centres/Thompson-Okanagan/Ashcroft.aspx",
+                "BusinessWebsite": "http://workbccentre-ashcroft.ca",
+                "FrenchServices": "N",
+                "Coordinates": "-121.27961816883898,50.723720402810386"
+            }
+        ]
+    },
+    {
+        "CatchmentNo": "31",
+        "AbbreviatedCode": "31-ES",
+        "CatchmentAreaCode": "131",
+        "Title": "Kamloops - Thompson",
+        "Contractor": "Open Door Social Services Society",
+        "Storefronts": [
+            {
+                "name": "Kamloops - Lansdowne",
+                "id": 1,
+                "Address": "Unit 210 - 450 Lansdowne St, Kamloops, BC V2C 1X8",
+                "Phone": "250-377-3670",
+                "Fax": "250-828-8755",
+                "Email": "centre-kamloops-lansdowne@workbc.ca",
+                "Website": "https://workbc.ca/WorkBC-Centres/Thompson-Okanagan/Kamloops-Lansdowne.aspx",
+                "BusinessWebsite": "http://workbccentre-kamloops-lansdowne.ca",
+                "FrenchServices": "Y",
+                "Coordinates": "-120.3288178,50.6772202"
+            },
+            {
+                "name": "Kamloops - Tranquille",
+                "id": 2,
+                "Address": "795 Tranquille Rd., Kamloops, BC V2B 3J3",
+                "Phone": "250-377-3670",
+                "Fax": "250-377-3659",
+                "Email": "centre-kamloops-tranquille@workbc.ca",
+                "Website": "https://workbc.ca/WorkBC-Centres/Thompson-Okanagan/Kamloops-Tranquille.aspx",
+                "BusinessWebsite": "http://workbccentre-kamloops-tranquille.ca",
+                "FrenchServices": "Y",
+                "Coordinates": "-120.3631851,50.6984055"
+            },
+            {
+                "name": "Clearwater",
+                "id": 3,
+                "Address": "Unit 100 - 240 Park Dr., Clearwater, BC V0E 1N1",
+                "Phone": "250 674-2928",
+                "Fax": "250 674-2938",
+                "Email": "centre-clearwater@workbc.ca",
+                "Website": "https://workbc.ca/WorkBC-Centres/Thompson-Okanagan/Clearwater.aspx",
+                "BusinessWebsite": "http://workbccentre-clearwater.ca",
+                "FrenchServices": "N",
+                "Coordinates": "-120.0403613,51.6510745"
+            },
+            {
+                "name": "Barriere",
+                "id": 4,
+                "Address": "5 - 4480 Barriere Town Road, Barriere, BC V0E 1E0",
+                "Phone": "250 672-0036",
+                "Fax": "250 672-2159",
+                "Email": "centre-barriere@workbc.ca",
+                "Website": "https://workbc.ca/WorkBC-Centres/Thompson-Okanagan/Barriere.aspx",
+                "BusinessWebsite": "http://workbccentre-barriere.ca",
+                "FrenchServices": "N",
+                "Coordinates": "-120.1238526,51.1790342"
+            },
+            {
+                "name": "Chase",
+                "id": 5,
+                "Address": "822 B Shuswap Ave, Chase, BC V0E 1M0",
+                "Phone": "1-800-763-1681",
+                "Fax": "250 679-8117",
+                "Email": "centre-chase@workbc.ca",
+                "Website": "https://workbc.ca/WorkBC-Centres/Thompson-Okanagan/Chase.aspx",
+                "BusinessWebsite": "http://workbccentre-chase.ca",
+                "FrenchServices": "N",
+                "Coordinates": "-119.6879313,50.8202015"
+            }
+        ]
+    },
+    {
+        "CatchmentNo": "32",
+        "AbbreviatedCode": "32-ES",
+        "CatchmentAreaCode": "132",
+        "Title": "Southern Okanagan",
+        "Contractor": "MAXIMUS Canada Employment Services Inc.",
+        "Storefronts": [
+            {
+                "name": "Penticton",
+                "id": 1,
+                "Address": "174 1848 Main Street, Penticton, BC V2A 5H3",
+                "Phone": "833-313-0547",
+                "Fax": "250-493-0185",
+                "Email": "centre-penticton@workbc.ca",
+                "Website": "https://workbc.ca/WorkBC-Centres/Thompson-Okanagan/Penticton.aspx",
+                "BusinessWebsite": "http://workbccentre-penticton.ca",
+                "FrenchServices": "Y",
+                "Coordinates": "-119.5837721,49.4779047"
+            },
+            {
+                "name": "Oliver",
+                "id": 2,
+                "Address": "291 Fairview Road, Oliver, BC V0H 1T0",
+                "Phone": "833-313-1026",
+                "Fax": "250-498-0856",
+                "Email": "centre-oliver@workbc.ca",
+                "Website": "https://workbc.ca/WorkBC-Centres/Thompson-Okanagan/Oliver.aspx",
+                "BusinessWebsite": "http://workbccentre-oliver.ca",
+                "FrenchServices": "N",
+                "Coordinates": "-119.5486875,49.1825047"
+            },
+            {
+                "name": "Princeton",
+                "id": 3,
+                "Address": "206 Vermilion Avenue, Princeton, BC V0X 1W0",
+                "Phone": "833-314-1043",
+                "Fax": "TBA",
+                "Email": "centre-princeton@workbc.ca",
+                "Website": "https://workbc.ca/WorkBC-Centres/Thompson-Okanagan/Princeton.aspx",
+                "BusinessWebsite": "http://workbccentre-princeton.ca",
+                "FrenchServices": "N",
+                "Coordinates": "-120.5087603,49.4573916"
+            },
+            {
+                "name": "Summerland",
+                "id": 4,
+                "Address": "102-7705 Prairie Valley Road, Summerland, BC V0H 1Z4",
+                "Phone": "833-313-1112",
+                "Fax": "250-404-9046",
+                "Email": "centre-summerland@workbc.ca",
+                "Website": "https://workbc.ca/WorkBC-Centres/Thompson-Okanagan/Summerland.aspx",
+                "BusinessWebsite": "http://workbccentre-summerland.ca",
+                "FrenchServices": "N",
+                "Coordinates": "-119.6668736,49.6018853"
+            }
+        ]
+    },
+    {
+        "CatchmentNo": "33",
+        "AbbreviatedCode": "33-ES",
+        "CatchmentAreaCode": "133",
+        "Title": "Central Okanagan",
+        "Contractor": "WCG International Consultants Ltd.",
+        "Storefronts": [
+            {
+                "name": "Kelowna",
+                "id": 1,
+                "Address": "107 - 1835 Gordon Dr, Kelowna, BC V1Y 3H4",
+                "Phone": "778-738-0225",
+                "Fax": "TBD",
+                "Email": "centre-kelowna@workbc.ca",
+                "Website": "https://workbc.ca/WorkBC-Centres/Thompson-Okanagan/Kelowna.aspx",
+                "BusinessWebsite": "http://workbccentre-kelowna.ca",
+                "FrenchServices": "Y",
+                "Coordinates": "-119.4757465,49.8816284"
+            },
+            {
+                "name": "West Kelowna",
+                "id": 2,
+                "Address": "111-3011 Louie Drive, West Kelowna, BC V4T 3E3",
+                "Phone": "778-741-0155",
+                "Fax": "TBD",
+                "Email": "centre-westkelowna@workbc.ca",
+                "Website": "https://workbc.ca/WorkBC-Centres/Thompson-Okanagan/West-Kelowna.aspx",
+                "BusinessWebsite": "http://workbccentre-westkelowna.ca",
+                "FrenchServices": "N",
+                "Coordinates": "-119.6179346,49.8361646"
+            },
+            {
+                "name": "Rutland",
+                "id": 3,
+                "Address": "Unit 40-301 Highway 33, Rutland, BC V1X 1X8",
+                "Phone": "778-738-2909",
+                "Fax": "TBD",
+                "Email": "centre-rutland@workbc.ca",
+                "Website": "https://workbc.ca/WorkBC-Centres/Thompson-Okanagan/Rutland.aspx",
+                "BusinessWebsite": "http://workbccentre-rutland.ca",
+                "FrenchServices": "Y",
+                "Coordinates": "-119.391573,49.8883348"
+            }
+        ]
+    },
+    {
+        "CatchmentNo": "34",
+        "AbbreviatedCode": "34-ES",
+        "CatchmentAreaCode": "134",
+        "Title": "Shuswap - Columbia",
+        "Contractor": "WCG International Consultants Ltd.",
+        "Storefronts": [
+            {
+                "name": "Salmon Arm",
+                "id": 1,
+                "Address": "310 Hudson Ave NE #101, Salmon Arm, BC V1E 1R6",
+                "Phone": "250-804-4770",
+                "Fax": "TBD",
+                "Email": "centre-salmonarm@workbc.ca",
+                "Website": "https://workbc.ca/WorkBC-Centres/Thompson-Okanagan/Salmon-Arm.aspx",
+                "BusinessWebsite": "http://workbccentre-salmonarm.ca",
+                "FrenchServices": "N",
+                "Coordinates": "-119.2808577,50.7019629"
+            },
+            {
+                "name": "Sicamous",
+                "id": 2,
+                "Address": "1217 Shuswap Ave Unit C, Sicamous, BC V0E 2V0",
+                "Phone": "250-836-2655",
+                "Fax": "TBD",
+                "Email": "centre-sicamous@workbc.ca",
+                "Website": "https://workbc.ca/WorkBC-Centres/Thompson-Okanagan/Sicamous.aspx",
+                "BusinessWebsite": "http://workbccentre-sicamous.ca",
+                "FrenchServices": "N",
+                "Coordinates": "-118.9858174,50.8364954"
+            },
+            {
+                "name": "Golden",
+                "id": 3,
+                "Address": "205-421 9 Ave N, Golden, BC V0A 1H2",
+                "Phone": "250-344-5413",
+                "Fax": "250-344-2515",
+                "Email": "centre-golden@workbc.ca",
+                "Website": "https://workbc.ca/WorkBC-Centres/Thompson-Okanagan/Golden.aspx",
+                "BusinessWebsite": "http://workbccentre-golden.ca",
+                "FrenchServices": "N",
+                "Coordinates": "-116.966221,51.299867"
+            },
+            {
+                "name": "Revelstoke",
+                "id": 4,
+                "Address": "117 Campbell Ave, Revelstoke, BC V0E 2S0",
+                "Phone": "250-814-0244",
+                "Fax": "TBD",
+                "Email": "centre-revelstoke@workbc.ca",
+                "Website": "https://workbc.ca/WorkBC-Centres/Thompson-Okanagan/Revelstoke.aspx",
+                "BusinessWebsite": "http://workbccentre-revelstoke.ca",
+                "FrenchServices": "N",
+                "Coordinates": "-118.1966479,50.9999382"
+            }
+        ]
+    },
+    {
+        "CatchmentNo": "35",
+        "AbbreviatedCode": "35-ES",
+        "CatchmentAreaCode": "135",
+        "Title": "West Kootenay - Boundary",
+        "Contractor": "Kootenay Career Development Society",
+        "Storefronts": [
+            {
+                "name": "Trail",
+                "id": 1,
+                "Address": "1499 Bay Avenue, Trail, V1R 4A9",
+                "Phone": "250 512-3001",
+                "Fax": "250 512-3002 ",
+                "Email": "centre-trail@workbc.ca",
+                "Website": "https://workbc.ca/WorkBC-Centres/Kootenay/Trail.aspx",
+                "BusinessWebsite": "http://workbccentre-trail.ca",
+                "FrenchServices": "N",
+                "Coordinates": "-117.7062708,49.0950455"
+            },
+            {
+                "name": "Castlegar",
+                "id": 2,
+                "Address": "1016 4th St, Castlegar, BC V1N 2B2",
+                "Phone": "250-365-6515",
+                "Fax": "250-365-6559",
+                "Email": "centre-castlegar@workbc.ca",
+                "Website": "https://workbc.ca/WorkBC-Centres/Kootenay/Castlegar.aspx",
+                "BusinessWebsite": "http://workbccentre-castlegar.ca",
+                "FrenchServices": "N",
+                "Coordinates": "-117.66396,49.3250614"
+            },
+            {
+                "name": "Grand Forks",
+                "id": 3,
+                "Address": "1647 Central Avenue, Grand Forks, BC V0H 1H0",
+                "Phone": "250-442-2722",
+                "Fax": "250-442-5311",
+                "Email": "centre-grandforks@workbc.ca",
+                "Website": "https://workbc.ca/WorkBC-Centres/Kootenay/Grand-Forks.aspx",
+                "BusinessWebsite": "http://workbccentre-grandforks.ca",
+                "FrenchServices": "N",
+                "Coordinates": "-118.456798,49.0297059"
+            }
+        ]
+    },
+    {
+        "CatchmentNo": "36",
+        "AbbreviatedCode": "36-ES",
+        "CatchmentAreaCode": "136",
+        "Title": "Central Kootenay",
+        "Contractor": "Kootenay Career Development Society",
+        "Storefronts": [
+            {
+                "name": "Creston",
+                "id": 1,
+                "Address": "119 11th Ave N, Creston, BC V0B 1G0",
+                "Phone": "250-428-5655",
+                "Fax": "250 428-5336",
+                "Email": "centre-creston@workbc.ca",
+                "Website": "https://workbc.ca/WorkBC-Centres/Kootenay/Creston.aspx",
+                "BusinessWebsite": "http://workbccentre-creston.ca",
+                "FrenchServices": "N",
+                "Coordinates": "-116.5123108,49.0960462"
+            },
+            {
+                "name": "Nelson",
+                "id": 2,
+                "Address": "#203 - 514 Vernon St, Nelson, V1L 4E7",
+                "Phone": "250 352-6200",
+                "Fax": "250 352-6203",
+                "Email": "centre-nelson@workbc.ca",
+                "Website": "https://workbc.ca/WorkBC-Centres/Kootenay/Nelson.aspx",
+                "BusinessWebsite": "http://workbccentre-nelson.ca",
+                "FrenchServices": "N",
+                "Coordinates": "-117.2939545,49.4930492"
+            },
+            {
+                "name": "Nakusp",
+                "id": 3,
+                "Address": "#205 - 6th Avenue NW, Nakusp, V0G 1R0",
+                "Phone": "250 265-3318",
+                "Fax": "250 265-3378",
+                "Email": "centre-nakusp@workbc.ca",
+                "Website": "https://workbc.ca/WorkBC-Centres/Kootenay/Nakusp.aspx",
+                "BusinessWebsite": "http://workbccentre-nakusp.ca",
+                "FrenchServices": "N",
+                "Coordinates": "-117.8043302,50.2415486"
+            }
+        ]
+    },
+    {
+        "CatchmentNo": "37",
+        "AbbreviatedCode": "37-ES",
+        "CatchmentAreaCode": "137",
+        "Title": "East Kootenay",
+        "Contractor": "Kootenay Employment Services Society",
+        "Storefronts": [
+            {
+                "name": "Fernie",
+                "id": 1,
+                "Address": "302 2nd Avenue, Fernie, V0B 1M0",
+                "Phone": "250-423-4204",
+                "Fax": "250-423-6238",
+                "Email": "centre-fernie@workbc.ca",
+                "Website": "https://workbc.ca/WorkBC-Centres/Kootenay/Fernie.aspx",
+                "BusinessWebsite": "http://workbccentre-fernie.ca",
+                "FrenchServices": "N",
+                "Coordinates": "-115.0628424,49.5014121"
+            },
+            {
+                "name": "Cranbrook",
+                "id": 2,
+                "Address": "1113 Baker Street, Cranbrook, BC V1C 1A7",
+                "Phone": "250-489-5117",
+                "Fax": "250-489-0663",
+                "Email": "centre-cranbrook@workbc.ca",
+                "Website": "https://workbc.ca/WorkBC-Centres/Kootenay/Cranbrook.aspx",
+                "BusinessWebsite": "http://workbccentre-cranbrook.ca",
+                "FrenchServices": "N",
+                "Coordinates": "-115.7654472,49.5121005"
+            },
+            {
+                "name": "Invermere",
+                "id": 3,
+                "Address": "#2 503 7th Ave, Invermere, BC V0A 1K0",
+                "Phone": "250-341-6889",
+                "Fax": "250-341-6886",
+                "Email": "centre-invermere@workbc.ca",
+                "Website": "https://workbc.ca/WorkBC-Centres/Kootenay/Invermere.aspx",
+                "BusinessWebsite": "http://workbccentre-invermere.ca",
+                "FrenchServices": "N",
+                "Coordinates": "-116.0263724,50.5031042"
+            }
+        ]
+    },
+    {
+        "CatchmentNo": "38",
+        "AbbreviatedCode": "38-ES",
+        "CatchmentAreaCode": "138",
+        "Title": "North Okanagan",
+        "Contractor": "Community Futures Development Corporation of the North Okanagan",
+        "Storefronts": [
+            {
+                "name": "Vernon",
+                "id": 1,
+                "Address": "3105 33 Street, Vernon, BC V1T 9P7",
+                "Phone": "250-545-2215 ext 230",
+                "Fax": "250-545-9831",
+                "Email": "centre-vernon@workbc.ca",
+                "Website": "https://workbc.ca/WorkBC-Centres/Thompson-Okanagan/Vernon.aspx",
+                "BusinessWebsite": "http://workbccentre-vernon.ca",
+                "FrenchServices": "N",
+                "Coordinates": "-119.2747108,50.2651153"
+            },
+            {
+                "name": "Enderby",
+                "id": 2,
+                "Address": "#2 - 904 Maud Street, Enderby, BC V0E 1V0",
+                "Phone": "250-838-2324",
+                "Fax": "250-838-0722",
+                "Email": "centre-enderby@workbc.ca",
+                "Website": "https://workbc.ca/WorkBC-Centres/Thompson-Okanagan/Enderby.aspx",
+                "BusinessWebsite": "http://workbccentre-enderby.ca",
+                "FrenchServices": "N",
+                "Coordinates": "-119.1376084,50.5505615"
+            }
+        ]
+    },
+    {
+        "CatchmentNo": "39",
+        "AbbreviatedCode": "39-ES",
+        "CatchmentAreaCode": "139",
+        "Title": "North Coast",
+        "Contractor": "Hecate Strait Employment Development Society",
+        "Storefronts": [
+            {
+                "name": "Prince Rupert - Market",
+                "id": 1,
+                "Address": "125 Market Place, Prince Rupert, BC V8J 1B9",
+                "Phone": "250-624-9498",
+                "Fax": "250-627-4397",
+                "Email": "centre-princerupert@workbc.ca",
+                "Website": "https://www.workbc.ca/WorkBC-Centres/North-Coast-Nechako/Prince-Rupert-Market.aspx",
+                "BusinessWebsite": "http://workbccentre-princerupert.ca",
+                "FrenchServices": "N",
+                "Coordinates": "-130.3205213,54.3173276"
+            },
+            {
+                "name": "Masset",
+                "id": 2,
+                "Address": "1563 Main Street, Masset, BC V0T 1M0",
+                "Phone": "250-626-3236",
+                "Fax": "250-626-3260",
+                "Email": "centre-masset@workbc.ca",
+                "Website": "https://workbc.ca/WorkBC-Centres/North-Coast-Nechako/Masset.aspx",
+                "BusinessWebsite": "http://workbccentre-masset.ca",
+                "FrenchServices": "N",
+                "Coordinates": "-132.1479593,54.0109779"
+            },
+            {
+                "name": "Queen Charlotte",
+                "id": 3,
+                "Address": "101 Causeway, Queen Charlotte, V0T 1S0",
+                "Phone": "250-559-0049",
+                "Fax": "250- 559-7709",
+                "Email": "centre-queencharlotte@workbc.ca",
+                "Website": "https://workbc.ca/WorkBC-Centres/North-Coast-Nechako/Queen-Charlotte.aspx",
+                "BusinessWebsite": "http://workbccentre-queencharlotte.ca",
+                "FrenchServices": "N",
+                "Coordinates": "-132.0703324,53.2534932"
+            }
+        ]
+    },
+    {
+        "CatchmentNo": "40",
+        "AbbreviatedCode": "40-ES",
+        "CatchmentAreaCode": "140",
+        "Title": "Northwest",
+        "Contractor": "Northwest Training Ltd.",
+        "Storefronts": [
+            {
+                "name": "Terrace - 1st Ave",
+                "id": 1,
+                "Address": "201 4622 Greig Avenue, Terrace, BC V8G 1M9",
+                "Phone": "250-638-8108",
+                "Fax": "250-638-7212",
+                "Email": "centre-terrace@workbc.ca",
+                "Website": "https://workbc.ca/WorkBC-Centres/North-Coast-Nechako/Terrace.aspx",
+                "BusinessWebsite": "http://workbccentre-terrace.ca",
+                "FrenchServices": "N",
+                "Coordinates": "-128.5889716,54.5157842"
+            },
+            {
+                "name": "Kitimat",
+                "id": 2,
+                "Address": "562 Mountainview Square, Kitimat, BC V8C 2N2",
+                "Phone": "250-632-6581",
+                "Fax": "250-632-6561",
+                "Email": "centre-kitimat@workbc.ca",
+                "Website": "https://workbc.ca/WorkBC-Centres/North-Coast-Nechako/Kitimat.aspx",
+                "BusinessWebsite": "http://workbccentre-kitimat.ca",
+                "FrenchServices": "N",
+                "Coordinates": "-128.6496135,54.0510794"
+            }
+        ]
+    },
+    {
+        "CatchmentNo": "41",
+        "AbbreviatedCode": "41-ES",
+        "CatchmentAreaCode": "141",
+        "Title": "Bulkley - Upper Skeena",
+        "Contractor": "Kopar Administration Ltd.",
+        "Storefronts": [
+            {
+                "name": "Smithers",
+                "id": 1,
+                "Address": "3851 First ave, Smithers, BC V0J 2N3",
+                "Phone": "1-877-564-3545",
+                "Fax": "",
+                "Email": "centre-smithers@workbc.ca",
+                "Website": "https://workbc.ca/WorkBC-Centres/North-Coast-Nechako/Smithers.aspx",
+                "BusinessWebsite": "http://workbccentre-smithers.ca",
+                "FrenchServices": "N",
+                "Coordinates": "-127.1732256,54.7801874"
+            },
+            {
+                "name": "Hazelton",
+                "id": 2,
+                "Address": "4345 Field St, Hazelton, BC V0J 1Y0",
+                "Phone": "250-842-6110",
+                "Fax": "250-842-2282",
+                "Email": "centre-hazelton@workbc.ca",
+                "Website": "https://workbc.ca/WorkBC-Centres/North-Coast-Nechako/Hazelton.aspx",
+                "BusinessWebsite": "http://workbccentre-hazelton.ca",
+                "FrenchServices": "N",
+                "Coordinates": "-127.6752791,55.2565141"
+            }
+        ]
+    },
+    {
+        "CatchmentNo": "42",
+        "AbbreviatedCode": "42-ES",
+        "CatchmentAreaCode": "142",
+        "Title": "Lakes District",
+        "Contractor": "Progressive Employment Services Ltd.",
+        "Storefronts": [
+            {
+                "name": "Vanderhoof",
+                "id": 1,
+                "Address": "139 1st Street East, Vanderhoof, BC V0J 3A0",
+                "Phone": "250-567-5785",
+                "Fax": "250-567-5784",
+                "Email": "centre-vanderhoof@workbc.ca",
+                "Website": "https://workbc.ca/WorkBC-Centres/Cariboo/Vanderhoof.aspx",
+                "BusinessWebsite": "http://workbccentre-vanderhoof.ca",
+                "FrenchServices": "N",
+                "Coordinates": "-124.0077735,54.0139448"
+            },
+            {
+                "name": "Fort St James",
+                "id": 2,
+                "Address": "242-250 Stuart Drive, Fort St James, BC V0J 1P0",
+                "Phone": "250-996-8251",
+                "Fax": "250-996-8236",
+                "Email": "centre-fortstjames@workbc.ca",
+                "Website": "https://workbc.ca/WorkBC-Centres/Cariboo/Fort-St-James.aspx",
+                "BusinessWebsite": "http://workbccentre-fortstjames.ca",
+                "FrenchServices": "N",
+                "Coordinates": "-124.2563406,54.4428665"
+            },
+            {
+                "name": "Burns Lake",
+                "id": 3,
+                "Address": "132C Francois Lake Drive, Burns Lake, BC V0J 1E0",
+                "Phone": "250-692-4219",
+                "Fax": "250-692-4237",
+                "Email": "centre-burnslake@workbc.ca",
+                "Website": "https://workbc.ca/WorkBC-Centres/Cariboo/Burns-Lake.aspx",
+                "BusinessWebsite": "http://workbccentre-burnslake.ca",
+                "FrenchServices": "N",
+                "Coordinates": "-125.7618454,54.2249735"
+            }
+        ]
+    },
+    {
+        "CatchmentNo": "43",
+        "AbbreviatedCode": "43-ES",
+        "CatchmentAreaCode": "143",
+        "Title": "Prince George",
+        "Contractor": "WCG International Consultants Ltd.",
+        "Storefronts": [
+            {
+                "name": "Valemount",
+                "id": 1,
+                "Address": "99 Gorse Street, Valemount, BC V0E 2Z0",
+                "Phone": "250-566-9107",
+                "Fax": "250-566-0011",
+                "Email": "centre-valemount@workbc.ca",
+                "Website": "https://workbc.ca/WorkBC-Centres/Cariboo/Valemount.aspx",
+                "BusinessWebsite": "http://workbccentre-valemount.ca",
+                "FrenchServices": "N",
+                "Coordinates": "-119.2731433,52.8285805"
+            },
+            {
+                "name": "Prince George",
+                "id": 2,
+                "Address": "103-1600 15th Ave, Prince George, BC V2L 3X3",
+                "Phone": "236-601-9111",
+                "Fax": "250-960-1491",
+                "Email": "centre-princegeorge@workbc.ca",
+                "Website": "https://workbc.ca/WorkBC-Centres/Cariboo/Prince-George.aspx",
+                "BusinessWebsite": "http://workbccentre-princegeorge.ca",
+                "FrenchServices": "Y",
+                "Coordinates": "-122.7613399,53.9105975"
+            },
+            {
+                "name": "Mackenzie",
+                "id": 3,
+                "Address": "540 MacKenzie Blvd, Mackenzie, BC V0J 2C0",
+                "Phone": "250-997-7208",
+                "Fax": "250-997-7219",
+                "Email": "centre-mackenzie@workbc.ca",
+                "Website": "https://workbc.ca/WorkBC-Centres/Cariboo/Mackenzie.aspx",
+                "BusinessWebsite": "http://workbccentre-mackenzie.ca",
+                "FrenchServices": "N",
+                "Coordinates": "-123.0956862,55.340119"
+            }
+        ]
+    },
+    {
+        "CatchmentNo": "44",
+        "AbbreviatedCode": "44-ES",
+        "CatchmentAreaCode": "144",
+        "Title": "Northeast",
+        "Contractor": "Employment Connections North Corp.",
+        "Storefronts": [
+            {
+                "name": "Fort St John",
+                "id": 1,
+                "Address": "101-9907 99 Avenue, Fort St John, BC V1J 1V1",
+                "Phone": "1-855-987-0024",
+                "Fax": "250-787-0028",
+                "Email": "centre-fortstjohn@workbc.ca",
+                "Website": "https://workbc.ca/WorkBC-Centres/Northeast/Fort-St-John.aspx",
+                "BusinessWebsite": "http://workbccentre-fortstjohn.ca",
+                "FrenchServices": "N",
+                "Coordinates": "-120.8462465,56.2457817"
+            },
+            {
+                "name": "Fort Nelson",
+                "id": 2,
+                "Address": "5008 49 Ave., Fort Nelson, BC V0C 1R0",
+                "Phone": "250-774-3114",
+                "Fax": "250-774-3768",
+                "Email": "centre-fortnelson@workbc.ca",
+                "Website": "https://workbc.ca/WorkBC-Centres/Northeast/Fort-Nelson.aspx",
+                "BusinessWebsite": "http://workbccentre-fortnelson.ca",
+                "FrenchServices": "N",
+                "Coordinates": "-122.7015872,58.8036029"
+            }
+        ]
+    },
+    {
+        "CatchmentNo": "45",
+        "AbbreviatedCode": "45-ES",
+        "CatchmentAreaCode": "145",
+        "Title": "Peace River South",
+        "Contractor": "Horton Ventures Inc.",
+        "Storefronts": [
+            {
+                "name": "Dawson Creek",
+                "id": 1,
+                "Address": "1105 - 103 Avenue, Dawson Creek, BC V1G 2G8",
+                "Phone": "250 782-1900",
+                "Fax": "250 395-5131",
+                "Email": "centre-dawsoncreek@workbc.ca",
+                "Website": "https://workbc.ca/WorkBC-Centres/Northeast/Dawson-Creek.aspx",
+                "BusinessWebsite": "http://workbccentre-dawsoncreek.ca",
+                "FrenchServices": "N",
+                "Coordinates": "-120.232166,55.7586206"
+            },
+            {
+                "name": "Chetwynd",
+                "id": 2,
+                "Address": "4757 51st Street, Chetwynd, BC V0C 1J0",
+                "Phone": "250 788-1025",
+                "Fax": "250 395-5131",
+                "Email": "centre-chetwynd@workbc.ca",
+                "Website": "https://workbc.ca/WorkBC-Centres/Northeast/Chetwynd.aspx",
+                "BusinessWebsite": "http://workbccentre-chetwynd.ca",
+                "FrenchServices": "N",
+                "Coordinates": "-121.6325075,55.6980867"
+            }
+        ]
+    }
+]

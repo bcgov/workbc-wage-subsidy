@@ -72,12 +72,12 @@ objects:
             value: ${COMMON_SERVICES_AUTH_REALM}
           - name: CHES_HOST
             value: ${CHES_HOST}
-          - name: CHEF_DEV_URL
-            value: ${CHEF_ENV_URL}
-          - name: CHEF_TEST_URL
-            value: ${CHEF_ENV_URL}
+          - name: CHEFS_URL
+            value: ${CHEFS_URL}
           - name: STATIC_URL
             value: ${STATIC_URL}
+          - name: S3_STATIC_IMG_URL
+            value: ${S3_STATIC_IMG_URL}
           image: ${NAME}-form-api:${TAG}
           livenessProbe:
             failureThreshold: 3
@@ -134,11 +134,11 @@ objects:
     strategy:
       resources:
         limits:
-          cpu: 20m
-          memory: 80Mi
+          cpu: 50m
+          memory: 100Mi
         requests:
-          cpu: 10m
-          memory: 65Mi
+          cpu: 40m
+          memory: 80Mi
     template:
       metadata:
         creationTimestamp: null
@@ -203,6 +203,8 @@ objects:
             value: ${HAVE_EMPLOYEE_HASH}
           - name: NEED_EMPLOYEE_HASH
             value: ${NEED_EMPLOYEE_HASH}
+          - name: CLAIM_HASH
+            value: ${CLAIM_HASH}
           - name: COMMON_SERVICES_KEYCLOAK_AUTH
             value: ${COMMON_SERVICES_KEYCLOAK_AUTH}
           - name: COMMON_SERVICES_AUTH_REALM
@@ -211,8 +213,18 @@ objects:
             value: ${CDOGS_CLIENT}
           - name: CDOGS_CLIENT_SECRET
             value: ${CDOGS_CLIENT_SECRET}
+          - name: CUSTOM_AUTH_REALM
+            value: ${CUSTOM_AUTH_REALM}
+          - name: CHEFS_CLIENT
+            value: ${CHEFS_CLIENT}
+          - name: CHEFS_CLIENT_SECRET
+            value: ${CHEFS_CLIENT_SECRET}
           - name: CDOGS_URL
             value: ${CDOGS_URL}
+          - name: CHEFS_URL
+            value: ${CHEFS_URL}
+          - name: S3_STATIC_IMG_URL
+            value: ${S3_STATIC_IMG_URL}
           livenessProbe:
             failureThreshold: 3
             initialDelaySeconds: 300
@@ -231,11 +243,11 @@ objects:
             timeoutSeconds: 1
           resources:
             limits:
-              cpu: 20m
-              memory: 80Mi
+              cpu: 50m
+              memory: 100Mi
             requests:
-              cpu: 10m
-              memory: 65Mi
+              cpu: 40m
+              memory: 80Mi
     test: false
     triggers:
     - type: ConfigChange
@@ -400,11 +412,11 @@ objects:
     strategy:
       resources:
         limits:
-          cpu: 10m
-          memory: 75Mi
+          cpu: 50m
+          memory: 100Mi
         requests:
-          cpu: 5m
-          memory: 60Mi
+          cpu: 40m
+          memory: 80Mi
     template:
       metadata:
         creationTimestamp: null
@@ -421,6 +433,16 @@ objects:
             value: ${REACT_APP_KEYCLOAK_REALM}
           - name: REACT_APP_ADMIN_API_URL
             value: ${REACT_APP_ADMIN_API_URL}
+          - name: REACT_ADMIN_TOKEN
+            valueFrom:
+              secretKeyRef:
+                key: ${NPM_INSTALL_TOKENS_SECRET_NAME}
+                name: REACT_ADMIN_TOKEN
+          - name: FONT_AWESOME_TOKEN
+            valueFrom:
+              secretKeyRef:
+                key: ${NPM_INSTALL_TOKENS_SECRET_NAME}
+                name: FONT_AWESOME_TOKEN
           image: ${NAME}-admin-client:${TAG}
           livenessProbe:
             failureThreshold: 3
@@ -444,11 +466,11 @@ objects:
             timeoutSeconds: 1
           resources:
             limits:
-              cpu: 10m
-              memory: 75Mi
+              cpu: 50m
+              memory: 100Mi
             requests:
-              cpu: 5m
-              memory: 60Mi
+              cpu: 40m
+              memory: 80Mi
     test: false
     triggers:
     - type: ConfigChange
@@ -498,14 +520,18 @@ objects:
             value: ${REACT_APP_KEYCLOAK_URL}
           - name: REACT_APP_KEYCLOAK_REALM
             value: ${REACT_APP_KEYCLOAK_REALM}
-          - name: REACT_APP_HAVE_EMPLOYEE_URL
-            value: ${REACT_APP_HAVE_EMPLOYEE_URL}
-          - name: REACT_APP_NEED_EMPLOYEE_URL
-            value: ${REACT_APP_NEED_EMPLOYEE_URL}
-          - name: REACT_APP_CLAIM_URL
-            value: ${REACT_APP_CLAIM_URL}
           - name: REACT_APP_VIEW_URL
             value: ${REACT_APP_VIEW_URL}
+          - name: REACT_ADMIN_TOKEN
+            valueFrom:
+              secretKeyRef:
+                key: ${NPM_INSTALL_TOKENS_SECRET_NAME}
+                name: REACT_ADMIN_TOKEN
+          - name: FONT_AWESOME_TOKEN
+            valueFrom:
+              secretKeyRef:
+                key: ${NPM_INSTALL_TOKENS_SECRET_NAME}
+                name: FONT_AWESOME_TOKEN
           image: ${NAME}-employer-client:${TAG}
           livenessProbe:
             failureThreshold: 3
@@ -719,6 +745,10 @@ parameters:
   displayName: Need Employee Hash
   name: NEED_EMPLOYEE_HASH
   value: ""
+- description: This is the Hash for the Claim form PDF on CDOGS
+  displayName: Claim Hash
+  name: CLAIM_HASH
+  value: ""
 - description: Common Services Keycloak Auth
   displayName: Common Services Keycloak Auth
   name: COMMON_SERVICES_KEYCLOAK_AUTH
@@ -726,6 +756,10 @@ parameters:
 - description: Common Services Auth Realm
   displayName: Common Services Auth Realm
   name: COMMON_SERVICES_AUTH_REALM
+  value: ""
+- description: Custom Auth Realm
+  displayName: Custom Auth Realm
+  name: CUSTOM_AUTH_REALM
   value: ""
 - description: CDOGS Client
   displayName: CDOGS Client
@@ -735,6 +769,14 @@ parameters:
   displayName: CDOGS Client Secret
   name: CDOGS_CLIENT_SECRET
   value: ""
+- description: CHEFS Client
+  displayName: CHEFS Client
+  name: CHEFS_CLIENT
+  value: ""
+- description: CHEFS Client Secret
+  displayName: CHEFS Client Secret
+  name: CHEFS_CLIENT_SECRET
+  value: ""
 - description: CDOGS URL
   displayName: CDOGS URL
   name: CDOGS_URL
@@ -742,6 +784,10 @@ parameters:
 - description: CHEFS URL
   displayName: CHEFS URL
   name: CHEFS_URL
+  value: ""
+- description: S3 Bucket Static Image URL
+  displayName: S3 Bucket Static Image URL
+  name: S3_STATIC_IMG_URL
   value: ""
 - description: Have Employee ID
   displayName: Have Employee ID
@@ -787,18 +833,6 @@ parameters:
   displayName: Data Provider URL
   name: REACT_APP_DATA_PROVIDER_URL
   value: ""
-- description: React App Have Employee URL
-  displayName: React App Have Employee URL
-  name: REACT_APP_HAVE_EMPLOYEE_URL
-  value: ""
-- description: React App Need Employee URL
-  displayName: React App Need Employee URL
-  name: REACT_APP_NEED_EMPLOYEE_URL
-  value: ""
-- description: React App Claim URL
-  displayName: React App Claim URL
-  name: REACT_APP_CLAIM_URL
-  value: ""
 - description: React App Draft URL
   displayName: React App Draft URL
   name: REACT_APP_DRAFT_URL
@@ -806,4 +840,12 @@ parameters:
 - description: React App View URL
   displayName: React App View URL
   name: REACT_APP_VIEW_URL
+  value: ""
+- description: S3 Static Image URL
+  displayName: S3 Static Image URL
+  name: S3_STATIC_IMG_URL
+  value: ""
+- description: Secret containing the npm install tokens (react-admin, fontawesome, etc)
+  displayName: NPM Install Tokens Secret Name
+  name: NPM_INSTALL_TOKENS_SECRET_NAME
   value: ""
