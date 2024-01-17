@@ -18,11 +18,11 @@ export const getPermission = async (req: any, res: express.Response) => {
         if (!guid) {
             return res.status(403).send("Access denied")
         }
-        const permissionResponse = await permissionService.getPermission(guid, isIDIR)
+        let permissionResponse = await permissionService.getPermission(guid, isIDIR)
         if (!permissionResponse) {
             return res.status(500).send("Server Error")
         }
-        permissionResponse.filter(
+        permissionResponse = permissionResponse.filter(
             (item: any) =>
                 // Only support catchments 1 - 45.
                 item.Application === "WGS" && Number(item.Catchment) > 100 && Number(item.Catchment) < 146
