@@ -10,8 +10,8 @@ const Header = () => (
                 style={{ marginTop: "-8px" }}
             />
             <h2>WorkBC Wage Subsidy</h2>
-            <div aria-label="This application is currently in Beta phase" className="Beta-PhaseBanner">
-                {import.meta.env.VITE_REACT_ENVIRONMENT || "Beta"}
+            <div aria-label="The current environment" className="Beta-PhaseBanner">
+                {import.meta.env.VITE_REACT_ENVIRONMENT === "PRODUCTION" ? "" : import.meta.env.VITE_REACT_ENVIRONMENT}
             </div>
         </div>
         <div className="other">
