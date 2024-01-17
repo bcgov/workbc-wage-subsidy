@@ -10,6 +10,7 @@ import Logo from "./Logo"
 import Tag from "./Tag"
 import { CustomUserMenu } from "./CustomUserMenu"
 import UserProfileModal from "./UserProfileModal"
+import EmployerHandbook from "./assets/Wage-Subsidy-Handbook.pdf"
 
 export const Header = (props: HeaderProps) => {
     const { menu = defaultMenu, toolbar = defaultToolbar, userMenu = defaultUserMenu } = useContainerLayout(props)
@@ -89,7 +90,7 @@ export const Header = (props: HeaderProps) => {
                                 textDecoration: "underline"
                             }
                         }}
-                        onClick={() => console.log("TODO!")}
+                        onClick={() => window.open(EmployerHandbook)}
                     >
                         <FontAwesomeIcon icon={faBookOpenReader} size="2x" style={{ marginRight: 15 }} />
                         Employer Handbook
