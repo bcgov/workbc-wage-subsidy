@@ -28,20 +28,20 @@ const Intro = () => {
                 onRequestClose={closeModal}
                 contentLabel="More information about the WorkBC Wage Subsidy"
             >
-                <h2>Wage Subsidy Benefits for Employers</h2>
+                <h2>Wage Subsidy Benefits</h2>
                 <Box paddingLeft="1em">
                     <p>Wage Subsidy offers employers:</p>
                     <ul>
-                        <li>A portion of employee wages</li>
-                        <li>Support for ongoing operations and expansion</li>
+                        <li>Reduced cost of hiring and training a new employee</li>
+                        <li>Coverage of a portion of employee wages</li>
+                        <li>Fill vacant positions</li>
                         <li>Disability supports to reduce work-related barriers for an employee</li>
-                        <li>An opportunity to:</li>
-                        <ul>
-                            <li>Re-hire laid off employees</li>
-                            <li>Hire new employees</li>
-                            <li>Better connect job seekers and employers to meet hiring needs</li>
-                        </ul>
-                        <li>Job Seeker Eligibility: All residents of B.C. who are not employed at all</li>
+                    </ul>
+                    <p>Wage Subsidy offers job seekers:</p>
+                    <ul>
+                        <li>Paid work experience opportunities</li>
+                        <li>On-the-job training</li>
+                        <li>Possible long-term employment options</li>
                     </ul>
                 </Box>
             </BCGovModal>
