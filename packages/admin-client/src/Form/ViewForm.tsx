@@ -122,28 +122,6 @@ export const ViewForm = () => {
                         >
                             <BackButton resource={resource} />
                             <StatusDropdown record={record} resource={resource} onChange={handleStatusChange} />
-                            <Box style={{ display: "flex", width: "100%", justifyContent: "right" }}>
-                                <Tooltip title={"Open form in new tab"}>
-                                    <span>
-                                        <Button
-                                            onClick={(event) => {
-                                                window.open(formUrl)
-                                            }}
-                                            sx={{ minWidth: "4em" }}
-                                            aria-label="Open form in new tab"
-                                        >
-                                            <FontAwesomeIcon
-                                                icon={faUpRightFromSquare}
-                                                style={{
-                                                    color: COLOURS.LIGHTBLUE_TEXT,
-                                                    padding: "0.65em 0em",
-                                                    height: "21px"
-                                                }}
-                                            />
-                                        </Button>
-                                    </span>
-                                </Tooltip>
-                            </Box>
                         </Box>
                         &nbsp;
                     </div>
