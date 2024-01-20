@@ -62,23 +62,6 @@ export const ViewForm = () => {
                 >
                     <Box style={{ display: "flex", marginTop: "1em" }}>
                         <BackButton resource={resource} />
-                        <Box style={{ display: "flex", width: "100%", justifyContent: "right" }}>
-                            <Tooltip title="Open form in new tab">
-                                <Button
-                                    onClick={(event) => {
-                                        window.open(formUrl)
-                                    }}
-                                    sx={{ minWidth: "4em" }}
-                                    aria-label="Open form in new tab"
-                                >
-                                    <FontAwesomeIcon
-                                        icon={faUpRightFromSquare}
-                                        size="xl"
-                                        style={{ color: COLOURS.LIGHTBLUE_TEXT, padding: "0.65em 0em" }}
-                                    />
-                                </Button>
-                            </Tooltip>
-                        </Box>
                     </Box>
                 </div>
                 <iframe
