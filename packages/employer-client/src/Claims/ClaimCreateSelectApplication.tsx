@@ -1,4 +1,4 @@
-import { Box, Checkbox, Chip, Stack, Tooltip } from "@mui/material"
+import { Box, Checkbox, Chip, CircularProgress, Stack, Tooltip } from "@mui/material"
 import {
     FunctionField,
     List,
@@ -92,6 +92,13 @@ export const ClaimCreateSelectApplication = (props: any) => {
             errors["city"] = "City is required"
         }
         return errors
+    }
+
+    const circularProgressStyle = {
+        "&.MuiCircularProgress-root": {
+            marginRight: "10px",
+            marginLeft: "2px"
+        }
     }
 
     return (
@@ -228,12 +235,12 @@ export const ClaimCreateSelectApplication = (props: any) => {
                                                         icon={<></>}
                                                         style={{ marginTop: 5, minWidth: 150 }}
                                                         disabled={addressValidated}
-                                                    />
+                                                    ></SaveButton>
                                                     <Button
                                                         label="Create"
                                                         variant="contained"
                                                         style={{ marginTop: 5, minWidth: 150 }}
-                                                        disabled={!addressValidated}
+                                                        disabled={!addressValidated || loading}
                                                         onClick={async () => {
                                                             if (
                                                                 addressValidated &&
@@ -260,7 +267,18 @@ export const ClaimCreateSelectApplication = (props: any) => {
                                                                     })
                                                             }
                                                         }}
-                                                    />
+                                                    >
+                                                        {loading ? (
+                                                            <CircularProgress
+                                                                sx={circularProgressStyle}
+                                                                size={14}
+                                                                thickness={3}
+                                                                color="inherit"
+                                                            />
+                                                        ) : (
+                                                            <></>
+                                                        )}
+                                                    </Button>
                                                 </Stack>
                                                 <a>{validationMessage}</a>
                                             </SimpleForm>
