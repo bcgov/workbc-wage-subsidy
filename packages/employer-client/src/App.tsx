@@ -269,7 +269,8 @@ function App() {
             initOptions={{
                 onLoad: "login-required",
                 pkceMethod: "S256",
-                onTokenExpired: onTokenExpired
+                onTokenExpired: onTokenExpired,
+                checkLoginIframe: false
             }}
         >
             <EmployerProvider>
