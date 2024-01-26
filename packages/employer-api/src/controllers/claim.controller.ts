@@ -128,11 +128,19 @@ export const createLegacyClaim = async (req: any, res: express.Response) => {
             return res.status(403).send("Forbidden")
         }
 
+        const employer = await employerService.getEmployerByID(bceid_guid)
+        if (!employer) {
+            return res.status(403).send("Forbidden")
+        }
+
         const prefillFields = {
             isLegacy: true,
             container: {
                 businessAddress1: req.body.address,
-                employerCity: req.body.city
+                employerCity: req.body.city,
+                employerName: employer.bceid_business_name,
+                employerContact: employer.contact_name,
+                employerPhone: employer.phone_number
             }
         }
 
