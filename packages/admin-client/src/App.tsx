@@ -21,7 +21,8 @@ import { parseCatchments } from "./utils/parseCatchments"
 const initOptions = {
     url: process.env.REACT_APP_KEYCLOAK_URL || "",
     realm: process.env.REACT_APP_KEYCLOAK_REALM || "",
-    clientId: process.env.REACT_APP_KEYCLOAK_CLIENT_ID || ""
+    clientId: process.env.REACT_APP_KEYCLOAK_CLIENT_ID || "",
+    checkLoginIFrame: false
 }
 
 const keycloak = new Keycloak(initOptions)
