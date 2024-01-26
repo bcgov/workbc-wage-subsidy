@@ -242,8 +242,7 @@ function App() {
             initOptions={{
                 onLoad: "login-required",
                 pkceMethod: "S256",
-                onTokenExpired,
-                checkLoginIframe: false
+                onTokenExpired
             }}
         >
             <CatchmentProvider>
