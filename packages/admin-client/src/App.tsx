@@ -21,8 +21,7 @@ import { parseCatchments } from "./utils/parseCatchments"
 const initOptions = {
     url: process.env.REACT_APP_KEYCLOAK_URL || "",
     realm: process.env.REACT_APP_KEYCLOAK_REALM || "",
-    clientId: process.env.REACT_APP_KEYCLOAK_CLIENT_ID || "",
-    checkLoginIFrame: false
+    clientId: process.env.REACT_APP_KEYCLOAK_CLIENT_ID || ""
 }
 
 const keycloak = new Keycloak(initOptions)
@@ -243,7 +242,8 @@ function App() {
             initOptions={{
                 onLoad: "login-required",
                 pkceMethod: "S256",
-                onTokenExpired
+                onTokenExpired,
+                checkLoginIframe: false
             }}
         >
             <CatchmentProvider>
