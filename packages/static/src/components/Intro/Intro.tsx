@@ -23,6 +23,15 @@ const Intro = () => {
                 and on-the-job training to unemployed British Columbians.
             </p>
             <ModalButton text="Find out more" showIcon onClick={openModal} ariaHasPopup="dialog" />
+            <h5>
+                <img
+                    width="20em"
+                    src="/circle-exclamation.svg"
+                    alt=""
+                    style={{ transform: "translate(0.5em, 0.12em)", padding: "0em 1.25em 0em 0em", flex: 1 }}
+                />
+                Please note, Firefox and Safari browsers are not supported with this application.
+            </h5>
             <BCGovModal
                 isOpen={modalIsOpen}
                 onRequestClose={closeModal}
