@@ -173,13 +173,18 @@ export const submission = async (req: express.Request, res: express.Response) =>
                             submissionResponse.submission.submission.data
                         )
                     }
-                    await emailController.sendEmail(submissionResponse.submission.submission).catch((e) => {
-                        console.log(
-                            `error sending notifications for submission id ${req.body.submissionId} - Error:`,
-                            e
-                        )
-                        return res.status(500).send("Internal Server Error")
-                    })
+                    await emailController
+                        .sendEmail(submissionResponse.submission.submission)
+                        .then(() => {
+                            console.log(`successfully sent notifications for submission id ${req.body.submissionId}`)
+                        })
+                        .catch((e) => {
+                            console.log(
+                                `error sending notifications for submission id ${req.body.submissionId} - Error:`,
+                                e
+                            )
+                            return res.status(500).send("Internal Server Error")
+                        })
                 } else if (submissionResponse.submission.draft === true) {
                     console.log(
                         `updating saved application for application id ${application.id} and submission id ${req.body.submissionId}`
