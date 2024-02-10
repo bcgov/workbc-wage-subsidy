@@ -5,7 +5,7 @@ import { useParams } from "react-router"
 import { COLOURS } from "../Colours"
 import BackButton from "../common/components/BackButton/BackButton"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faUpRightFromSquare } from "@fortawesome/pro-solid-svg-icons"
+import { faExclamationCircle } from "@fortawesome/pro-solid-svg-icons"
 import { Loading, useDataProvider, useGetOne, useRefresh } from "react-admin"
 
 export const ViewForm = () => {
@@ -83,6 +83,11 @@ export const ViewForm = () => {
                         bottom: 0
                     }}
                 >
+                    <div>
+                        <FontAwesomeIcon icon={faExclamationCircle} size="sm" />
+                        &nbsp; Some users are reporting issues viewing their {resource} in Safari. If you are
+                        experiencing issues please try using a different browser.
+                    </div>
                     &nbsp;
                 </div>
             </Box>
