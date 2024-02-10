@@ -14,6 +14,8 @@ export const submission = async (req: express.Request, res: express.Response) =>
         if (!formType) {
             return res.status(400).send("Form type parameter required")
         }
+        console.log(`submission event received for form type ${formType} with submission id ${req.body.submissionId}`)
+
         let formPass
         if (formType === "HaveEmployeeForm") {
             formPass = process.env.HAVE_EMPLOYEE_PASS
@@ -21,7 +23,9 @@ export const submission = async (req: express.Request, res: express.Response) =>
             formPass = process.env.NEED_EMPLOYEE_PASS
         } else if (formType === "ClaimForm") {
             formPass = process.env.CLAIM_FORM_PASS
-        } else if (formType === "ServiceProviderClaimForm") formPass = process.env.SP_CLAIM_FORM_PASS
+        } else if (formType === "ServiceProviderClaimForm") {
+            formPass = process.env.SP_CLAIM_FORM_PASS
+        }
 
         if (!formPass) {
             return res.status(400).send("Invalid form type parameter provided")
@@ -33,19 +37,21 @@ export const submission = async (req: express.Request, res: express.Response) =>
         const submissionResponse = await formService.getSubmission(req.body.formId, formPass, req.body.submissionId)
         const submission = submissionResponse?.submission?.submission
         if (!submission) {
-            console.log("formService getSubmission failed")
+            console.log(`failed to obtain submission data for submission id ${req.body.submissionId}`)
             return res.status(500).send("Internal Server Error")
         }
-        console.log("RETRIEVED SUBMISSION")
 
-        // Claim Form submission events //
+        // Claim Form events //
         if (formType === "ClaimForm") {
             let claim = await claimService.getClaimBySubmissionID(req.body.submissionId)
             if (submissionResponse.submission.draft === true) {
                 if (claim?.status !== "Draft") {
+                    console.log(
+                        `claim form full-submission events shouldn't occur - aborting for submission id ${req.body.submissionId}`
+                    )
                     return res.status(500).send("Internal Server Error")
                 }
-                console.log("updating saved claim for id ", claim.id)
+                console.log(`updating saved claim for claim id ${claim.id} and submission id ${req.body.submissionId}`)
                 const updateResult = await claimService.updateClaim(
                     claim.id,
                     "Draft",
@@ -53,7 +59,9 @@ export const submission = async (req: express.Request, res: express.Response) =>
                     false
                 )
                 if (updateResult === 1) {
-                    console.log("claim record update successful for id ", claim.id)
+                    console.log(
+                        `claim record update successful for claim id ${claim.id} and submission id ${req.body.submissionId}`
+                    )
                     return res.status(200).send()
                 }
                 console.log("Unable to update claim database entry")
@@ -76,19 +84,21 @@ export const submission = async (req: express.Request, res: express.Response) =>
                         createDraftResult.id
                     )
                     if (addResult === 1) {
-                        console.log("claim record update successful")
+                        console.log(`claim record update successful for submission id ${req.body.submissionId}`)
                         // Get the newly added record
                         claim = await claimService.getServiceProviderClaimByInternalId(serviceProviderInternalID)
                         if (claim === null) {
-                            console.log("Error retrieving new claim")
+                            console.log(`error retrieving new claim for submission id ${req.body.submissionId}`)
                             return res.status(500).send("Internal Server Error")
                         }
                     } else {
-                        console.log("Unable to update claim database entry")
+                        console.log(`unable to update claim database entry for submission id ${req.body.submissionId}`)
                         return res.status(500).send("Internal Server Error")
                     }
                 } else {
-                    console.log("Unable to create new service provider claim form")
+                    console.log(
+                        `unable to create new service provider claim form for submission id ${req.body.submissionId}`
+                    )
                     return res.status(500).send("Internal Server Error")
                 }
             }
@@ -101,8 +111,11 @@ export const submission = async (req: express.Request, res: express.Response) =>
                         applicationType: "Claims"
                     }
                 })
+                .then(() => {
+                    console.log(`successfully sent notifications for submission id ${req.body.submissionId}`)
+                })
                 .catch((e) => {
-                    console.log("Error sending notifications", e)
+                    console.log(`error sending notifications for submission id ${req.body.submissionId} - Error:`, e)
                     return res.status(500).send("Internal Server Error")
                 })
             return res.status(200).send()
@@ -111,31 +124,35 @@ export const submission = async (req: express.Request, res: express.Response) =>
         // Service Provider Claim Form draft submission events - triggered on calculator approval //
         if (formType === "ServiceProviderClaimForm") {
             if (submission.data.customEvent !== true) {
-                console.log("not a custom event - ignoring")
+                console.log(`not a custom event - ignoring submission id ${req.body.submissionId}`)
                 return res.status(200).send("not a custom event - ignoring")
             }
             if (submissionResponse.submission.draft !== true) {
-                console.log("service provider claim form submission events should not occur")
-                return res.status(400).send("service provider claim form submission events should not occur")
+                console.log(
+                    `service provider claim form full-submission events should not occur - aborting for submission id ${req.body.submissionId}`
+                )
+                return res.status(400).send("service provider claim form full-submission events should not occur")
             }
             // Update the claim form entry //
             const updateResult = await claimService.updateServiceProviderClaim(submissionResponse)
             if (updateResult === 1) {
-                console.log("claim record update successful")
+                console.log(`claim record update successful for submission id ${req.body.submissionId}`)
                 return res.status(200).send()
             }
 
-            console.log("Unable to update claim database entry")
+            console.log(`unable to update claim database entry for submission id ${req.body.submissionId}`)
             return res.status(500).send("Internal Server Error")
         }
 
-        // Application forms //
+        // Application form events //
         if (formType === "HaveEmployeeForm" || formType === "NeedEmployeeForm") {
             const application = await applicationService.getApplicationBySubmissionID(req.body.submissionId)
             if (application?.status === "Draft") {
                 let updateResult
                 if (submissionResponse.submission.draft === false) {
-                    console.log("updating submitted application for id ", application.id)
+                    console.log(
+                        `updating submitted application for application id ${application.id} and submission id ${req.body.submissionId}`
+                    )
                     updateResult = await applicationService.updateApplication(
                         application.id,
                         "New",
@@ -156,9 +173,17 @@ export const submission = async (req: express.Request, res: express.Response) =>
                             submissionResponse.submission.submission.data
                         )
                     }
-                    await emailController.sendEmail(submissionResponse.submission.submission)
+                    await emailController.sendEmail(submissionResponse.submission.submission).catch((e) => {
+                        console.log(
+                            `error sending notifications for submission id ${req.body.submissionId} - Error:`,
+                            e
+                        )
+                        return res.status(500).send("Internal Server Error")
+                    })
                 } else if (submissionResponse.submission.draft === true) {
-                    console.log("updating saved application for id ", application.id)
+                    console.log(
+                        `updating saved application for application id ${application.id} and submission id ${req.body.submissionId}`
+                    )
                     updateResult = await applicationService.updateApplication(
                         application.id,
                         "Draft",
@@ -167,13 +192,21 @@ export const submission = async (req: express.Request, res: express.Response) =>
                     )
                 }
                 if (updateResult === 1) {
-                    console.log("application record update successful for id ", application.id)
+                    console.log(
+                        `application record update successful for id ${application.id} and submission id ${req.body.submissionId}`
+                    )
                     return res.status(200).send()
                 }
 
-                console.log("unable to update application database entry for id ", application.id)
+                console.log(
+                    `unable to update application database entry for id ${application.id} and submission id ${req.body.submissionId}`
+                )
                 return res.status(500).send("Internal Server Error")
             }
+            console.log(
+                `application record is not in Draft status - aborting for submission id ${req.body.submissionId}`
+            )
+            return res.status(500).send("Internal Server Error")
         }
 
         return res.status(200).send()
