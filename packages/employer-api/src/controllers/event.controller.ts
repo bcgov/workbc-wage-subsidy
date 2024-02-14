@@ -147,6 +147,10 @@ export const submission = async (req: express.Request, res: express.Response) =>
         // Application form events //
         if (formType === "HaveEmployeeForm" || formType === "NeedEmployeeForm") {
             const application = await applicationService.getApplicationBySubmissionID(req.body.submissionId)
+            if (!application) {
+                console.log(`application record not found - aborting for submission id ${req.body.submissionId}`)
+                return res.status(404).send()
+            }
             if (application?.status === "Draft") {
                 let updateResult
                 if (submissionResponse.submission.draft === false) {
@@ -198,13 +202,13 @@ export const submission = async (req: express.Request, res: express.Response) =>
                 }
                 if (updateResult === 1) {
                     console.log(
-                        `application record update successful for id ${application.id} and submission id ${req.body.submissionId}`
+                        `application record update successful for application id ${application.id} and submission id ${req.body.submissionId}`
                     )
                     return res.status(200).send()
                 }
 
                 console.log(
-                    `unable to update application database entry for id ${application.id} and submission id ${req.body.submissionId}`
+                    `unable to update application database entry for application id ${application.id} and submission id ${req.body.submissionId}`
                 )
                 return res.status(500).send("Internal Server Error")
             }
