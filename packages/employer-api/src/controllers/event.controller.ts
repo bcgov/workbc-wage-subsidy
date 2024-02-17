@@ -6,6 +6,7 @@ import * as claimService from "../services/claim.service"
 import * as employerService from "../services/employer.service"
 import * as formService from "../services/form.service"
 import * as emailController from "./email.controller"
+import * as geocoderService from "../services/geocoder.service"
 
 export const submission = async (req: express.Request, res: express.Response) => {
     try {
@@ -157,6 +158,57 @@ export const submission = async (req: express.Request, res: express.Response) =>
                     console.log(
                         `updating submitted application for application id ${application.id} and submission id ${req.body.submissionId}`
                     )
+                    // Route the catchment & storefront for the submitted application //
+                    // Use the workplace address if provided, otherwise use the business address //
+                    let address
+                    let city
+                    let province
+                    const workplaceContainer = submission?.data?.container
+                    if (workplaceContainer.addressAlt && workplaceContainer.cityAlt && workplaceContainer.provinceAlt) {
+                        address = workplaceContainer.addressAlt
+                        city = workplaceContainer.cityAlt
+                        province = workplaceContainer.provinceAlt
+                    } else if (
+                        submission.data.businessAddress &&
+                        submission.data.businessCity &&
+                        submission.data.businessProvince
+                    ) {
+                        address = submission.data.businessAddress
+                        city = submission.data.businessCity
+                        province = submission.data.businessProvince
+                    }
+                    console.log(
+                        `address for submission id ${req.body.submissionId} - Address: ${address}, City: ${city}, Province: ${province}`
+                    )
+                    const { Score, Catchment, Storefront } = await geocoderService.geocodeAddress(
+                        address,
+                        city,
+                        province
+                    )
+                    console.log(
+                        `address validation result for submission id ${req.body.submissionId} - Score: ${Score}, Catchment: ${Catchment}, Storefront: ${Storefront}`
+                    )
+                    if (Score && Catchment && Storefront) {
+                        if (Score >= 95) {
+                            const newDataObj = Object.assign(submissionResponse.submission.submission.data, {
+                                catchmentNo: Catchment,
+                                storefrontId: Storefront,
+                                catchmentNoStoreFront: `${Catchment}-${Storefront}`,
+                                matchedToCentre: `${Catchment}-${Storefront}`
+                            })
+                            submissionResponse.submission.submission.data = newDataObj // update the object used for updating the application record
+                        } else {
+                            console.log(
+                                `insufficient address validation score for application submission id ${application.form_submission_id} - this shouldn't happen!`
+                            )
+                        }
+                    } else {
+                        console.log(
+                            `insufficient results returned from address validation for submission id ${application.form_submission_id} - this shouldn't happen!`
+                        )
+                    }
+
+                    // Update the application //
                     updateResult = await applicationService.updateApplication(
                         application.id,
                         "New",
