@@ -106,7 +106,7 @@ export const ApplicationList = (props: any) => {
                                         />
                                     }
                                     sort={{
-                                        field: "form_submitted_date,updated_date,created_date",
+                                        field: "updated_date,form_submitted_date,created_date",
                                         order: "DESC"
                                     }}
                                 >
