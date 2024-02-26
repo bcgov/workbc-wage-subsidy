@@ -144,7 +144,10 @@ const UserProfileModal: React.FC<UserProfileModalProps> = ({ isOpen, onRequestCl
                                         source="phone_number"
                                         label="Phone Number"
                                         sx={{ minWidth: "20em" }}
-                                        validate={maxLength(12)}
+                                        validate={regex(
+                                            /^\d{10}/,
+                                            "Enter in the format: 1112223333"
+                                        )}
                                     />
                                     <StyledTextInput
                                         source="contact_email"
@@ -158,7 +161,10 @@ const UserProfileModal: React.FC<UserProfileModalProps> = ({ isOpen, onRequestCl
                                         source="fax_number"
                                         label="Fax Number"
                                         sx={{ minWidth: "20em" }}
-                                        validate={maxLength(12)}
+                                        validate={regex(
+                                            /^\d{10}/,
+                                            "Enter in the format: 1112223333"
+                                        )}
                                     />
                                     <StyledTextInput
                                         source="cra_business_number"
@@ -166,7 +172,7 @@ const UserProfileModal: React.FC<UserProfileModalProps> = ({ isOpen, onRequestCl
                                         sx={{ minWidth: "20em" }}
                                         validate={regex(
                                             /^[0-9]{9}[A-Z]{2}[0]{3}[1]/,
-                                            "Must have format: [0-9]{9}[A-Z]{2}[0]{3}[1]"
+                                            "Enter in the format: 123456789BC0001"
                                         )}
                                     />
                                 </Stack>
@@ -206,7 +212,10 @@ const UserProfileModal: React.FC<UserProfileModalProps> = ({ isOpen, onRequestCl
                                     source="postal_code"
                                     label="Postal Code"
                                     sx={{ maxWidth: "20em" }}
-                                    validate={maxLength(255)}
+                                    validate={regex(
+                                        /[ABCEGHJ-NPRSTVXY]\d[ABCEGHJ-NPRSTV-Z][ -]?\d[ABCEGHJ-NPRSTV-Z]\d/,
+                                        "Enter in the format: A1A 1A1"
+                                    )}
                                 />
                             </Stack>
                             <h3>
