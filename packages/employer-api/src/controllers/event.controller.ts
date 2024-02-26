@@ -164,7 +164,7 @@ export const submission = async (req: express.Request, res: express.Response) =>
                     let city
                     let province
                     const workplaceContainer = submission?.data?.container
-                    if (workplaceContainer.addressAlt && workplaceContainer.cityAlt && workplaceContainer.provinceAlt) {
+                    if (workplaceContainer?.addressAlt && workplaceContainer.cityAlt && workplaceContainer.provinceAlt) {
                         address = workplaceContainer.addressAlt
                         city = workplaceContainer.cityAlt
                         province = workplaceContainer.provinceAlt
