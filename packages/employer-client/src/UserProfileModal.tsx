@@ -212,7 +212,10 @@ const UserProfileModal: React.FC<UserProfileModalProps> = ({ isOpen, onRequestCl
                                     source="postal_code"
                                     label="Postal Code"
                                     sx={{ maxWidth: "20em" }}
-                                    validate={maxLength(255)}
+                                    validate={regex(
+                                        /[ABCEGHJ-NPRSTVXY]\d[ABCEGHJ-NPRSTV-Z][ -]?\d[ABCEGHJ-NPRSTV-Z]\d/,
+                                        "Enter in the format: A1A 1A1"
+                                    )}
                                 />
                             </Stack>
                             <h3>
