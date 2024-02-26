@@ -221,10 +221,14 @@ const UserProfileModal: React.FC<UserProfileModalProps> = ({ isOpen, onRequestCl
                                     source="postal_code"
                                     label="Postal Code"
                                     sx={{ maxWidth: "20em" }}
-                                    validate={regex(
-                                        /^[ABCEGHJ-NPRSTVXY]\d[ABCEGHJ-NPRSTV-Z][ -]?\d[ABCEGHJ-NPRSTV-Z]\d/,
-                                        "Enter in the format: A1A 1A1"
-                                    )}
+                                    validate={[
+                                        minLength(6),
+                                        maxLength(7), 
+                                        regex(
+                                            /^[ABCEGHJ-NPRSTVXY]\d[ABCEGHJ-NPRSTV-Z][ -]?\d[ABCEGHJ-NPRSTV-Z]\d/,
+                                            "Enter in the format: A1A 1A1"
+                                        )
+                                    ]}
                                 />
                             </Stack>
                             <h3>
@@ -256,10 +260,14 @@ const UserProfileModal: React.FC<UserProfileModalProps> = ({ isOpen, onRequestCl
                                     source="workplace_postal_code"
                                     label="Postal Code"
                                     sx={{ maxWidth: "20em" }}
-                                    validate={regex(
-                                        /^[ABCEGHJ-NPRSTVXY]\d[ABCEGHJ-NPRSTV-Z][ -]?\d[ABCEGHJ-NPRSTV-Z]\d/,
-                                        "Enter in the format: A1A 1A1"
-                                    )}
+                                    validate={[
+                                        minLength(6),
+                                        maxLength(7), 
+                                        regex(
+                                            /^[ABCEGHJ-NPRSTVXY]\d[ABCEGHJ-NPRSTV-Z][ -]?\d[ABCEGHJ-NPRSTV-Z]\d/,
+                                            "Enter in the format: A1A 1A1"
+                                        )
+                                    ]}
                                 />
                                 <Box sx={{ width: "100%", display: "flex", justifyContent: "right" }}>
                                     <SaveButton icon={<span />} alwaysEnable sx={SaveButtonStyles} />
