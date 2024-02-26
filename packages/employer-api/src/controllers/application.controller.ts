@@ -5,6 +5,7 @@ import { insertApplication } from "../lib/transactions"
 import * as applicationService from "../services/application.service"
 import * as employerService from "../services/employer.service"
 import * as formService from "../services/form.service"
+import * as geocoderService from "../services/geocoder.service"
 
 export const getAllApplications = async (req: any, res: express.Response) => {
     try {
@@ -143,20 +144,93 @@ export const syncApplications = async (req: any, res: express.Response) => {
 
 // updates the status of applications that have been submitted or in draft
 const updateApplicationFromForm = async (application: any) => {
-    if (application.status === "Draft") {
-        const formID = applicationService.getFormId(application.form_type)
-        const formPass = applicationService.getFormPass(application.form_type)
-        if (formID && formPass && application.form_submission_id) {
-            const submissionResponse = await formService.getSubmission(formID, formPass, application.form_submission_id)
-            if (submissionResponse.submission.draft === false) {
-                console.log("form submitted event")
-                // submitted
-                await applicationService.updateApplication(application.id, "New", submissionResponse.submission, true)
-            } else if (submissionResponse.submission.draft === true) {
-                // draft
-                await applicationService.updateApplication(application.id, "Draft", submissionResponse.submission, true)
+    try {
+        if (application.status === "Draft") {
+            const formID = applicationService.getFormId(application.form_type)
+            const formPass = applicationService.getFormPass(application.form_type)
+            if (formID && formPass && application.form_submission_id) {
+                const submissionResponse = await formService.getSubmission(
+                    formID,
+                    formPass,
+                    application.form_submission_id
+                )
+                const submission = submissionResponse?.submission.submission
+                if (submissionResponse.submission.draft === false) {
+                    // Application form has been submitted
+                    // Route the catchment & storefront for the submitted application //
+                    // Use the workplace address if provided, otherwise use the business address //
+                    let address
+                    let city
+                    let province
+                    const workplaceContainer = submission?.data?.container
+                    if (
+                        workplaceContainer?.addressAlt &&
+                        workplaceContainer.cityAlt &&
+                        workplaceContainer.provinceAlt
+                    ) {
+                        address = workplaceContainer.addressAlt
+                        city = workplaceContainer.cityAlt
+                        province = workplaceContainer.provinceAlt
+                    } else if (
+                        submission?.data?.businessAddress &&
+                        submission.data.businessCity &&
+                        submission.data.businessProvince
+                    ) {
+                        address = submission.data.businessAddress
+                        city = submission.data.businessCity
+                        province = submission.data.businessProvince
+                    }
+                    console.log(
+                        `address for submission id ${application.form_submission_id} - Address: ${address}, City: ${city}, Province: ${province}`
+                    )
+                    const { Score, Catchment, Storefront } = await geocoderService.geocodeAddress(
+                        address,
+                        city,
+                        province
+                    )
+                    console.log(
+                        `address validation result for submission id ${application.form_submission_id} - Score: ${Score}, Catchment: ${Catchment}, Storefront: ${Storefront}`
+                    )
+                    if (Score && Catchment && Storefront) {
+                        if (Score >= 95) {
+                            const newDataObj = Object.assign(submissionResponse.submission.submission.data, {
+                                catchmentNo: Catchment,
+                                storefrontId: Storefront,
+                                catchmentNoStoreFront: `${Catchment}-${Storefront}`,
+                                matchedToCentre: `${Catchment}-${Storefront}`
+                            })
+                            submissionResponse.submission.submission.data = newDataObj // update the object used for updating the application record
+                        } else {
+                            console.log(
+                                `insufficient address validation score for application submission id ${application.form_submission_id} - this shouldn't happen!`
+                            )
+                        }
+                    } else {
+                        console.log(
+                            `address validation failed for submission id ${application.form_submission_id} - this shouldn't happen!`
+                        )
+                    }
+                    await applicationService.updateApplication(
+                        application.id,
+                        "New",
+                        submissionResponse.submission,
+                        true
+                    )
+                } else if (submissionResponse.submission.draft === true) {
+                    // Form is still in draft
+                    await applicationService.updateApplication(
+                        application.id,
+                        "Draft",
+                        submissionResponse.submission,
+                        true
+                    )
+                }
             }
         }
+    } catch (e: any) {
+        throw new Error(
+            `updateApplicationFromForm failed for submission id ${application.form_submission_id} with message: ${e?.message}`
+        )
     }
 }
 

@@ -139,7 +139,7 @@ export const updateClaim = async (id: number, status: string | null, body: any, 
             })
             .update({
                 form_confirmation_id: submitted ? body.confirmationId : null, // only store the confirmation ID when the form has been submitted
-                form_submitted_date: submitted ? body.createdAt : null,
+                form_submitted_date: submitted ? body.updatedAt ?? body.createdAt : null,
                 employee_first_name: body.submission?.data?.container?.employeeFirstName,
                 employee_last_name: body.submission?.data?.container?.employeeLastName,
                 status,
@@ -191,7 +191,9 @@ export const addServiceProviderClaim = async (
                         submission.state === "submitted" ? submissionResponse.submission.confirmationId : null, // only store the confirmation ID when the form has been submitted
                     form_submission_id: submissionResponse.submission.id,
                     form_submitted_date:
-                        submission.state === "submitted" ? submissionResponse.submission.createdAt : null,
+                        submission.state === "submitted"
+                            ? submissionResponse.submission.updatedAt ?? submissionResponse.submission.createdAt
+                            : null,
                     employee_first_name: submission.data.container.employeeFirstName,
                     employee_last_name: submission.data.container.employeeLastName,
                     status: "New",
