@@ -146,12 +146,9 @@ const UserProfileModal: React.FC<UserProfileModalProps> = ({ isOpen, onRequestCl
                                         label="Phone Number"
                                         sx={{ minWidth: "20em" }}
                                         validate={[
-                                            minLength(10),
-                                            maxLength(10), 
-                                            regex(
-                                                /^\d{10}/,
-                                                "Enter in the format: 1112223333"
-                                            )
+                                            minLength(10, "Enter in the format: 1112223333"),
+                                            maxLength(10, "Enter in the format: 1112223333"),
+                                            regex(/^\d{10}/, "Enter in the format: 1112223333")
                                         ]}
                                     />
                                     <StyledTextInput
@@ -167,12 +164,9 @@ const UserProfileModal: React.FC<UserProfileModalProps> = ({ isOpen, onRequestCl
                                         label="Fax Number"
                                         sx={{ minWidth: "20em" }}
                                         validate={[
-                                            minLength(10),
-                                            maxLength(10), 
-                                            regex(
-                                                /^\d{10}/,
-                                                "Enter in the format: 1112223333"
-                                            )
+                                            minLength(10, "Enter in the format: 1112223333"),
+                                            maxLength(10, "Enter in the format: 1112223333"),
+                                            regex(/^\d{10}/, "Enter in the format: 1112223333")
                                         ]}
                                     />
                                     <StyledTextInput
@@ -223,7 +217,7 @@ const UserProfileModal: React.FC<UserProfileModalProps> = ({ isOpen, onRequestCl
                                     sx={{ maxWidth: "20em" }}
                                     validate={[
                                         minLength(6),
-                                        maxLength(7), 
+                                        maxLength(7),
                                         regex(
                                             /^[ABCEGHJ-NPRSTVXY]\d[ABCEGHJ-NPRSTV-Z][ -]?\d[ABCEGHJ-NPRSTV-Z]\d$/i,
                                             "Enter in the format: A1A 1A1"
@@ -262,7 +256,7 @@ const UserProfileModal: React.FC<UserProfileModalProps> = ({ isOpen, onRequestCl
                                     sx={{ maxWidth: "20em" }}
                                     validate={[
                                         minLength(6),
-                                        maxLength(7), 
+                                        maxLength(7),
                                         regex(
                                             /^[ABCEGHJ-NPRSTVXY]\d[ABCEGHJ-NPRSTV-Z][ -]?\d[ABCEGHJ-NPRSTV-Z]\d$/i,
                                             "Enter in the format: A1A 1A1"
