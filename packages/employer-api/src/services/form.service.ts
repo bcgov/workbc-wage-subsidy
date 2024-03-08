@@ -212,7 +212,6 @@ export const updateSubmissionCatchment = async (submissionID: string, submission
         const data = {
             submission: { ...submission.submission, catchment }
         }
-        console.log("DATA: ", data)
         await chefsApi
             .put(url, data, config)
             .then(() => console.log(`successfully updated form submission ${submissionID} with catchment ${catchment}`))
