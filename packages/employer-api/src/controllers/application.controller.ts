@@ -217,6 +217,15 @@ const updateApplicationFromForm = async (application: any) => {
                         submissionResponse.submission,
                         true
                     )
+
+                    // Update the catchment of the form in CHEFS //
+                    if (Catchment) {
+                        await formService.updateSubmissionCatchment(
+                            application.form_submission_id,
+                            submissionResponse.submission,
+                            Catchment
+                        )
+                    }
                 } else if (submissionResponse.submission.draft === true) {
                     // Form is still in draft
                     await applicationService.updateApplication(
