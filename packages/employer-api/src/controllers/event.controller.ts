@@ -164,7 +164,11 @@ export const submission = async (req: express.Request, res: express.Response) =>
                     let city
                     let province
                     const workplaceContainer = submission?.data?.container
-                    if (workplaceContainer?.addressAlt && workplaceContainer.cityAlt && workplaceContainer.provinceAlt) {
+                    if (
+                        workplaceContainer?.addressAlt &&
+                        workplaceContainer.cityAlt &&
+                        workplaceContainer.provinceAlt
+                    ) {
                         address = workplaceContainer.addressAlt
                         city = workplaceContainer.cityAlt
                         province = workplaceContainer.provinceAlt
@@ -215,6 +219,7 @@ export const submission = async (req: express.Request, res: express.Response) =>
                         submissionResponse.submission,
                         false
                     )
+
                     // If first application submitted, backfill employer profile from form data.
                     const firstApplicationSubmitted = await applicationService.oneApplicationSubmitted(
                         application.created_by
@@ -229,6 +234,17 @@ export const submission = async (req: express.Request, res: express.Response) =>
                             submissionResponse.submission.submission.data
                         )
                     }
+
+                    // Update the catchment of the form in CHEFS //
+                    if (Catchment) {
+                        await formService.updateSubmissionCatchment(
+                            req.body.submissionId,
+                            submissionResponse.submission,
+                            Catchment
+                        )
+                    }
+
+                    // Send notification(s) //
                     await emailController
                         .sendEmail(submissionResponse.submission.submission)
                         .then(() => {
