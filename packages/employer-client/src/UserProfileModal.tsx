@@ -174,7 +174,7 @@ const UserProfileModal: React.FC<UserProfileModalProps> = ({ isOpen, onRequestCl
                                         label="CRA Business Number"
                                         sx={{ minWidth: "20em" }}
                                         validate={regex(
-                                            /^[0-9]{9}[A-Z]{2}[0]{3}[1]/,
+                                            /^[0-9]{9}[A-Z]{2}[0-9]{3}[1-9]$/,
                                             "Enter in the format: 123456789BC0001"
                                         )}
                                     />
@@ -194,21 +194,7 @@ const UserProfileModal: React.FC<UserProfileModalProps> = ({ isOpen, onRequestCl
                                         source="province"
                                         label="Province"
                                         sx={{ minWidth: "20em" }}
-                                        choices={[
-                                            { id: "AB", name: "Alberta" },
-                                            { id: "BC", name: "British Columbia" },
-                                            { id: "MB", name: "Manitoba" },
-                                            { id: "NB", name: "New Brunswick" },
-                                            { id: "NL", name: "Newfoundland & Labrador" },
-                                            { id: "NT", name: "Northwest Territories" },
-                                            { id: "NS", name: "Nova Scotia" },
-                                            { id: "NU", name: "Nunavut" },
-                                            { id: "ON", name: "Ontario" },
-                                            { id: "PE", name: "Prince Edward Island" },
-                                            { id: "QC", name: "Quebec" },
-                                            { id: "SK", name: "Saskachewan" },
-                                            { id: "YT", name: "Yukon" }
-                                        ]}
+                                        choices={[{ id: "BC", name: "British Columbia" }]}
                                     />
                                 </Stack>
                                 <StyledTextInput
@@ -219,7 +205,7 @@ const UserProfileModal: React.FC<UserProfileModalProps> = ({ isOpen, onRequestCl
                                         minLength(6),
                                         maxLength(7),
                                         regex(
-                                            /^[ABCEGHJ-NPRSTVXY]\d[ABCEGHJ-NPRSTV-Z][ -]?\d[ABCEGHJ-NPRSTV-Z]\d$/i,
+                                            /^[ABCEGHJ-NPRSTVXY][0-9][ABCEGHJ-NPRSTV-Z] [0-9][ABCEGHJ-NPRSTV-Z][0-9]$/,
                                             "Enter in the format: A1A 1A1"
                                         )
                                     ]}
@@ -258,7 +244,7 @@ const UserProfileModal: React.FC<UserProfileModalProps> = ({ isOpen, onRequestCl
                                         minLength(6),
                                         maxLength(7),
                                         regex(
-                                            /^[ABCEGHJ-NPRSTVXY]\d[ABCEGHJ-NPRSTV-Z][ -]?\d[ABCEGHJ-NPRSTV-Z]\d$/i,
+                                            /^[ABCEGHJ-NPRSTVXY][0-9][ABCEGHJ-NPRSTV-Z] [0-9][ABCEGHJ-NPRSTV-Z][0-9]$/,
                                             "Enter in the format: A1A 1A1"
                                         )
                                     ]}

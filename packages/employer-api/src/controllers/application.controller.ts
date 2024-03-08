@@ -1,5 +1,6 @@
 /* eslint-disable camelcase */
 /* eslint-disable import/prefer-default-export */
+/* eslint-disable no-param-reassign */
 import * as express from "express"
 import { insertApplication } from "../lib/transactions"
 import * as applicationService from "../services/application.service"
@@ -68,7 +69,7 @@ export const createApplication = async (req: any, res: express.Response) => {
         if (!employer || employer?.id !== bceid_guid) {
             return res.status(403).send("Forbidden")
         }
-        const prefillFields = computeApplicationPrefillFields(employer)
+        const prefillFields = await computeApplicationPrefillFields(employer)
 
         // Create a new form draft //
         const formID = applicationService.getFormId(req.body.formType)
@@ -335,32 +336,94 @@ export const markApplication = async (req: any, res: express.Response) => {
     }
 }
 
-const computeApplicationPrefillFields = (employer: any) => ({
-    ...(employer?.bceid_business_name && { operatingName: employer.bceid_business_name }),
-    ...(employer?.cra_business_number && { businessNumber: employer.cra_business_number }),
-    ...(employer?.street_address && { businessAddress: employer.street_address }),
-    ...(employer?.city && { businessCity: employer.city }),
-    ...(employer?.province && { businessProvince: employer.province }),
-    ...(employer?.postal_code && { businessPostal: employer.postal_code }),
-    ...(employer?.phone_number && { businessPhone: employer.phone_number }),
-    ...(employer?.fax_number && { businessFax: employer.fax_number }),
-    ...(employer?.contact_email && { employerEmail: employer.contact_email }),
-    ...((employer?.workplace_street_address || employer?.workplace_city || employer?.workplace_postal_code) && {
-        otherWorkAddress: true
-    }),
-    ...(!employer?.workplace_street_address &&
-        !employer?.workplace_city &&
-        !employer?.workplace_postal_code && {
-            otherWorkAddress: false
+const computeApplicationPrefillFields = async (employer: any) => {
+    if (!employer) {
+        return null
+    }
+
+    // check if address(s) are valid before prefilling //
+    if (employer.street_address && employer.city && employer.province) {
+        const businessAddressValidation = await geocoderService.geocodeAddress(
+            employer.street_address,
+            employer.city,
+            employer.province
+        )
+        if (!(businessAddressValidation?.Score && businessAddressValidation.Score >= 95)) {
+            console.log(
+                `invalid business address ${employer.street_address}, ${employer.city}, ${employer.province} for employer with id ${employer.id} - avoiding prefilling address`
+            )
+            employer.street_address = null
+            employer.city = null
+            employer.province = null
+        }
+    } else {
+        employer.street_address = null
+        employer.city = null
+        employer.province = null
+    }
+
+    if (employer.workplace_street_address && employer.workplace_city && employer.workplace_province) {
+        const workplaceAddressValidation = await geocoderService.geocodeAddress(
+            employer.workplace_street_address,
+            employer.workplace_city,
+            employer.workplace_province
+        )
+        if (!(workplaceAddressValidation?.Score && workplaceAddressValidation.Score >= 95)) {
+            console.log(
+                `invalid workplace address ${employer.workplace_street_address}, ${employer.workplace_city}, ${employer.workplace_province} for employer with id ${employer.id} - avoiding prefilling address`
+            )
+            employer.workplace_street_address = null
+            employer.workplace_city = null
+            employer.workplace_province = null
+        }
+    } else {
+        employer.workplace_street_address = null
+        employer.workplace_city = null
+        employer.workplace_province = null
+    }
+
+    // postal code checks //
+    const regex = /^[ABCEGHJ-NPRSTVXY][0-9][ABCEGHJ-NPRSTV-Z] [0-9][ABCEGHJ-NPRSTV-Z][0-9]$/
+    if (employer.postal_code && !regex.test(employer.postal_code)) {
+        console.log(
+            `invalid business postal code ${employer.postal_code} for employer with id ${employer.id} - avoiding prefilling postal code`
+        )
+        employer.postal_code = null
+    }
+    if (employer.workplace_postal_code && !regex.test(employer.workplace_postal_code)) {
+        console.log(
+            `invalid workplace postal code ${employer.workplace_postal_code} for employer with id ${employer.id} - avoiding prefilling postal code`
+        )
+        employer.workplace_postal_code = null
+    }
+
+    return {
+        ...(employer.bceid_business_name && { operatingName: employer.bceid_business_name }),
+        ...(employer.cra_business_number && { businessNumber: employer.cra_business_number }),
+        ...(employer.street_address && { businessAddress: employer.street_address }),
+        ...(employer.city && { businessCity: employer.city }),
+        ...(employer.province && { businessProvince: employer.province }),
+        ...(employer.postal_code && { businessPostal: employer.postal_code }),
+        ...(employer.phone_number && { businessPhone: employer.phone_number }),
+        ...(employer.fax_number && { businessFax: employer.fax_number }),
+        ...(employer.contact_email && { employerEmail: employer.contact_email }),
+        ...((employer.workplace_street_address || employer.workplace_city || employer.workplace_postal_code) && {
+            otherWorkAddress: true
         }),
-    container: {
-        ...((employer?.workplace_street_address || employer?.workplace_city || employer?.workplace_postal_code) && {
-            addressValidationAlt: "Validation required to continue."
-        }),
-        ...(employer?.workplace_street_address && { addressAlt: employer.workplace_street_address }),
-        ...(employer?.workplace_city && { cityAlt: employer.workplace_city }),
-        provinceAlt: "BC",
-        ...(employer?.workplace_postal_code && { postalAlt: employer.workplace_postal_code })
-    },
-    ...(employer?.contact_name && { signatory1: employer.contact_name })
-})
+        ...(!employer.workplace_street_address &&
+            !employer.workplace_city &&
+            !employer.workplace_postal_code && {
+                otherWorkAddress: false
+            }),
+        container: {
+            ...((employer.workplace_street_address || employer.workplace_city || employer.workplace_postal_code) && {
+                addressValidationAlt: "Validation required to continue."
+            }),
+            ...(employer.workplace_street_address && { addressAlt: employer.workplace_street_address }),
+            ...(employer.workplace_city && { cityAlt: employer.workplace_city }),
+            provinceAlt: "BC",
+            ...(employer.workplace_postal_code && { postalAlt: employer.workplace_postal_code })
+        },
+        ...(employer.contact_name && { signatory1: employer.contact_name })
+    }
+}
