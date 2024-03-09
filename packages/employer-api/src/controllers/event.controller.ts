@@ -7,6 +7,7 @@ import * as employerService from "../services/employer.service"
 import * as formService from "../services/form.service"
 import * as emailController from "./email.controller"
 import * as geocoderService from "../services/geocoder.service"
+import { getCHEFSToken } from "../services/common.service"
 
 export const submission = async (req: express.Request, res: express.Response) => {
     try {
@@ -71,13 +72,18 @@ export const submission = async (req: express.Request, res: express.Response) =>
             // Create service provider claim form if one does not already exist.
             if (!claim?.service_provider_form_submission_id || !claim?.service_provider_form_internal_id) {
                 const serviceProviderInternalID = `SPx${submission.data.internalId}` // create a new internal id for the SP form
-                const createDraftResult = await formService.createTeamProtectedDraft(
+
+                // Create a new form draft //
+                const token = await getCHEFSToken()
+                console.log("submission.data: ", submission.data)
+                const createDraftResult = await formService.createLoginProtectedDraft(
+                    token,
                     process.env.SP_CLAIM_FORM_ID as string,
-                    process.env.SP_CLAIM_FORM_PASS as string,
                     process.env.SP_CLAIM_FORM_VERSION_ID as string,
                     serviceProviderInternalID,
                     submission.data
                 )
+
                 if (createDraftResult?.id && createDraftResult.submission) {
                     const addResult = await claimService.addServiceProviderClaim(
                         submissionResponse,
