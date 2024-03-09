@@ -77,7 +77,7 @@ export const submission = async (req: express.Request, res: express.Response) =>
                 const token = await getCHEFSToken()
                 console.log("submission.data: ", submission.data)
                 const createDraftResult = await formService.createLoginProtectedDraft(
-                    token,
+                    { token },
                     process.env.SP_CLAIM_FORM_ID as string,
                     process.env.SP_CLAIM_FORM_VERSION_ID as string,
                     serviceProviderInternalID,
