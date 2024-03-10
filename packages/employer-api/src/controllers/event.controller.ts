@@ -75,13 +75,14 @@ export const submission = async (req: express.Request, res: express.Response) =>
 
                 // Create a new form draft //
                 const token = await getCHEFSToken()
+                console.log("submission: ", submission)
                 console.log("submission.data: ", submission.data)
                 const createDraftResult = await formService.createLoginProtectedDraft(
                     { token },
                     process.env.SP_CLAIM_FORM_ID as string,
                     process.env.SP_CLAIM_FORM_VERSION_ID as string,
                     serviceProviderInternalID,
-                    submission.data
+                    { data: submission.data, catchment: claim.catchmentno }
                 )
 
                 if (createDraftResult?.id && createDraftResult.submission) {
