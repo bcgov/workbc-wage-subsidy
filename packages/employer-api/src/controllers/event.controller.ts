@@ -82,7 +82,8 @@ export const submission = async (req: express.Request, res: express.Response) =>
                     process.env.SP_CLAIM_FORM_ID as string,
                     process.env.SP_CLAIM_FORM_VERSION_ID as string,
                     serviceProviderInternalID,
-                    { data: submission.data, catchment: claim.catchmentno }
+                    submission.data,
+                    claim.catchmentno
                 )
 
                 if (createDraftResult?.id && createDraftResult.submission) {

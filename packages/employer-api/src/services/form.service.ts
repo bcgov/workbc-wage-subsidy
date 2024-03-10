@@ -48,7 +48,8 @@ export const createLoginProtectedDraft = async (
     formID: string,
     formVersionID: string,
     internalID: string,
-    prefillFields: any
+    prefillFields: any,
+    catchment?: number
 ) => {
     try {
         const url = `forms/${formID}/versions/${formVersionID}/submissions`
@@ -61,6 +62,7 @@ export const createLoginProtectedDraft = async (
         const data = {
             draft: true,
             submission: {
+                catchment,
                 data: {
                     lateEntry: false,
                     internalId: internalID, // TODO: do we need internalId as a concept?
