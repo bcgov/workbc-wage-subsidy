@@ -4,6 +4,7 @@
 import { knex } from "../config/db-config"
 import * as applicationService from "../services/application.service"
 import * as claimService from "../services/claims.service"
+import * as formService from "../services/form.service"
 
 const MAX_RESULTS = 100
 const PAGE = 1
@@ -52,6 +53,53 @@ const updateApplicationAndAssociatedClaims = async (application: any, data: any,
     if (!catchmentUpdated && !workBcCentreUpdated && !applicationCancelled) {
         return numUpdated
     }
+
+    // update the chefs form if required //
+    if (catchmentUpdated) {
+        console.log("catchmentUpdated!")
+        let formID
+        let formPass
+        if (application.form_type === "Have Employee") {
+            formID = process.env.HAVE_EMPLOYEE_ID as string
+            formPass = process.env.HAVE_EMPLOYEE_PASS as string
+        } else if (application.form_type === "Need Employee") {
+            formID = process.env.NEED_EMPLOYEE_ID as string
+            formPass = process.env.NEED_EMPLOYEE_PASS as string
+        }
+        if (formID && formPass && application.form_submission_id) {
+            console.log("params: ", application.form_submission_id, formID, formPass)
+            await formService
+                .getSubmission(formID, formPass, application.form_submission_id)
+                .then(async (submissionResponse) => {
+                    await formService
+                        .updateSubmissionCatchment(
+                            application.form_submission_id,
+                            submissionResponse.submission,
+                            data.catchmentNo
+                        )
+                        .then(() => {
+                            console.log(
+                                `[transactions] chefs update submission catchment call succeeded for submission id ${application.form_submission_id} with catchment ${data.catchmentNo}`
+                            )
+                        })
+                        .catch((e) => {
+                            console.log(
+                                `[transactions] chefs update submission catchment call failed for submission id ${application.form_submission_id} with catchment ${data.catchmentNo} with error ${e}`
+                            )
+                        })
+                })
+                .catch((e) => {
+                    console.log(
+                        `[transactions] chefs GET submission call failed for submission id ${application.form_submission_id} with error ${e}`
+                    )
+                })
+        } else {
+            console.log(
+                `[transactions] unable to update catchment for chefs form for submission id ${application.form_submission_id} - misconfiguration`
+            )
+        }
+    }
+
     const claimsData: { [key: string]: any } = {}
     if (catchmentUpdated) claimsData.catchmentNo = data.catchmentNo
     if (workBcCentreUpdated) claimsData.workBcCentre = data.workBcCentre
