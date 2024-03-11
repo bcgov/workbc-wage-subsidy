@@ -12,8 +12,8 @@ export function getCatchment(lat: any, lon: any) {
             const distance = calcDistance(
                 lat,
                 lon,
-                pins[i].Storefronts[j].Coordinates.split(",")[0],
                 pins[i].Storefronts[j].Coordinates.split(",")[1],
+                pins[i].Storefronts[j].Coordinates.split(",")[0],
                 "K"
             )
             if (distance < min) {

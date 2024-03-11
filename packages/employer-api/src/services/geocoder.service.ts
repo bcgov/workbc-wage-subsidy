@@ -22,8 +22,8 @@ export const geocodeAddress = async (address: string, city: string, province: st
         .then((response) => {
             const { score } = response.data.features[0].properties
             const catchment = getCatchment(
-                response.data.features[0].geometry.coordinates[0],
-                response.data.features[0].geometry.coordinates[1]
+                response.data.features[0].geometry.coordinates[1],
+                response.data.features[0].geometry.coordinates[0]
             )
             Catchment = catchment.closestCatchment
             Storefront = catchment.closestStorefrontId
