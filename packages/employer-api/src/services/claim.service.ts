@@ -274,7 +274,14 @@ export const insertEmployerClaimRecord = async (employerId: string, claimId: str
 
 export const getStaleDrafts = async (user: string) => {
     const drafts = knex
-        .select("id", "form_submission_id", "status")
+        .select(
+            "id",
+            "form_submission_id",
+            "status",
+            "catchmentno",
+            "service_provider_form_submission_id",
+            "service_provider_form_internal_id"
+        )
         .from(
             knex
                 .select("*")

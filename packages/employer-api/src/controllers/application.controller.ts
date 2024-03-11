@@ -150,6 +150,9 @@ const updateApplicationFromForm = async (application: any) => {
             const formID = applicationService.getFormId(application.form_type)
             const formPass = applicationService.getFormPass(application.form_type)
             if (formID && formPass && application.form_submission_id) {
+                console.log(
+                    `[application.controller] updating submitted application for application id ${application.id} and submission id ${application.form_submission_id}`
+                )
                 const submissionResponse = await formService.getSubmission(
                     formID,
                     formPass,
@@ -182,7 +185,7 @@ const updateApplicationFromForm = async (application: any) => {
                         province = submission.data.businessProvince
                     }
                     console.log(
-                        `address for submission id ${application.form_submission_id} - Address: ${address}, City: ${city}, Province: ${province}`
+                        `[application.controller] address for submission id ${application.form_submission_id} - Address: ${address}, City: ${city}, Province: ${province}`
                     )
                     const { Score, Catchment, Storefront } = await geocoderService.geocodeAddress(
                         address,
@@ -190,7 +193,7 @@ const updateApplicationFromForm = async (application: any) => {
                         province
                     )
                     console.log(
-                        `address validation result for submission id ${application.form_submission_id} - Score: ${Score}, Catchment: ${Catchment}, Storefront: ${Storefront}`
+                        `[application.controller] address validation result for submission id ${application.form_submission_id} - Score: ${Score}, Catchment: ${Catchment}, Storefront: ${Storefront}`
                     )
                     if (Score && Catchment && Storefront) {
                         if (Score >= 95) {
@@ -203,12 +206,12 @@ const updateApplicationFromForm = async (application: any) => {
                             submissionResponse.submission.submission.data = newDataObj // update the object used for updating the application record
                         } else {
                             console.log(
-                                `insufficient address validation score for application submission id ${application.form_submission_id} - this shouldn't happen!`
+                                `[application.controller] insufficient address validation score for application submission id ${application.form_submission_id} - this shouldn't happen!`
                             )
                         }
                     } else {
                         console.log(
-                            `address validation failed for submission id ${application.form_submission_id} - this shouldn't happen!`
+                            `[application.controller] address validation failed for submission id ${application.form_submission_id} - this shouldn't happen!`
                         )
                     }
                     await applicationService.updateApplication(
@@ -239,7 +242,7 @@ const updateApplicationFromForm = async (application: any) => {
         }
     } catch (e: any) {
         throw new Error(
-            `updateApplicationFromForm failed for submission id ${application.form_submission_id} with message: ${e?.message}`
+            `[application.controller] updateApplicationFromForm failed for submission id ${application.form_submission_id} with message: ${e?.message}`
         )
     }
 }
