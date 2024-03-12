@@ -75,9 +75,18 @@ export const ViewForm = () => {
                 const bceidViewUrl = process.env.REACT_APP_VIEW_URL + record.form_submission_id
                 setFormUrl(identity.idp === "bceid" ? bceidViewUrl : identity.idp === "idir" ? idirViewUrl : "")
             } else if (resource === "claims" && record?.service_provider_form_submission_id && record?.status) {
+                const idirViewUrl = process.env.REACT_APP_MINISTRY_VIEW_URL + record.service_provider_form_submission_id
                 const bceidViewUrl = process.env.REACT_APP_VIEW_URL + record.service_provider_form_submission_id
                 const draftUrl = `${process.env.REACT_APP_DRAFT_URL}${record.service_provider_form_submission_id}&initialTab=${location?.initialTab}`
-                setFormUrl(record.status === "In Progress" ? draftUrl : bceidViewUrl)
+                setFormUrl(
+                    record.status === "In Progress" && identity.idp === "bceid"
+                        ? draftUrl
+                        : identity.idp === "bceid"
+                        ? bceidViewUrl
+                        : identity.idp === "idir"
+                        ? idirViewUrl
+                        : null
+                )
             }
         }
     }, [record])
@@ -109,7 +118,7 @@ export const ViewForm = () => {
                             borderBottom: "solid 2px " + COLOURS.MEDIUMGREY,
                             backgroundColor: "white",
                             width: "100%",
-                            height: resource === "applications" && identity?.idp === "idir" ? "8em" : "5em",
+                            height: identity?.idp === "idir" ? "8em" : "5em",
                             position: "absolute",
                             zIndex: 1
                         }}
@@ -117,7 +126,7 @@ export const ViewForm = () => {
                         <Box
                             style={{
                                 display: "flex",
-                                marginTop: resource === "applications" && identity?.idp === "idir" ? "4em" : "1em"
+                                marginTop: identity?.idp === "idir" ? "4em" : "1em"
                             }}
                         >
                             <BackButton resource={resource} />
