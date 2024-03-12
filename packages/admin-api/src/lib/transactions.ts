@@ -27,13 +27,19 @@ const updateAssociatedClaims = async (application: any, data: any, username: str
         return numUpdated
     }
     const results = await Promise.all(
-        assocClaims.data.map((claim: any) =>
-            (claim.catchmentno && data.catchmentNo && claim.catchmentno !== data.catchmentNo) ||
-            (claim.workbc_centre && data.workBcCentre && claim.workbc_centre !== data.workBcCentre) ||
-            (claim.status && data.status && data.status === "Cancelled" && claim.status !== "Cancelled")
-                ? claimService.updateClaim(claim.id, username, data, trx)
-                : null
-        )
+        assocClaims.data.map(async (claim: any) => {
+            if (
+                (claim.catchmentno && data.catchmentNo && claim.catchmentno !== data.catchmentNo) ||
+                (claim.workbc_centre && data.workBcCentre && claim.workbc_centre !== data.workBcCentre) ||
+                (claim.status && data.status && data.status === "Cancelled" && claim.status !== "Cancelled")
+            ) {
+                const result = claimService.updateClaim(claim.id, username, data, trx)
+                await updateChefsCatchment("Claim", claim.service_provider_form_submission_id, data.catchmentNo)
+                return result
+            }
+
+            return null
+        })
     )
     results.forEach((result) => {
         if (result === 1) numUpdated += 1
@@ -56,48 +62,7 @@ const updateApplicationAndAssociatedClaims = async (application: any, data: any,
 
     // update the chefs form if required //
     if (catchmentUpdated) {
-        console.log("catchmentUpdated!")
-        let formID
-        let formPass
-        if (application.form_type === "Have Employee") {
-            formID = process.env.HAVE_EMPLOYEE_ID as string
-            formPass = process.env.HAVE_EMPLOYEE_PASS as string
-        } else if (application.form_type === "Need Employee") {
-            formID = process.env.NEED_EMPLOYEE_ID as string
-            formPass = process.env.NEED_EMPLOYEE_PASS as string
-        }
-        if (formID && formPass && application.form_submission_id) {
-            console.log("params: ", application.form_submission_id, formID, formPass)
-            await formService
-                .getSubmission(formID, formPass, application.form_submission_id)
-                .then(async (submissionResponse) => {
-                    await formService
-                        .updateSubmissionCatchment(
-                            application.form_submission_id,
-                            submissionResponse.submission,
-                            data.catchmentNo
-                        )
-                        .then(() => {
-                            console.log(
-                                `[transactions] chefs update submission catchment call succeeded for submission id ${application.form_submission_id} with catchment ${data.catchmentNo}`
-                            )
-                        })
-                        .catch((e) => {
-                            console.log(
-                                `[transactions] chefs update submission catchment call failed for submission id ${application.form_submission_id} with catchment ${data.catchmentNo} with error ${e}`
-                            )
-                        })
-                })
-                .catch((e) => {
-                    console.log(
-                        `[transactions] chefs GET submission call failed for submission id ${application.form_submission_id} with error ${e}`
-                    )
-                })
-        } else {
-            console.log(
-                `[transactions] unable to update catchment for chefs form for submission id ${application.form_submission_id} - misconfiguration`
-            )
-        }
+        await updateChefsCatchment(application.form_type, application.form_submission_id, data.catchmentNo)
     }
 
     const claimsData: { [key: string]: any } = {}
@@ -106,6 +71,48 @@ const updateApplicationAndAssociatedClaims = async (application: any, data: any,
     if (applicationCancelled) claimsData.status = data.status
     numUpdated += await updateAssociatedClaims(application, claimsData, username, trx)
     return numUpdated
+}
+
+export const updateChefsCatchment = async (formType: string, submissionID: string, catchment: number) => {
+    let formID
+    let formPass
+    if (formType === "Have Employee") {
+        formID = process.env.HAVE_EMPLOYEE_ID as string
+        formPass = process.env.HAVE_EMPLOYEE_PASS as string
+    } else if (formType === "Need Employee") {
+        formID = process.env.NEED_EMPLOYEE_ID as string
+        formPass = process.env.NEED_EMPLOYEE_PASS as string
+    } else if (formType === "Claim") {
+        formID = process.env.SP_CLAIM_FORM_ID as string
+        formPass = process.env.SP_CLAIM_FORM_PASS as string
+    }
+    if (submissionID && formID && formPass) {
+        await formService
+            .getSubmission(formID, formPass, submissionID)
+            .then(async (submissionResponse) => {
+                await formService
+                    .updateSubmissionCatchment(submissionID, submissionResponse.submission, catchment)
+                    .then(() => {
+                        console.log(
+                            `[transactions] chefs update submission catchment call succeeded for submission id ${submissionID} with catchment ${catchment}`
+                        )
+                    })
+                    .catch((e) => {
+                        console.log(
+                            `[transactions] chefs update submission catchment call failed for submission id ${submissionID} with catchment ${catchment} with error ${e} - this shouldn't happen!`
+                        )
+                    })
+            })
+            .catch((e) => {
+                console.log(
+                    `[transactions] chefs GET submission call failed for submission id ${submissionID} with error ${e} - this shouldn't happen!`
+                )
+            })
+    } else {
+        console.log(
+            `[transactions] unable to update catchment for chefs form for submission id ${submissionID} - misconfiguration - this shouldn't happen!`
+        )
+    }
 }
 
 // Update application. If catchment changed or application cancelled, update associated claims.
