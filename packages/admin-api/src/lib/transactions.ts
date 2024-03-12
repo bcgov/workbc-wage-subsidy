@@ -136,6 +136,9 @@ export const updateClaimWithSideEffects = async (claim: any, username: string, d
                 const assocApplication = assocApplications.data[0]
                 const catchmentData = { catchmentNo: data.catchmentNo, workBcCentre: data.workBcCentre }
                 numUpdated += await updateApplicationAndAssociatedClaims(assocApplication, catchmentData, username, trx)
+            } else {
+                // legacy claim - no associated applications - make sure to still update forms catchment //
+                await updateChefsCatchment("claim", claim.service_provider_form_submission_id, data.catchmentNo)
             }
         }
         numUpdated += await claimService.updateClaim(claim.id, username, data, trx)
