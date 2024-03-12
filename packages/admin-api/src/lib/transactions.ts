@@ -89,9 +89,9 @@ export const updateChefsCatchment = async (formType: string, submissionID: strin
     if (submissionID && formID && formPass) {
         await formService
             .getSubmission(formID, formPass, submissionID)
-            .then(async (submissionResponse) => {
+            .then(async (submission) => {
                 await formService
-                    .updateSubmissionCatchment(submissionID, submissionResponse.submission, catchment)
+                    .updateSubmissionCatchment(submissionID, submission, catchment)
                     .then(() => {
                         console.log(
                             `[transactions] chefs update submission catchment call succeeded for submission id ${submissionID} with catchment ${catchment}`

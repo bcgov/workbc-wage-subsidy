@@ -32,11 +32,12 @@ export const updateSubmissionCatchment = async (submissionID: string, submission
                 Authorization: `Bearer ${chefsToken}`
             }
         }
-        const data = {
-            submission: { ...submission.submission, catchment }
+        const body = {
+            draft: submission.submission.draft,
+            submission: { ...submission.submission.submission, catchment }
         }
         await chefsApi
-            .put(url, data, config)
+            .put(url, body, config)
             .then(() => console.log(`successfully updated form submission ${submissionID} with catchment ${catchment}`))
             .catch(() => console.log(`unable to update form submission ${submissionID} with catchment ${catchment}`))
 

@@ -216,8 +216,16 @@ export const updateSubmissionCatchment = async (submissionID: string, submission
         }
         await chefsApi
             .put(url, data, config)
-            .then(() => console.log(`successfully updated form submission ${submissionID} with catchment ${catchment}`))
-            .catch(() => console.log(`unable to update form submission ${submissionID} with catchment ${catchment}`))
+            .then(() =>
+                console.log(
+                    `[form.service] successfully updated form submission ${submissionID} with catchment ${catchment}`
+                )
+            )
+            .catch(() =>
+                console.log(
+                    `[form.service] unable to update form submission ${submissionID} with catchment ${catchment}`
+                )
+            )
 
         return true
     } catch (e: any) {
