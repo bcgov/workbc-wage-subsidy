@@ -68,7 +68,7 @@ export const sendEmail = async (formData: any) => {
                 String(applicationType) === "Claims" ? "claim" : "application"
             )
             if (notificationList.length === 0) {
-                console.log("No notifications found for this catchment")
+                console.log("[email.controller] No notifications found for this catchment")
             }
             // Send notifications emails to clients with notifications enabled (entry in notifications table)
             await Promise.all(
