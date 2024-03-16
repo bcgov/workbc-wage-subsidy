@@ -7,6 +7,7 @@ import {
     useDataProvider,
     useGetIdentity,
     useLogout,
+    minLength,
     maxLength,
     email,
     regex
@@ -144,7 +145,11 @@ const UserProfileModal: React.FC<UserProfileModalProps> = ({ isOpen, onRequestCl
                                         source="phone_number"
                                         label="Phone Number"
                                         sx={{ minWidth: "20em" }}
-                                        validate={maxLength(12)}
+                                        validate={[
+                                            minLength(10, "Enter in the format: 1112223333"),
+                                            maxLength(10, "Enter in the format: 1112223333"),
+                                            regex(/^\d{10}/, "Enter in the format: 1112223333")
+                                        ]}
                                     />
                                     <StyledTextInput
                                         source="contact_email"
@@ -158,15 +163,19 @@ const UserProfileModal: React.FC<UserProfileModalProps> = ({ isOpen, onRequestCl
                                         source="fax_number"
                                         label="Fax Number"
                                         sx={{ minWidth: "20em" }}
-                                        validate={maxLength(12)}
+                                        validate={[
+                                            minLength(10, "Enter in the format: 1112223333"),
+                                            maxLength(10, "Enter in the format: 1112223333"),
+                                            regex(/^\d{10}/, "Enter in the format: 1112223333")
+                                        ]}
                                     />
                                     <StyledTextInput
                                         source="cra_business_number"
                                         label="CRA Business Number"
                                         sx={{ minWidth: "20em" }}
                                         validate={regex(
-                                            /^[0-9]{9}[A-Z]{2}[0]{3}[1]/,
-                                            "Must have format: [0-9]{9}[A-Z]{2}[0]{3}[1]"
+                                            /^[0-9]{9}[A-Z]{2}[0-9]{3}[1-9]$/,
+                                            "Enter in the format: 123456789BC0001"
                                         )}
                                     />
                                 </Stack>
@@ -185,28 +194,21 @@ const UserProfileModal: React.FC<UserProfileModalProps> = ({ isOpen, onRequestCl
                                         source="province"
                                         label="Province"
                                         sx={{ minWidth: "20em" }}
-                                        choices={[
-                                            { id: "AB", name: "Alberta" },
-                                            { id: "BC", name: "British Columbia" },
-                                            { id: "MB", name: "Manitoba" },
-                                            { id: "NB", name: "New Brunswick" },
-                                            { id: "NL", name: "Newfoundland & Labrador" },
-                                            { id: "NT", name: "Northwest Territories" },
-                                            { id: "NS", name: "Nova Scotia" },
-                                            { id: "NU", name: "Nunavut" },
-                                            { id: "ON", name: "Ontario" },
-                                            { id: "PE", name: "Prince Edward Island" },
-                                            { id: "QC", name: "Quebec" },
-                                            { id: "SK", name: "Saskachewan" },
-                                            { id: "YT", name: "Yukon" }
-                                        ]}
+                                        choices={[{ id: "BC", name: "British Columbia" }]}
                                     />
                                 </Stack>
                                 <StyledTextInput
                                     source="postal_code"
                                     label="Postal Code"
                                     sx={{ maxWidth: "20em" }}
-                                    validate={maxLength(255)}
+                                    validate={[
+                                        minLength(6),
+                                        maxLength(7),
+                                        regex(
+                                            /^[ABCEGHJ-NPRSTVXY][0-9][ABCEGHJ-NPRSTV-Z] [0-9][ABCEGHJ-NPRSTV-Z][0-9]$/,
+                                            "Enter in the format: A1A 1A1"
+                                        )
+                                    ]}
                                 />
                             </Stack>
                             <h3>
@@ -238,7 +240,14 @@ const UserProfileModal: React.FC<UserProfileModalProps> = ({ isOpen, onRequestCl
                                     source="workplace_postal_code"
                                     label="Postal Code"
                                     sx={{ maxWidth: "20em" }}
-                                    validate={maxLength(255)}
+                                    validate={[
+                                        minLength(6),
+                                        maxLength(7),
+                                        regex(
+                                            /^[ABCEGHJ-NPRSTVXY][0-9][ABCEGHJ-NPRSTV-Z] [0-9][ABCEGHJ-NPRSTV-Z][0-9]$/,
+                                            "Enter in the format: A1A 1A1"
+                                        )
+                                    ]}
                                 />
                                 <Box sx={{ width: "100%", display: "flex", justifyContent: "right" }}>
                                     <SaveButton icon={<span />} alwaysEnable sx={SaveButtonStyles} />

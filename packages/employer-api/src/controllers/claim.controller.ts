@@ -7,6 +7,7 @@ import * as claimService from "../services/claim.service"
 import * as employerService from "../services/employer.service"
 import * as formService from "../services/form.service"
 import { getApplicationByConfirmationID, getFormId, getFormPass } from "../services/application.service"
+import { getCHEFSToken } from "../services/common.service"
 
 export const getAllClaims = async (req: any, res: express.Response) => {
     try {
@@ -239,6 +240,7 @@ export const updateClaim = async (req: any, res: express.Response) => {
 // and the form is still in draft, then update the claim status to draft
 const updateClaimFromForm = async (employerClaimRecord: any) => {
     if (employerClaimRecord.status === "Draft") {
+        console.log(`[claim.controller] updating claim with id ${employerClaimRecord.id}`)
         const formID = process.env.CLAIM_FORM_ID
         const formPass = process.env.CLAIM_FORM_PASS
         if (formID && formPass && employerClaimRecord.form_submission_id) {
@@ -250,7 +252,6 @@ const updateClaimFromForm = async (employerClaimRecord: any) => {
             if (submissionResponse.submission.draft === true) {
                 await claimService.updateClaim(employerClaimRecord.id, "Draft", submissionResponse.submission, true)
             } else if (submissionResponse.submission.draft === false) {
-                console.log("form submitted event")
                 // Create SP claim form if it does not already exist.
                 if (
                     !employerClaimRecord?.service_provider_form_submission_id ||
@@ -258,25 +259,44 @@ const updateClaimFromForm = async (employerClaimRecord: any) => {
                 ) {
                     const submission = submissionResponse?.submission?.submission
                     const serviceProviderInternalID = `SPx${submission.data.internalId}` // create a new internal id for the SP form
-                    const createDraftResult = await formService.createTeamProtectedDraft(
+                    const token = await getCHEFSToken()
+                    const createDraftResult = await formService.createLoginProtectedDraft(
+                        { token },
                         process.env.SP_CLAIM_FORM_ID as string,
-                        process.env.SP_CLAIM_FORM_PASS as string,
                         process.env.SP_CLAIM_FORM_VERSION_ID as string,
                         serviceProviderInternalID,
-                        submission.data
+                        submission.data,
+                        employerClaimRecord.catchmentno
                     )
+
                     // If SP claim form created, then update DB record.
                     if (createDraftResult?.id && createDraftResult.submission) {
-                        await claimService.addServiceProviderClaim(
-                            submissionResponse,
-                            serviceProviderInternalID,
-                            createDraftResult.id
+                        console.log(
+                            `[claim.controller] new SP claim form draft created with id ${createDraftResult.id} and catchment ${employerClaimRecord.catchmentno}`
                         )
+                        await claimService
+                            .addServiceProviderClaim(
+                                submissionResponse,
+                                serviceProviderInternalID,
+                                createDraftResult.id
+                            )
+                            .then(() => {
+                                console.log(
+                                    `[claim.controller] successfully updated claim ${employerClaimRecord.id} with SP claim form data`
+                                )
+                            })
                         // TODO: send notification.
+                    } else {
+                        console.log(
+                            `[claim.controller] unable to create new service provider claim form for submission id ${employerClaimRecord.form_submission_id} - this shouldn't happen!`
+                        )
                     }
-                    console.log("SP claim form created")
                 }
             }
+        } else {
+            console.log(
+                `[claim.controller] claim ${employerClaimRecord.id} failed to update - one of formID, formPass, form_submission_id is missing - this shouldn't happen!`
+            )
         }
     }
 }
