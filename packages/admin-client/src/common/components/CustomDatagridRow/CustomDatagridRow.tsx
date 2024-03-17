@@ -26,13 +26,13 @@ const computeNbColumns = (expand, children, hasBulkActions) =>
           React.Children.toArray(children).filter((child) => !!child).length // non-null children
         : 0 // we don't need to compute columns if there is no expand panel;
 
-// type CustomDatagridRowProps = DatagridRowProps & {
-//     showCalculatorButton?: boolean
-// }
+type CustomDatagridRowProps = DatagridRowProps & {
+    showCalculatorButton?: boolean
+}
 
-//const DatagridRow: FC<CustomDatagridRowProps> = React.forwardRef((props, ref) => {
-// const DatagridRow: FC<DatagridRowProps> = React.forwardRef((props, ref) => {
-const DatagridRow: FC<any> = React.forwardRef((props, ref) => {
+const DatagridRow: FC<CustomDatagridRowProps> = React.forwardRef((props, ref) => {
+    // const DatagridRow: FC<DatagridRowProps> = React.forwardRef((props, ref) => {
+    //const DatagridRow: FC<any> = React.forwardRef((props, ref) => {
     const {
         showCalculatorButton,
         children,
