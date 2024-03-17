@@ -56,7 +56,7 @@
         "ra-data-simple-rest": "^4.7.0",
         "ra-keycloak": "^1.0.0",
         "react": "^18.2.0",
-        "react-admin": "^4.4.0",
+        "react-admin": "4.16.12",
         "react-dom": "^18.2.0",
         "react-hook-form": "^7.41.5",
         "react-icons": "^4.7.1",
