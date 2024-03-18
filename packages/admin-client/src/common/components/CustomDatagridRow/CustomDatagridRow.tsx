@@ -30,7 +30,7 @@ const computeNbColumns = (expand, children, hasBulkActions) =>
 //     showCalculatorButton?: boolean
 // }
 
-//const DatagridRow: FC<CustomDatagridRowProps> = React.forwardRef((props, ref) => {
+// const DatagridRow: FC<CustomDatagridRowProps> = React.forwardRef((props, ref) => {
 // const DatagridRow: FC<DatagridRowProps> = React.forwardRef((props, ref) => {
 const DatagridRow: FC<any> = React.forwardRef((props, ref) => {
     const {
@@ -171,7 +171,7 @@ const DatagridRow: FC<any> = React.forwardRef((props, ref) => {
                             key={`${id}-${(field.props as any).source || index}`}
                             className={clsx(`column-${(field.props as any).source}`, DatagridClasses.rowCell)}
                             record={record}
-                            {...{ field, resource }}
+                            {...{ field, resource, ...rest }}
                         />
                     ) : null
                 )}
