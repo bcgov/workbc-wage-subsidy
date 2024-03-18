@@ -24,6 +24,15 @@ export const getAllApplications = async (
             if (filters.form_confirmation_id) {
                 queryBuilder.where("form_confirmation_id", filters.form_confirmation_id)
             }
+            if (filters.search_query) {
+                queryBuilder.where((queryBuilder: any) => {
+                    queryBuilder
+                        .where("form_confirmation_id", "ILIKE", `%${filters.search_query}%`)
+                        .orWhere("position_title", "ILIKE", `%${filters.search_query}%`)
+                        .orWhere("organization", "ILIKE", `%${filters.search_query}%`)
+                        .orWhere("form_type", "ILIKE", `%${filters.search_query}%`)
+                })
+            }
             if (sortFields?.length > 0 && sortOrder) {
                 sortFields.forEach((field, i) => {
                     sortOrder === "DESC"

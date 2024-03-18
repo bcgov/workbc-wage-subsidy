@@ -30,6 +30,16 @@ export const getAllClaims = async (
             if (filters.associated_application_id) {
                 queryBuilder.where("associated_application_id", filters.associated_application_id)
             }
+            if (filters.search_query) {
+                queryBuilder.where((queryBuilder: any) => {
+                    queryBuilder
+                        .where("form_confirmation_id", "ILIKE", `%${filters.search_query}%`)
+                        .orWhere("position_title", "ILIKE", `%${filters.search_query}%`)
+                        .orWhere("employee_first_name", "ILIKE", `%${filters.search_query}%`)
+                        .orWhere("employee_last_name", "ILIKE", `%${filters.search_query}%`)
+                        .orWhere("associated_application_id", "ILIKE", `%${filters.search_query}%`)
+                })
+            }
             if (sortFields?.length > 0 && sortOrder) {
                 sortFields.forEach((field, i) => {
                     sortOrder === "DESC"
