@@ -4,7 +4,7 @@ import { styled } from "@mui/material/styles"
 import { useTranslate } from "ra-core"
 import { COLOURS } from "../../../Colours"
 
-import { CommonInputProps, TextInput, TextInputProps } from "react-admin"
+import { CommonInputProps, TextInput, TextInputProps, minLength } from "react-admin"
 
 type CustomSearchInputProps = SearchInputProps & { containerStyle?: any }
 
@@ -42,6 +42,8 @@ export const CustomSearchInput = (props: CustomSearchInputProps) => {
                     backgroundColor: COLOURS.LIGHTGREY
                 }}
                 {...rest}
+                // Do not search until 3 or more characters enetered.
+                validate={minLength(3, "")}
             />
         </Box>
     )
