@@ -7,6 +7,7 @@ import CustomDatagrid from "../common/components/CustomDatagrid/CustomDatagrid"
 import { ListActions } from "../common/components/ListActions/ListActions"
 import { ListAside } from "../common/components/ListAside/ListAside"
 import { WorkBcCentres } from "../common/data/WorkBcCentres"
+import { CustomSearchInput } from "../common/components/CustomSearchInput/CustomSearchInput"
 
 export const claimStatusFilters = {
     All: { label: "All" },
@@ -15,6 +16,16 @@ export const claimStatusFilters = {
     Completed: { label: "Completed", status: "Completed" },
     Cancelled: { label: "Cancelled", status: "Cancelled" }
 } as { [key: string]: any }
+
+const claimFilters = [
+    <CustomSearchInput
+        placeholder="Search this catchment..."
+        source="search_query"
+        alwaysOn
+        style={{ width: "18em" }}
+        containerStyle={{ transform: "translate(0em, -2.8em)" }}
+    />
+]
 
 export const ClaimList = (props: any) => {
     const cc = useContext(CatchmentContext)
@@ -48,13 +59,14 @@ export const ClaimList = (props: any) => {
             <Box id="main-content-custom" tabIndex={0} aria-label="main content">
                 {!ready && <Loading sx={{ marginTop: 20 }}></Loading>}
                 {cc.catchments.length > 0 && cc.catchment.id > 0 && (
-                    <Box hidden={!ready}>
+                    <Box hidden={!ready} sx={{ paddingTop: "2em" }}>
                         <CatchmentLabel catchment={cc.catchment.name} />
                         <List
                             {...props}
                             actions={<ListActions />}
                             filter={{ ...statusFilter, catchmentno: cc.catchment.id }}
                             filterDefaultValues={{ ...claimStatusFilters["All"], catchmentno: cc.catchment.id }}
+                            filters={claimFilters}
                             aside={
                                 <ListAside
                                     statusFilters={claimStatusFilters}
