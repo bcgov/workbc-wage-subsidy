@@ -7,6 +7,7 @@ import * as applicationService from "../services/application.service"
 import * as employerService from "../services/employer.service"
 import * as formService from "../services/form.service"
 import * as geocoderService from "../services/geocoder.service"
+import * as emailController from "./email.controller"
 
 export const getAllApplications = async (req: any, res: express.Response) => {
     try {
@@ -229,6 +230,21 @@ const updateApplicationFromForm = async (application: any) => {
                             Catchment
                         )
                     }
+
+                    // Send email confirmations and notifications //
+                    await emailController
+                        .sendEmail(submissionResponse.submission.submission)
+                        .then(() => {
+                            console.log(
+                                `[application.controller] successfully sent notifications for submission id ${application.form_submission_id}`
+                            )
+                        })
+                        .catch((e) => {
+                            console.log(
+                                `[application.controller] error sending notifications for submission id ${application.form_submission_id} - Error:`,
+                                e
+                            )
+                        })
                 } else if (submissionResponse.submission.draft === true) {
                     // Form is still in draft
                     await applicationService.updateApplication(
