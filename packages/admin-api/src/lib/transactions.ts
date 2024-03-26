@@ -34,7 +34,10 @@ const updateAssociatedClaims = async (application: any, data: any, username: str
                 (claim.status && data.status && data.status === "Cancelled" && claim.status !== "Cancelled")
             ) {
                 const result = claimService.updateClaim(claim.id, username, data, trx)
-                await updateChefsCatchment("Claim", claim.service_provider_form_submission_id, data.catchmentNo)
+                if (data.catchmentNo) {
+                    // update chefs form if the catchment was changed
+                    await updateChefsCatchment("Claim", claim.service_provider_form_submission_id, data.catchmentNo)
+                }
                 return result
             }
 
