@@ -21,7 +21,7 @@ export const getAllClaims = async (
             if (filters.id) {
                 queryBuilder.where("id", `%${filters.id}%`)
             }
-            if (filters.catchmentno) {
+            if (filters.catchmentno && filters.catchmentno > 0) {
                 queryBuilder.where("catchmentno", Number(filters.catchmentno))
             }
             if (filters.status) {
@@ -31,12 +31,17 @@ export const getAllClaims = async (
                 queryBuilder.where("associated_application_id", filters.associated_application_id)
             }
             if (filters.search_query) {
+                // special logic for full names //
+                const searchSplit = filters.search_query.split(" ")
+                const firstName = searchSplit[0]
+                const lastName = searchSplit.length === 2 && searchSplit[1] ? searchSplit[1] : searchSplit[0]
+
                 queryBuilder.where((queryBuilder: any) => {
                     queryBuilder
                         .where("form_confirmation_id", "ILIKE", `%${filters.search_query}%`)
                         .orWhere("position_title", "ILIKE", `%${filters.search_query}%`)
-                        .orWhere("employee_first_name", "ILIKE", `%${filters.search_query}%`)
-                        .orWhere("employee_last_name", "ILIKE", `%${filters.search_query}%`)
+                        .orWhere("employee_first_name", "ILIKE", `%${firstName}%`)
+                        .orWhere("employee_last_name", "ILIKE", `%${lastName}%`)
                         .orWhere("associated_application_id", "ILIKE", `%${filters.search_query}%`)
                 })
             }
@@ -59,13 +64,20 @@ export const getAllClaims = async (
 }
 
 export const getClaimCounts = async (catchmentno: string) => {
-    const claimCounts = knex
-        .select("status")
-        .count("*")
-        .from("claims")
-        .whereNot("status", "Draft")
-        .where("catchmentno", Number(catchmentno))
-        .groupBy("status")
+    let claimCounts
+    if (Number(catchmentno) > 0) {
+        // 0 <=> all catchments
+        claimCounts = knex
+            .select("status")
+            .count("*")
+            .from("claims")
+            .whereNot("status", "Draft")
+            .where("catchmentno", Number(catchmentno))
+            .groupBy("status")
+    } else {
+        claimCounts = knex.select("status").count("*").from("claims").whereNot("status", "Draft").groupBy("status")
+    }
+
     return claimCounts
 }
 

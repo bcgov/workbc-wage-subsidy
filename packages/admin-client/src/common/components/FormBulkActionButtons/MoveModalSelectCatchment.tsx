@@ -47,22 +47,26 @@ const MoveModalSelectCatchment: React.FC<MoveModalProps> = ({
                     <MenuList
                         style={{ maxHeight: "20em", overflow: "auto", border: "2px solid " + COLOURS.MEDIUMGREY }}
                     >
-                        {cc.catchments.map((catchment) => (
-                            <MenuItem
-                                key={catchment.id}
-                                value={catchment.id}
-                                selected={targetCatchment === catchment.id}
-                                onClick={() => setTargetCatchment(catchment.id)}
-                            >
-                                {/* Manually indicate selection, since aria-selected having no effect for unknown reasons. */}
-                                <span style={ScreenReaderOnly}>
-                                    {"Catchment " +
-                                        catchment.name +
-                                        (targetCatchment === catchment.id ? ", selected" : ", unselected")}
-                                </span>
-                                <span aria-hidden={true}>{catchment.name}</span>
-                            </MenuItem>
-                        ))}
+                        {cc.catchments.map((catchment) => {
+                            if (catchment.id > 0) {
+                                return (
+                                    <MenuItem
+                                        key={catchment.id}
+                                        value={catchment.id}
+                                        selected={targetCatchment === catchment.id}
+                                        onClick={() => setTargetCatchment(catchment.id)}
+                                    >
+                                        {/* Manually indicate selection, since aria-selected having no effect for unknown reasons. */}
+                                        <span style={ScreenReaderOnly}>
+                                            {"Catchment " +
+                                                catchment.name +
+                                                (targetCatchment === catchment.id ? ", selected" : ", unselected")}
+                                        </span>
+                                        <span aria-hidden={true}>{catchment.name}</span>
+                                    </MenuItem>
+                                )
+                            }
+                        })}
                     </MenuList>
                 </Box>
             </Box>

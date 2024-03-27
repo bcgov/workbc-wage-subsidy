@@ -45,7 +45,7 @@ const CatchmentDropdown: React.FC = () => {
             value={value}
             onChange={handleChange}
             displayEmpty
-            renderValue={() => "Select Catchment"}
+            renderValue={() => cc.catchment.name}
             // This component receives keyboard focus via a subcomponent.
             // To detect keyboard focus from here, we must use onFocus(), onBlur().
             onFocus={() => setOutline(outlineStyles.solidOutline)}

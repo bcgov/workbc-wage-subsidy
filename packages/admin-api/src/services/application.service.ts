@@ -15,7 +15,7 @@ export const getAllApplications = async (
             if (filters.id) {
                 queryBuilder.where("id", Number(filters.id))
             }
-            if (filters.catchmentno) {
+            if (filters.catchmentno && filters.catchmentno > 0) {
                 queryBuilder.where("catchmentno", Number(filters.catchmentno))
             }
             if (filters.status) {
@@ -52,13 +52,25 @@ export const getAllApplications = async (
 }
 
 export const getApplicationCounts = async (catchmentno: string) => {
-    const applicationCounts = knex
-        .select("status")
-        .count("*")
-        .from("applications")
-        .whereNot("status", "Draft")
-        .where("catchmentno", Number(catchmentno))
-        .groupBy("status")
+    let applicationCounts
+    if (Number(catchmentno) > 0) {
+        // 0 <=> all catchments
+        applicationCounts = knex
+            .select("status")
+            .count("*")
+            .from("applications")
+            .whereNot("status", "Draft")
+            .where("catchmentno", Number(catchmentno))
+            .groupBy("status")
+    } else {
+        applicationCounts = knex
+            .select("status")
+            .count("*")
+            .from("applications")
+            .whereNot("status", "Draft")
+            .groupBy("status")
+    }
+
     return applicationCounts
 }
 

@@ -9,6 +9,13 @@ const getCatchments = () => {
     // eslint-disable-next-line prefer-const
     let result: any[] = []
     const provider = localStorage.getItem("provider")
+    if (provider === "IDIR") {
+        // give IDIR users the option to view all catchments at once
+        result.push({
+            id: 0,
+            name: "All Catchments"
+        })
+    }
     const permissions = localStorage.getItem("permissions")
     if ((provider === "BCEID" || provider === "BCEIDBOTH" || provider === "IDIR") && permissions !== null) {
         JSON.parse(permissions).forEach((item: { catchmentNo: number; location: string }) => {

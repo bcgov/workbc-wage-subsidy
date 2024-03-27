@@ -26,8 +26,9 @@ export const getAllClaims = async (req: any, res: express.Response) => {
         const catchments = await getCatchments(req.kauth.grant.access_token)
         if (
             catchments.length === 0 ||
-            !filter.catchmentno ||
-            (filter.catchmentno !== -1 && !catchments.includes(filter.catchmentno))
+            filter.catchmentno == null ||
+            (Number(filter.catchmentno) !== -1 &&
+                Number(filter.catchmentno !== 0 && !catchments.includes(filter.catchmentno)))
         ) {
             return res.status(403).send("Forbidden")
         }
@@ -58,8 +59,10 @@ export const getClaimCounts = async (req: any, res: express.Response) => {
         const catchments = await getCatchments(req.kauth.grant.access_token)
         if (
             catchments.length === 0 ||
-            !filter.catchmentno ||
-            (filter.catchmentno !== -1 && !catchments.includes(filter.catchmentno))
+            filter.catchmentno == null ||
+            (Number(filter.catchmentno !== -1) &&
+                Number(filter.catchmentno !== 0) &&
+                !catchments.includes(filter.catchmentno))
         ) {
             return res.status(403).send("Forbidden")
         }

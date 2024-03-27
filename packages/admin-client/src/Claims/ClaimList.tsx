@@ -17,16 +17,6 @@ export const claimStatusFilters = {
     Cancelled: { label: "Cancelled", status: "Cancelled" }
 } as { [key: string]: any }
 
-const claimFilters = [
-    <CustomSearchInput
-        placeholder="Search this catchment..."
-        source="search_query"
-        alwaysOn
-        style={{ width: "18em" }}
-        containerStyle={{ transform: "translate(0em, -2.8em)" }}
-    />
-]
-
 export const ClaimList = (props: any) => {
     const cc = useContext(CatchmentContext)
     const unselectAll = useUnselectAll("claims")
@@ -54,16 +44,26 @@ export const ClaimList = (props: any) => {
         }
     }
 
+    const claimFilters = [
+        <CustomSearchInput
+            placeholder={cc.catchment.id > 0 ? "Search this catchment..." : "Search all catchments..."}
+            source="search_query"
+            alwaysOn
+            style={{ width: "18em" }}
+            containerStyle={{ transform: "translate(0em, -2.8em)" }}
+        />
+    ]
+
     return (
         <>
             <Box id="main-content-custom" tabIndex={0} aria-label="main content">
                 {!ready && <Loading sx={{ marginTop: 20 }}></Loading>}
-                {cc.catchments.length > 0 && cc.catchment.id > 0 && (
+                {cc.catchments.length > 0 && cc.catchment.id >= 0 && (
                     <Box hidden={!ready} sx={{ paddingTop: "2em" }}>
                         <CatchmentLabel catchment={cc.catchment.name} />
                         <List
                             {...props}
-                            actions={<ListActions />}
+                            actions={<ListActions catchment={cc.catchment.id} />}
                             filter={{ ...statusFilter, catchmentno: cc.catchment.id }}
                             filterDefaultValues={{ ...claimStatusFilters["All"], catchmentno: cc.catchment.id }}
                             filters={claimFilters}
