@@ -19,7 +19,6 @@ const { PDFDocument } = require("pdf-lib")
 export const getAllClaims = async (req: any, res: express.Response) => {
     try {
         const { bceid_user_guid, idir_user_guid, idp } = req.kauth.grant.access_token.content
-        console.log(req.kauth.grant.access_token.content)
         if (bceid_user_guid === undefined && idir_user_guid === undefined) {
             return res.status(401).send("Not Authorized")
         }
