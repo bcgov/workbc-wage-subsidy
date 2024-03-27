@@ -21,7 +21,7 @@ export const getAllClaims = async (
             if (filters.id) {
                 queryBuilder.where("id", `%${filters.id}%`)
             }
-            if (filters.catchmentno && filters.catchmentno > 0) {
+            if (filters.catchmentno && Number(filters.catchmentno) !== 0) {
                 queryBuilder.where("catchmentno", Number(filters.catchmentno))
             }
             if (filters.status) {
@@ -65,7 +65,7 @@ export const getAllClaims = async (
 
 export const getClaimCounts = async (catchmentno: string) => {
     let claimCounts
-    if (Number(catchmentno) > 0) {
+    if (Number(catchmentno) !== 0) {
         // 0 <=> all catchments
         claimCounts = knex
             .select("status")

@@ -47,7 +47,7 @@ export const ApplicationList = (props: any) => {
 
     const applicationFilters = [
         <CustomSearchInput
-            placeholder={cc.catchment.id > 0 ? "Search this catchment..." : "Search all catchments..."}
+            placeholder={cc.catchment.id !== 0 ? "Search this catchment..." : "Search all catchments..."}
             source="search_query"
             alwaysOn
             style={{ width: "18em" }}
