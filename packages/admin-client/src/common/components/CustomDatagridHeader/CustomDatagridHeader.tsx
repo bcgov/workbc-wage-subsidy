@@ -1,7 +1,7 @@
 import * as React from "react"
 import { Children, isValidElement, useCallback } from "react"
 import PropTypes from "prop-types"
-import { useListContext, useResourceContext, Identifier, RaRecord, SortPayload, useTranslate } from "ra-core"
+import { useListContext, useResourceContext, Identifier, RaRecord, SortPayload } from "ra-core"
 import { Box, Checkbox, TableCell, TableHead, TableRow } from "@mui/material"
 import clsx from "clsx"
 
@@ -17,7 +17,6 @@ import CustomDatagridHeaderCell from "../CustomDatagridHeaderCell/CustomDatagrid
 export const CustomDatagridHeader = (props: DatagridHeaderProps) => {
     const { children, className, hasExpand = false, hasBulkActions = false, isRowSelectable } = props
     const resource = useResourceContext(props)
-    const translate = useTranslate()
     const { sort, data, onSelect, selectedIds, setSort } = useListContext(props)
     const { expandSingle } = useDatagridContext()
 
@@ -64,9 +63,7 @@ export const CustomDatagridHeader = (props: DatagridHeaderProps) => {
                         // Apply same padding that gets applied automatically to list row checkboxes.
                         <Box paddingLeft="8.48px">
                             <Checkbox
-                                aria-label={translate("ra.action.select_all", {
-                                    _: "Select all"
-                                })}
+                                aria-label={"Select all"}
                                 className="select-all"
                                 color="primary"
                                 checked={
