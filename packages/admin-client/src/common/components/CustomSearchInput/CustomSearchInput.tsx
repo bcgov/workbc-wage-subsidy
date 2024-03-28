@@ -11,8 +11,6 @@ type CustomSearchInputProps = SearchInputProps & { containerStyle?: any }
 export const CustomSearchInput = (props: CustomSearchInputProps) => {
     const { label, containerStyle, ...rest } = props
 
-    const translate = useTranslate()
-
     if (label) {
         throw new Error(
             "<SearchInput> isn't designed to be used with a label prop. Use <TextInput> if you need a label."
@@ -25,7 +23,6 @@ export const CustomSearchInput = (props: CustomSearchInputProps) => {
                 hiddenLabel
                 label=""
                 resettable
-                placeholder={translate("ra.action.search")}
                 InputProps={{
                     startAdornment: (
                         <InputAdornment position="start">
@@ -42,7 +39,7 @@ export const CustomSearchInput = (props: CustomSearchInputProps) => {
                     backgroundColor: COLOURS.LIGHTGREY
                 }}
                 {...rest}
-                // Do not search until 3 or more characters enetered.
+                // Do not search until 3 or more characters entered.
                 validate={minLength(3, "")}
             />
         </Box>
