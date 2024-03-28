@@ -219,6 +219,7 @@ const CustomAdminWithKeycloak = () => {
             disableTelemetry
             requireAuth
             ready={Ready}
+            i18nProvider={undefined}
         >
             {access && (
                 <>

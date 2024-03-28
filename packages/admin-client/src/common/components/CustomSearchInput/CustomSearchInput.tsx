@@ -44,7 +44,6 @@ export const CustomSearchInput = (props: CustomSearchInputProps) => {
                 {...rest}
                 // Do not search until 3 or more characters enetered.
                 validate={minLength(3, "")}
-                translate={"no"}
             />
         </Box>
     )
