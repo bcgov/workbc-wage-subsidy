@@ -9,8 +9,7 @@ import {
     useCreatePath,
     useExpanded,
     useRecordContext,
-    useResourceContext,
-    useTranslate
+    useResourceContext
 } from "ra-core"
 import React, { FC, ReactElement, isValidElement, memo, useCallback, useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
@@ -51,7 +50,6 @@ const DatagridRow: FC<any> = React.forwardRef((props, ref) => {
     } = props
 
     const context = useDatagridContext()
-    const translate = useTranslate()
     const record = useRecordContext(props)
     const expandable = (!context || !context.isRowExpandable || context.isRowExpandable(record)) && expand
     const resource = useResourceContext(props)
@@ -146,9 +144,7 @@ const DatagridRow: FC<any> = React.forwardRef((props, ref) => {
                         />
                         {hasBulkActions && (
                             <Checkbox
-                                aria-label={translate("ra.action.select_row", {
-                                    _: "Select this row"
-                                })}
+                                aria-label={"Select this row"}
                                 color="primary"
                                 className={`select-item ${DatagridClasses.checkbox}`}
                                 checked={selectable && selected}

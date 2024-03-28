@@ -5,13 +5,11 @@ import PropTypes from "prop-types"
 import clsx from "clsx"
 import { TableCell, TableSortLabel, Tooltip } from "@mui/material"
 import { TableCellProps } from "@mui/material/TableCell"
-import { FieldTitle, useTranslate, SortPayload, useResourceContext } from "ra-core"
+import { FieldTitle, SortPayload, useResourceContext } from "ra-core"
 
 export const DatagridHeaderCell = (props: DatagridHeaderCellProps): JSX.Element => {
     const { className, field, sort, updateSort, isSorting, ...rest } = props
     const resource = useResourceContext(props)
-
-    const translate = useTranslate()
 
     return field ? (
         <StyledTableCell
@@ -22,7 +20,7 @@ export const DatagridHeaderCell = (props: DatagridHeaderCellProps): JSX.Element 
         >
             {updateSort && field.props.sortable !== false && (field.props.sortBy || field.props.source) ? (
                 <Tooltip
-                    title={translate("ra.action.sort")}
+                    title={"sort"}
                     placement={field.props.textAlign === "right" ? "bottom-end" : "bottom-start"}
                     enterDelay={300}
                 >
