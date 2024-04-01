@@ -14,7 +14,7 @@ const workBcCentreCodes = Object.keys(WorkBcCentres)
 
 export const getAllApplications = async (req: any, res: express.Response) => {
     try {
-        const { bceid_user_guid, idir_user_guid } = req.kauth.grant.access_token.content
+        const { bceid_user_guid, idir_user_guid, idp } = req.kauth.grant.access_token.content
         if (bceid_user_guid === undefined && idir_user_guid === undefined) {
             return res.status(401).send("Not Authorized")
         }
@@ -22,8 +22,11 @@ export const getAllApplications = async (req: any, res: express.Response) => {
         const catchments = await getCatchments(req.kauth.grant.access_token)
         if (
             catchments.length === 0 ||
-            !filter.catchmentno ||
-            (filter.catchmentno !== -1 && !catchments.includes(filter.catchmentno))
+            filter.catchmentno == null ||
+            (Number(filter.catchmentno) === 0 && idp !== "idir") ||
+            (Number(filter.catchmentno) !== -1 &&
+                Number(filter.catchmentno) !== 0 &&
+                !catchments.includes(filter.catchmentno))
         ) {
             return res.status(403).send("Forbidden")
         }
@@ -55,7 +58,7 @@ export const getAllApplications = async (req: any, res: express.Response) => {
 
 export const getApplicationCounts = async (req: any, res: express.Response) => {
     try {
-        const { bceid_user_guid, idir_user_guid } = req.kauth.grant.access_token.content
+        const { bceid_user_guid, idir_user_guid, idp } = req.kauth.grant.access_token.content
         if (bceid_user_guid === undefined && idir_user_guid === undefined) {
             return res.status(401).send("Not Authorized")
         }
@@ -63,8 +66,11 @@ export const getApplicationCounts = async (req: any, res: express.Response) => {
         const catchments = await getCatchments(req.kauth.grant.access_token)
         if (
             catchments.length === 0 ||
-            !filter.catchmentno ||
-            (filter.catchmentno !== -1 && !catchments.includes(filter.catchmentno))
+            filter.catchmentno == null ||
+            (Number(filter.catchmentno) === 0 && idp !== "idir") ||
+            (Number(filter.catchmentno) !== -1 &&
+                Number(filter.catchmentno) !== 0 &&
+                !catchments.includes(filter.catchmentno))
         ) {
             return res.status(403).send("Forbidden")
         }

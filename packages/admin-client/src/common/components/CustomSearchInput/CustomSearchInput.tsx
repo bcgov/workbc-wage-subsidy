@@ -1,7 +1,6 @@
 import SearchIcon from "@mui/icons-material/Search"
 import { Box, InputAdornment } from "@mui/material"
 import { styled } from "@mui/material/styles"
-import { useTranslate } from "ra-core"
 import { COLOURS } from "../../../Colours"
 
 import { CommonInputProps, TextInput, TextInputProps, minLength } from "react-admin"
@@ -10,8 +9,6 @@ type CustomSearchInputProps = SearchInputProps & { containerStyle?: any }
 
 export const CustomSearchInput = (props: CustomSearchInputProps) => {
     const { label, containerStyle, ...rest } = props
-
-    const translate = useTranslate()
 
     if (label) {
         throw new Error(
@@ -25,7 +22,6 @@ export const CustomSearchInput = (props: CustomSearchInputProps) => {
                 hiddenLabel
                 label=""
                 resettable
-                placeholder={translate("ra.action.search")}
                 InputProps={{
                     startAdornment: (
                         <InputAdornment position="start">
@@ -42,7 +38,7 @@ export const CustomSearchInput = (props: CustomSearchInputProps) => {
                     backgroundColor: COLOURS.LIGHTGREY
                 }}
                 {...rest}
-                // Do not search until 3 or more characters enetered.
+                // Do not search until 3 or more characters entered.
                 validate={minLength(3, "")}
             />
         </Box>

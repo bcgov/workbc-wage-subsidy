@@ -3,7 +3,7 @@ const generateHTMLEmail = require("../utils/htmlEmail")
 
 const s3static = process.env.S3_STATIC_IMG_URL || ""
 
-const receivedHaveEmployee = () => {
+const employeeReceivedHaveEmployee = () => {
     const email = generateHTMLEmail(
         "WorkBC Wage Subsidy Application - Next Steps",
         [
@@ -39,12 +39,25 @@ const receivedHaveEmployee = () => {
     return email
 }
 
-const receivedNeedEmployee = () => {
+const employerReceivedHaveEmployee = () => {
     const email = generateHTMLEmail(
         "Thank you, your application has been received",
         [
             `Thank you for your interest in WorkBC Wage Subsidy services.`,
-            `A WorkBC staff member will be in touch with you to confirm your business qualifies for WorkBC Wage subsidy, to complete the application process and will work with you on identifying a suitable match.`
+            `A WorkBC staff member will be in touch with you to confirm your business qualifies for WorkBC Wage Subsidy and to complete the application process.`
+        ],
+        [],
+        []
+    )
+    return email
+}
+
+const employerReceivedNeedEmployee = () => {
+    const email = generateHTMLEmail(
+        "Thank you, your application has been received",
+        [
+            `Thank you for your interest in WorkBC Wage Subsidy services.`,
+            `A WorkBC staff member will be in touch with you to confirm your business qualifies for WorkBC Wage Subsidy, to complete the application process and will work with you on identifying a suitable match.`
         ],
         [],
         []
@@ -53,6 +66,7 @@ const receivedNeedEmployee = () => {
 }
 
 export default {
-    receivedHaveEmployee,
-    receivedNeedEmployee
+    employeeReceivedHaveEmployee,
+    employerReceivedHaveEmployee,
+    employerReceivedNeedEmployee
 }

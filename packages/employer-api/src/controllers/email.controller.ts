@@ -8,12 +8,16 @@ import * as emailService from "../services/email.service"
 import received from "../templates/received.template"
 import notificationTemplate from "../templates/notification.template"
 
-const createEmailHTMLBasedOnType = (applicationType: string) => {
+const createEmailHTMLBasedOnType = (applicationType: string, applicantType: string) => {
     let emailHTML = ""
     if (String(applicationType) === "HaveEmployee") {
-        emailHTML = received.receivedHaveEmployee()
+        if (applicantType === "employee") {
+            emailHTML = received.employeeReceivedHaveEmployee()
+        } else if (applicantType === "employer") {
+            emailHTML = received.employerReceivedHaveEmployee()
+        }
     } else if (String(applicationType) === "NeedEmployee") {
-        emailHTML = received.receivedNeedEmployee()
+        emailHTML = received.employerReceivedNeedEmployee()
     }
     return emailHTML
 }
@@ -22,20 +26,22 @@ export const sendEmail = async (formData: any) => {
     try {
         const { data } = formData
         const applicationType = String(data.applicationType)
-        let recipients: string[] = []
+        let employerRecipients: string[] = []
+        const employeeRecipients: string[] = []
         if (String(applicationType) === "HaveEmployee") {
             Object.keys(data).forEach((key: string) => {
+                employerRecipients = [data.employerEmail]
                 if (key.includes("employeeEmail")) {
-                    if (!recipients.includes(data[key])) {
-                        recipients.push(data[key])
+                    if (!employeeRecipients.includes(data[key])) {
+                        employeeRecipients.push(data[key])
                     }
                 }
                 if (key.includes("position2")) {
                     Object.keys(data[key]).forEach((k: string) => {
                         if (k.includes("employeeEmail")) {
-                            // check if email in recipients array already
-                            if (!recipients.includes(data[key][k])) {
-                                recipients.push(data[key][k])
+                            // check if email in employee recipients array already
+                            if (!employeeRecipients.includes(data[key][k])) {
+                                employeeRecipients.push(data[key][k])
                             }
                         }
                     })
@@ -43,12 +49,26 @@ export const sendEmail = async (formData: any) => {
             })
             // if it is a Need Employee email, only send the employer a confirmation email
         } else if (String(applicationType) === "NeedEmployee") {
-            recipients = [data.employerEmail]
+            employerRecipients = [data.employerEmail]
         }
 
-        const emailHTML = createEmailHTMLBasedOnType(applicationType)
-        if (recipients.length !== 0) {
-            await emailService.sendEmail(emailHTML, `Wage Subsidy Application Submitted`, recipients)
+        const employerEmailHTML = createEmailHTMLBasedOnType(applicationType, "employer")
+        const employeeEmailHTML = createEmailHTMLBasedOnType(applicationType, "employee")
+
+        // Send the emails //
+        if (employerRecipients.length !== 0) {
+            await emailService
+                .sendEmail(employerEmailHTML, `Wage Subsidy Application Submitted`, employerRecipients)
+                .catch((e) => {
+                    console.log(`[email.controller] error sending employer email`)
+                })
+        }
+        if (employeeRecipients.length !== 0) {
+            await emailService
+                .sendEmail(employeeEmailHTML, `Wage Subsidy Application Submitted`, employeeRecipients)
+                .catch((e) => {
+                    console.log(`[email.controller] error sending employee email(s)`)
+                })
         }
 
         // Get catchment number and then proceed to send notifications to all users who have enabled notifications on that catchment's applications
@@ -68,7 +88,7 @@ export const sendEmail = async (formData: any) => {
                 String(applicationType) === "Claims" ? "claim" : "application"
             )
             if (notificationList.length === 0) {
-                console.log("[email.controller] No notifications found for this catchment")
+                console.log(`[email.controller] No notifications found for catchment ${data.catchmentNo}`)
             }
             // Send notifications emails to clients with notifications enabled (entry in notifications table)
             await Promise.all(

@@ -8,7 +8,7 @@ export const getNotifications = async (req: any, res: express.Response) => {
     try {
         const { catchmentNo, type } = req.query
         const catchments = await getCatchments(req.kauth.grant.access_token)
-        if (catchments.length === 0 || !catchments.includes(Number(catchmentNo))) {
+        if (catchments.length === 0 || (!catchments.includes(Number(catchmentNo)) && Number(catchmentNo) !== 0)) {
             return res.status(403).send("Forbidden")
         }
         if (type !== "application" && type !== "claim") {

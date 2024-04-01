@@ -3,11 +3,17 @@ import { TopToolbar } from "react-admin"
 import NotifyButton from "../NotifyButton/NotifyButton"
 import CatchmentDropdown from "../CatchmentDropdown/CatchmentDropdown"
 
-export const ListActions = () => (
-    <TopToolbar>
-        <Box display="flex" alignItems="end">
-            <NotifyButton />
-            <CatchmentDropdown />
-        </Box>
-    </TopToolbar>
-)
+interface ListActionProps {
+    catchment: number
+}
+
+export const ListActions: React.FC<ListActionProps> = ({ catchment }) => {
+    return (
+        <TopToolbar>
+            <Box display="flex" alignItems="end">
+                {catchment > 0 && <NotifyButton />}
+                <CatchmentDropdown />
+            </Box>
+        </TopToolbar>
+    )
+}
