@@ -37,6 +37,7 @@ export const CustomSearchInput = (props: CustomSearchInputProps) => {
                     },
                     backgroundColor: COLOURS.LIGHTGREY
                 }}
+                translate="no"
                 {...rest}
                 // Do not search until 3 or more characters entered.
                 validate={minLength(3, "")}

@@ -3,6 +3,8 @@ import axios from "axios"
 import Keycloak from "keycloak-js"
 import { useEffect, useState } from "react"
 import { Admin, CustomRoutes, Resource } from "react-admin"
+import polyglotI18nProvider from "ra-i18n-polyglot"
+import engMessages from "ra-language-english"
 import Ready from "./admin/ready"
 import "./App.css"
 import { ApplicationList } from "./Applications/ApplicationList"
@@ -199,6 +201,11 @@ export const lightTheme = {
     }
 }
 
+const i18nProvider = polyglotI18nProvider((locale) => engMessages, "en", {
+    allowMissing: true,
+    onMissingKey: (key, _, __) => key
+})
+
 const CustomAdminWithKeycloak = () => {
     const [access, setAccess] = useState(localStorage.getItem("access") === "true")
     const customAuthProvider = useAuthProvider()
@@ -219,6 +226,7 @@ const CustomAdminWithKeycloak = () => {
             disableTelemetry
             requireAuth
             ready={Ready}
+            i18nProvider={i18nProvider}
         >
             {access && (
                 <>
