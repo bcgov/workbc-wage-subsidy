@@ -63,9 +63,6 @@ jobs:
       - uses: actions/checkout@v3
         with:
           ref: ${{ steps.extract_branch.outputs.branch }}
-      - name: Setup npm
-        shell: bash
-        run: sudo npm install -g npm@8.5.5
       - name: Cache node modules
         id: cache-npm
         uses: actions/cache@v3
@@ -79,6 +76,9 @@ jobs:
             ${{ runner.os }}-build-${{ env.cache-name }}-
             ${{ runner.os }}-build-
             ${{ runner.os }}-
+      - name: Setup npm
+        shell: bash
+        run: sudo npm install -g npm@8.5.5
       - name: Use Node.js
         uses: actions/setup-node@v3
         with:
