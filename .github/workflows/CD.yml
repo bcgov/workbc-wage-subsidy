@@ -76,9 +76,6 @@ jobs:
             ${{ runner.os }}-build-${{ env.cache-name }}-
             ${{ runner.os }}-build-
             ${{ runner.os }}-
-      - name: Setup npm
-        shell: bash
-        run: sudo npm install -g npm@8.5.5
       - name: Use Node.js
         uses: actions/setup-node@v3
         with:
@@ -107,6 +104,9 @@ jobs:
 
           # Optional - this sets your Kubernetes context's current namespace after logging in.
           namespace: ${{secrets.PROJECT_TOOLS_4}}
+      - name: Setup npm
+        shell: bash
+        run: sudo npm install -g npm@8.5.5
       # Build image
       - name: Building image
         id: build-static-image
