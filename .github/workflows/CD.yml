@@ -63,6 +63,9 @@ jobs:
       - uses: actions/checkout@v3
         with:
           ref: ${{ steps.extract_branch.outputs.branch }}
+      - name: Setup npm
+        shell: bash
+        run: npx -p npm@8 npm ci
       - name: Cache node modules
         id: cache-npm
         uses: actions/cache@v3
