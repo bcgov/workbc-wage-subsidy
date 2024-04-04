@@ -197,7 +197,7 @@ const updateApplicationFromForm = async (application: any) => {
                         `[application.controller] address validation result for submission id ${application.form_submission_id} - Score: ${Score}, Catchment: ${Catchment}, Storefront: ${Storefront}`
                     )
                     if (Score && Catchment && Storefront) {
-                        if (Score >= 95) {
+                        if (Score >= 80) {
                             const newDataObj = Object.assign(submissionResponse.submission.submission.data, {
                                 catchmentNo: Catchment,
                                 storefrontId: Storefront,
@@ -376,7 +376,7 @@ const computeApplicationPrefillFields = async (employer: any) => {
             employer.city,
             employer.province
         )
-        if (!(businessAddressValidation?.Score && businessAddressValidation.Score >= 95)) {
+        if (!(businessAddressValidation?.Score && businessAddressValidation.Score >= 80)) {
             console.log(
                 `invalid business address ${employer.street_address}, ${employer.city}, ${employer.province} for employer with id ${employer.id} - avoiding prefilling address`
             )
@@ -396,7 +396,7 @@ const computeApplicationPrefillFields = async (employer: any) => {
             employer.workplace_city,
             employer.workplace_province
         )
-        if (!(workplaceAddressValidation?.Score && workplaceAddressValidation.Score >= 95)) {
+        if (!(workplaceAddressValidation?.Score && workplaceAddressValidation.Score >= 80)) {
             console.log(
                 `invalid workplace address ${employer.workplace_street_address}, ${employer.workplace_city}, ${employer.workplace_province} for employer with id ${employer.id} - avoiding prefilling address`
             )
