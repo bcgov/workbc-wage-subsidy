@@ -225,7 +225,7 @@ export const submission = async (req: express.Request, res: express.Response) =>
                         `[event.controller] address validation result for submission id ${req.body.submissionId} - Score: ${Score}, Catchment: ${Catchment}, Storefront: ${Storefront}`
                     )
                     if (Score && Catchment && Storefront) {
-                        if (Score >= 95) {
+                        if (Score >= 80) {
                             const newDataObj = Object.assign(submissionResponse.submission.submission.data, {
                                 catchmentNo: Catchment,
                                 storefrontId: Storefront,
