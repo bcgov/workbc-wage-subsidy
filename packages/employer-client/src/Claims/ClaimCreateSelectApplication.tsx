@@ -71,7 +71,7 @@ export const ClaimCreateSelectApplication = (props: any) => {
                 city: data.city,
                 province: "BC"
             })
-            if (validationResult.data.Score >= 95) {
+            if (validationResult.data.Score >= 80) {
                 setAddressValidated(true)
                 setValidationData(validationResult.data)
                 setValidationMessage("Address Validated")
