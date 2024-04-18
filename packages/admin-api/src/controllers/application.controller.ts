@@ -261,7 +261,8 @@ export const generatePDF = async (req: any, res: express.Response) => {
             signatory1: submission.data?.signatory1,
             signatoryTitle: submission.data?.signatoryTitle,
             submittedDate: formatDateMmmDDYYYY(submittedDate),
-            workBcCentre: submission.data?.workBcCentre
+            workBcCentre: submission.data?.workBcCentre,
+            submissionId: application?.form_confirmation_id ? application.form_confirmation_id : ""
         }
         const templateConfig = {
             // eslint-disable-next-line object-shorthand

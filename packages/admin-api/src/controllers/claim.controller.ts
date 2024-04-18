@@ -265,7 +265,8 @@ const formatPDFData = (submission: any, claim: any, submittedDate: string) => {
         comments: submission.data.container?.comments,
         approvedBy: submission.data.container?.approvedBy,
         approvedDate: submission.data.container?.approvedDate,
-        submittedDate: formatDateMmmDDYYYY(submittedDate)
+        submittedDate: formatDateMmmDDYYYY(submittedDate),
+        submissionId: claim?.form_confirmation_id ? claim.form_confirmation_id : ""
     }
     return formattedData
 }
