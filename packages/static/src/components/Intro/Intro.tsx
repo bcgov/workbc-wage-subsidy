@@ -17,6 +17,9 @@ const Intro = () => {
 
     return (
         <div className="intro">
+            <p style={{ padding: "1em 1em", backgroundColor: "#fcba19", borderRadius: "5px", fontWeight: "bold" }}>
+                May 1, 2024 the Employer Initiated Wage Subsidy (EIWS) will end.
+            </p>
             <h1>WorkBC Wage Subsidy</h1>
             <p>
                 The WorkBC Wage Subsidy program provides funding to eligible employers to hire, provide work experience
