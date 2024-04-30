@@ -1,11 +1,11 @@
-import { useEffect, useState } from "react"
 import Box from "@mui/material/Box"
 import Grid from "@mui/material/Grid"
+import { useEffect, useState } from "react"
 import { LoadingIndicator, useCreate, useGetIdentity, useGetList, useRedirect } from "react-admin"
+import { useSearchParams } from "react-router-dom"
 import { v4 as uuidv4 } from "uuid"
 import BCGovPrimaryButton from "../common/components/BCGovPrimaryButton/BCGovPrimaryButton"
 import Card from "../common/components/Card/Card"
-import { useSearchParams } from "react-router-dom"
 
 export const ApplicationCreate = () => {
     const redirect = useRedirect()
@@ -55,7 +55,6 @@ export const ApplicationCreate = () => {
                                     </p>
                                     <ul>
                                         <li>Your CRA Business Number</li>
-                                        <li>Your employee's e-mail address (if you{<br />}have an employee)</li>
                                     </ul>
                                 </Box>
                             </Grid>
