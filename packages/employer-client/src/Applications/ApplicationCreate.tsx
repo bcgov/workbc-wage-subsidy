@@ -86,17 +86,9 @@ export const ApplicationCreate = () => {
                                     alignItems="end"
                                     sx={{ flexGrow: 1 }}
                                 >
-                                    <Grid container direction="row" spacing={7}>
-                                        <Grid item xs={6}>
-                                            <Box display="flex" justifyContent="right">
-                                                <BCGovPrimaryButton
-                                                    text="I Have an Employee"
-                                                    onClick={() => handleClick("Have Employee")}
-                                                />
-                                            </Box>
-                                        </Grid>
-                                        <Grid item xs={6}>
-                                            <Box display="flex" justifyContent="left">
+                                    <Grid container direction="row">
+                                        <Grid item width="100%">
+                                            <Box display="flex" justifyContent="center">
                                                 <BCGovPrimaryButton
                                                     text="I Need an Employee"
                                                     onClick={() => handleClick("Need Employee")}

@@ -41,7 +41,7 @@ const Intro = () => {
                     <ul>
                         <li>Paid work experience opportunities</li>
                         <li>On-the-job training</li>
-                        <li>Possible long-term employment options.</li>
+                        <li>Possible long-term employment options</li>
                     </ul>
                 </Box>
             </BCGovModal>
