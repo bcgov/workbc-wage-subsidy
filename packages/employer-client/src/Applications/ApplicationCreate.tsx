@@ -55,7 +55,6 @@ export const ApplicationCreate = () => {
                                     </p>
                                     <ul>
                                         <li>Your CRA Business Number</li>
-                                        {/* <li>Your employee's e-mail address (if you{<br />}have an employee)</li> */}
                                     </ul>
                                 </Box>
                             </Grid>
