@@ -19,11 +19,9 @@ const Intro = () => {
         <div className="intro">
             <h1>WorkBC Wage Subsidy</h1>
             <p>
-                <mark style={{ backgroundColor: "lightGrey" }}>
-                    <b>As of May 1, 2024, the Employer Initiated Wage Subsidy (EIWS) ended.</b>
-                    &nbsp; The WorkBC wage subsidy has returned to its original intent of assisting unemployed WorkBC
-                    clients who are having a difficult time finding work due to a lack of skills and work experience.
-                </mark>
+                <b>As of May 1, 2024, the Employer Initiated Wage Subsidy (EIWS) ended.</b>
+                &nbsp; The WorkBC wage subsidy has returned to its original intent of assisting unemployed WorkBC
+                clients who are having a difficult time finding work due to a lack of skills and work experience.
             </p>
             <p>
                 The Wage Subsidy program matches WorkBC clients who require on-the-job training and work experience with
