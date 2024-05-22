@@ -130,6 +130,7 @@ jobs:
             VITE_EMPLOYER_URL=${{ vars.VITE_EMPLOYER_URL }}
             VITE_SERVICE_PROVIDER_URL=${{ vars.VITE_SERVICE_PROVIDER_URL }}
             VITE_MINISTRY_URL=${{ vars.VITE_MINISTRY_URL }}
+          extra-args: --ulimit nofile=4096:4096
       # Push to specified registry
       - name: Push Static To OpenShift Image repo
         id: push-to-os-static

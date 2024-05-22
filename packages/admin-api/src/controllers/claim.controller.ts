@@ -265,7 +265,14 @@ const formatPDFData = (submission: any, claim: any, submittedDate: string) => {
         comments: submission.data.container?.comments,
         approvedBy: submission.data.container?.approvedBy,
         approvedDate: submission.data.container?.approvedDate,
-        submittedDate: formatDateMmmDDYYYY(submittedDate)
+        submittedDate: formatDateMmmDDYYYY(submittedDate),
+        submissionID: claim?.form_confirmation_id,
+        grandTotal: formatCurrency(
+            (submission.data.container?.totalWages ?? 0) + (submission.data.container?.totalMercs ?? 0)
+        ),
+        grandEligTotal: formatCurrency(
+            (submission.data.container?.totalEligibleWages ?? 0) + (submission.data.container?.totalEligibleMercs ?? 0)
+        )
     }
     return formattedData
 }
