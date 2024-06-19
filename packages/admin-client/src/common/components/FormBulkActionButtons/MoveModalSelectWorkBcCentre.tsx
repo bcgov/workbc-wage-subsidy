@@ -38,7 +38,7 @@ const MoveModalSelectWorkBcCentre: React.FC<MoveModalSelectWorkBcCentreProps> = 
 
     const handleBack = (event: any) => {
         onRequestClose(event)
-        // Clear selection before returning to previous dialog.
+        // Clear selection before returning to previous dialog..
         setTargetCentre("")
         openModalSelectCatchment()
     }
