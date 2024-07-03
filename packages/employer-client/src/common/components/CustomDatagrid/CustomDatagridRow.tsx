@@ -163,7 +163,7 @@ const DatagridRow: FC<CustomDatagridRowProps> = React.forwardRef((props, ref) =>
                                 checked={selectable && selected}
                                 onClick={handleToggleSelection}
                                 disabled={!selectable}
-                                sx={{ alignItems: "start", padding: "6px 9px" }}
+                                sx={{ alignItems: "start", padding: "0.4em 0.6em" }}
                             />
                         )}
                     </Box>
