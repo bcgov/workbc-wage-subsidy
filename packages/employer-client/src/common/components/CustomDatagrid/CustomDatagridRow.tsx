@@ -131,12 +131,16 @@ const DatagridRow: FC<CustomDatagridRowProps> = React.forwardRef((props, ref) =>
             >
                 {/* First column: row button, checkbox */}
                 <TableCell padding="none">
-                    <Box display="flex" padding="0em 0em 0em 0.53em" minHeight="2.6em">
+                    <Box display="flex" padding="0em 0em 0em 0.53em" height="100%">
                         <Button
                             sx={{
+                                display: "flex",
+                                flexGrow: "1",
                                 position: "absolute",
-                                width: "99%",
-                                height: "3em",
+                                left: 0,
+                                width: "100%",
+                                height: "100%",
+                                alignItems: "stretch",
                                 backgroundColor: "transparent",
                                 "&:hover": {
                                     backgroundColor: "transparent"
@@ -159,6 +163,7 @@ const DatagridRow: FC<CustomDatagridRowProps> = React.forwardRef((props, ref) =>
                                 checked={selectable && selected}
                                 onClick={handleToggleSelection}
                                 disabled={!selectable}
+                                sx={{ alignItems: "start", padding: "6px 9px" }}
                             />
                         )}
                     </Box>
