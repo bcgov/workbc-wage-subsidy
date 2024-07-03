@@ -38,7 +38,7 @@ const PdfButtonField: React.FC = () => {
                     getPdf(formType)
                 }
             }}
-            sx={{ minWidth: "3em" }}
+            sx={{ minWidth: "3em", padding: "0.6em" }}
             aria-label="Generate PDF"
         >
             <FontAwesomeIcon icon={faFilePdf} size="xl" style={{ color: COLOURS.LIGHTBLUE_TEXT }} />
