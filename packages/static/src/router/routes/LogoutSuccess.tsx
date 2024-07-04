@@ -17,7 +17,7 @@ const LogoutSuccess = () => (
             We hope to see you again soon.
         </Typography>
         <Tooltip title="Go to Home">
-            <IconButton color="primary" href="/">
+            <IconButton color="primary" href="/" aria-label="Go to home page">
                 <HomeIcon fontSize="large" />
             </IconButton>
         </Tooltip>
