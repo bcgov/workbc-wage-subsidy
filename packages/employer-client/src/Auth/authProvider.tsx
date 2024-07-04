@@ -13,7 +13,7 @@ const useAuthProvider = (clientID: string) => {
             localStorage.removeItem("token")
             localStorage.removeItem("refresh_token")
             localStorage.removeItem("permissions")
-            return keycloak.logout()
+            return keycloak.logout({ redirectUri: "/logout-success" })
         },
         getIdentity: () => {
             if (keycloak.token) {
