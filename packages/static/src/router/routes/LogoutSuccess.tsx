@@ -7,7 +7,7 @@ const LogoutSuccess = () => (
         flexDirection="column"
         alignItems="center"
         justifyContent="center"
-        minHeight="calc(100vh - 120px)" // Assuming header and footer take up 120px
+        minHeight="calc(100vh - 115px)"
         sx={{ p: 4 }}
     >
         <Typography variant="h4" component="h1" gutterBottom>
