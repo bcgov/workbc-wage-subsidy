@@ -2,20 +2,26 @@ import { useCallback, useEffect, useState } from "react"
 import { useListContext } from "react-admin"
 import ShareButton from "./ShareButton"
 import ShareModal from "./ShareModal"
+import DeleteButton from "./DeleteButton"
+import DeleteModal from "./DeleteModal"
 
 export const FormBulkActionButtons = () => {
     const { resource, selectedIds, onUnselectItems } = useListContext()
     const [tabIndex, setTabIndex] = useState(-1)
     const [ariaHidden, setAriaHidden] = useState(true)
-    const [modalIsOpen, setModalIsOpen] = useState(false)
+    const [shareModalIsOpen, setShareModalIsOpen] = useState(false)
+    const [deleteModalIsOpen, setDeleteModalIsOpen] = useState(false)
 
-    const openModal = useCallback(() => {
-        setModalIsOpen(true)
+    const openModal = useCallback((type) => {
+        type === "share" ? setShareModalIsOpen(true) : setDeleteModalIsOpen(true)
+        // console.log(type);
+        // setShareModalIsOpen(true)
     }, [])
 
     const closeModal = useCallback(() => {
         onUnselectItems()
-        setModalIsOpen(false)
+        setShareModalIsOpen(false)
+        setDeleteModalIsOpen(false)
     }, [])
 
     // When bulk actions toolbar is hidden:
@@ -40,9 +46,17 @@ export const FormBulkActionButtons = () => {
 
     return (
         <>
-            <ShareButton tabIndex={tabIndex} ariaHidden={ariaHidden} onClick={openModal} />
+            <DeleteButton tabIndex={tabIndex} ariaHidden={ariaHidden} onClick={() => openModal("delete")} />
+            <DeleteModal
+                isOpen={deleteModalIsOpen}
+                onRequestClose={closeModal}
+                contentLabel="Delete selection of forms"
+                selectedIds={selectedIds}
+                resource={resource}
+            />
+            <ShareButton tabIndex={tabIndex} ariaHidden={ariaHidden} onClick={() => openModal("share")} />
             <ShareModal
-                isOpen={modalIsOpen}
+                isOpen={shareModalIsOpen}
                 onRequestClose={closeModal}
                 contentLabel="Share selection with other users"
                 selectedIds={selectedIds}
