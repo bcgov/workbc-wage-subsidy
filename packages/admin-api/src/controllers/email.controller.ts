@@ -3,8 +3,7 @@
 import * as emailService from "../services/email.service"
 import * as notificationService from "../services/notification.service"
 import notificationTemplate from "../templates/catchment-move-notification.template"
-// eslint-disable-next-line @typescript-eslint/no-require-imports, @typescript-eslint/no-var-requires
-const pins = require("../constants/centres.json")
+import pins from "../constants/centres.json"
 
 export const sendEmail = async (resource: string, catchmentNo: number) => {
     try {
