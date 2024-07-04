@@ -1,10 +1,12 @@
-import { Box, MenuItem, MenuList, Stack } from "@mui/material"
+import { Box, MenuItem, MenuList, Stack, Grid, Checkbox, Tooltip } from "@mui/material"
 import BCGovModal from "../BCGovModal/BCGovModal"
 import { COLOURS } from "../../../Colours"
 import ModalButton from "../BCGovModal/BCGovModalButton"
-import React, { useEffect } from "react"
+import React, { useEffect, useState } from "react"
 import { useListContext, useRefresh, useUpdateMany } from "react-admin"
 import { ScreenReaderOnly } from "../../styles/ScreenReaderOnly"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { faInfoCircle } from "@fortawesome/pro-solid-svg-icons"
 
 interface MoveModalSelectWorkBcCentreProps {
     isOpen: boolean
@@ -31,9 +33,10 @@ const MoveModalSelectWorkBcCentre: React.FC<MoveModalSelectWorkBcCentreProps> = 
 }) => {
     const refresh = useRefresh()
     const { resource, onUnselectItems } = useListContext()
+    const [isChecked, setIsChecked] = useState(false)
     const [updateCatchment, { isLoading }] = useUpdateMany(resource, {
         ids: selectedIds,
-        data: { catchmentNo: targetCatchment, workBcCentre: targetCentre }
+        data: { catchmentNo: targetCatchment, workBcCentre: targetCentre, sendNotifications: isChecked }
     })
 
     const handleBack = (event: any) => {
@@ -97,6 +100,20 @@ const MoveModalSelectWorkBcCentre: React.FC<MoveModalSelectWorkBcCentreProps> = 
                             </MenuList>
                         </Box>
                     </Box>
+                    <Grid container direction="row" alignItems={"center"} spacing={0}>
+                        <Checkbox
+                            color="primary"
+                            checked={isChecked}
+                            onClick={() => {
+                                setIsChecked(!isChecked)
+                            }}
+                            size="small"
+                        />
+                        <a style={{ marginRight: 5 }}>Send notification to receiving Catchment</a>
+                        <Tooltip title="Notification will be received only by users who have notifications set for this Catchment">
+                            <FontAwesomeIcon icon={faInfoCircle} style={{ color: COLOURS.LIGHTBLUE_TEXT }} />
+                        </Tooltip>
+                    </Grid>
                 </>
             ) : (
                 <p>
