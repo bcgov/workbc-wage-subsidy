@@ -6,19 +6,40 @@ import MoveModalSelectWorkBcCentre from "./MoveModalSelectWorkBcCentre"
 import { WorkBcCentres } from "../../data/WorkBcCentres"
 
 export const FormBulkActionButtons = () => {
-    const { selectedIds } = useListContext()
+    const { selectedIds, data } = useListContext()
     const [tabIndex, setTabIndex] = useState(-1)
     const [ariaHidden, setAriaHidden] = useState(true)
     const [modalSelectCatchmentIsOpen, setModalSelectCatchmentIsOpen] = useState(false)
     const [modalSelectWorkBcCentreIsOpen, setModalSelectWorkBcCentreIsOpen] = useState(false)
     const [targetCatchment, setTargetCatchment] = useState(-1)
     const [targetCentre, setTargetCentre] = useState("")
+    const [moveable, setMoveable] = useState(true)
     const workBcCentres = Object.keys(WorkBcCentres).map((code: string) => ({
         code: code,
         name: WorkBcCentres[code],
         catchment: Number(code.split("-")[0])
     }))
     const availableCentres = workBcCentres.filter((centre) => centre.catchment === targetCatchment)
+
+    useEffect(() => {
+        // calculate whether the Catchment Move action should be shown //
+        let shouldBeMoveable = true
+        selectedIds.forEach((selectedID) => {
+            const row = data.find((d) => d.id === selectedID)
+            if (row) {
+                if (row.associated_application_id && row.associated_application_id !== "LEGACY") {
+                    // Claims
+                    if (moveable) setMoveable(false)
+                    else shouldBeMoveable = false
+                } else if (!row.associated_application_id && row.status !== "New") {
+                    // Everything else
+                    if (moveable) setMoveable(false)
+                    else shouldBeMoveable = false
+                }
+            }
+        })
+        if (!moveable && shouldBeMoveable) setMoveable(true)
+    }, [selectedIds])
 
     const openModalSelectCatchment = useCallback(() => {
         setModalSelectCatchmentIsOpen(true)
@@ -63,26 +84,30 @@ export const FormBulkActionButtons = () => {
 
     return (
         <>
-            <MoveButton tabIndex={tabIndex} ariaHidden={ariaHidden} onClick={handleMove} />
-            <MoveModalSelectCatchment
-                isOpen={modalSelectCatchmentIsOpen}
-                onRequestClose={closeModalSelectCatchment}
-                contentLabel="Move selection to another catchment. Select target catchment."
-                targetCatchment={targetCatchment}
-                setTargetCatchment={setTargetCatchment}
-                openModalSelectWorkBcCentre={openModalSelectWorkBcCentre}
-            />
-            <MoveModalSelectWorkBcCentre
-                isOpen={modalSelectWorkBcCentreIsOpen}
-                onRequestClose={closeModalSelectWorkBcCentre}
-                contentLabel="Select target WorkBC Centre."
-                selectedIds={selectedIds}
-                targetCatchment={targetCatchment}
-                targetCentre={targetCentre}
-                setTargetCentre={setTargetCentre}
-                availableCentres={availableCentres}
-                openModalSelectCatchment={openModalSelectCatchment}
-            />
+            {moveable && (
+                <>
+                    <MoveButton tabIndex={tabIndex} ariaHidden={ariaHidden} onClick={handleMove} />
+                    <MoveModalSelectCatchment
+                        isOpen={modalSelectCatchmentIsOpen}
+                        onRequestClose={closeModalSelectCatchment}
+                        contentLabel="Move selection to another catchment. Select target catchment."
+                        targetCatchment={targetCatchment}
+                        setTargetCatchment={setTargetCatchment}
+                        openModalSelectWorkBcCentre={openModalSelectWorkBcCentre}
+                    />
+                    <MoveModalSelectWorkBcCentre
+                        isOpen={modalSelectWorkBcCentreIsOpen}
+                        onRequestClose={closeModalSelectWorkBcCentre}
+                        contentLabel="Select target WorkBC Centre."
+                        selectedIds={selectedIds}
+                        targetCatchment={targetCatchment}
+                        targetCentre={targetCentre}
+                        setTargetCentre={setTargetCentre}
+                        availableCentres={availableCentres}
+                        openModalSelectCatchment={openModalSelectCatchment}
+                    />
+                </>
+            )}
         </>
     )
 }

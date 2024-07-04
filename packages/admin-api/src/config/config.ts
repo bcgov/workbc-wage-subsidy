@@ -2,6 +2,7 @@ import axios, { AxiosInstance } from "axios"
 
 const chefsBaseUrl = process.env.CHEFS_URL || ""
 const authBaseUrl = process.env.AUTH_KEYCLOAK_SERVER_URL || ""
+const chesBaseUrl = process.env.CHES_HOST || ""
 
 // eslint-disable-next-line import/prefer-default-export
 export const chefsApi: AxiosInstance = axios.create({
@@ -10,4 +11,8 @@ export const chefsApi: AxiosInstance = axios.create({
 
 export const authApi: AxiosInstance = axios.create({
     baseURL: authBaseUrl
+})
+
+export const chesApi: AxiosInstance = axios.create({
+    baseURL: chesBaseUrl
 })
