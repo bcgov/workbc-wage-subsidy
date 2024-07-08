@@ -5,6 +5,7 @@ import { knex } from "../config/db-config"
 import * as applicationService from "../services/application.service"
 import * as claimService from "../services/claims.service"
 import * as formService from "../services/form.service"
+import * as emailController from "../controllers/email.controller"
 
 const MAX_RESULTS = 100
 const PAGE = 1
@@ -66,6 +67,11 @@ const updateApplicationAndAssociatedClaims = async (application: any, data: any,
     // update the chefs form if required //
     if (catchmentUpdated) {
         await updateChefsCatchment(application.form_type, application.form_submission_id, data.catchmentNo)
+
+        // send notifications to the catchment if requested //
+        if (data.sendNotifications === true) {
+            await emailController.sendEmail("Application", data.catchmentNo)
+        }
     }
 
     const claimsData: { [key: string]: any } = {}
@@ -137,11 +143,34 @@ export const updateClaimWithSideEffects = async (claim: any, username: string, d
                     )
                 }
                 const assocApplication = assocApplications.data[0]
-                const catchmentData = { catchmentNo: data.catchmentNo, workBcCentre: data.workBcCentre }
+                const catchmentData = {
+                    catchmentNo: data.catchmentNo,
+                    workBcCentre: data.workBcCentre,
+                    sendNotifications: data.sendNotifications
+                }
                 numUpdated += await updateApplicationAndAssociatedClaims(assocApplication, catchmentData, username, trx)
             } else {
                 // legacy claim - no associated applications - make sure to still update forms catchment //
                 await updateChefsCatchment("Claim", claim.service_provider_form_submission_id, data.catchmentNo)
+                const catchmentUpdated =
+                    (data.catchmentNo && !claim.catchmentno) ||
+                    (data.catchmentNo && claim.catchmentno && data.catchmentNo !== claim.catchmentno)
+
+                // send notifications to the catchment if requested //
+                if (catchmentUpdated && data.sendNotifications === true) {
+                    await emailController
+                        .sendEmail("Claim", data.catchmentNo)
+                        .then(() => {
+                            console.log(
+                                `[transactions.ts] Successfully sent catchment move emails to catchment ${data.catchmentNo}`
+                            )
+                        })
+                        .catch(() => {
+                            console.log(
+                                `[transactions.ts] Catchment move emails failed for catchment ${data.catchmentNo}`
+                            )
+                        })
+                }
             }
         }
         numUpdated += await claimService.updateClaim(claim.id, username, data, trx)
