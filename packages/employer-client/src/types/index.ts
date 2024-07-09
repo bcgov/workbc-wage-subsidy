@@ -1,1 +1,1 @@
-export type AppEnv = "Local Dev" | "Test" // TODO: Add more environments
+export type AppEnv = "Local Dev" | "DEV" | "TEST" | "PRODUCTION"
