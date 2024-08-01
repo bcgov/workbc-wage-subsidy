@@ -21,5 +21,8 @@ export const DatagridStyles = {
     "& .RaDatagrid-headerCell": {
         fontWeight: "bold",
         textAlign: "left"
+    },
+    "& .MuiTableRow-root": {
+        position: "relative"
     }
 }

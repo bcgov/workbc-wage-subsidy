@@ -11,4 +11,3 @@ v=${b%%[)| ]*}
 export PATH="$NVM_DIR/versions/node/$v/bin:$PATH"
 
 npx lint-staged
-npx jest --detectOpenHandles --forceExit

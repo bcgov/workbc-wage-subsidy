@@ -1,5 +1,6 @@
 import { useKeycloak } from "@react-keycloak/web"
 import jwt_decode from "jwt-decode"
+import { setEnvVariables } from "../utils/index"
 
 const useAuthProvider = (clientID: string) => {
     const { keycloak } = useKeycloak()
@@ -10,10 +11,11 @@ const useAuthProvider = (clientID: string) => {
             return localStorage.getItem("token") ? Promise.resolve() : Promise.reject("Failed to obtain access token.")
         },
         logout: () => {
+            const { absolutePath } = setEnvVariables()
             localStorage.removeItem("token")
             localStorage.removeItem("refresh_token")
             localStorage.removeItem("permissions")
-            return keycloak.logout()
+            return keycloak.logout({ redirectUri: `${absolutePath}/logout-success` })
         },
         getIdentity: () => {
             if (keycloak.token) {

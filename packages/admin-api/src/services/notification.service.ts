@@ -15,6 +15,11 @@ export const getNotifications = async (email: string, catchmentNo: number, type:
     return notifications
 }
 
+export const getNotificationsForCatchment = async (catchmentNo: number, type: string) => {
+    const notifications = await knex("notifications").where("catchmentno", catchmentNo).andWhere("type", type)
+    return notifications
+}
+
 export const addNotification = async (email: string, catchmentNo: number, type: string, username: string) => {
     const data = {
         email,
