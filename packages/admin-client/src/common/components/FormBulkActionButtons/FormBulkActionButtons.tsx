@@ -31,7 +31,7 @@ export const FormBulkActionButtons = () => {
                     // Claims
                     if (moveable) setMoveable(false)
                     else shouldBeMoveable = false
-                } else if (!row.associated_application_id && row.status !== "New") {
+                } else if (!row.associated_application_id && row.status !== "New" && row.status !== "In Progress") {
                     // Everything else
                     if (moveable) setMoveable(false)
                     else shouldBeMoveable = false
