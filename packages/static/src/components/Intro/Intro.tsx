@@ -17,6 +17,12 @@ const Intro = () => {
 
     return (
         <div className="intro">
+            <p>
+                <b style={{ color: "red" }}>
+                    Please note that due to technical difficulties users may experience temporary issues with the Wage
+                    Subsidy system.
+                </b>
+            </p>
             <h1>WorkBC Wage Subsidy</h1>
             <p>
                 <b>As of May 1, 2024, the Employer Initiated Wage Subsidy (EIWS) ended.</b>
