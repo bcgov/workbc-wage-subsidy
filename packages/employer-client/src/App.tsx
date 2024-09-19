@@ -274,10 +274,7 @@ function App() {
             }}
         >
             <EmployerProvider>
-                {/* <CustomAdminWithKeycloak /> */}
-                <div>
-                    <a>The Wage Subsidy platform is currently unavailable for maintenance. </a>
-                </div>
+                <CustomAdminWithKeycloak />
                 <Footer />
             </EmployerProvider>
         </ReactKeycloakProvider>
