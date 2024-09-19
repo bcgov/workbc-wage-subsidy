@@ -247,7 +247,10 @@ function App() {
             }}
         >
             <CatchmentProvider>
-                <CustomAdminWithKeycloak />
+                {/* <CustomAdminWithKeycloak /> */}
+                <div>
+                    <a>The Wage Subsidy platform is currently unavailable for maintenance. </a>
+                </div>
                 <Footer />
             </CatchmentProvider>
         </ReactKeycloakProvider>

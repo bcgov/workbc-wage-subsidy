@@ -8,6 +8,9 @@ const Home = () => (
     <Box padding="0em 8em">
         <Intro />
         <CardContainer>
+            <div>
+                <a>The Wage Subsidy platform is currently unavailable for maintenance. </a>
+            </div>
             <EmployerCard />
             <ServiceProviderCard />
         </CardContainer>
