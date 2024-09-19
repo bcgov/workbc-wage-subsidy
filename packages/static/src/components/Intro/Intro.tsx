@@ -19,7 +19,7 @@ const Intro = () => {
         <div className="intro">
             <h1>WorkBC Wage Subsidy</h1>
             <p>
-                <b color="red">The Wage Subsidy platform is currently unavailable for maintenance. </b>
+                <b style={{ color: "red" }}>The Wage Subsidy platform is currently unavailable for maintenance. </b>
             </p>
             <p>
                 <b>As of May 1, 2024, the Employer Initiated Wage Subsidy (EIWS) ended.</b>
