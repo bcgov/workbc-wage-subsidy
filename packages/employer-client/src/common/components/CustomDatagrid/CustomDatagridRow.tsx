@@ -31,161 +31,158 @@ type CustomDatagridRowProps = DatagridRowProps & {
     rowAriaLabel?: string
 }
 
-const DatagridRow: FC<CustomDatagridRowProps> = React.forwardRef<HTMLTableRowElement, CustomDatagridRowProps>(
-    (props, ref) => {
-        // const DatagridRow: FC<DatagridRowProps> = React.forwardRef((props, ref) => {
-        const {
-            showCalculatorButton,
-            rowAriaLabel,
-            children,
-            className,
-            expand,
-            hasBulkActions,
-            hover,
-            id,
-            onToggleItem,
-            record: recordOverride,
-            rowClick,
-            selected,
-            style,
-            selectable,
-            ...rest
-        } = props
+const DatagridRow = React.forwardRef<HTMLTableRowElement, CustomDatagridRowProps>((props, ref) => {
+    // const DatagridRow: FC<DatagridRowProps> = React.forwardRef((props, ref) => {
+    const {
+        showCalculatorButton,
+        rowAriaLabel,
+        children,
+        className,
+        expand,
+        hasBulkActions,
+        hover,
+        id,
+        onToggleItem,
+        record: recordOverride,
+        rowClick,
+        selected,
+        style,
+        selectable,
+        ...rest
+    } = props
 
-        const context = useDatagridContext()
-        const translate = useTranslate()
-        const record = useRecordContext(props)
-        const expandable = (!context || !context.isRowExpandable || context.isRowExpandable(record)) && expand
-        const resource = useResourceContext(props)
-        const createPath = useCreatePath()
-        const [expanded, toggleExpanded] = useExpanded(resource, id as Identifier, context && context.expandSingle)
-        const [nbColumns, setNbColumns] = useState(() => computeNbColumns(expandable, children, hasBulkActions))
-        useEffect(() => {
-            // Fields can be hidden dynamically based on permissions;
-            // The expand panel must span over the remaining columns
-            // So we must recompute the number of columns to span on
-            const newNbColumns = computeNbColumns(expandable, children, hasBulkActions)
-            if (newNbColumns !== nbColumns) {
-                setNbColumns(newNbColumns)
+    const context = useDatagridContext()
+    const translate = useTranslate()
+    const record = useRecordContext(props)
+    const expandable = (!context || !context.isRowExpandable || context.isRowExpandable(record)) && expand
+    const resource = useResourceContext(props)
+    const createPath = useCreatePath()
+    const [, toggleExpanded] = useExpanded(resource, id as Identifier, context && context.expandSingle)
+    const [nbColumns, setNbColumns] = useState(() => computeNbColumns(expandable, children, hasBulkActions))
+    useEffect(() => {
+        // Fields can be hidden dynamically based on permissions;
+        // The expand panel must span over the remaining columns
+        // So we must recompute the number of columns to span on
+        const newNbColumns = computeNbColumns(expandable, children, hasBulkActions)
+        if (newNbColumns !== nbColumns) {
+            setNbColumns(newNbColumns)
+        }
+    }, [expandable, nbColumns, children, hasBulkActions])
+
+    const navigate = useNavigate()
+
+    const handleToggleExpand = useCallback(
+        (event) => {
+            toggleExpanded()
+            event.stopPropagation()
+        },
+        [toggleExpanded]
+    )
+    const handleToggleSelection = useCallback(
+        (event) => {
+            if (!selectable) return
+            if (onToggleItem && id) onToggleItem(id, event)
+            event.stopPropagation()
+        },
+        [id, onToggleItem, selectable]
+    )
+    const handleClick = useCallback(
+        async (event) => {
+            event.persist()
+            const type = typeof rowClick === "function" ? await rowClick(id as Identifier, resource, record) : rowClick
+            if (type === false || type == null) {
+                return
             }
-        }, [expandable, nbColumns, children, hasBulkActions])
+            if (["edit", "show"].includes(type)) {
+                navigate(createPath({ resource, id, type }))
+                return
+            }
+            if (type === "expand") {
+                handleToggleExpand(event)
+                return
+            }
+            if (type === "toggleSelection") {
+                handleToggleSelection(event)
+                return
+            }
+            navigate(type)
+        },
+        [rowClick, id, resource, record, navigate, createPath, handleToggleExpand, handleToggleSelection]
+    )
 
-        const navigate = useNavigate()
-
-        const handleToggleExpand = useCallback(
-            (event) => {
-                toggleExpanded()
-                event.stopPropagation()
-            },
-            [toggleExpanded]
-        )
-        const handleToggleSelection = useCallback(
-            (event) => {
-                if (!selectable) return
-                if (onToggleItem && id) onToggleItem(id, event)
-                event.stopPropagation()
-            },
-            [id, onToggleItem, selectable]
-        )
-        const handleClick = useCallback(
-            async (event) => {
-                event.persist()
-                const type =
-                    typeof rowClick === "function" ? await rowClick(id as Identifier, resource, record) : rowClick
-                if (type === false || type == null) {
-                    return
-                }
-                if (["edit", "show"].includes(type)) {
-                    navigate(createPath({ resource, id, type }))
-                    return
-                }
-                if (type === "expand") {
-                    handleToggleExpand(event)
-                    return
-                }
-                if (type === "toggleSelection") {
-                    handleToggleSelection(event)
-                    return
-                }
-                navigate(type)
-            },
-            [rowClick, id, resource, record, navigate, createPath, handleToggleExpand, handleToggleSelection]
-        )
-
-        return (
-            <RecordContextProvider value={record}>
-                <TableRow
-                    sx={{
-                        ":focus": {
-                            backgroundColor: "rgba(0, 0, 0, 0.04)"
-                        }
-                    }}
-                    ref={ref}
-                    className={clsx(className, {
-                        [DatagridClasses.expandable]: expandable,
-                        [DatagridClasses.selectable]: selectable,
-                        [DatagridClasses.clickableRow]: typeof rowClick === "function" ? true : rowClick
-                    })}
-                    key={id}
-                    style={style}
-                    hover={hover}
-                    {...rest}
-                >
-                    {/* First column: row button, checkbox */}
-                    <TableCell padding="none">
-                        <Box display="flex" padding="0em 0em 0em 0.53em" height="100%">
-                            <Button
-                                sx={{
-                                    display: "flex",
-                                    flexGrow: "1",
-                                    position: "absolute",
-                                    left: 0,
-                                    width: "100%",
-                                    height: "100%",
-                                    alignItems: "stretch",
-                                    backgroundColor: "transparent",
-                                    "&:hover": {
-                                        backgroundColor: "transparent"
-                                    }
-                                }}
-                                onClick={handleClick}
-                                aria-label={
-                                    (rowAriaLabel ? rowAriaLabel : "View or edit form") +
-                                    " with position title " +
-                                    record.position_title
+    return (
+        <RecordContextProvider value={record}>
+            <TableRow
+                sx={{
+                    ":focus": {
+                        backgroundColor: "rgba(0, 0, 0, 0.04)"
+                    }
+                }}
+                ref={ref}
+                className={clsx(className, {
+                    [DatagridClasses.expandable]: expandable,
+                    [DatagridClasses.selectable]: selectable,
+                    [DatagridClasses.clickableRow]: typeof rowClick === "function" ? true : rowClick
+                })}
+                key={id}
+                style={style}
+                hover={hover}
+                {...rest}
+            >
+                {/* First column: row button, checkbox */}
+                <TableCell padding="none">
+                    <Box display="flex" padding="0em 0em 0em 0.53em" height="100%">
+                        <Button
+                            sx={{
+                                display: "flex",
+                                flexGrow: "1",
+                                position: "absolute",
+                                left: 0,
+                                width: "100%",
+                                height: "100%",
+                                alignItems: "stretch",
+                                backgroundColor: "transparent",
+                                "&:hover": {
+                                    backgroundColor: "transparent"
                                 }
+                            }}
+                            onClick={handleClick}
+                            aria-label={
+                                (rowAriaLabel ? rowAriaLabel : "View or edit form") +
+                                " with position title " +
+                                record.position_title
+                            }
+                        />
+                        {hasBulkActions && (
+                            <Checkbox
+                                aria-label={translate("ra.action.select_row", {
+                                    _: "Select this row"
+                                })}
+                                color="primary"
+                                className={`select-item ${DatagridClasses.checkbox}`}
+                                checked={selectable && selected}
+                                onClick={handleToggleSelection}
+                                disabled={!selectable}
+                                sx={{ alignItems: "start", padding: "0.4em 0.6em" }}
                             />
-                            {hasBulkActions && (
-                                <Checkbox
-                                    aria-label={translate("ra.action.select_row", {
-                                        _: "Select this row"
-                                    })}
-                                    color="primary"
-                                    className={`select-item ${DatagridClasses.checkbox}`}
-                                    checked={selectable && selected}
-                                    onClick={handleToggleSelection}
-                                    disabled={!selectable}
-                                    sx={{ alignItems: "start", padding: "0.4em 0.6em" }}
-                                />
-                            )}
-                        </Box>
-                    </TableCell>
-                    {React.Children.map(children, (field, index) =>
-                        isValidElement(field) ? (
-                            <DatagridCell
-                                key={`${id}-${(field.props as any).source || index}`}
-                                className={clsx(`column-${(field.props as any).source}`, DatagridClasses.rowCell)}
-                                record={record}
-                                {...{ field, resource }}
-                                aria-label={field.key?.toString()}
-                            />
-                        ) : null
-                    )}
-                </TableRow>
-            </RecordContextProvider>
-        )
-    }
-)
+                        )}
+                    </Box>
+                </TableCell>
+                {React.Children.map(children, (field, index) =>
+                    isValidElement(field) ? (
+                        <DatagridCell
+                            key={`${id}-${(field.props as any).source || index}`}
+                            className={clsx(`column-${(field.props as any).source}`, DatagridClasses.rowCell)}
+                            record={record}
+                            {...{ field, resource }}
+                            aria-label={field.key?.toString()}
+                        />
+                    ) : null
+                )}
+            </TableRow>
+        </RecordContextProvider>
+    )
+})
 
 DatagridRow.propTypes = {
     children: PropTypes.node,
