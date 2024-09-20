@@ -48,8 +48,7 @@ const DatagridRow: FC<CustomDatagridRowProps> = React.forwardRef((props, ref) =>
         rowClick,
         selected,
         style,
-        selectable,
-        ...rest
+        selectable
     } = props
 
     const context = useDatagridContext()
@@ -127,7 +126,6 @@ const DatagridRow: FC<CustomDatagridRowProps> = React.forwardRef((props, ref) =>
                 key={id}
                 style={style}
                 hover={hover}
-                {...rest}
             >
                 {/* First column: row button, checkbox, PDF button, and optional calculator button */}
                 <TableCell padding="none">
