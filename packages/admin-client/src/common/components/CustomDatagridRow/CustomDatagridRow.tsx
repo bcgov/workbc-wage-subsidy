@@ -174,7 +174,7 @@ const DatagridRow = React.forwardRef<HTMLTableRowElement, CustomDatagridRowProps
                             key={`${id}-${(field.props as any).source || index}`}
                             className={clsx(`column-${(field.props as any).source}`, DatagridClasses.rowCell)}
                             record={record}
-                            {...{ field, resource }}
+                            {...{ field, resource, ...rest }}
                         />
                     ) : null
                 )}
