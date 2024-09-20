@@ -27,16 +27,15 @@ const computeNbColumns = (expand, children, hasBulkActions) =>
 
 type CustomDatagridRowProps = DatagridRowProps & {
     showCalculatorButton?: boolean
-    rowAriaLabel?: string
 }
 
 //const DatagridRow: FC<any> = React.forwardRef<HTMLInputElement | null, CustomDatagridRowProps>((props, ref) => {
 //const DatagridRow: FC<DatagridRowProps> = React.forwardRef((props, ref) => {
 //const DatagridRow: FC<any> = React.forwardRef((props, ref) => {
-const DatagridRow: FC<CustomDatagridRowProps> = React.forwardRef((props, ref) => {
+const DatagridRow: FC<any> = React.forwardRef((props, ref) => {
+    //const DatagridRow: FC<CustomDatagridRowProps> = React.forwardRef((props, ref) => {
     const {
         showCalculatorButton,
-        rowAriaLabel,
         children,
         className,
         expand,
@@ -48,7 +47,8 @@ const DatagridRow: FC<CustomDatagridRowProps> = React.forwardRef((props, ref) =>
         rowClick,
         selected,
         style,
-        selectable
+        selectable,
+        ...rest
     } = props
 
     const context = useDatagridContext()
@@ -126,6 +126,7 @@ const DatagridRow: FC<CustomDatagridRowProps> = React.forwardRef((props, ref) =>
                 key={id}
                 style={style}
                 hover={hover}
+                {...rest}
             >
                 {/* First column: row button, checkbox, PDF button, and optional calculator button */}
                 <TableCell padding="none">
@@ -173,8 +174,7 @@ const DatagridRow: FC<CustomDatagridRowProps> = React.forwardRef((props, ref) =>
                             key={`${id}-${(field.props as any).source || index}`}
                             className={clsx(`column-${(field.props as any).source}`, DatagridClasses.rowCell)}
                             record={record}
-                            {...{ field, resource }}
-                            aria-label={field.key?.toString()}
+                            {...{ field, resource, ...rest }}
                         />
                     ) : null
                 )}
