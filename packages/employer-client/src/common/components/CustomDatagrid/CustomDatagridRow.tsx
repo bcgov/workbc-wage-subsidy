@@ -31,7 +31,7 @@ type CustomDatagridRowProps = DatagridRowProps & {
     rowAriaLabel?: string
 }
 
-const DatagridRow: FC<CustomDatagridRowProps> = React.forwardRef((props, ref) => {
+const DatagridRow = React.forwardRef<HTMLTableRowElement, CustomDatagridRowProps>((props, ref) => {
     // const DatagridRow: FC<DatagridRowProps> = React.forwardRef((props, ref) => {
     const {
         showCalculatorButton,
@@ -57,7 +57,7 @@ const DatagridRow: FC<CustomDatagridRowProps> = React.forwardRef((props, ref) =>
     const expandable = (!context || !context.isRowExpandable || context.isRowExpandable(record)) && expand
     const resource = useResourceContext(props)
     const createPath = useCreatePath()
-    const [expanded, toggleExpanded] = useExpanded(resource, id as Identifier, context && context.expandSingle)
+    const [, toggleExpanded] = useExpanded(resource, id as Identifier, context && context.expandSingle)
     const [nbColumns, setNbColumns] = useState(() => computeNbColumns(expandable, children, hasBulkActions))
     useEffect(() => {
         // Fields can be hidden dynamically based on permissions;

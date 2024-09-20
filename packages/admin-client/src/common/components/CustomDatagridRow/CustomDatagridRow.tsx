@@ -31,7 +31,8 @@ type CustomDatagridRowProps = DatagridRowProps & {
 
 //const DatagridRow: FC<any> = React.forwardRef<HTMLInputElement | null, CustomDatagridRowProps>((props, ref) => {
 //const DatagridRow: FC<DatagridRowProps> = React.forwardRef((props, ref) => {
-const DatagridRow: FC<any> = React.forwardRef((props, ref) => {
+//const DatagridRow: FC<any> = React.forwardRef((props, ref) => {
+const DatagridRow = React.forwardRef<HTMLTableRowElement, CustomDatagridRowProps>((props, ref) => {
     //const DatagridRow: FC<CustomDatagridRowProps> = React.forwardRef((props, ref) => {
     const {
         showCalculatorButton,
@@ -173,7 +174,9 @@ const DatagridRow: FC<any> = React.forwardRef((props, ref) => {
                             key={`${id}-${(field.props as any).source || index}`}
                             className={clsx(`column-${(field.props as any).source}`, DatagridClasses.rowCell)}
                             record={record}
-                            {...{ field, resource }}
+                            onPointerEnterCapture={() => {}}
+                            onPointerLeaveCapture={() => {}}
+                            {...{ field, resource, rest }}
                         />
                     ) : null
                 )}
