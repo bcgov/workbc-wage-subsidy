@@ -31,8 +31,8 @@ type CustomDatagridRowProps = DatagridRowProps & {
 
 //const DatagridRow: FC<any> = React.forwardRef<HTMLInputElement | null, CustomDatagridRowProps>((props, ref) => {
 //const DatagridRow: FC<DatagridRowProps> = React.forwardRef((props, ref) => {
-//const DatagridRow: FC<any> = React.forwardRef((props, ref) => {
-const DatagridRow: FC<CustomDatagridRowProps> = React.forwardRef((props, ref) => {
+const DatagridRow: FC<any> = React.forwardRef((props, ref) => {
+    //const DatagridRow: FC<CustomDatagridRowProps> = React.forwardRef((props, ref) => {
     const {
         showCalculatorButton,
         children,
