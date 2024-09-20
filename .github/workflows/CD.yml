@@ -63,6 +63,10 @@ jobs:
       - uses: actions/checkout@v3
         with:
           ref: ${{ steps.extract_branch.outputs.branch }}
+      - name: Setup react-admin registry
+        uses: react-admin/ra-enterprise-action@v1.0.0
+        env:
+          RA_EE_CI_TOKEN: ${{secrets.REACT_ADMIN_TOKEN}}
       - name: Cache node modules
         id: cache-npm
         uses: actions/cache@v3
