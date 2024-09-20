@@ -27,14 +27,16 @@ const computeNbColumns = (expand, children, hasBulkActions) =>
 
 type CustomDatagridRowProps = DatagridRowProps & {
     showCalculatorButton?: boolean
+    rowAriaLabel?: string
 }
 
 //const DatagridRow: FC<any> = React.forwardRef<HTMLInputElement | null, CustomDatagridRowProps>((props, ref) => {
 //const DatagridRow: FC<DatagridRowProps> = React.forwardRef((props, ref) => {
-const DatagridRow: FC<any> = React.forwardRef((props, ref) => {
-    //const DatagridRow: FC<CustomDatagridRowProps> = React.forwardRef((props, ref) => {
+//const DatagridRow: FC<any> = React.forwardRef((props, ref) => {
+const DatagridRow: FC<CustomDatagridRowProps> = React.forwardRef((props, ref) => {
     const {
         showCalculatorButton,
+        rowAriaLabel,
         children,
         className,
         expand,
@@ -174,6 +176,7 @@ const DatagridRow: FC<any> = React.forwardRef((props, ref) => {
                             className={clsx(`column-${(field.props as any).source}`, DatagridClasses.rowCell)}
                             record={record}
                             {...{ field, resource }}
+                            aria-label={field.key?.toString()}
                         />
                     ) : null
                 )}
