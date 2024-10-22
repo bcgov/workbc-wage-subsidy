@@ -732,14 +732,14 @@
             {
                 "name": "Burnaby - Brentwood",
                 "id": 2,
-                "Address": "101-3999 Henning Drive, Burnaby, BC V5C 6P9",
+                "Address": "202 - 4190 Lougheed Hwy, Burnaby, BC V5C 6A8",
                 "Phone": "778-357-0445",
                 "Fax": "TBD",
                 "Email": "centre-burnaby-brentwood@workbc.ca",
                 "Website": "https://workbc.ca/WorkBC-Centres/Mainland-Southwest/Burnaby-Henning.aspx",
                 "BusinessWebsite": "http://workbccentre-burnaby-brentwood.ca",
                 "FrenchServices": "N",
-                "Coordinates": "-123.0151079,49.2654203"
+                "Coordinates": "-123.0102578,49.2659818"
             },
             {
                 "name": "Burnaby - Edmonds",
@@ -1080,14 +1080,14 @@
             {
                 "name": "Summerland",
                 "id": 4,
-                "Address": "102-7705 Prairie Valley Road, Summerland, BC V0H 1Z4",
+                "Address": "14820 Victoria Road North, Summerland, BC V0H 1Z5",
                 "Phone": "833-313-1112",
                 "Fax": "250-404-9046",
                 "Email": "centre-summerland@workbc.ca",
                 "Website": "https://workbc.ca/WorkBC-Centres/Thompson-Okanagan/Summerland.aspx",
                 "BusinessWebsite": "http://workbccentre-summerland.ca",
                 "FrenchServices": "N",
-                "Coordinates": "-119.6668736,49.6018853"
+                "Coordinates": "-119.6846543,49.6092332"
             }
         ]
     },
