@@ -1260,14 +1260,14 @@
             {
                 "name": "Nelson",
                 "id": 2,
-                "Address": "#203 - 514 Vernon St, Nelson, V1L 4E7",
+                "Address": "3 - 86 Baker Street, Nelson BC, V1L 4G9",
                 "Phone": "250 352-6200",
                 "Fax": "250 352-6203",
                 "Email": "centre-nelson@workbc.ca",
                 "Website": "https://workbc.ca/WorkBC-Centres/Kootenay/Nelson.aspx",
                 "BusinessWebsite": "http://workbccentre-nelson.ca",
                 "FrenchServices": "N",
-                "Coordinates": "-117.2939545,49.4930492"
+                "Coordinates": "-117.3011729,49.4889159"
             },
             {
                 "name": "Nakusp",
