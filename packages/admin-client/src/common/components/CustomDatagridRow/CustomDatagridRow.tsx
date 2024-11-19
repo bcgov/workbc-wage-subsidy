@@ -14,7 +14,7 @@ import {
 import React, { FC, ReactElement, isValidElement, memo, useCallback, useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 
-import { DatagridCell, DatagridClasses, useDatagridContext } from "react-admin"
+import { DatagridCell, DatagridClasses, InputProps, useDatagridContext } from "react-admin"
 import CalculatorButtonField from "../CalculatorButtonField/CalculatorButtonField"
 import PdfButtonField from "../PdfButtonField/PdfButtonField"
 
@@ -25,13 +25,15 @@ const computeNbColumns = (expand, children, hasBulkActions) =>
           React.Children.toArray(children).filter((child) => !!child).length // non-null children
         : 0 // we don't need to compute columns if there is no expand panel;
 
-// type CustomDatagridRowProps = DatagridRowProps & {
-//     showCalculatorButton?: boolean
-// }
+type CustomDatagridRowProps = DatagridRowProps & {
+    showCalculatorButton?: boolean
+}
 
-// const DatagridRow: FC<CustomDatagridRowProps> = React.forwardRef((props, ref) => {
-// const DatagridRow: FC<DatagridRowProps> = React.forwardRef((props, ref) => {
-const DatagridRow: FC<any> = React.forwardRef((props, ref) => {
+//const DatagridRow: FC<any> = React.forwardRef<HTMLInputElement | null, CustomDatagridRowProps>((props, ref) => {
+//const DatagridRow: FC<DatagridRowProps> = React.forwardRef((props, ref) => {
+//const DatagridRow: FC<any> = React.forwardRef((props, ref) => {
+const DatagridRow = React.forwardRef<HTMLTableRowElement, CustomDatagridRowProps>((props, ref) => {
+    //const DatagridRow: FC<CustomDatagridRowProps> = React.forwardRef((props, ref) => {
     const {
         showCalculatorButton,
         children,
@@ -172,7 +174,9 @@ const DatagridRow: FC<any> = React.forwardRef((props, ref) => {
                             key={`${id}-${(field.props as any).source || index}`}
                             className={clsx(`column-${(field.props as any).source}`, DatagridClasses.rowCell)}
                             record={record}
-                            {...{ field, resource, ...rest }}
+                            onPointerEnterCapture={() => {}}
+                            onPointerLeaveCapture={() => {}}
+                            {...{ field, resource, rest }}
                         />
                     ) : null
                 )}

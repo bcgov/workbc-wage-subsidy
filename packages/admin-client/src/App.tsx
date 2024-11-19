@@ -245,6 +245,9 @@ function App() {
                 onTokenExpired,
                 checkLoginIframe: false
             }}
+            onEvent={() => {
+                window.history.replaceState({}, document.title, window.location.pathname)
+            }}
         >
             <CatchmentProvider>
                 <CustomAdminWithKeycloak />
