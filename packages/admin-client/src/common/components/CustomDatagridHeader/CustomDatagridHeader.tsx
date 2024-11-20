@@ -6,7 +6,6 @@ import { Box, Checkbox, TableCell, TableHead, TableRow } from "@mui/material"
 import clsx from "clsx"
 
 import { DatagridClasses } from "react-admin"
-import { useDatagridContext } from "react-admin"
 import CustomDatagridHeaderCell from "../CustomDatagridHeaderCell/CustomDatagridHeaderCell"
 
 /**
@@ -15,10 +14,9 @@ import CustomDatagridHeaderCell from "../CustomDatagridHeaderCell/CustomDatagrid
  * Renders select all checkbox as well as column header buttons used for sorting.
  */
 export const CustomDatagridHeader = (props: DatagridHeaderProps) => {
-    const { children, className, hasExpand = false, hasBulkActions = false, isRowSelectable } = props
+    const { children, className = false, hasBulkActions = false, isRowSelectable } = props
     const resource = useResourceContext(props)
-    const { sort, data, onSelect, selectedIds, setSort } = useListContext(props)
-    const { expandSingle } = useDatagridContext()
+    const { sort, data, onSelect, selectedIds, setSort } = useListContext()
 
     const updateSortCallback = useCallback(
         (event) => {
@@ -37,7 +35,7 @@ export const CustomDatagridHeader = (props: DatagridHeaderProps) => {
     const handleSelectAll = useCallback(
         (event) =>
             onSelect(
-                event.target.checked
+                event.target.checked && data
                     ? selectedIds.concat(
                           data
                               .filter((record) => !selectedIds.includes(record.id))
@@ -85,7 +83,7 @@ export const CustomDatagridHeader = (props: DatagridHeaderProps) => {
                             field={field}
                             isSorting={sort.field === ((field.props as any).sortBy || (field.props as any).source)}
                             key={(field.props as any).source || index}
-                            resource={resource}
+                            resource={resource as string}
                             updateSort={updateSort}
                         />
                     ) : null

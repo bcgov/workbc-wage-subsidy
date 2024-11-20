@@ -35,7 +35,7 @@ const CustomDatagrid = <T,>({ ariaLabel, showCalculatorButton, setIsLoading, ...
     }, [identity])
 
     useEffect(() => {
-        if (setIsLoading) {
+        if (setIsLoading && isLoading != null) {
             setIsLoading(isLoading)
         }
     }, [isLoading])

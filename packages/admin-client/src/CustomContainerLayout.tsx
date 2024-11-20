@@ -9,7 +9,8 @@ import {
     CoreLayoutProps,
     Error,
     ErrorProps,
-    SkipNavigationButton
+    SkipNavigationButton,
+    TitleComponent
     // FIXME: add this when the react-admin dependency is updated
     //Inspector,
 } from "react-admin"
@@ -66,7 +67,6 @@ export const CustomContainerLayout = (props: LayoutProps) => {
                                     errorComponent={errorComponent}
                                     errorInfo={errorInfo}
                                     resetErrorBoundary={resetErrorBoundary}
-                                    title={title}
                                 />
                             )}
                         >
@@ -82,7 +82,7 @@ export const CustomContainerLayout = (props: LayoutProps) => {
 
 const defaultAppBar = <Header />
 
-export interface LayoutProps extends Omit<CoreLayoutProps, "menu">, Omit<HtmlHTMLAttributes<HTMLDivElement>, "title"> {
+export interface LayoutProps extends CoreLayoutProps {
     appBar?: ReactNode
     className?: string
     error?: ComponentType<ErrorProps>
@@ -93,6 +93,8 @@ export interface LayoutProps extends Omit<CoreLayoutProps, "menu">, Omit<HtmlHTM
     sx?: SxProps
     toolbar?: ReactNode
     userMenu?: ReactNode
+    dashboard: boolean
+    title: TitleComponent | undefined
 }
 
 export interface LayoutState {

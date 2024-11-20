@@ -9,10 +9,10 @@ const NotificationCheck = () => {
     useEffect(() => {
         const check = async () => {
             let auth: boolean = false
-            await authProvider.checkAuth(undefined).then(() => {
+            await authProvider?.checkAuth(undefined).then(() => {
                 auth = true
             })
-            const permissions = await authProvider.getPermissions(undefined).then((res) => {
+            const permissions = await authProvider?.getPermissions(undefined).then((res) => {
                 return res
             })
             if (auth !== false && permissions.length !== 0) {

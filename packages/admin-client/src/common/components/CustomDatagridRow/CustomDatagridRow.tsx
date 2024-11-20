@@ -53,10 +53,14 @@ const DatagridRow = React.forwardRef<HTMLTableRowElement, CustomDatagridRowProps
 
     const context = useDatagridContext()
     const record = useRecordContext(props)
-    const expandable = (!context || !context.isRowExpandable || context.isRowExpandable(record)) && expand
+    const expandable = (!context || !context.isRowExpandable || (record && context.isRowExpandable(record))) && expand
     const resource = useResourceContext(props)
     const createPath = useCreatePath()
-    const [expanded, toggleExpanded] = useExpanded(resource, id as Identifier, context && context.expandSingle)
+    const [expanded, toggleExpanded] = useExpanded(
+        resource as string,
+        id as Identifier,
+        context && context.expandSingle
+    )
     const [nbColumns, setNbColumns] = useState(() => computeNbColumns(expandable, children, hasBulkActions))
     useEffect(() => {
         // Fields can be hidden dynamically based on permissions;
@@ -88,7 +92,10 @@ const DatagridRow = React.forwardRef<HTMLTableRowElement, CustomDatagridRowProps
     const handleClick = useCallback(
         async (event) => {
             event.persist()
-            const type = typeof rowClick === "function" ? await rowClick(id as Identifier, resource, record) : rowClick
+            const type: string | boolean =
+                typeof rowClick === "function" && record
+                    ? await rowClick(id as Identifier, resource as string, record)
+                    : (rowClick as string)
             if (type === false || type == null) {
                 return
             }

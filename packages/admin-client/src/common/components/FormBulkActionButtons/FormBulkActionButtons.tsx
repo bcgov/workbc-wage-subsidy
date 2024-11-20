@@ -25,7 +25,7 @@ export const FormBulkActionButtons = () => {
         // calculate whether the Catchment Move action should be shown //
         let shouldBeMoveable = true
         selectedIds.forEach((selectedID) => {
-            const row = data.find((d) => d.id === selectedID)
+            const row = data?.find((d) => d.id === selectedID)
             if (row) {
                 if (row.associated_application_id && row.associated_application_id !== "LEGACY") {
                     // Claims
