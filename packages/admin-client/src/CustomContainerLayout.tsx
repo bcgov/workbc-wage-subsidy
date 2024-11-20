@@ -83,7 +83,7 @@ export const CustomContainerLayout = (props: LayoutProps) => {
 
 const defaultAppBar = <Header />
 
-export interface LayoutProps extends CoreLayoutProps {
+export interface LayoutProps extends Omit<CoreLayoutProps, "menu" | "title"> {
     appBar?: ReactNode
     className?: string
     error?: ComponentType<ErrorProps>
