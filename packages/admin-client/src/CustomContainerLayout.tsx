@@ -7,6 +7,7 @@ import { ErrorBoundary } from "react-error-boundary"
 import { AppLocationContext, ContainerLayoutContext } from "@react-admin/ra-navigation"
 import {
     CoreLayoutProps,
+    DashboardComponent,
     Error,
     ErrorProps,
     SkipNavigationButton,
@@ -93,7 +94,7 @@ export interface LayoutProps extends CoreLayoutProps {
     sx?: SxProps
     toolbar?: ReactNode
     userMenu?: ReactNode
-    dashboard: boolean
+    dashboard: DashboardComponent | undefined
     title: TitleComponent | undefined
 }
 
