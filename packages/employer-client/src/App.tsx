@@ -1,6 +1,6 @@
 import "@bcgov/bc-sans/css/BCSans.css"
 import { ReactKeycloakProvider } from "@react-keycloak/web"
-import Keycloak from "keycloak-js"
+import Keycloak, { KeycloakConfig } from "keycloak-js"
 import { useEffect, useState } from "react"
 import { Admin, CustomRoutes, Resource } from "react-admin"
 import { Route } from "react-router-dom"
@@ -20,13 +20,13 @@ import Layout from "./Layout"
 import Footer from "./footer"
 import { EmployerProvider } from "./common/contexts/EmployerContext"
 
-const initOptions = {
+const initOptions: KeycloakConfig = {
     url: process.env.REACT_APP_KEYCLOAK_URL || "",
     realm: process.env.REACT_APP_KEYCLOAK_REALM || "",
     clientId: process.env.REACT_APP_KEYCLOAK_CLIENT_ID || ""
 }
 
-let keycloak = new Keycloak(initOptions)
+let keycloak: Keycloak = new Keycloak(initOptions)
 const kcLogin = keycloak.login
 keycloak.login = (options) => {
     if (options) options.idpHint = "bceid"
@@ -271,9 +271,6 @@ function App() {
                 pkceMethod: "S256",
                 onTokenExpired: onTokenExpired,
                 checkLoginIframe: false
-            }}
-            onEvent={() => {
-                window.history.replaceState({}, document.title, window.location.pathname)
             }}
         >
             <EmployerProvider>
