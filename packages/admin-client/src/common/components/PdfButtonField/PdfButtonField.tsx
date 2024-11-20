@@ -10,15 +10,15 @@ const PdfButtonField: React.FC = () => {
     const record = useRecordContext()
     const dataProvider = useDataProvider()
     const { resource } = useListContext()
-    const { mutate: getPdf, isLoading } = useMutation((formType) => {
+    const { mutate: getPdf } = useMutation((formType) => {
         return dataProvider
             .getPdf(resource, {
-                id: record.id,
+                id: record?.id,
                 formType: formType
             })
             .then(({ result }) => {
                 const filename =
-                    (resource === "applications" ? "application_" : "claim_") + record.form_confirmation_id + ".pdf"
+                    (resource === "applications" ? "application_" : "claim_") + record?.form_confirmation_id + ".pdf"
                 downloadPdf(result, filename)
             })
     })

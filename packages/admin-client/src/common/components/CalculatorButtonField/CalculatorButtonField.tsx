@@ -8,7 +8,7 @@ const CalculatorButtonField: React.FC = () => {
     const record = useRecordContext()
     const redirect = useRedirect()
 
-    return record.status === "In Progress" ? (
+    return record?.status === "In Progress" ? (
         <Button
             onClick={(event) => {
                 event?.stopPropagation()
