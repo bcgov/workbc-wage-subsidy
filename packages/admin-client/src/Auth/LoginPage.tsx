@@ -8,7 +8,7 @@ const LoginPage = () => {
     return (
         <Button
             onClick={() => {
-                keycloak.logout({ redirectUri: `${absolutePath}/logout-success` })
+                keycloak.logout({ redirectUri: `${absolutePath}logout-success` })
                 localStorage.removeItem("token")
                 localStorage.removeItem("refresh_token")
                 localStorage.removeItem("permissions")
