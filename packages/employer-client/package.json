@@ -6,7 +6,8 @@
         "build": "react-scripts build",
         "eject": "react-scripts eject",
         "start": "react-scripts start",
-        "test": "echo \"No tests yet\" && exit 0"
+        "test": "echo \"No tests yet\" && exit 0",
+        "tsc": "tsc"
     },
     "browserslist": {
         "production": [
