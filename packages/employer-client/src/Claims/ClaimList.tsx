@@ -223,7 +223,7 @@ export const ClaimList = (props: any) => {
                                                                     )
                                                                 }}
                                                                 sx={{ minWidth: "3em", padding: "0.6em" }}
-                                                                aria-label="Generate PDF"
+                                                                aria-label="Create new claim"
                                                             >
                                                                 {isClaimCreating && selectedRecord === record.id ? (
                                                                     <LoadingIndicator
