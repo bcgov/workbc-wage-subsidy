@@ -171,6 +171,9 @@ const DatagridRow = React.forwardRef<HTMLTableRowElement, CustomDatagridRowProps
                 {React.Children.map(children, (field, index) =>
                     isValidElement(field) ? (
                         <DatagridCell
+                            placeholder={undefined}
+                            onPointerEnterCapture={undefined}
+                            onPointerLeaveCapture={undefined}
                             key={`${id}-${(field.props as any).source || index}`}
                             className={clsx(`column-${(field.props as any).source}`, DatagridClasses.rowCell)}
                             record={record}

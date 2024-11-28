@@ -1,4 +1,5 @@
-import { Box, Chip } from "@mui/material"
+import { Box, Chip, Button } from "@mui/material"
+import AddIcon from "@mui/icons-material/Add"
 import { useCallback, useContext, useEffect, useState } from "react"
 import {
     FunctionField,
@@ -8,7 +9,9 @@ import {
     TextField,
     useDataProvider,
     useGetIdentity,
-    useRedirect
+    useRedirect,
+    useCreate,
+    LoadingIndicator
 } from "react-admin"
 import CustomDatagrid from "../common/components/CustomDatagrid/CustomDatagrid"
 import { ListActions } from "../common/components/ListActions/ListActions"
@@ -17,13 +20,19 @@ import { DatagridStyles } from "../common/styles/DatagridStyles"
 import { SharedWithModal } from "../common/components/SharedWithField/SharedWithModal"
 import { SharedWithField } from "../common/components/SharedWithField/SharedWithField"
 import { EmployerContext } from "../common/contexts/EmployerContext"
+import { v4 as uuidv4 } from "uuid"
 
-export const claimStatusFilters = {
+type ClaimStatusFilter = {
+    label: string
+    status?: string[]
+}
+
+export const claimStatusFilters: { [key: string]: ClaimStatusFilter } = {
     All: { label: "All" },
     NotSubmitted: { label: "Draft", status: ["Draft"] },
     Submitted: { label: "Submitted", status: ["New", "In Progress", "Completed"] },
     Cancelled: { label: "Cancelled", status: ["Cancelled"] }
-} as { [key: string]: any }
+}
 
 export const ClaimList = (props: any) => {
     const [statusFilter, setStatusFilter] = useState(claimStatusFilters["All"])
@@ -38,12 +47,15 @@ export const ClaimList = (props: any) => {
     const [isFetching, setIsFetching] = useState(true)
     const [ready, setReady] = useState(false)
     const ec = useContext(EmployerContext)
+    const [create] = useCreate()
+    const [isClaimCreating, setIsClaimCreating] = useState(false)
+    const [selectedRecord, setSelectedRecord] = useState("")
 
-    const syncClaims = () => {
+    const syncClaims = useCallback(() => {
         dataProvider.sync("claims").then(({ data }) => {
             setSynced(true)
         })
-    }
+    }, [dataProvider])
 
     const handleRowClick = (id: Identifier, resource: string, record: any) => {
         if (record.status === "Draft" && record.id && record.form_submission_id) {
@@ -75,13 +87,13 @@ export const ClaimList = (props: any) => {
         if (synced && !isFetching) {
             setReady(true)
         }
-    }, [isFetching])
+    }, [isFetching, synced])
 
     useEffect(() => {
         if (identity && ec.profileExists && !synced) {
             syncClaims()
         }
-    }, [identity, ec.profileExists])
+    }, [identity, ec.profileExists, synced, syncClaims])
 
     return (
         <>
@@ -172,6 +184,57 @@ export const ClaimList = (props: any) => {
                                                         }
                                                     />
                                                 </Box>
+                                            )}
+                                        />
+                                        <FunctionField
+                                            render={(record: any) => (
+                                                <>
+                                                    {record.status !== "Draft" &&
+                                                        record.associated_application_id !== "LEGACY" && (
+                                                            <Button
+                                                                onClick={async () => {
+                                                                    setIsClaimCreating(true)
+                                                                    setSelectedRecord(record.id)
+                                                                    await create(
+                                                                        "claims",
+                                                                        {
+                                                                            data: {
+                                                                                formKey: uuidv4(),
+                                                                                guid: identity.guid,
+                                                                                application_id:
+                                                                                    record.associated_application_id,
+                                                                                record
+                                                                            }
+                                                                        },
+                                                                        {
+                                                                            onSuccess: (data) => {
+                                                                                setIsClaimCreating(false)
+                                                                                setSelectedRecord("")
+                                                                                redirect(
+                                                                                    "/ViewForm/claims/" + data.id,
+                                                                                    ""
+                                                                                )
+                                                                            },
+                                                                            onError: () => {
+                                                                                setIsClaimCreating(false)
+                                                                                setSelectedRecord("")
+                                                                            }
+                                                                        }
+                                                                    )
+                                                                }}
+                                                                sx={{ minWidth: "3em", padding: "0.6em" }}
+                                                                aria-label="Generate PDF"
+                                                            >
+                                                                {isClaimCreating && selectedRecord === record.id ? (
+                                                                    <LoadingIndicator
+                                                                        sx={{ maxWidth: "24px", maxHeight: "24px" }}
+                                                                    />
+                                                                ) : (
+                                                                    <AddIcon />
+                                                                )}
+                                                            </Button>
+                                                        )}
+                                                </>
                                             )}
                                         />
                                     </CustomDatagrid>
