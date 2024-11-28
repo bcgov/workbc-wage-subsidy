@@ -23,7 +23,6 @@ import Grid from "@mui/material/Grid"
 import StyledTextInput from "../common/components/Forms/Fields/StyledTextInput"
 import { faInfoCircle } from "@fortawesome/pro-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { IconProp } from "@fortawesome/fontawesome-svg-core"
 
 const applicationFilters = [
     <CustomSearchInput
@@ -192,7 +191,7 @@ export const ClaimCreateSelectApplication = (props: any) => {
                                         <a style={{ marginRight: 5 }}>My application is not on this system</a>
                                         <Tooltip title="Check this box if your application was submitted through WorkBC.ca before January 17, 2024, or if you submitted your application by another method (e.g. email, paper submission)">
                                             <FontAwesomeIcon
-                                                icon={faInfoCircle as IconProp}
+                                                icon={faInfoCircle}
                                                 style={{ color: COLOURS.LIGHTBLUE_TEXT }}
                                             />
                                         </Tooltip>
