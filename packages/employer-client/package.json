@@ -64,7 +64,7 @@
         "web-vitals": "^2.1.4"
     },
     "devDependencies": {
-        "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
+        "@babel/plugin-transform-private-property-in-object": "^7.25.9",
         "@bcgov-elmsd/eslint-config": "^1.0.1",
         "@types/file-saver": "^2.0.7",
         "@types/lodash": "^4.17.13",
