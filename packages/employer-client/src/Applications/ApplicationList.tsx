@@ -87,7 +87,7 @@ export const ApplicationList = (props: any) => {
 
     return (
         <>
-            <Box id="main-content-custom" tabIndex={0} aria-label="main content">
+            <Box id="main-content-custom" tabIndex={0} aria-label="main content" mt={1}>
                 {!ready && <Loading sx={{ marginTop: 20 }}></Loading>}
                 {identity !== undefined && (
                     <>
