@@ -5,7 +5,7 @@ interface ListActionsProps {
 }
 
 export const ListActions: React.FC<ListActionsProps> = ({ createButtonLabel }) => (
-    <TopToolbar sx={{ paddingTop: "5vh" }}>
+    <TopToolbar>
         <div>
             <CreateButton label={createButtonLabel} />
         </div>
