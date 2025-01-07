@@ -168,7 +168,7 @@ const DatagridRow = React.forwardRef<HTMLTableRowElement, CustomDatagridRowProps
                         )}
                         <Box width="100%" justifyContent="center" alignSelf="center">
                             <Box display="flex">
-                                <PdfButtonField />
+                                <PdfButtonField record={record} resource={resource} />
                                 {showCalculatorButton && <CalculatorButtonField />}
                             </Box>
                         </Box>

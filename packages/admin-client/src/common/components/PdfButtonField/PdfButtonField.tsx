@@ -1,15 +1,18 @@
 import { Button } from "@mui/material"
-import { useDataProvider, useListContext, useRecordContext } from "react-admin"
+import { useDataProvider } from "react-admin"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faFilePdf } from "@fortawesome/pro-solid-svg-icons"
 import { COLOURS } from "../../../Colours"
 import { downloadPdf } from "../../../utils/FileFunctions"
 import { useMutation } from "react-query"
 
-const PdfButtonField: React.FC = () => {
-    const record = useRecordContext()
+interface PDFButtonFieldProps {
+    record: any
+    resource: any
+}
+
+const PdfButtonField: React.FC<PDFButtonFieldProps> = ({ record, resource }) => {
     const dataProvider = useDataProvider()
-    const { resource } = useListContext()
     const { mutate: getPdf } = useMutation((formType) => {
         return dataProvider
             .getPdf(resource, {
