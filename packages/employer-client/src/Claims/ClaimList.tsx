@@ -1,5 +1,6 @@
 import { Box, Chip, Button } from "@mui/material"
-import AddIcon from "@mui/icons-material/Add"
+import ContentCopyIcon from "@mui/icons-material/ContentCopy"
+import DeleteIcon from "@mui/icons-material/Delete"
 import { useCallback, useContext, useEffect, useState } from "react"
 import {
     FunctionField,
@@ -11,7 +12,9 @@ import {
     useGetIdentity,
     useRedirect,
     useCreate,
-    LoadingIndicator
+    useUpdate,
+    LoadingIndicator,
+    useRefresh
 } from "react-admin"
 import CustomDatagrid from "../common/components/CustomDatagrid/CustomDatagrid"
 import { ListActions } from "../common/components/ListActions/ListActions"
@@ -28,7 +31,7 @@ type ClaimStatusFilter = {
 }
 
 export const claimStatusFilters: { [key: string]: ClaimStatusFilter } = {
-    All: { label: "All" },
+    All: { label: "All", status: ["New", "In Progress", "Completed", "Draft", "Cancelled"] },
     NotSubmitted: { label: "Draft", status: ["Draft"] },
     Submitted: { label: "Submitted", status: ["New", "In Progress", "Completed"] },
     Cancelled: { label: "Cancelled", status: ["Cancelled"] }
@@ -38,6 +41,7 @@ export const ClaimList = (props: any) => {
     const [statusFilter, setStatusFilter] = useState(claimStatusFilters["All"])
     const { identity } = useGetIdentity()
     const redirect = useRedirect()
+    const refresh = useRefresh()
     const [modalIsOpen, setModalIsOpen] = useState(false)
     const [sharedUsers, setSharedUsers] = useState([])
     const [sharedFormId, setSharedFormId] = useState("")
@@ -48,6 +52,7 @@ export const ClaimList = (props: any) => {
     const [ready, setReady] = useState(false)
     const ec = useContext(EmployerContext)
     const [create] = useCreate()
+    const [update] = useUpdate()
     const [isClaimCreating, setIsClaimCreating] = useState(false)
     const [selectedRecord, setSelectedRecord] = useState("")
 
@@ -189,6 +194,38 @@ export const ClaimList = (props: any) => {
                                         <FunctionField
                                             render={(record: any) => (
                                                 <>
+                                                    {record.status === "Draft" && (
+                                                        <Button
+                                                            onClick={() => {
+                                                                // console.log(record.id)
+                                                                const diff = { status: "Deleted" }
+                                                                // dataProvider.delete('claims', { id: record.id })
+                                                                update(
+                                                                    "claims",
+                                                                    {
+                                                                        id: record.id,
+                                                                        data: diff,
+                                                                        previousData: undefined
+                                                                    },
+                                                                    {
+                                                                        onSuccess: () => {
+                                                                            refresh()
+                                                                        }
+                                                                    }
+                                                                )
+                                                            }}
+                                                            sx={{ minWidth: "3em", padding: "0.6em" }}
+                                                            aria-label="Create new claim"
+                                                        >
+                                                            {isClaimCreating && selectedRecord === record.id ? (
+                                                                <LoadingIndicator
+                                                                    sx={{ maxWidth: "24px", maxHeight: "24px" }}
+                                                                />
+                                                            ) : (
+                                                                <DeleteIcon />
+                                                            )}
+                                                        </Button>
+                                                    )}
                                                     {record.status !== "Draft" &&
                                                         record.associated_application_id !== "LEGACY" && (
                                                             <Button
@@ -230,7 +267,7 @@ export const ClaimList = (props: any) => {
                                                                         sx={{ maxWidth: "24px", maxHeight: "24px" }}
                                                                     />
                                                                 ) : (
-                                                                    <AddIcon />
+                                                                    <ContentCopyIcon />
                                                                 )}
                                                             </Button>
                                                         )}

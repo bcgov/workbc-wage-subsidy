@@ -142,7 +142,7 @@ export const updateClaim = async (id: number, status: string | null, body: any, 
                 form_submitted_date: submitted ? body.updatedAt ?? body.createdAt : null,
                 employee_first_name: body.submission?.data?.container?.employeeFirstName,
                 employee_last_name: body.submission?.data?.container?.employeeLastName,
-                status,
+                status: body.status ?? status,
                 updated_by: "system",
                 updated_date: new Date().toISOString(),
                 stale: false
