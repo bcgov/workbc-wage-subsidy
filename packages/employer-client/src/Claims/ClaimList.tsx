@@ -197,9 +197,7 @@ export const ClaimList = (props: any) => {
                                                     {record.status === "Draft" && (
                                                         <Button
                                                             onClick={() => {
-                                                                // console.log(record.id)
                                                                 const diff = { status: "Deleted" }
-                                                                // dataProvider.delete('claims', { id: record.id })
                                                                 update(
                                                                     "claims",
                                                                     {
