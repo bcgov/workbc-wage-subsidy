@@ -197,20 +197,26 @@ export const ClaimList = (props: any) => {
                                                     {record.status === "Draft" && (
                                                         <Button
                                                             onClick={() => {
-                                                                const diff = { status: "Deleted" }
-                                                                update(
-                                                                    "claims",
-                                                                    {
-                                                                        id: record.id,
-                                                                        data: diff,
-                                                                        previousData: undefined
-                                                                    },
-                                                                    {
-                                                                        onSuccess: () => {
-                                                                            refresh()
+                                                                if (
+                                                                    window.confirm(
+                                                                        "Are you sure you want to delete this claim?"
+                                                                    )
+                                                                ) {
+                                                                    const diff = { status: "Deleted" }
+                                                                    update(
+                                                                        "claims",
+                                                                        {
+                                                                            id: record.id,
+                                                                            data: diff,
+                                                                            previousData: undefined
+                                                                        },
+                                                                        {
+                                                                            onSuccess: () => {
+                                                                                refresh()
+                                                                            }
                                                                         }
-                                                                    }
-                                                                )
+                                                                    )
+                                                                }
                                                             }}
                                                             sx={{ minWidth: "3em", padding: "0.6em" }}
                                                             aria-label="Create new claim"

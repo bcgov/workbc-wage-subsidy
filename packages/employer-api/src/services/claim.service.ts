@@ -48,6 +48,7 @@ export const getClaimCounts = async (userGuid: string) => {
         .count("*")
         .from(knex.select("claim_id").from("employers_claims").where("employer_id", userGuid).as("ec"))
         .join("claims as c", "ec.claim_id", "=", "c.id")
+        .whereNot("status", "Deleted")
         .groupBy("status")
     return claimCounts
 }
