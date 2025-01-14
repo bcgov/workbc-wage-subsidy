@@ -183,7 +183,7 @@ export const ApplicationList = (props: any) => {
                                             render={(record: any) => (
                                                 <>
                                                     {record.status === "Draft" && (
-                                                        <Tooltip title="Delete application">
+                                                        <Tooltip title="Delete Application">
                                                             <Button
                                                                 onClick={() => {
                                                                     if (

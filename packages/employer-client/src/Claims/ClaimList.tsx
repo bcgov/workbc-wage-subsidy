@@ -228,7 +228,7 @@ export const ClaimList = (props: any) => {
                                                     )}
                                                     {record.status !== "Draft" &&
                                                         record.associated_application_id !== "LEGACY" && (
-                                                            <Tooltip title="Clone claim">
+                                                            <Tooltip title="Copy Claim">
                                                                 <Button
                                                                     onClick={async () => {
                                                                         setIsClaimCreating(true)
