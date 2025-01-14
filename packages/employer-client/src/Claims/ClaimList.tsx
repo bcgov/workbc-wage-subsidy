@@ -1,4 +1,4 @@
-import { Box, Chip, Button } from "@mui/material"
+import { Box, Chip, Button, Tooltip } from "@mui/material"
 import ContentCopyIcon from "@mui/icons-material/ContentCopy"
 import DeleteIcon from "@mui/icons-material/Delete"
 import { useCallback, useContext, useEffect, useState } from "react"
@@ -195,79 +195,83 @@ export const ClaimList = (props: any) => {
                                             render={(record: any) => (
                                                 <>
                                                     {record.status === "Draft" && (
-                                                        <Button
-                                                            onClick={() => {
-                                                                if (
-                                                                    window.confirm(
-                                                                        "Are you sure you want to delete this claim?"
-                                                                    )
-                                                                ) {
-                                                                    const diff = { status: "Deleted" }
-                                                                    update(
-                                                                        "claims",
-                                                                        {
-                                                                            id: record.id,
-                                                                            data: diff,
-                                                                            previousData: undefined
-                                                                        },
-                                                                        {
-                                                                            onSuccess: () => {
-                                                                                refresh()
+                                                        <Tooltip title="Delete Claim">
+                                                            <Button
+                                                                onClick={() => {
+                                                                    if (
+                                                                        window.confirm(
+                                                                            "Are you sure you want to delete this claim?"
+                                                                        )
+                                                                    ) {
+                                                                        const diff = { status: "Deleted" }
+                                                                        update(
+                                                                            "claims",
+                                                                            {
+                                                                                id: record.id,
+                                                                                data: diff,
+                                                                                previousData: undefined
+                                                                            },
+                                                                            {
+                                                                                onSuccess: () => {
+                                                                                    refresh()
+                                                                                }
                                                                             }
-                                                                        }
-                                                                    )
-                                                                }
-                                                            }}
-                                                            sx={{ minWidth: "3em", padding: "0.6em" }}
-                                                            aria-label="Create new claim"
-                                                        >
-                                                            <DeleteIcon />
-                                                        </Button>
+                                                                        )
+                                                                    }
+                                                                }}
+                                                                sx={{ minWidth: "3em", padding: "0 !important" }}
+                                                                aria-label="Create new claim"
+                                                            >
+                                                                <DeleteIcon />
+                                                            </Button>
+                                                        </Tooltip>
                                                     )}
                                                     {record.status !== "Draft" &&
                                                         record.associated_application_id !== "LEGACY" && (
-                                                            <Button
-                                                                onClick={async () => {
-                                                                    setIsClaimCreating(true)
-                                                                    setSelectedRecord(record.id)
-                                                                    await create(
-                                                                        "claims",
-                                                                        {
-                                                                            data: {
-                                                                                formKey: uuidv4(),
-                                                                                guid: identity.guid,
-                                                                                application_id:
-                                                                                    record.associated_application_id,
-                                                                                record
-                                                                            }
-                                                                        },
-                                                                        {
-                                                                            onSuccess: (data) => {
-                                                                                setIsClaimCreating(false)
-                                                                                setSelectedRecord("")
-                                                                                redirect(
-                                                                                    "/ViewForm/claims/" + data.id,
-                                                                                    ""
-                                                                                )
+                                                            <Tooltip title="Clone claim">
+                                                                <Button
+                                                                    onClick={async () => {
+                                                                        setIsClaimCreating(true)
+                                                                        setSelectedRecord(record.id)
+                                                                        await create(
+                                                                            "claims",
+                                                                            {
+                                                                                data: {
+                                                                                    formKey: uuidv4(),
+                                                                                    guid: identity.guid,
+                                                                                    application_id:
+                                                                                        record.associated_application_id,
+                                                                                    record
+                                                                                }
                                                                             },
-                                                                            onError: () => {
-                                                                                setIsClaimCreating(false)
-                                                                                setSelectedRecord("")
+                                                                            {
+                                                                                onSuccess: (data) => {
+                                                                                    setIsClaimCreating(false)
+                                                                                    setSelectedRecord("")
+                                                                                    redirect(
+                                                                                        "/ViewForm/claims/" + data.id,
+                                                                                        ""
+                                                                                    )
+                                                                                },
+                                                                                onError: () => {
+                                                                                    setIsClaimCreating(false)
+                                                                                    setSelectedRecord("")
+                                                                                }
                                                                             }
-                                                                        }
-                                                                    )
-                                                                }}
-                                                                sx={{ minWidth: "3em", padding: "0.6em" }}
-                                                                aria-label="Create new claim"
-                                                            >
-                                                                {isClaimCreating && selectedRecord === record.id ? (
-                                                                    <LoadingIndicator
-                                                                        sx={{ maxWidth: "24px", maxHeight: "24px" }}
-                                                                    />
-                                                                ) : (
-                                                                    <ContentCopyIcon />
-                                                                )}
-                                                            </Button>
+                                                                        )
+                                                                    }}
+                                                                    sx={{ minWidth: "3em", padding: "0 !important" }}
+                                                                    aria-label="Create new claim"
+                                                                >
+                                                                    {isClaimCreating && selectedRecord === record.id ? (
+                                                                        <LoadingIndicator
+                                                                            sx={{ maxWidth: "24px", maxHeight: "24px" }}
+                                                                        />
+                                                                    ) : (
+                                                                        <ContentCopyIcon />
+                                                                    )}
+                                                                </Button>
+                                                            </Tooltip>
                                                         )}
                                                 </>
                                             )}

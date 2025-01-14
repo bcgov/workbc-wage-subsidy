@@ -1,4 +1,4 @@
-import { Box, Chip, Button } from "@mui/material"
+import { Box, Chip, Button, Tooltip } from "@mui/material"
 import { useState, useCallback, useEffect, useContext } from "react"
 import {
     FunctionField,
@@ -183,34 +183,36 @@ export const ApplicationList = (props: any) => {
                                             render={(record: any) => (
                                                 <>
                                                     {record.status === "Draft" && (
-                                                        <Button
-                                                            onClick={() => {
-                                                                if (
-                                                                    window.confirm(
-                                                                        "Are you sure you want to delete this application?"
-                                                                    )
-                                                                ) {
-                                                                    const diff = { status: "Deleted" }
-                                                                    update(
-                                                                        "applications",
-                                                                        {
-                                                                            id: record.id,
-                                                                            data: diff,
-                                                                            previousData: undefined
-                                                                        },
-                                                                        {
-                                                                            onSuccess: () => {
-                                                                                refresh()
+                                                        <Tooltip title="Delete application">
+                                                            <Button
+                                                                onClick={() => {
+                                                                    if (
+                                                                        window.confirm(
+                                                                            "Are you sure you want to delete this application?"
+                                                                        )
+                                                                    ) {
+                                                                        const diff = { status: "Deleted" }
+                                                                        update(
+                                                                            "applications",
+                                                                            {
+                                                                                id: record.id,
+                                                                                data: diff,
+                                                                                previousData: undefined
+                                                                            },
+                                                                            {
+                                                                                onSuccess: () => {
+                                                                                    refresh()
+                                                                                }
                                                                             }
-                                                                        }
-                                                                    )
-                                                                }
-                                                            }}
-                                                            sx={{ minWidth: "3em", padding: "0.6em" }}
-                                                            aria-label="Create new claim"
-                                                        >
-                                                            <DeleteIcon />
-                                                        </Button>
+                                                                        )
+                                                                    }
+                                                                }}
+                                                                sx={{ minWidth: "3em", padding: "0 !important" }}
+                                                                aria-label="Create new claim"
+                                                            >
+                                                                <DeleteIcon />
+                                                            </Button>
+                                                        </Tooltip>
                                                     )}
                                                 </>
                                             )}
