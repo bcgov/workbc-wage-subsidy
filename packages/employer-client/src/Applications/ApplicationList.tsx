@@ -28,7 +28,7 @@ export const applicationStatusFilters = {
     Processing: { label: "Processing", status: ["In Progress"] },
     Completed: { label: "Completed", status: ["Completed"] },
     Cancelled: { label: "Cancelled", status: ["Cancelled"] }
-} as { [key: string]: any }
+}
 
 export const ApplicationList = (props: any) => {
     const [statusFilter, setStatusFilter] = useState(applicationStatusFilters["All"])

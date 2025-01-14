@@ -14,8 +14,9 @@ export const claimStatusFilters = {
     New: { label: "New", status: "New" },
     InProgress: { label: "In Progress", status: "In Progress" },
     Completed: { label: "Completed", status: "Completed" },
-    Cancelled: { label: "Cancelled", status: "Cancelled" }
-} as { [key: string]: any }
+    Cancelled: { label: "Cancelled", status: "Cancelled" },
+    Deleted: { label: "Deleted", status: "Deleted" }
+}
 
 export const ClaimList = (props: any) => {
     const cc = useContext(CatchmentContext)
@@ -28,7 +29,7 @@ export const ClaimList = (props: any) => {
 
     useEffect(() => {
         unselectAll()
-    }, [cc.catchment])
+    }, [cc.catchment, unselectAll])
 
     useEffect(() => {
         if (!listIsLoading && !listAsideIsLoading) {
@@ -142,6 +143,8 @@ export const ClaimList = (props: any) => {
                                                         ? "Completed"
                                                         : record.status === "Cancelled"
                                                         ? "Cancelled"
+                                                        : record.status === "Deleted"
+                                                        ? "Deleted"
                                                         : "New"
                                                 }
                                                 size="small"
@@ -154,7 +157,7 @@ export const ClaimList = (props: any) => {
                                                         ? "warning"
                                                         : record.status === "Completed"
                                                         ? "success"
-                                                        : record.status === "Cancelled"
+                                                        : record.status === "Cancelled" || record.status === "Deleted"
                                                         ? "error"
                                                         : "primary"
                                                 }
