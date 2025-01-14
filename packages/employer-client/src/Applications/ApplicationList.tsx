@@ -1,4 +1,4 @@
-import { Box, Chip } from "@mui/material"
+import { Box, Chip, Button } from "@mui/material"
 import { useState, useCallback, useEffect, useContext } from "react"
 import {
     FunctionField,
@@ -8,7 +8,9 @@ import {
     TextField,
     useDataProvider,
     useGetIdentity,
-    useRedirect
+    useRedirect,
+    useUpdate,
+    useRefresh
 } from "react-admin"
 import CustomDatagrid from "../common/components/CustomDatagrid/CustomDatagrid"
 import { ListActions } from "../common/components/ListActions/ListActions"
@@ -17,9 +19,10 @@ import { DatagridStyles } from "../common/styles/DatagridStyles"
 import { SharedWithModal } from "../common/components/SharedWithField/SharedWithModal"
 import { SharedWithField } from "../common/components/SharedWithField/SharedWithField"
 import { EmployerContext } from "../common/contexts/EmployerContext"
+import DeleteIcon from "@mui/icons-material/Delete"
 
 export const applicationStatusFilters = {
-    All: { label: "All" },
+    All: { label: "All", status: ["Draft", "New", "In Progress", "Completed", "Cancelled"] },
     NotSubmitted: { label: "Draft", status: ["Draft"] },
     Submitted: { label: "Submitted", status: ["New"] },
     Processing: { label: "Processing", status: ["In Progress"] },
@@ -31,6 +34,7 @@ export const ApplicationList = (props: any) => {
     const [statusFilter, setStatusFilter] = useState(applicationStatusFilters["All"])
     const { identity } = useGetIdentity()
     const redirect = useRedirect()
+    const refresh = useRefresh()
     const [modalIsOpen, setModalIsOpen] = useState(false)
     const [sharedUsers, setSharedUsers] = useState([])
     const [sharedFormId, setSharedFormId] = useState("")
@@ -40,12 +44,13 @@ export const ApplicationList = (props: any) => {
     const [isFetching, setIsFetching] = useState(false)
     const [ready, setReady] = useState(false)
     const ec = useContext(EmployerContext)
+    const [update] = useUpdate()
 
-    const syncApplications = () => {
+    const syncApplications = useCallback(() => {
         dataProvider.sync("applications").then(({ data }) => {
             setSynced(true)
         })
-    }
+    }, [dataProvider])
 
     const handleRowClick = (id: Identifier, resource: string, record: any) => {
         if (record.status === "Draft" && record.id && record.form_submission_id) {
@@ -77,13 +82,13 @@ export const ApplicationList = (props: any) => {
         if (synced && !isFetching) {
             setReady(true)
         }
-    }, [isFetching])
+    }, [isFetching, synced])
 
     useEffect(() => {
         if (identity && ec.profileExists && !synced) {
             syncApplications()
         }
-    }, [identity, ec.profileExists])
+    }, [identity, ec.profileExists, synced, syncApplications])
 
     return (
         <>
@@ -173,6 +178,43 @@ export const ApplicationList = (props: any) => {
                                                     </Box>
                                                 )
                                             }}
+                                        />
+                                        <FunctionField
+                                            render={(record: any) => (
+                                                <>
+                                                    {record.status === "Draft" && (
+                                                        <Button
+                                                            onClick={() => {
+                                                                if (
+                                                                    window.confirm(
+                                                                        "Are you sure you want to delete this claim?"
+                                                                    )
+                                                                ) {
+                                                                    console.log("delete", record)
+                                                                    const diff = { status: "Deleted" }
+                                                                    update(
+                                                                        "applications",
+                                                                        {
+                                                                            id: record.id,
+                                                                            data: diff,
+                                                                            previousData: undefined
+                                                                        },
+                                                                        {
+                                                                            onSuccess: () => {
+                                                                                refresh()
+                                                                            }
+                                                                        }
+                                                                    )
+                                                                }
+                                                            }}
+                                                            sx={{ minWidth: "3em", padding: "0.6em" }}
+                                                            aria-label="Create new claim"
+                                                        >
+                                                            <DeleteIcon />
+                                                        </Button>
+                                                    )}
+                                                </>
+                                            )}
                                         />
                                     </CustomDatagrid>
                                 </List>

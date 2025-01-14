@@ -221,13 +221,7 @@ export const ClaimList = (props: any) => {
                                                             sx={{ minWidth: "3em", padding: "0.6em" }}
                                                             aria-label="Create new claim"
                                                         >
-                                                            {isClaimCreating && selectedRecord === record.id ? (
-                                                                <LoadingIndicator
-                                                                    sx={{ maxWidth: "24px", maxHeight: "24px" }}
-                                                                />
-                                                            ) : (
-                                                                <DeleteIcon />
-                                                            )}
+                                                            <DeleteIcon />
                                                         </Button>
                                                     )}
                                                     {record.status !== "Draft" &&
