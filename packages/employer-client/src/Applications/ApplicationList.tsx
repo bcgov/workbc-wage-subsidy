@@ -190,7 +190,6 @@ export const ApplicationList = (props: any) => {
                                                                         "Are you sure you want to delete this claim?"
                                                                     )
                                                                 ) {
-                                                                    console.log("delete", record)
                                                                     const diff = { status: "Deleted" }
                                                                     update(
                                                                         "applications",

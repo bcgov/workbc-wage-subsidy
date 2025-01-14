@@ -103,7 +103,6 @@ export const updateApplication = async (id: number, status: string | null, body:
         return 0
     }
     let result
-    console.log("body", body)
     if (body) {
         const submitted = body.draft === false
         result = await knex("applications")
