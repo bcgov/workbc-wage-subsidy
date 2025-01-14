@@ -187,7 +187,7 @@ export const ApplicationList = (props: any) => {
                                                             onClick={() => {
                                                                 if (
                                                                     window.confirm(
-                                                                        "Are you sure you want to delete this claim?"
+                                                                        "Are you sure you want to delete this application?"
                                                                     )
                                                                 ) {
                                                                     const diff = { status: "Deleted" }
