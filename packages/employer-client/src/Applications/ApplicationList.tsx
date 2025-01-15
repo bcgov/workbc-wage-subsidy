@@ -82,13 +82,13 @@ export const ApplicationList = (props: any) => {
         if (synced && !isFetching) {
             setReady(true)
         }
-    }, [isFetching, synced])
+    }, [isFetching])
 
     useEffect(() => {
         if (identity && ec.profileExists && !synced) {
             syncApplications()
         }
-    }, [identity, ec.profileExists, synced, syncApplications])
+    }, [identity, ec.profileExists])
 
     return (
         <>

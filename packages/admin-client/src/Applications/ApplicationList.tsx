@@ -29,7 +29,7 @@ export const ApplicationList = (props: any) => {
 
     useEffect(() => {
         unselectAll()
-    }, [cc.catchment, unselectAll])
+    }, [cc.catchment])
 
     useEffect(() => {
         if (!listIsLoading && !listAsideIsLoading) {
