@@ -49,6 +49,7 @@ export const getApplicationCounts = async (userGuid: string) => {
         .count("*")
         .from(knex.select("application_id").from("employers_applications").where("employer_id", userGuid).as("ea"))
         .join("applications as a", "ea.application_id", "=", "a.id")
+        .whereNot("status", "Deleted")
         .groupBy("status")
     return applicationCounts
 }
@@ -114,18 +115,18 @@ export const updateApplication = async (id: number, status: string | null, body:
             .update({
                 form_confirmation_id: submitted ? body.confirmationId : null, // only store the confirmation ID when the form has been submitted
                 form_submitted_date: submitted ? body.updatedAt ?? body.createdAt : null,
-                position_title: body.submission.data.positionTitle0,
-                num_positions: body.submission.data.numberOfPositions0
-                    ? Number(body.submission.data.numberOfPositions0)
+                position_title: body.submission?.data?.positionTitle0,
+                num_positions: body.submission?.data?.numberOfPositions0
+                    ? Number(body.submission?.data?.numberOfPositions0)
                     : null,
-                catchmentno: body.submission.data.catchmentNo ? Number(body.submission.data.catchmentNo) : null,
-                workbc_centre: body.submission.data.catchmentNoStoreFront
-                    ? body.submission.data.catchmentNoStoreFront
+                catchmentno: body.submission?.data?.catchmentNo ? Number(body.submission?.data?.catchmentNo) : null,
+                workbc_centre: body.submission?.data?.catchmentNoStoreFront
+                    ? body.submission?.data?.catchmentNoStoreFront
                     : null,
-                status,
+                status: body.status ?? status,
                 updated_by: "system",
                 updated_date: new Date().toISOString(),
-                organization: body.submission.data.operatingName,
+                organization: body.submission?.data?.operatingName,
                 stale: false
             })
     }

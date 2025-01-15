@@ -14,8 +14,9 @@ export const applicationStatusFilters = {
     New: { label: "New", status: "New" },
     InProgress: { label: "In Progress", status: "In Progress" },
     Completed: { label: "Completed", status: "Completed" },
-    Cancelled: { label: "Cancelled", status: "Cancelled" }
-} as { [key: string]: any }
+    Cancelled: { label: "Cancelled", status: "Cancelled" },
+    Deleted: { label: "Deleted", status: "Deleted" }
+}
 
 export const ApplicationList = (props: any) => {
     const cc = useContext(CatchmentContext)
