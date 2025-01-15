@@ -97,7 +97,7 @@ export const ClaimList = (props: any) => {
                                     }
                                 />
                                 <FunctionField
-                                    label="Submitted Date"
+                                    label="Submitted"
                                     sortBy="form_submitted_date,updated_date,created_date"
                                     sortByOrder="DESC"
                                     render={(record: any) =>
@@ -106,11 +106,17 @@ export const ClaimList = (props: any) => {
                                             : "-"
                                     }
                                 />
-                                <TextField
-                                    label="Associated Application ID"
-                                    source="associated_application_id"
-                                    emptyText="-"
+                                <FunctionField
+                                    label="Last Updated"
+                                    sortBy="updated_date,created_date"
+                                    sortByOrder="DESC"
+                                    render={(record: any) =>
+                                        record.form_submitted_date
+                                            ? new Date(record.updated_date).toLocaleDateString()
+                                            : "-"
+                                    }
                                 />
+                                <TextField label="Application ID" source="associated_application_id" emptyText="-" />
                                 <FunctionField
                                     label="WorkBC Centre"
                                     sortBy="workbc_centre"
