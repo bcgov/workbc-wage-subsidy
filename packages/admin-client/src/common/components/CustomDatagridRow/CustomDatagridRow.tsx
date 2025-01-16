@@ -193,6 +193,7 @@ const DatagridRow = React.forwardRef<HTMLTableRowElement, CustomDatagridRowProps
 })
 
 DatagridRow.propTypes = {
+    // @ts-ignore
     children: PropTypes.node,
     className: PropTypes.string,
     // @ts-ignore
