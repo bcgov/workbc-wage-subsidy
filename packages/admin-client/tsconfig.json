@@ -1,6 +1,6 @@
 {
     "compilerOptions": {
-        "target": "es5",
+        "target": "es2017",
         "noImplicitAny": false,
         "lib": ["dom", "dom.iterable", "esnext"],
         "allowJs": true,
@@ -15,7 +15,10 @@
         "resolveJsonModule": true,
         "isolatedModules": true,
         "noEmit": true,
-        "jsx": "react-jsx"
+        "jsx": "react-jsx",
+        "paths": {
+            "react": ["./node_modules/@types/react"]
+        }
     },
     "include": ["src"]
 }

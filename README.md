@@ -14,7 +14,7 @@ The application consist of the following 6 clients and APIs:
 - `./packages/admin-api` : expressjs API for CRUD operations on the database, with PDF capabilities using CDOGS
 - `./packages/employer-client` : react-admin application for application intake, connected to CHEFS
 - `./packages/employer-api` : expressjs API for CRUD operations on the database
-- `./packages/form-api` : expressjs API for location services and emailing using CHES
+- `./packages/form-api` : expressjs API for location services and emailing using CHES [DEPRECATED]
 
 ## Deployment Flow
 
