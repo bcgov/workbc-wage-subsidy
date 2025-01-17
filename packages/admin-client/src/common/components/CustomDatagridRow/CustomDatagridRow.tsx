@@ -19,23 +19,25 @@ import { useNavigate } from "react-router-dom"
 
 type CustomDatagridRowProps = DatagridRowProps & {
     showCalculatorButton?: boolean
+    rowAriaLabel?: string
 }
 
 const DatagridRow = React.forwardRef<HTMLTableRowElement, CustomDatagridRowProps>((props, ref) => {
     const {
+        showCalculatorButton,
+        hasBulkActions = false,
+        rowAriaLabel,
         record,
         id,
-        hasBulkActions,
-        showCalculatorButton,
         onToggleItem,
         children,
-        selected,
-        selectable,
+        selected = false,
+        selectable = true,
         className,
         expand,
         rowClick,
         style,
-        hover,
+        hover = true,
         ...rest
     } = props
     const context = useDatagridContext()
@@ -102,7 +104,7 @@ const DatagridRow = React.forwardRef<HTMLTableRowElement, CustomDatagridRowProps
                 })}
                 key={id}
                 style={style}
-                hover={true}
+                hover={hover}
                 {...rest}
             >
                 {/* First column: row button, checkbox, PDF button, and optional calculator button */}
