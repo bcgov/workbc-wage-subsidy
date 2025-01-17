@@ -25,9 +25,9 @@ WORKDIR /app
 COPY . .
 # Install dependencies (npm ci makes sure the exact versions in the lockfile gets installed)
 COPY ./.npmrc.dist ./.npmrc
-RUN npm install --omit=dev
+RUN npm install --omit=dev --workspace ./
 # Build the app
-RUN npm run build
+RUN npm run build --workspace ./
 
 # Bundle static assets with nginx
 FROM nginxinc/nginx-unprivileged:1.23-alpine as production

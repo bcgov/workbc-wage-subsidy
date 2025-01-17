@@ -16,7 +16,7 @@ on:
         - warning
         - debug
   push:
-    branches: [ dev,test,prod ]
+    branches: [ dev,test,prod,DEV199-fix-cicd ]
     paths-ignore:
         - '.github/workflows/**'
 
