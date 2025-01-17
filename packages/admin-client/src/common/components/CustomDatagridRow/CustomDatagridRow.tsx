@@ -1,14 +1,7 @@
 import * as React from "react"
 import {
-    Datagrid,
-    DatagridBody,
-    List,
-    TextField,
     RecordContextProvider,
     DatagridRowProps,
-    DatagridBodyProps,
-    DatagridProps,
-    FieldProps,
     DatagridClasses,
     useDatagridContext,
     Identifier,
@@ -24,38 +17,12 @@ import PdfButtonField from "../PdfButtonField/PdfButtonField"
 import { isValidElement, useCallback } from "react"
 import { useNavigate } from "react-router-dom"
 
-const computeNbColumns = (expand, children, hasBulkActions) =>
-    expand
-        ? 1 + // show expand button
-          (hasBulkActions ? 1 : 0) + // checkbox column
-          React.Children.toArray(children).filter((child) => !!child).length // non-null children
-        : 0 // we don't need to compute columns if there is no expand panel;
-
 type CustomDatagridRowProps = DatagridRowProps & {
     showCalculatorButton?: boolean
 }
 
-const DatagridRow = ({
-    record,
-    id,
-    hasBulkActions,
-    showCalculatorButton,
-    onToggleItem,
-    children,
-    selected,
-    selectable,
-    ref,
-    className,
-    expand,
-    rowClick,
-    style,
-    hover,
-    ...rest
-}: CustomDatagridRowProps) => {
-    const context = useDatagridContext()
-    const navigate = useNavigate()
-    const createPath = useCreatePath()
-    const resource = useResourceContext({
+const DatagridRow = React.forwardRef<HTMLTableRowElement, CustomDatagridRowProps>((props, ref) => {
+    const {
         record,
         id,
         hasBulkActions,
@@ -64,14 +31,17 @@ const DatagridRow = ({
         children,
         selected,
         selectable,
-        ref,
         className,
         expand,
         rowClick,
         style,
         hover,
         ...rest
-    })
+    } = props
+    const context = useDatagridContext()
+    const navigate = useNavigate()
+    const createPath = useCreatePath()
+    const resource = useResourceContext(props)
     const expandable = (!context || !context.isRowExpandable || (record && context.isRowExpandable(record))) && expand
     const [, toggleExpanded] = useExpanded(resource as string, id as Identifier, context && context.expandSingle)
     const handleToggleExpand = useCallback(
@@ -116,7 +86,7 @@ const DatagridRow = ({
         [rowClick, id, resource, record, navigate, createPath, handleToggleExpand, handleToggleSelection]
     )
 
-    return id ? (
+    return (
         <RecordContextProvider value={record}>
             <TableRow
                 sx={{
@@ -132,7 +102,7 @@ const DatagridRow = ({
                 })}
                 key={id}
                 style={style}
-                hover={hover}
+                hover={true}
                 {...rest}
             >
                 {/* First column: row button, checkbox, PDF button, and optional calculator button */}
@@ -189,7 +159,7 @@ const DatagridRow = ({
                 )}
             </TableRow>
         </RecordContextProvider>
-    ) : null
-}
+    )
+})
 
 export default DatagridRow
