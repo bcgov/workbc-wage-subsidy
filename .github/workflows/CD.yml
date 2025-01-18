@@ -40,20 +40,8 @@ jobs:
     strategy:
       matrix:
         include:
-          - imagename: "workbc-wage-subsidy-v2-static"
-            context: "./packages/static"
-            env: true
           - imagename: "workbc-wage-subsidy-v2-admin-api"
             context: "./packages/admin-api"
-            env: false
-          - imagename: "workbc-wage-subsidy-v2-admin-client"
-            context: "./packages/admin-client"
-            env: true
-          - imagename: "workbc-wage-subsidy-v2-employer-client"
-            context: "./packages/employer-client"
-            env: true
-          - imagename: "workbc-wage-subsidy-v2-employer-api"
-            context: "./packages/employer-api"
             env: false
     steps:
       - name: Extract branch name
@@ -115,8 +103,8 @@ jobs:
         with:
           image: ${{ matrix.imagename }}
           tags: ${{ steps.extract_branch.outputs.branch == 'dev' && 'latest' || steps.extract_branch.outputs.branch}}
-          context: ${{ matrix.context }}
-          containerfiles: ${{ matrix.context }}/Dockerfile
+          context: ./
+          containerfiles: ./Dockerfile
           tls-verify: false
           build-args: |
             VITE_REACT_ENVIRONMENT=${{ vars.REACT_APP_ENVIRONMENT }}
