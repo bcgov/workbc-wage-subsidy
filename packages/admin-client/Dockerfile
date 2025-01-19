@@ -28,7 +28,7 @@ WORKDIR /app
 COPY . .
 # Install dependencies (npm ci makes sure the exact versions in the lockfile gets installed)
 COPY ./.npmrc.dist ./.npmrc
-RUN npm install
+RUN npm install --omit=dev
 # Build the app
 RUN npm run build
 
