@@ -28,6 +28,7 @@
         ]
     },
     "dependencies": {
+        "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
         "@bcgov/bc-sans": "^1.0.1",
         "@emotion/react": "^11.13.5",
         "@emotion/styled": "^11.13.5",
@@ -61,7 +62,6 @@
         "web-vitals": "^2.1.4"
     },
     "devDependencies": {
-        "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
         "@babel/plugin-transform-private-property-in-object": "^7.25.9",
         "@testing-library/jest-dom": "^5.17.0",
         "@testing-library/react": "^13.4.0",
