@@ -15,8 +15,8 @@ COPY tsconfig.json ./
 COPY . .
 
 # Install dependencies
-RUN npm install --omit=dev --workspace=packages/admin-api
-RUN npm run build --workspace=packages/admin-api
+RUN npm install --omit=dev
+RUN npm run build
 
 # Expose port 8002
 EXPOSE 8002

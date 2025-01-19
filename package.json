@@ -9,6 +9,7 @@
     ],
     "scripts": {
         "changeset": "changeset",
+        "prepare": "husky install",
         "release": "changeset publish",
         "test": "npx jest --detectOpenHandles --forceExit"
     },
