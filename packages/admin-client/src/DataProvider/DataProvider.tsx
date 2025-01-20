@@ -204,6 +204,14 @@ export const dataProvider = {
                 Authorization: `Bearer ${localStorage.getItem("token")}`
             })
         }).then(({ json }) => json),
+    getEmployerInfo: (resource: any, params: { id: any }) =>
+        httpClient(`${apiUrl}/${resource}/getEmployerInfo/${params.id}`, {
+            method: "GET",
+            headers: new Headers({
+                Accept: "application/json",
+                Authorization: `Bearer ${localStorage.getItem("token")}`
+            })
+        }).then(({ json }) => json),
     getNotifications: (resource: string, body: { catchment: number }) =>
         httpClient(`${apiUrl}/notification?catchmentNo=${body.catchment}&type=${resource}`, {
             method: "GET",
