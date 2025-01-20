@@ -15,7 +15,7 @@ COPY tsconfig.json ./
 COPY . .
 
 # Install dependencies
-RUN npm install --omit=dev
+RUN npm install --omit=dev --ignore-scripts
 RUN npm run build
 
 # Expose port 8001
