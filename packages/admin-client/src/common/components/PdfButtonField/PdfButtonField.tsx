@@ -5,6 +5,7 @@ import { faFilePdf } from "@fortawesome/pro-solid-svg-icons"
 import { COLOURS } from "../../../Colours"
 import { downloadPdf } from "../../../utils/FileFunctions"
 import { useMutation } from "react-query"
+import moment from "moment"
 
 interface PDFButtonFieldProps {
     record: any
@@ -13,16 +14,54 @@ interface PDFButtonFieldProps {
 
 const PdfButtonField: React.FC<PDFButtonFieldProps> = ({ record, resource }) => {
     const dataProvider = useDataProvider()
-    const { mutate: getPdf } = useMutation((formType) => {
+
+    const { mutate: getPdf } = useMutation(async (formType) => {
         return dataProvider
             .getPdf(resource, {
                 id: record?.id,
                 formType: formType
             })
-            .then(({ result }) => {
-                const filename =
-                    (resource === "applications" ? "application_" : "claim_") + record?.form_confirmation_id + ".pdf"
-                downloadPdf(result, filename)
+            .then(async ({ result }) => {
+                if (resource === "claims") {
+                    const employerInfo = await dataProvider
+                        .getEmployerInfo("employer", { id: record?.id })
+                        .then(async ({ result }) => {
+                            return result
+                        })
+                    const claimPeriodStartString = employerInfo["periodStart"]
+                    const claimPeriodEndString = employerInfo["periodEnd"]
+                    const formattedPeriodStart = moment(claimPeriodStartString).format("MMM D")
+                    const formattedPeriodEnd = moment(claimPeriodEndString).format("MMM D YYYY")
+                    const clientInitials = record?.employee_first_name[0] + record?.employee_last_name[0]
+                    const claimsFileName = (
+                        "WS_Claim" +
+                        "_" +
+                        employerInfo["employerName"] +
+                        "_" +
+                        formattedPeriodStart +
+                        "-" +
+                        formattedPeriodEnd +
+                        "_" +
+                        clientInitials +
+                        "_" +
+                        record?.form_confirmation_id +
+                        ".pdf"
+                    ).replace(/ /g, "_")
+                    downloadPdf(result, claimsFileName)
+                } else {
+                    const dateString = record?.form_submitted_date
+                    const formattedDate = moment(dateString).format("MMM D YYYY")
+                    const applicationsFileName = (
+                        record?.form_confirmation_id +
+                        "_" +
+                        record?.organization +
+                        "_" +
+                        formattedDate +
+                        ".pdf"
+                    ).replace(/ /g, "_")
+                    console.log(applicationsFileName)
+                    downloadPdf(result, applicationsFileName)
+                }
             })
     })
 
