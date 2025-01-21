@@ -21,31 +21,34 @@ const PdfButtonField: React.FC<PDFButtonFieldProps> = ({ record, resource }) => 
             })
             .then(async ({ result }) => {
                 if (resource === "claims") {
-                    const employerInfo = await dataProvider
-                        .getEmployerInfo("employer", { id: record?.id })
-                        .then(async ({ result }) => {
-                            return result
-                        })
-                    const claimPeriodStartString = employerInfo["periodStart"]
-                    const claimPeriodEndString = employerInfo["periodEnd"]
-                    const formattedPeriodStart = moment(claimPeriodStartString).format("MMM D")
-                    const formattedPeriodEnd = moment(claimPeriodEndString).format("MMM D YYYY")
-                    const clientInitials = record?.employee_first_name[0] + record?.employee_last_name[0]
-                    const claimsFileName = (
-                        "WS_Claim" +
-                        "_" +
-                        employerInfo["employerName"] +
-                        "_" +
-                        formattedPeriodStart +
-                        "-" +
-                        formattedPeriodEnd +
-                        "_" +
-                        clientInitials +
-                        "_" +
-                        record?.form_confirmation_id +
-                        ".pdf"
-                    ).replace(/ /g, "_")
-                    downloadPdf(result, claimsFileName)
+                    try {
+                        const { employerInfo } = await dataProvider.getEmployerInfo("employer", { id: record?.id })
+                        if (employerInfo) {
+                            const claimPeriodStartString = employerInfo["periodStart"]
+                            const claimPeriodEndString = employerInfo["periodEnd"]
+                            const formattedPeriodStart = moment(claimPeriodStartString).format("MMM D")
+                            const formattedPeriodEnd = moment(claimPeriodEndString).format("MMM D YYYY")
+                            const clientInitials = record?.employee_first_name[0] + record?.employee_last_name[0]
+                            const claimsFileName = (
+                                "WS_Claim" +
+                                "_" +
+                                employerInfo["employerName"] +
+                                "_" +
+                                formattedPeriodStart +
+                                "-" +
+                                formattedPeriodEnd +
+                                "_" +
+                                clientInitials +
+                                "_" +
+                                record?.form_confirmation_id +
+                                ".pdf"
+                            ).replace(/ /g, "_")
+                            downloadPdf(result, claimsFileName)
+                        }
+                    } catch (error) {
+                        console.log("Error getting employer info", error)
+                        throw new Error("Error getting employer info")
+                    }
                 } else {
                     const dateString = record?.form_submitted_date
                     const formattedDate = moment(dateString).format("MMM D YYYY")

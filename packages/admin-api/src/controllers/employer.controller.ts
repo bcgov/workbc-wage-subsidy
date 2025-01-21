@@ -31,7 +31,7 @@ export const getOneEmployer = async (req: any, res: express.Response) => {
             periodStart: submission?.data.container.periodStart1,
             periodEnd: submission?.data.container.periodStart2
         }
-        return res.status(200).send({ result: employerInfo })
+        return res.status(200).send({ employerInfo })
     } catch (e: any) {
         console.log(e?.message)
         return res.status(500).send("Server Error")
