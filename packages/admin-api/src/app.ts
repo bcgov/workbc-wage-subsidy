@@ -7,6 +7,7 @@ import applicationRoute from "./routes/application.route"
 import claimRoute from "./routes/claim.route"
 import permissionRoute from "./routes/permission.route"
 import notificationRoute from "./routes/notification.route"
+import employerRoute from "./routes/employer.route"
 
 const corsOptions = {
     origin: process.env.ORIGIN_URL || process.env.OPENSHIFT_NODEJS_ORIGIN_URL || "http://localhost:3006",
@@ -40,6 +41,7 @@ app.use("/permission", keycloak.protect(), permissionRoute)
 app.use("/applications", keycloak.protect(), applicationRoute)
 app.use("/claims", keycloak.protect(), claimRoute)
 app.use("/notification", keycloak.protect(), notificationRoute)
+app.use("/employer", keycloak.protect(), employerRoute)
 
 const port = process.env.PORT || "8002"
 app.listen(port, () => {
