@@ -14,55 +14,61 @@ interface PDFButtonFieldProps {
 const PdfButtonField: React.FC<PDFButtonFieldProps> = ({ record, resource }) => {
     const dataProvider = useDataProvider()
     const { mutate: getPdf } = useMutation((formType) => {
-        return dataProvider
-            .getPdf(resource, {
-                id: record?.id,
-                formType: formType
-            })
-            .then(async ({ result }) => {
-                if (resource === "claims") {
-                    try {
-                        const { employerInfo } = await dataProvider.getEmployerInfo("employer", { id: record?.id })
-                        if (employerInfo) {
-                            const claimPeriodStartString = employerInfo["periodStart"]
-                            const claimPeriodEndString = employerInfo["periodEnd"]
-                            const formattedPeriodStart = moment(claimPeriodStartString).format("MMM D")
-                            const formattedPeriodEnd = moment(claimPeriodEndString).format("MMM D YYYY")
-                            const clientInitials = record?.employee_first_name[0] + record?.employee_last_name[0]
-                            const claimsFileName = (
-                                "WS_Claim" +
-                                "_" +
-                                employerInfo["employerName"] +
-                                "_" +
-                                formattedPeriodStart +
-                                "-" +
-                                formattedPeriodEnd +
-                                "_" +
-                                clientInitials +
-                                "_" +
-                                record?.form_confirmation_id +
-                                ".pdf"
-                            ).replace(/ /g, "_")
-                            downloadPdf(result, claimsFileName)
+        try {
+            if (!record) {
+                console.error("Record not found")
+                throw new Error("Record not found")
+            }
+            return dataProvider
+                .getPdf(resource, {
+                    id: record.id,
+                    formType: formType
+                })
+                .then(async ({ result }) => {
+                    if (resource === "claims") {
+                        const { employerInfo } = await dataProvider.getEmployerInfo("employer", { id: record.id })
+                        if (!employerInfo) {
+                            console.error("Employer info not found, cannot generate PDF")
+                            throw new Error("Employer info not found, cannot generate PDF")
                         }
-                    } catch (error) {
-                        console.log("Error getting employer info", error)
-                        throw new Error("Error getting employer info")
+                        const claimPeriodStartString = employerInfo["periodStart"]
+                        const claimPeriodEndString = employerInfo["periodEnd"]
+                        const formattedPeriodStart = moment(claimPeriodStartString).format("MMM D")
+                        const formattedPeriodEnd = moment(claimPeriodEndString).format("MMM D YYYY")
+                        const clientInitials = record.employee_first_name[0] + record.employee_last_name[0]
+                        const claimsFileName = (
+                            "WS_Claim" +
+                            "_" +
+                            employerInfo["employerName"] +
+                            "_" +
+                            formattedPeriodStart +
+                            "-" +
+                            formattedPeriodEnd +
+                            "_" +
+                            clientInitials +
+                            "_" +
+                            record.form_confirmation_id +
+                            ".pdf"
+                        ).replace(/ /g, "_")
+                        downloadPdf(result, claimsFileName)
+                    } else {
+                        const dateString = record.form_submitted_date
+                        const formattedDate = moment(dateString).format("MMM D YYYY")
+                        const applicationsFileName = (
+                            record.form_confirmation_id +
+                            "_" +
+                            record.organization +
+                            "_" +
+                            formattedDate +
+                            ".pdf"
+                        ).replace(/ /g, "_")
+                        downloadPdf(result, applicationsFileName)
                     }
-                } else {
-                    const dateString = record?.form_submitted_date
-                    const formattedDate = moment(dateString).format("MMM D YYYY")
-                    const applicationsFileName = (
-                        record?.form_confirmation_id +
-                        "_" +
-                        record?.organization +
-                        "_" +
-                        formattedDate +
-                        ".pdf"
-                    ).replace(/ /g, "_")
-                    downloadPdf(result, applicationsFileName)
-                }
-            })
+                })
+        } catch (error) {
+            console.error("Error getting PDF: ", error)
+            throw new Error("Error getting PDF")
+        }
     })
 
     return (
@@ -76,7 +82,7 @@ const PdfButtonField: React.FC<PDFButtonFieldProps> = ({ record, resource }) => 
                 } else if (resource === "claims") {
                     formType = "ServiceProviderClaimForm"
                 }
-                if (record?.id && record?.form_confirmation_id && formType) {
+                if (record && record.id && record.form_confirmation_id && formType) {
                     getPdf(formType)
                 }
             }}
