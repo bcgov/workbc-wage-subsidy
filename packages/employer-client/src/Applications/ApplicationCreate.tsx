@@ -12,7 +12,10 @@ export const ApplicationCreate = () => {
     const { identity } = useGetIdentity()
     const [create] = useCreate()
     const [loading, setLoading] = useState(false)
-    const { total, isLoading } = useGetList("applications", { pagination: { page: 1, perPage: 1 } })
+    const { total, isLoading } = useGetList("applications", {
+        pagination: { page: 1, perPage: 1 },
+        filter: { status: ["Draft", "New", "In Progress", "Completed", "Cancelled"] }
+    })
     const [searchParams] = useSearchParams()
 
     const handleClick = async (formType) => {
