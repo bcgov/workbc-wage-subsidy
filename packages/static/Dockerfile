@@ -14,7 +14,7 @@ WORKDIR /app
 COPY . /app
 COPY tsconfig.json ./
 # Install dependencies (npm ci makes sure the exact versions in the lockfile gets installed)
-RUN npm install --omit=dev
+RUN npm install --omit=dev --ignore-scripts
 # Build the app
 RUN npm run build
 

@@ -15,7 +15,7 @@ const useAuthProvider = (clientID: string) => {
             localStorage.removeItem("token")
             localStorage.removeItem("refresh_token")
             localStorage.removeItem("permissions")
-            return keycloak.logout({ redirectUri: `${absolutePath}/logout-success` })
+            return keycloak.logout({ redirectUri: `${absolutePath}logout-success` })
         },
         getIdentity: () => {
             if (keycloak.token) {
