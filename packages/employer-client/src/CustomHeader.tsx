@@ -155,7 +155,7 @@ export const Header = (props: HeaderProps) => {
                             application. For screen readers, use the 'Open form in new tab' icon link to allow your
                             screen reader to properly read out and allow you to work with form fields.
                         </div>
-                        <h2>Labels and tool tips</h2>
+                        <h2>Labels and Tool Tips</h2>
                         <div>
                             Labels and tool tips have been added to provide additional explanation for areas, fields and
                             actions within the application. Some of these labels may be hidden visually but will be read
