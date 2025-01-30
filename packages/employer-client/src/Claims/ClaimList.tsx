@@ -1,6 +1,5 @@
 import { Box, Chip, Button, Tooltip } from "@mui/material"
 import ContentCopyIcon from "@mui/icons-material/ContentCopy"
-import DeleteIcon from "@mui/icons-material/Delete"
 import { useCallback, useContext, useEffect, useState } from "react"
 import {
     FunctionField,
@@ -12,9 +11,7 @@ import {
     useGetIdentity,
     useRedirect,
     useCreate,
-    useUpdate,
-    LoadingIndicator,
-    useRefresh
+    LoadingIndicator
 } from "react-admin"
 import CustomDatagrid from "../common/components/CustomDatagrid/CustomDatagrid"
 import { ListActions } from "../common/components/ListActions/ListActions"
@@ -41,7 +38,6 @@ export const ClaimList = (props: any) => {
     const [statusFilter, setStatusFilter] = useState(claimStatusFilters["All"])
     const { identity } = useGetIdentity()
     const redirect = useRedirect()
-    const refresh = useRefresh()
     const [modalIsOpen, setModalIsOpen] = useState(false)
     const [sharedUsers, setSharedUsers] = useState([])
     const [sharedFormId, setSharedFormId] = useState("")
@@ -52,7 +48,6 @@ export const ClaimList = (props: any) => {
     const [ready, setReady] = useState(false)
     const ec = useContext(EmployerContext)
     const [create] = useCreate()
-    const [update] = useUpdate()
     const [isClaimCreating, setIsClaimCreating] = useState(false)
     const [selectedRecord, setSelectedRecord] = useState("")
 
@@ -194,38 +189,6 @@ export const ClaimList = (props: any) => {
                                         <FunctionField
                                             render={(record: any) => (
                                                 <>
-                                                    {record.status === "Draft" && (
-                                                        <Tooltip title="Delete Claim">
-                                                            <Button
-                                                                onClick={() => {
-                                                                    if (
-                                                                        window.confirm(
-                                                                            "Are you sure you want to delete this claim?"
-                                                                        )
-                                                                    ) {
-                                                                        const diff = { status: "Deleted" }
-                                                                        update(
-                                                                            "claims",
-                                                                            {
-                                                                                id: record.id,
-                                                                                data: diff,
-                                                                                previousData: undefined
-                                                                            },
-                                                                            {
-                                                                                onSuccess: () => {
-                                                                                    refresh()
-                                                                                }
-                                                                            }
-                                                                        )
-                                                                    }
-                                                                }}
-                                                                sx={{ minWidth: "3em", padding: "0 !important" }}
-                                                                aria-label="Create new claim"
-                                                            >
-                                                                <DeleteIcon />
-                                                            </Button>
-                                                        </Tooltip>
-                                                    )}
                                                     {record.status !== "Draft" &&
                                                         record.associated_application_id !== "LEGACY" && (
                                                             <Tooltip title="Copy Claim">

@@ -14,8 +14,7 @@ export const claimStatusFilters = {
     New: { label: "New", status: "New" },
     InProgress: { label: "In Progress", status: "In Progress" },
     Completed: { label: "Completed", status: "Completed" },
-    Cancelled: { label: "Cancelled", status: "Cancelled" },
-    Deleted: { label: "Deleted", status: "Deleted" }
+    Cancelled: { label: "Cancelled", status: "Cancelled" }
 }
 
 export const ClaimList = (props: any) => {
@@ -149,8 +148,6 @@ export const ClaimList = (props: any) => {
                                                         ? "Completed"
                                                         : record.status === "Cancelled"
                                                         ? "Cancelled"
-                                                        : record.status === "Deleted"
-                                                        ? "Deleted"
                                                         : "New"
                                                 }
                                                 size="small"
@@ -163,7 +160,7 @@ export const ClaimList = (props: any) => {
                                                         ? "warning"
                                                         : record.status === "Completed"
                                                         ? "success"
-                                                        : record.status === "Cancelled" || record.status === "Deleted"
+                                                        : record.status === "Cancelled"
                                                         ? "error"
                                                         : "primary"
                                                 }
