@@ -14,8 +14,7 @@ export const claimStatusFilters = {
     New: { label: "New", status: "New" },
     InProgress: { label: "In Progress", status: "In Progress" },
     Completed: { label: "Completed", status: "Completed" },
-    Cancelled: { label: "Cancelled", status: "Cancelled" },
-    Deleted: { label: "Deleted", status: "Deleted" }
+    Cancelled: { label: "Cancelled", status: "Cancelled" }
 }
 
 export const ClaimList = (props: any) => {
