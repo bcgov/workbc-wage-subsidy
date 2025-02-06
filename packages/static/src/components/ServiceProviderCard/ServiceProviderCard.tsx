@@ -26,7 +26,7 @@ const ServiceProviderCard = () => (
                 <Box display="flex" height="100%" justifyContent="center" alignItems="end" sx={{ flexGrow: 1 }}>
                     <BCGovPrimaryButton
                         text="Service Provider Login"
-                        onClick={() => window.open(import.meta.env.VITE_SERVICE_PROVIDER_URL)}
+                        onClick={() => window.open(import.meta.env.VITE_SERVICE_PROVIDER_URL, "_self")}
                     />
                 </Box>
             </Grid>
