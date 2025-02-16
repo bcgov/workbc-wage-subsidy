@@ -208,7 +208,7 @@ export const ApplicationList = (props: any) => {
                                                                     }
                                                                 }}
                                                                 sx={{ minWidth: "3em", padding: "0 !important" }}
-                                                                aria-label="Create new claim"
+                                                                aria-label="Delete Application"
                                                             >
                                                                 <DeleteIcon />
                                                             </Button>

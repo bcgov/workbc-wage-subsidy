@@ -420,8 +420,8 @@ const computeClaimPrefillFields = (appFormData: any, record?: Record) => ({
             ...(appFormData?.businessCity && { employerCity: appFormData.businessCity }),
             ...(appFormData?.businessPostal && { employerPostal: appFormData.businessPostal })
         }),
-        employeeLastName: record?.employee_first_name,
-        employeeFirstName: record?.employee_last_name,
+        employeeFirstName: record?.employee_first_name,
+        employeeLastName: record?.employee_last_name,
         clientIssues1: appFormData?.duties0
     }
 })

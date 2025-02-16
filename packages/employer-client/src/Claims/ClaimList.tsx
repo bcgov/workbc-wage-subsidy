@@ -261,7 +261,7 @@ export const ClaimList = (props: any) => {
                                                                         )
                                                                     }}
                                                                     sx={{ minWidth: "3em", padding: "0 !important" }}
-                                                                    aria-label="Create new claim"
+                                                                    aria-label="Copy Claim"
                                                                 >
                                                                     {isClaimCreating && selectedRecord === record.id ? (
                                                                         <LoadingIndicator
