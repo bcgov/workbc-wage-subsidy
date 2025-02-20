@@ -8,7 +8,10 @@ import { useSearchParams } from "react-router-dom"
 
 export const ClaimCreate = () => {
     const redirect = useRedirect()
-    const { total, isLoading } = useGetList("claims", { pagination: { page: 1, perPage: 1 } })
+    const { total, isLoading } = useGetList("claims", {
+        pagination: { page: 1, perPage: 1 },
+        filter: { status: ["Draft", "New", "In Progress", "Completed", "Cancelled"] }
+    })
     const [searchParams] = useSearchParams()
 
     useEffect(() => {

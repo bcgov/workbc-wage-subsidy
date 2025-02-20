@@ -141,7 +141,7 @@ export const Header = (props: HeaderProps) => {
                                 Accessibility and Inclusion Toolkit
                             </a>
                             , and specifically the
-                            <a href="https://www.w3.org/WAI/tips/developing/">
+                            <a href="https://www.w3.org/WAI/tips/developing/" target="_blank" rel="noreferrer">
                                 {" "}
                                 W3 Developing for Web Accessibility
                             </a>{" "}
