@@ -16,7 +16,7 @@ on:
         - warning
         - debug
   push:
-    branches: [ dev,test,prod,DEV216-RHBK26-updates ]
+    branches: [ dev,test,prod ]
     paths-ignore:
         - '.github/workflows/**'
 
