@@ -9,5 +9,3 @@ b=${a#*(-> }
 v=${b%%[)| ]*}
 
 export PATH="$NVM_DIR/versions/node/$v/bin:$PATH"
-
-npx lint-staged
