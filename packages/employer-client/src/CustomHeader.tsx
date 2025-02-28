@@ -130,54 +130,54 @@ export const Header = (props: HeaderProps) => {
                 <div className="accessibility-features-modal-container">
                     <div className="accessibility-features-title">
                         <h1>Accessibility Features</h1>
-                        <div>
-                            The Wage Subsidy application has been developed following the BC Government's
+                        <p>
+                            <span>The Wage Subsidy application has been developed following the BC Government's </span>
                             <a
                                 href="https://www2.gov.bc.ca/gov/content/home/accessible-government/toolkit"
                                 target="_blank"
                                 rel="noreferrer"
                             >
-                                {" "}
                                 Accessibility and Inclusion Toolkit
                             </a>
-                            , and specifically the
+                            <span>, and specifically the </span>
                             <a href="https://www.w3.org/WAI/tips/developing/" target="_blank" rel="noreferrer">
-                                {" "}
                                 W3 Developing for Web Accessibility
-                            </a>{" "}
-                            best practices.
-                        </div>
+                            </a>
+                            <span> best practices.</span>
+                        </p>
                     </div>
                     <div className="accessiblity-features-content">
                         <h2>Form Completion</h2>
-                        <div>
+                        <p>
                             For applications and claim forms, we use embedded form functionality within the Wage Subsidy
                             application. For screen readers, use the 'Open form in new tab' icon link to allow your
                             screen reader to properly read out and allow you to work with form fields.
-                        </div>
+                        </p>
                         <h2>Labels and Tool Tips</h2>
-                        <div>
+                        <p>
                             Labels and tool tips have been added to provide additional explanation for areas, fields and
                             actions within the application. Some of these labels may be hidden visually but will be read
                             out with screen readers.
-                        </div>
+                        </p>
                         <h2>Navigation</h2>
-                        <div>
+                        <p>
                             Users can navigate between the list of applications or claim forms and the status filter
                             sidebar (left-hand portion of the screen) using the left and right arrow keys.
-                        </div>
+                        </p>
                         <h2>Checkboxes</h2>
-                        <div>
+                        <p>
                             Selecting a given checkbox will enable additional actions to appear at the top of the list
-                            of applications or claim forms. <br />
-                            <br />
+                            of applications or claim forms.
+                        </p>
+                        <p>
                             For Employers, this action allows the user to <b>share</b> selected applications and claim
                             forms with others within your Business BCeID organization. Note this function is not
-                            available for Basic BCeID users. <br />
-                            <br />
+                            available for Basic BCeID users.
+                        </p>
+                        <p>
                             For Ministry Staff, this action allows the user to <b>move</b> applications and claim forms
                             from one catchment to another.
-                        </div>
+                        </p>
                     </div>
                 </div>
             </BCGovModal>
