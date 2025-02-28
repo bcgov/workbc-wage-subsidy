@@ -14,6 +14,8 @@ export const getAllClaims = async (
     trx?: any
 ) => {
     const claims = await knex("claims")
+        .whereNot("status", "Draft")
+        .whereNot("status", "Deleted")
         .modify((queryBuilder: any) => {
             if (!getDrafts) {
                 queryBuilder.whereNot("status", "Draft")

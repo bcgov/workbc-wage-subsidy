@@ -11,6 +11,7 @@ export const getAllApplications = async (
 ) => {
     const applications = await knex("applications")
         .whereNot("status", "Draft")
+        .whereNot("status", "Deleted")
         .modify((queryBuilder: any) => {
             if (filters.id) {
                 queryBuilder.where("id", Number(filters.id))
