@@ -1,14 +1,13 @@
 /* eslint-disable jsx-a11y/iframe-has-title */
-import { Box, Tooltip } from "@mui/material"
-import { Button, Loading, useGetIdentity, useGetOne, useRefresh, useUpdate } from "react-admin"
+import { Box } from "@mui/material"
+import { Loading, useGetIdentity, useGetOne, useRefresh, useUpdate } from "react-admin"
 import { useParams, useLocation } from "react-router"
 import StatusDropdown from "../common/components/StatusDropdown/StatusDropdown"
 import { COLOURS } from "../Colours"
 import BackButton from "../common/components/BackButton/BackButton"
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faUpRightFromSquare } from "@fortawesome/pro-solid-svg-icons"
 import { useRef, useState, useEffect } from "react"
 import React from "react"
+import PdfButtonField from "../common/components/PdfButtonField/PdfButtonField"
 
 function useRecursiveTimeout(callback, delay) {
     const savedCallback = useRef(callback)
@@ -131,6 +130,7 @@ export const ViewForm = () => {
                         >
                             <BackButton resource={resource} />
                             <StatusDropdown record={record} resource={resource} onChange={handleStatusChange} />
+                            {record.status === "Completed" && <PdfButtonField record={record} resource={resource} />}
                         </Box>
                         &nbsp;
                     </div>

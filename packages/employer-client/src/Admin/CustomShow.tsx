@@ -49,6 +49,7 @@ export interface CustomShowProps {
 }
 
 CustomShow.propTypes = {
+    // @ts-ignore
     children: PropTypes.node,
     className: PropTypes.string,
     divider: PropTypes.any,

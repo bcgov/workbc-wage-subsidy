@@ -15,7 +15,7 @@ export const applicationStatusFilters = {
     InProgress: { label: "In Progress", status: "In Progress" },
     Completed: { label: "Completed", status: "Completed" },
     Cancelled: { label: "Cancelled", status: "Cancelled" }
-} as { [key: string]: any }
+}
 
 export const ApplicationList = (props: any) => {
     const cc = useContext(CatchmentContext)
@@ -90,7 +90,7 @@ export const ApplicationList = (props: any) => {
                                 <TextField label="Organization" source="organization" emptyText="-" />
                                 <TextField label="Position Title" source="position_title" emptyText="-" />
                                 <FunctionField
-                                    label="Submitted Date"
+                                    label="Submitted"
                                     sortBy="form_submitted_date,updated_date,created_date"
                                     sortByOrder="DESC"
                                     render={(record: any) =>
@@ -99,7 +99,16 @@ export const ApplicationList = (props: any) => {
                                             : "-"
                                     }
                                 />
-                                <TextField label="Form Type" source="form_type" emptyText="-" />
+                                <FunctionField
+                                    label="Last Updated"
+                                    sortBy="updated_date,created_date"
+                                    sortByOrder="DESC"
+                                    render={(record: any) =>
+                                        record.form_submitted_date
+                                            ? new Date(record.updated_date).toLocaleDateString()
+                                            : "-"
+                                    }
+                                />
                                 <FunctionField
                                     label="WorkBC Centre"
                                     sortBy="workbc_centre"

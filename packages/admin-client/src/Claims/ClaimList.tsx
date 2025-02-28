@@ -15,7 +15,7 @@ export const claimStatusFilters = {
     InProgress: { label: "In Progress", status: "In Progress" },
     Completed: { label: "Completed", status: "Completed" },
     Cancelled: { label: "Cancelled", status: "Cancelled" }
-} as { [key: string]: any }
+}
 
 export const ClaimList = (props: any) => {
     const cc = useContext(CatchmentContext)
@@ -97,7 +97,7 @@ export const ClaimList = (props: any) => {
                                     }
                                 />
                                 <FunctionField
-                                    label="Submitted Date"
+                                    label="Submitted"
                                     sortBy="form_submitted_date,updated_date,created_date"
                                     sortByOrder="DESC"
                                     render={(record: any) =>
@@ -106,11 +106,17 @@ export const ClaimList = (props: any) => {
                                             : "-"
                                     }
                                 />
-                                <TextField
-                                    label="Associated Application ID"
-                                    source="associated_application_id"
-                                    emptyText="-"
+                                <FunctionField
+                                    label="Last Updated"
+                                    sortBy="updated_date,created_date"
+                                    sortByOrder="DESC"
+                                    render={(record: any) =>
+                                        record.form_submitted_date
+                                            ? new Date(record.updated_date).toLocaleDateString()
+                                            : "-"
+                                    }
                                 />
+                                <TextField label="Application ID" source="associated_application_id" emptyText="-" />
                                 <FunctionField
                                     label="WorkBC Centre"
                                     sortBy="workbc_centre"
@@ -142,6 +148,8 @@ export const ClaimList = (props: any) => {
                                                         ? "Completed"
                                                         : record.status === "Cancelled"
                                                         ? "Cancelled"
+                                                        : record.status === "Deleted"
+                                                        ? "Deleted"
                                                         : "New"
                                                 }
                                                 size="small"
@@ -154,7 +162,7 @@ export const ClaimList = (props: any) => {
                                                         ? "warning"
                                                         : record.status === "Completed"
                                                         ? "success"
-                                                        : record.status === "Cancelled"
+                                                        : record.status === "Cancelled" || record.status === "Deleted"
                                                         ? "error"
                                                         : "primary"
                                                 }
