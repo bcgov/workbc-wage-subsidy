@@ -8,6 +8,7 @@ import * as employerService from "../services/employer.service"
 import * as formService from "../services/form.service"
 import { getApplicationByConfirmationID, getFormId, getFormPass } from "../services/application.service"
 import { getCHEFSToken } from "../services/common.service"
+import * as emailController from "./email.controller"
 
 export const getAllClaims = async (req: any, res: express.Response) => {
     try {
@@ -286,6 +287,22 @@ const updateClaimFromForm = async (employerClaimRecord: any) => {
                                 )
                             })
                         // TODO: send notification.
+                        submission.data.applicationType = "Claims"
+                        submission.data.catchmentNo = employerClaimRecord.catchmentno
+
+                        await emailController
+                            .sendEmail(submission, employerClaimRecord.id)
+                            .then(() => {
+                                console.log(
+                                    `[claim.controller] successfully sent notifications for submission id ${employerClaimRecord.form_submission_id}`
+                                )
+                            })
+                            .catch((e) => {
+                                console.log(
+                                    `[claim.controller] error sending notifications for submission id ${employerClaimRecord.form_submission_id} - Error:`,
+                                    e
+                                )
+                            })
                     } else {
                         console.log(
                             `[claim.controller] unable to create new service provider claim form for submission id ${employerClaimRecord.form_submission_id} - this shouldn't happen!`
