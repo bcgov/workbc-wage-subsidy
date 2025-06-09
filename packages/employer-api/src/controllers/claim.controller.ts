@@ -286,7 +286,6 @@ const updateClaimFromForm = async (employerClaimRecord: any) => {
                                     `[claim.controller] successfully updated claim ${employerClaimRecord.id} with SP claim form data`
                                 )
                             })
-                        // TODO: send notification.
                         submission.data.applicationType = "Claims"
                         submission.data.catchmentNo = employerClaimRecord.catchmentno
 
