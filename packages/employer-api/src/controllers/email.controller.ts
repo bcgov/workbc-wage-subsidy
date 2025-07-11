@@ -22,7 +22,7 @@ const createEmailHTMLBasedOnType = (applicationType: string, applicantType: stri
     return emailHTML
 }
 
-export const sendEmail = async (formData: any) => {
+export const sendEmail = async (formData: any, formID?: string) => {
     try {
         const { data } = formData
         const applicationType = String(data.applicationType)
@@ -81,7 +81,8 @@ export const sendEmail = async (formData: any) => {
             const notificationHTML = notificationTemplate.applicationNotification(
                 `${data.catchmentNo}`,
                 catchmentName || "",
-                String(applicationType) === "Claims" ? "claim" : "application"
+                String(applicationType) === "Claims" ? "claim" : "application",
+                formID
             )
             const notificationList = await notificationService.getNotification(
                 Number(data.catchmentNo),

@@ -233,7 +233,7 @@ const updateApplicationFromForm = async (application: any) => {
 
                     // Send email confirmations and notifications //
                     await emailController
-                        .sendEmail(submissionResponse.submission.submission)
+                        .sendEmail(submissionResponse.submission.submission, application.id)
                         .then(() => {
                             console.log(
                                 `[application.controller] successfully sent notifications for submission id ${application.form_submission_id}`

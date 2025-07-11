@@ -145,12 +145,3 @@ jobs:
           registry: image-registry.apps.silver.devops.gov.bc.ca/1c4f9c-tools
           username: ${{ secrets.API_TOKEN_4 }}
           password: ${{ secrets.API_TOKEN_4 }}
-      - name: Push Static To DockerHub Image repo
-        id: push-to-docker-static
-        uses: redhat-actions/push-to-registry@v2
-        with:
-          image: ${{ steps.build-static-image.outputs.image }}
-          tags: ${{ steps.build-static-image.outputs.tags }}
-          registry: docker.io/elmsd
-          username: ${{ secrets.DOCKER_USER }}
-          password: ${{ secrets.DOCKER_TOKEN }}

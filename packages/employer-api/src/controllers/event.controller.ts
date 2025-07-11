@@ -126,13 +126,16 @@ export const submission = async (req: express.Request, res: express.Response) =>
             }
             // Send notifications to clients with Claims notifications enabled
             await emailController
-                .sendEmail({
+                .sendEmail(
+                    {
                     // email controller expects the data to be wrapped in a data object
                     data: {
                         catchmentNo: claim.catchmentno,
                         applicationType: "Claims"
                     }
-                })
+                }, 
+                claim.id
+            )
                 .then(() => {
                     console.log(
                         `[event.controller] successfully sent notifications for submission id ${req.body.submissionId}`
@@ -278,7 +281,7 @@ export const submission = async (req: express.Request, res: express.Response) =>
 
                     // Send notification(s) //
                     await emailController
-                        .sendEmail(submissionResponse.submission.submission)
+                        .sendEmail(submissionResponse.submission.submission, application.id)
                         .then(() => {
                             console.log(
                                 `[event.controller] successfully sent notifications for submission id ${req.body.submissionId}`
