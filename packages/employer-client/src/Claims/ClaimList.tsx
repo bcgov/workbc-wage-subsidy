@@ -162,11 +162,8 @@ export const ClaimList = (props: any) => {
                                         />
                                         {allowSharing && <SharedWithField label="Shared With" openModal={openModal} />}
                                         <FunctionField
-                                            label={
-                                                <Box display="flex" width="100%" justifyContent="center">
-                                                    Status
-                                                </Box>
-                                            }
+                                            label="Status"
+                                            sortBy="status"
                                             render={(record: any) => (
                                                 <Box display="flex" width="100%" justifyContent="center">
                                                     <Chip

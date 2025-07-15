@@ -100,29 +100,44 @@ export const ClaimList = (props: any) => {
                                     label="Submission ID"
                                     source="form_confirmation_id"
                                     render={(record: any) => (
-                                        <Tooltip
-                                            title={
-                                                copiedID === record.form_confirmation_id
-                                                    ? "Copied!"
-                                                    : "Copy Submission ID"
-                                            }
-                                        >
-                                            <Button
-                                                style={{ padding: 0 }}
-                                                onClick={() => handleSubmissionIDClick(record.form_confirmation_id)}
+                                        <Box display="flex" alignItems="center" gap={0}>
+                                            <TextField
+                                                label={record.form_confirmation_id}
+                                                aria-label={record.form_confirmation_id}
+                                                source="form_confirmation_id"
+                                                emptyText="-"
+                                            />
+                                            <Tooltip
+                                                title={
+                                                    copiedID === record.form_confirmation_id
+                                                        ? "Copied!"
+                                                        : "Copy Submission ID"
+                                                }
+                                                aria-label={record.form_confirmation_id}
+                                                aria-hidden={true}
                                             >
-                                                <TextField
-                                                    label="Submission ID"
-                                                    source="form_confirmation_id"
-                                                    emptyText="-"
-                                                />
-
-                                                <FontAwesomeIcon
-                                                    icon={faCopy}
-                                                    style={{ color: COLOURS.LIGHTBLUE_TEXT, padding: "0.5rem" }}
-                                                />
-                                            </Button>
-                                        </Tooltip>
+                                                <Button
+                                                    aria-label={`Copy Submission ID ${record.form_confirmation_id}`}
+                                                    style={{ padding: 0, minWidth: "unset" }}
+                                                    onClick={(e) => {
+                                                        e.stopPropagation()
+                                                        handleSubmissionIDClick(record.form_confirmation_id)
+                                                    }}
+                                                    onKeyDown={(e) => {
+                                                        if (e.key === "Enter") {
+                                                            e.stopPropagation()
+                                                            handleSubmissionIDClick(record.form_confirmation_id)
+                                                        }
+                                                    }}
+                                                    aria-pressed
+                                                >
+                                                    <FontAwesomeIcon
+                                                        icon={faCopy}
+                                                        style={{ color: COLOURS.LIGHTBLUE_TEXT, padding: "0 0.5rem" }}
+                                                    />
+                                                </Button>
+                                            </Tooltip>
+                                        </Box>
                                     )}
                                 />
                                 <TextField label="Position Title" source="position_title" emptyText="-" />
@@ -171,11 +186,8 @@ export const ClaimList = (props: any) => {
                                     }}
                                 />
                                 <FunctionField
-                                    label={
-                                        <Box display="flex" width="100%" justifyContent="center">
-                                            Status
-                                        </Box>
-                                    }
+                                    label="Status"
+                                    sortBy="status"
                                     render={(record: any) => (
                                         <Box display="flex" width="100%" justifyContent="center">
                                             <Chip
