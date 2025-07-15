@@ -129,7 +129,6 @@ export const ClaimList = (props: any) => {
                                                             handleSubmissionIDClick(record.form_confirmation_id)
                                                         }
                                                     }}
-                                                    aria-pressed
                                                 >
                                                     <FontAwesomeIcon
                                                         icon={faCopy}
