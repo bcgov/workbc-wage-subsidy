@@ -1,4 +1,4 @@
-import { Box, Chip } from "@mui/material"
+import { Box, Chip, Button } from "@mui/material"
 import { FunctionField, Identifier, List, TextField, useUnselectAll, useRedirect, Loading } from "react-admin"
 import { useContext, useEffect, useState } from "react"
 import CatchmentLabel from "../common/components/CatchmentLabel/CatchmentLabel"
@@ -8,6 +8,9 @@ import { ListActions } from "../common/components/ListActions/ListActions"
 import { ListAside } from "../common/components/ListAside/ListAside"
 import { WorkBcCentres } from "../common/data/WorkBcCentres"
 import { CustomSearchInput } from "../common/components/CustomSearchInput/CustomSearchInput"
+import { faCopy } from "@fortawesome/pro-solid-svg-icons"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { COLOURS } from "../Colours"
 
 export const applicationStatusFilters = {
     All: { label: "All" },
@@ -86,7 +89,34 @@ export const ApplicationList = (props: any) => {
                                 ariaLabel="applications list"
                                 setIsLoading={setListIsLoading}
                             >
-                                <TextField label="Submission ID" source="form_confirmation_id" emptyText="-" />
+                                <FunctionField
+                                    render={(record: any) => (
+                                        <>
+                                            <Button
+                                                onClick={() => {
+                                                    console.log("Submission ID:", record.form_confirmation_id)
+                                                }}
+                                            >
+                                                <TextField
+                                                    label="Submission ID"
+                                                    source="form_confirmation_id"
+                                                    emptyText="-"
+                                                />
+                                                <Button
+                                                    onClick={() => {
+                                                        console.log("Submission ID:", record.form_confirmation_id)
+                                                    }}
+                                                >
+                                                    <FontAwesomeIcon
+                                                        icon={faCopy}
+                                                        size="xl"
+                                                        style={{ color: COLOURS.LIGHTBLUE_TEXT }}
+                                                    />
+                                                </Button>
+                                            </Button>
+                                        </>
+                                    )}
+                                />
                                 <TextField label="Organization" source="organization" emptyText="-" />
                                 <TextField label="Position Title" source="position_title" emptyText="-" />
                                 <FunctionField
