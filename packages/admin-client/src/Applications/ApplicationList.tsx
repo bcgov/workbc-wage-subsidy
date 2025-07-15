@@ -1,4 +1,4 @@
-import { Box, Chip, Button } from "@mui/material"
+import { Box, Chip, Button, Tooltip } from "@mui/material"
 import { FunctionField, Identifier, List, TextField, useUnselectAll, useRedirect, Loading } from "react-admin"
 import { useContext, useEffect, useState } from "react"
 import CatchmentLabel from "../common/components/CatchmentLabel/CatchmentLabel"
@@ -28,6 +28,13 @@ export const ApplicationList = (props: any) => {
     const [listIsLoading, setListIsLoading] = useState(true)
     const [listAsideIsLoading, setListAsideIsLoading] = useState(true)
     const [ready, setReady] = useState(false)
+    const [copiedID, setCopiedID] = useState(null)
+
+    const handleSubmissionIDClick = (form_confirmation_id: any) => {
+        navigator.clipboard.writeText(form_confirmation_id)
+        setCopiedID(form_confirmation_id)
+        setTimeout(() => setCopiedID(null), 2000)
+    }
 
     useEffect(() => {
         unselectAll()
@@ -90,31 +97,39 @@ export const ApplicationList = (props: any) => {
                                 setIsLoading={setListIsLoading}
                             >
                                 <FunctionField
+                                    label="Submission ID"
+                                    source="form_confirmation_id"
                                     render={(record: any) => (
-                                        <>
+                                        <Tooltip
+                                            title={
+                                                copiedID === record.form_confirmation_id
+                                                    ? "Copied!"
+                                                    : "Copy Submission ID"
+                                            }
+                                        >
                                             <Button
-                                                onClick={() => {
-                                                    console.log("Submission ID:", record.form_confirmation_id)
-                                                }}
+                                                style={{ padding: 0 }}
+                                                onClick={() => handleSubmissionIDClick(record.form_confirmation_id)}
                                             >
                                                 <TextField
                                                     label="Submission ID"
                                                     source="form_confirmation_id"
                                                     emptyText="-"
                                                 />
-                                                <Button
+                                                {/* <Button
+                                                    // style={{ padding: 0, justifySelf: "left" }}
                                                     onClick={() => {
                                                         console.log("Submission ID:", record.form_confirmation_id)
                                                     }}
-                                                >
-                                                    <FontAwesomeIcon
-                                                        icon={faCopy}
-                                                        size="xl"
-                                                        style={{ color: COLOURS.LIGHTBLUE_TEXT }}
-                                                    />
-                                                </Button>
+                                                > */}
+                                                <FontAwesomeIcon
+                                                    icon={faCopy}
+                                                    // size="xl"
+                                                    style={{ color: COLOURS.LIGHTBLUE_TEXT, padding: "0.5rem" }}
+                                                />
+                                                {/* </Button> */}
                                             </Button>
-                                        </>
+                                        </Tooltip>
                                     )}
                                 />
                                 <TextField label="Organization" source="organization" emptyText="-" />
