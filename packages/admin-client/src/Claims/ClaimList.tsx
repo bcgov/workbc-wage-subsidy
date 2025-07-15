@@ -1,4 +1,4 @@
-import { Box, Chip } from "@mui/material"
+import { Box, Chip, Button, Tooltip } from "@mui/material"
 import { FunctionField, Identifier, List, Loading, TextField, useRedirect, useUnselectAll } from "react-admin"
 import { useContext, useEffect, useState } from "react"
 import CatchmentLabel from "../common/components/CatchmentLabel/CatchmentLabel"
@@ -8,6 +8,9 @@ import { ListActions } from "../common/components/ListActions/ListActions"
 import { ListAside } from "../common/components/ListAside/ListAside"
 import { WorkBcCentres } from "../common/data/WorkBcCentres"
 import { CustomSearchInput } from "../common/components/CustomSearchInput/CustomSearchInput"
+import { faCopy } from "@fortawesome/pro-solid-svg-icons"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { COLOURS } from "../Colours"
 
 export const claimStatusFilters = {
     All: { label: "All" },
@@ -25,6 +28,13 @@ export const ClaimList = (props: any) => {
     const [listIsLoading, setListIsLoading] = useState(true)
     const [listAsideIsLoading, setListAsideIsLoading] = useState(true)
     const [ready, setReady] = useState(false)
+    const [copiedID, setCopiedID] = useState(null)
+
+    const handleSubmissionIDClick = (form_confirmation_id: any) => {
+        navigator.clipboard.writeText(form_confirmation_id)
+        setCopiedID(form_confirmation_id)
+        setTimeout(() => setCopiedID(null), 2000)
+    }
 
     useEffect(() => {
         unselectAll()
@@ -86,7 +96,35 @@ export const ClaimList = (props: any) => {
                                 ariaLabel="claims list"
                                 setIsLoading={setListIsLoading}
                             >
-                                <TextField label="Submission ID" source="form_confirmation_id" emptyText="-" />
+                                <FunctionField
+                                    label="Submission ID"
+                                    source="form_confirmation_id"
+                                    render={(record: any) => (
+                                        <Tooltip
+                                            title={
+                                                copiedID === record.form_confirmation_id
+                                                    ? "Copied!"
+                                                    : "Copy Submission ID"
+                                            }
+                                        >
+                                            <Button
+                                                style={{ padding: 0 }}
+                                                onClick={() => handleSubmissionIDClick(record.form_confirmation_id)}
+                                            >
+                                                <TextField
+                                                    label="Submission ID"
+                                                    source="form_confirmation_id"
+                                                    emptyText="-"
+                                                />
+
+                                                <FontAwesomeIcon
+                                                    icon={faCopy}
+                                                    style={{ color: COLOURS.LIGHTBLUE_TEXT, padding: "0.5rem" }}
+                                                />
+                                            </Button>
+                                        </Tooltip>
+                                    )}
+                                />
                                 <TextField label="Position Title" source="position_title" emptyText="-" />
                                 <FunctionField
                                     label="Employee Name"
