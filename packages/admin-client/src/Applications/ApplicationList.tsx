@@ -116,18 +116,11 @@ export const ApplicationList = (props: any) => {
                                                     source="form_confirmation_id"
                                                     emptyText="-"
                                                 />
-                                                {/* <Button
-                                                    // style={{ padding: 0, justifySelf: "left" }}
-                                                    onClick={() => {
-                                                        console.log("Submission ID:", record.form_confirmation_id)
-                                                    }}
-                                                > */}
+
                                                 <FontAwesomeIcon
                                                     icon={faCopy}
-                                                    // size="xl"
                                                     style={{ color: COLOURS.LIGHTBLUE_TEXT, padding: "0.5rem" }}
                                                 />
-                                                {/* </Button> */}
                                             </Button>
                                         </Tooltip>
                                     )}
