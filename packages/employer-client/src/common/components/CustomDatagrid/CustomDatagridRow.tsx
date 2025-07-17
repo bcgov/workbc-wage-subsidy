@@ -157,7 +157,14 @@ const DatagridRow = React.forwardRef<HTMLTableRowElement, CustomDatagridRowProps
                             className={clsx(`column-${(field.props as any).source}`, DatagridClasses.rowCell)}
                             record={record}
                             {...{ field, resource }}
-                            aria-label={field.key?.toString()}
+                            tabIndex={0}
+                            aria-label={field.props.label}
+                            onClick={handleClick}
+                            onKeyDown={(e) => {
+                                if (e.key === "Enter") {
+                                    handleClick(e)
+                                }
+                            }}
                         />
                     ) : null
                 )}
