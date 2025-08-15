@@ -7,10 +7,12 @@ const useAuthProvider = (clientID: string) => {
     return {
         login: () => keycloak.login(),
         checkError: () => Promise.resolve(),
-        checkAuth: () => (keycloak.token ? Promise.resolve() : Promise.reject("Failed to obtain access token.")),
-        logout: () => {
+        checkAuth: () => {
+            return localStorage.getItem("token") ? Promise.resolve() : Promise.reject("Failed to obtain access token.")
+        },
+        logout: async () => {
             const { absolutePath } = setEnvVariables()
-            return keycloak.logout({ redirectUri: `${absolutePath}logout-success` })
+            await keycloak.logout({ redirectUri: `${absolutePath}logout-success` })
         },
         getIdentity: () => {
             if (keycloak.token) {
