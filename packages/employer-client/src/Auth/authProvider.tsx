@@ -12,8 +12,14 @@ const useAuthProvider = (clientID: string) => {
         },
         logout: () => {
             const { absolutePath } = setEnvVariables()
-            localStorage.clear()
-            window.location.href = `${absolutePath}logout-success`
+            keycloak
+                .logout()
+                .then(() => {
+                    window.location.href = `${absolutePath}logout-success`
+                })
+                .catch((error) => {
+                    console.error("Logout failed:", error)
+                })
             // return keycloak.logout({ redirectUri: `${absolutePath}logout-success` })
         },
         getIdentity: () => {
