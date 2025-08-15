@@ -99,6 +99,7 @@ export const CustomDatagridHeader = (props: DatagridHeaderProps) => {
 }
 
 CustomDatagridHeader.propTypes = {
+    // @ts-ignore
     children: PropTypes.node,
     className: PropTypes.string,
     sort: PropTypes.exact({

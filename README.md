@@ -14,7 +14,7 @@ The application consist of the following 6 clients and APIs:
 - `./packages/admin-api` : expressjs API for CRUD operations on the database, with PDF capabilities using CDOGS
 - `./packages/employer-client` : react-admin application for application intake, connected to CHEFS
 - `./packages/employer-api` : expressjs API for CRUD operations on the database
-- `./packages/form-api` : expressjs API for location services and emailing using CHES
+- `./packages/form-api` : expressjs API for location services and emailing using CHES [DEPRECATED]
 
 ## Deployment Flow
 
@@ -37,9 +37,9 @@ There are GitHub Actions created to build the image and push it with the appropr
 
 - [Node 18.16.0 LTS](https://nodejs.org/en/download)
 
-Run the following command first:
+Run the following command first in the root folder:
 
-`npm install`
+`npm install --workspaces`
 
 ## Setting up Postgres database
 

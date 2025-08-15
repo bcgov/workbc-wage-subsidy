@@ -1,75 +1,51 @@
-import { Box, Button, Checkbox, TableCell, TableRow, TableRowProps } from "@mui/material"
-import clsx from "clsx"
-import PropTypes from "prop-types"
+import * as React from "react"
 import {
-    Identifier,
-    RaRecord,
     RecordContextProvider,
-    shallowEqual,
+    DatagridRowProps,
+    DatagridClasses,
+    useDatagridContext,
+    Identifier,
+    useResourceContext,
     useCreatePath,
     useExpanded,
-    useRecordContext,
-    useResourceContext
-} from "ra-core"
-import React, { FC, ReactElement, isValidElement, memo, useCallback, useEffect, useState } from "react"
-import { useNavigate } from "react-router-dom"
-
-import { DatagridCell, DatagridClasses, InputProps, useDatagridContext } from "react-admin"
+    DatagridCell
+} from "react-admin"
+import { TableCell, TableRow, Checkbox, Box, Button } from "@mui/material"
+import clsx from "clsx"
 import CalculatorButtonField from "../CalculatorButtonField/CalculatorButtonField"
 import PdfButtonField from "../PdfButtonField/PdfButtonField"
-
-const computeNbColumns = (expand, children, hasBulkActions) =>
-    expand
-        ? 1 + // show expand button
-          (hasBulkActions ? 1 : 0) + // checkbox column
-          React.Children.toArray(children).filter((child) => !!child).length // non-null children
-        : 0 // we don't need to compute columns if there is no expand panel;
+import { isValidElement, useCallback } from "react"
+import { useNavigate } from "react-router-dom"
 
 type CustomDatagridRowProps = DatagridRowProps & {
     showCalculatorButton?: boolean
+    rowAriaLabel?: string
 }
 
-//const DatagridRow: FC<any> = React.forwardRef<HTMLInputElement | null, CustomDatagridRowProps>((props, ref) => {
-//const DatagridRow: FC<DatagridRowProps> = React.forwardRef((props, ref) => {
-//const DatagridRow: FC<any> = React.forwardRef((props, ref) => {
 const DatagridRow = React.forwardRef<HTMLTableRowElement, CustomDatagridRowProps>((props, ref) => {
-    //const DatagridRow: FC<CustomDatagridRowProps> = React.forwardRef((props, ref) => {
     const {
         showCalculatorButton,
-        children,
-        className,
-        expand,
-        hasBulkActions,
-        hover,
+        hasBulkActions = false,
+        rowAriaLabel,
+        record,
         id,
         onToggleItem,
-        record: recordOverride,
+        children,
+        selected = false,
+        selectable = true,
+        className,
+        expand,
         rowClick,
-        selected,
         style,
-        selectable,
+        hover = true,
         ...rest
     } = props
-
     const context = useDatagridContext()
-    const record = useRecordContext(props)
-    const expandable = (!context || !context.isRowExpandable || context.isRowExpandable(record)) && expand
-    const resource = useResourceContext(props)
-    const createPath = useCreatePath()
-    const [expanded, toggleExpanded] = useExpanded(resource, id as Identifier, context && context.expandSingle)
-    const [nbColumns, setNbColumns] = useState(() => computeNbColumns(expandable, children, hasBulkActions))
-    useEffect(() => {
-        // Fields can be hidden dynamically based on permissions;
-        // The expand panel must span over the remaining columns
-        // So we must recompute the number of columns to span on
-        const newNbColumns = computeNbColumns(expandable, children, hasBulkActions)
-        if (newNbColumns !== nbColumns) {
-            setNbColumns(newNbColumns)
-        }
-    }, [expandable, nbColumns, children, hasBulkActions])
-
     const navigate = useNavigate()
-
+    const createPath = useCreatePath()
+    const resource = useResourceContext(props)
+    const expandable = (!context || !context.isRowExpandable || (record && context.isRowExpandable(record))) && expand
+    const [, toggleExpanded] = useExpanded(resource as string, id as Identifier, context && context.expandSingle)
     const handleToggleExpand = useCallback(
         (event) => {
             toggleExpanded()
@@ -88,7 +64,10 @@ const DatagridRow = React.forwardRef<HTMLTableRowElement, CustomDatagridRowProps
     const handleClick = useCallback(
         async (event) => {
             event.persist()
-            const type = typeof rowClick === "function" ? await rowClick(id as Identifier, resource, record) : rowClick
+            const type: string | boolean =
+                typeof rowClick === "function" && record
+                    ? await rowClick(id as Identifier, resource as string, record)
+                    : (rowClick as string)
             if (type === false || type == null) {
                 return
             }
@@ -161,7 +140,7 @@ const DatagridRow = React.forwardRef<HTMLTableRowElement, CustomDatagridRowProps
                         )}
                         <Box width="100%" justifyContent="center" alignSelf="center">
                             <Box display="flex">
-                                <PdfButtonField />
+                                <PdfButtonField record={record} resource={resource} />
                                 {showCalculatorButton && <CalculatorButtonField />}
                             </Box>
                         </Box>
@@ -174,6 +153,8 @@ const DatagridRow = React.forwardRef<HTMLTableRowElement, CustomDatagridRowProps
                             key={`${id}-${(field.props as any).source || index}`}
                             className={clsx(`column-${(field.props as any).source}`, DatagridClasses.rowCell)}
                             record={record}
+                            onPointerEnterCapture={() => {}}
+                            onPointerLeaveCapture={() => {}}
                             {...{ field, resource, rest }}
                         />
                     ) : null
@@ -182,68 +163,5 @@ const DatagridRow = React.forwardRef<HTMLTableRowElement, CustomDatagridRowProps
         </RecordContextProvider>
     )
 })
-
-DatagridRow.propTypes = {
-    children: PropTypes.node,
-    className: PropTypes.string,
-    // @ts-ignore
-    expand: PropTypes.oneOfType([PropTypes.element, PropTypes.elementType]),
-    hasBulkActions: PropTypes.bool.isRequired,
-    hover: PropTypes.bool,
-    id: PropTypes.any,
-    onToggleItem: PropTypes.func,
-    // @ts-ignore
-    record: PropTypes.object,
-    resource: PropTypes.string,
-    // @ts-ignore
-    rowClick: PropTypes.oneOfType([PropTypes.string, PropTypes.func, PropTypes.bool]),
-    selected: PropTypes.bool,
-    style: PropTypes.object,
-    selectable: PropTypes.bool
-}
-
-DatagridRow.defaultProps = {
-    hasBulkActions: false,
-    hover: true,
-    selected: false,
-    selectable: true
-}
-
-export interface DatagridRowProps extends Omit<TableRowProps, "id" | "classes"> {
-    className?: string
-    expand?:
-        | ReactElement
-        | FC<{
-              id: Identifier
-              record: RaRecord
-              resource: string
-          }>
-    hasBulkActions?: boolean
-    hover?: boolean
-    id?: Identifier
-    onToggleItem?: (id: Identifier, event: React.TouchEvent | React.MouseEvent) => void
-    record?: RaRecord
-    resource?: string
-    rowClick?: RowClickFunction | string | false
-    selected?: boolean
-    style?: any
-    selectable?: boolean
-}
-
-export type RowClickFunction = (
-    id: Identifier,
-    resource: string,
-    record: RaRecord
-) => string | false | Promise<string | false>
-
-const areEqual = (prevProps, nextProps) => {
-    const { children: _1, expand: _2, ...prevPropsWithoutChildren } = prevProps
-    const { children: _3, expand: _4, ...nextPropsWithoutChildren } = nextProps
-    return shallowEqual(prevPropsWithoutChildren, nextPropsWithoutChildren)
-}
-
-export const PureDatagridRow = memo(DatagridRow, areEqual)
-
-PureDatagridRow.displayName = "PureDatagridRow"
 
 export default DatagridRow

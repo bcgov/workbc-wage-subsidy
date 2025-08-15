@@ -13,7 +13,8 @@ const modalStyles = {
         borderRadius: "6px",
         maxWidth: "47em",
         boxShadow: "0 0 30px 0 rgb(0 0 0 / 15%)",
-        maxHeight: "80%"
+        maxHeight: "80%",
+        fontFamily: "'BCSans', 'Noto Sans', Verdana, Arial, sans-serif"
     },
     overlay: {
         backgroundColor: "rgba(210, 210, 210, 0.58)",

@@ -58,7 +58,7 @@ const EmployerCard = () => {
                     <Box display="flex" height="100%" justifyContent="center" alignItems="end" sx={{ flexGrow: 1 }}>
                         <BCGovPrimaryButton
                             text="Employer Login"
-                            onClick={() => window.open(import.meta.env.VITE_EMPLOYER_URL)}
+                            onClick={() => window.open(import.meta.env.VITE_EMPLOYER_URL, "_self")}
                         />
                     </Box>
                 </Grid>

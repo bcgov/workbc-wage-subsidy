@@ -8,6 +8,7 @@ import * as employerService from "../services/employer.service"
 import * as formService from "../services/form.service"
 import { getApplicationByConfirmationID, getFormId, getFormPass } from "../services/application.service"
 import { getCHEFSToken } from "../services/common.service"
+import * as emailController from "./email.controller"
 
 export const getAllClaims = async (req: any, res: express.Response) => {
     try {
@@ -86,7 +87,7 @@ export const createClaim = async (req: any, res: express.Response) => {
 
         // Prepare pre-fill data.
         const appFormData = associatedApplicationForm.submission.submission.data
-        const prefillFields = computeClaimPrefillFields(appFormData)
+        const prefillFields = computeClaimPrefillFields(appFormData, req.body.record)
 
         // Create a new form draft //
         const createDraftResult = await formService.createLoginProtectedDraft(
@@ -285,7 +286,22 @@ const updateClaimFromForm = async (employerClaimRecord: any) => {
                                     `[claim.controller] successfully updated claim ${employerClaimRecord.id} with SP claim form data`
                                 )
                             })
-                        // TODO: send notification.
+                        submission.data.applicationType = "Claims"
+                        submission.data.catchmentNo = employerClaimRecord.catchmentno
+
+                        await emailController
+                            .sendEmail(submission, employerClaimRecord.id)
+                            .then(() => {
+                                console.log(
+                                    `[claim.controller] successfully sent notifications for submission id ${employerClaimRecord.form_submission_id}`
+                                )
+                            })
+                            .catch((e) => {
+                                console.log(
+                                    `[claim.controller] error sending notifications for submission id ${employerClaimRecord.form_submission_id} - Error:`,
+                                    e
+                                )
+                            })
                     } else {
                         console.log(
                             `[claim.controller] unable to create new service provider claim form for submission id ${employerClaimRecord.form_submission_id} - this shouldn't happen!`
@@ -378,10 +394,34 @@ export const deleteClaim = async (req: any, res: express.Response) => {
     }
 }
 
+type Record = {
+    id: string
+    position_title: string
+    status: string
+    catchmentno: number
+    workbc_centre: string
+    employee_first_name: string
+    employee_last_name: string
+    associated_application_id: string
+    form_confirmation_id: string
+    form_submission_id: string
+    form_submitted_date: string
+    service_provider_form_submission_id: string
+    service_provider_form_internal_id: string
+    calculator_approved: boolean
+    created_by: string
+    created_date: string
+    updated_by: string
+    updated_date: string
+    stale: boolean
+    created_by_idp: string
+    shared_with: unknown
+}
+
 // Prepare pre-fill data.
 // Use data from associated application.
 // Use workplace address if it exists, otherwise use business address.
-const computeClaimPrefillFields = (appFormData: any) => ({
+const computeClaimPrefillFields = (appFormData: any, record?: Record) => ({
     container: {
         ...(appFormData?.operatingName && { employerName: appFormData.operatingName }),
         ...(appFormData?.signatory1 && { employerContact: appFormData.signatory1 }),
@@ -395,6 +435,9 @@ const computeClaimPrefillFields = (appFormData: any) => ({
             ...(appFormData?.businessAddress && { businessAddress1: appFormData.businessAddress }),
             ...(appFormData?.businessCity && { employerCity: appFormData.businessCity }),
             ...(appFormData?.businessPostal && { employerPostal: appFormData.businessPostal })
-        })
+        }),
+        employeeFirstName: record?.employee_first_name,
+        employeeLastName: record?.employee_last_name,
+        clientIssues1: appFormData?.duties0
     }
 })

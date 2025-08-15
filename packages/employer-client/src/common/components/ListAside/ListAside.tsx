@@ -79,7 +79,7 @@ export const ListAside: React.FC<ListAsideProps> = ({ statusFilters, statusFilte
     }, [])
 
     return (
-        <Box width={200} mr={1} mt={7} flexShrink={0} order={-1} style={{ transform: "translate(0em, -1.7em)" }}>
+        <Box width={200} mr={1} mt={1.5} flexShrink={0} order={-1}>
             <Box style={{ transform: "translate(0em, -0.5em)" }}>
                 <span
                     style={{

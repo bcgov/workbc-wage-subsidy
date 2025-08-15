@@ -1,6 +1,6 @@
 /* eslint-disable import/prefer-default-export */
 import { stringify } from "querystring"
-import { fetchUtils } from "react-admin"
+import { fetchUtils, GetListParams } from "react-admin"
 
 const apiUrl = process.env.REACT_APP_ADMIN_API_URL || "http://localhost:8002"
 const countHeader = "Content-Range"
@@ -9,10 +9,11 @@ const httpClient = fetchUtils.fetchJson
 export const dataProvider = {
     getList: (
         resource: any,
-        params: { pagination: { page: any; perPage: any }; sort: { field: any; order: any }; filter: any }
+        params: GetListParams
+        // params: { pagination?: { page: any; perPage: any }; sort: { field: any; order: any }; filter: any }
     ) => {
-        const { page, perPage } = params.pagination
-        const { field, order } = params.sort
+        const { page = 1, perPage = 10 } = params.pagination ?? { page: 1, perPage: 10 }
+        const { field, order } = params.sort ?? { field: "", order: "" }
 
         const rangeStart = (page - 1) * perPage
         const rangeEnd = page * perPage - 1
@@ -197,6 +198,14 @@ export const dataProvider = {
         })),
     getPdf: (resource: any, params: { id: any; formType: any }) =>
         httpClient(`${apiUrl}/${resource}/pdf/${params.id}/${params.formType}`, {
+            method: "GET",
+            headers: new Headers({
+                Accept: "application/json",
+                Authorization: `Bearer ${localStorage.getItem("token")}`
+            })
+        }).then(({ json }) => json),
+    getEmployerInfo: (resource: any, params: { id: any }) =>
+        httpClient(`${apiUrl}/${resource}/getEmployerInfo/${params.id}`, {
             method: "GET",
             headers: new Headers({
                 Accept: "application/json",

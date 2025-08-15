@@ -35,7 +35,7 @@ export const insertEmployer = async (data: any) => {
     if (data.bceid_username) {
         employerData.bceid_username = data.bceid_username
     }
-    const result = await knex("employers").insert(employerData)
+    const result = await knex("employers").insert(employerData) // comment for commit
     return result
 }
 
