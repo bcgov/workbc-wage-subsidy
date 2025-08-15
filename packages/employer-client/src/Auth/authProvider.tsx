@@ -12,11 +12,6 @@ const useAuthProvider = (clientID: string) => {
         },
         logout: () => {
             const { absolutePath } = setEnvVariables()
-            localStorage.removeItem("token")
-            localStorage.removeItem("refresh_token")
-            localStorage.removeItem("permissions")
-            localStorage.removeItem("access")
-            localStorage.clear()
             return keycloak.logout({ redirectUri: `${absolutePath}logout-success` })
         },
         getIdentity: () => {
