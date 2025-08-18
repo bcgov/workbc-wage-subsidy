@@ -38,8 +38,8 @@ const onToken = () => {
         localStorage.setItem("token", keycloak.token)
         localStorage.setItem("refresh-token", keycloak.refreshToken)
         localStorage.setItem("provider", keycloak.idTokenParsed?.identity_provider)
+        window.dispatchEvent(new Event("storage"))
     }
-    window.dispatchEvent(new Event("storage"))
 }
 
 const onTokenExpired = () => {
