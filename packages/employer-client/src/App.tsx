@@ -27,19 +27,19 @@ const initOptions: KeycloakConfig = {
 }
 
 const keycloak: Keycloak = new Keycloak(initOptions)
-// const kcLogin = keycloak.login
-// keycloak.login = (options) => {
-//     if (options) options.idpHint = "bceid"
-//     return kcLogin(options)
-// }
+const kcLogin = keycloak.login
+keycloak.login = (options) => {
+    if (options) options.idpHint = "bceid"
+    return kcLogin(options)
+}
 
 const onToken = () => {
     if (keycloak.token && keycloak.refreshToken) {
         localStorage.setItem("token", keycloak.token)
         localStorage.setItem("refresh-token", keycloak.refreshToken)
         localStorage.setItem("provider", keycloak.idTokenParsed?.identity_provider)
-        window.dispatchEvent(new Event("storage"))
     }
+    window.dispatchEvent(new Event("storage"))
 }
 
 const onTokenExpired = () => {
