@@ -79,9 +79,6 @@ const UserProfileModal: React.FC<UserProfileModalProps> = ({ isOpen, onRequestCl
             {
                 onSuccess: () => {
                     ec.setEmployerProfileExists(true)
-                },
-                onError: () => {
-                    logout()
                 }
             }
         )

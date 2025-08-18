@@ -204,10 +204,15 @@ export const lightTheme = {
 
 const CustomAdminWithKeycloak = () => {
     const customAuthProvider = useAuthProvider(process.env.REACT_APP_KEYCLOAK_CLIENT_ID ?? "")
-    const [permissions] = useState(
-        keycloak?.idTokenParsed?.identity_provider === "bceid" ||
-            keycloak?.idTokenParsed?.identity_provider === "bceidboth"
-    )
+    const [permissions, setPermissions] = useState(keycloak.idTokenParsed?.identity_provider === "bceid")
+    useEffect(() => {
+        if (
+            (keycloak && keycloak.idTokenParsed?.identity_provider === "bceid") ||
+            (keycloak && keycloak.idTokenParsed?.identity_provider === "bceidboth")
+        ) {
+            setPermissions(true)
+        }
+    }, [])
 
     const queryClient = new QueryClient({
         defaultOptions: {
