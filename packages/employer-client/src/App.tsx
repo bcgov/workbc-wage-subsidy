@@ -46,12 +46,13 @@ const onTokenExpired = () => {
     keycloak
         .updateToken(30)
         .then(() => {
-            if (keycloak.token && keycloak.refreshToken) {
-                localStorage.setItem("token", keycloak.token)
-                localStorage.setItem("refresh-token", keycloak.refreshToken)
-                localStorage.setItem("provider", keycloak.idTokenParsed?.identity_provider)
-                window.dispatchEvent(new Event("storage"))
-            }
+            // if (keycloak.token && keycloak.refreshToken) {
+            //     localStorage.setItem("token", keycloak.token)
+            //     localStorage.setItem("refresh-token", keycloak.refreshToken)
+            //     localStorage.setItem("provider", keycloak.idTokenParsed?.identity_provider)
+            //     window.dispatchEvent(new Event("storage"))
+            // }
+            onToken()
         })
         .catch(() => {
             console.error("failed to refresh token")
