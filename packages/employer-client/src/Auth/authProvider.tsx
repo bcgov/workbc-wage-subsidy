@@ -12,7 +12,7 @@ const useAuthProvider = (clientID: string) => {
         },
         logout: () => {
             const { absolutePath } = setEnvVariables()
-            return keycloak.logout({ redirectUri: `${absolutePath}` })
+            return keycloak.logout({ redirectUri: `${absolutePath}logout-success` })
         },
         getIdentity: () => {
             if (keycloak.token) {

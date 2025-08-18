@@ -26,12 +26,12 @@ const initOptions: KeycloakConfig = {
     clientId: process.env.REACT_APP_KEYCLOAK_CLIENT_ID || ""
 }
 
-let keycloak: Keycloak = new Keycloak(initOptions)
-const kcLogin = keycloak.login
-keycloak.login = (options) => {
-    if (options) options.idpHint = "bceid"
-    return kcLogin(options)
-}
+const keycloak: Keycloak = new Keycloak(initOptions)
+// const kcLogin = keycloak.login
+// keycloak.login = (options) => {
+//     if (options) options.idpHint = "bceid"
+//     return kcLogin(options)
+// }
 
 const onToken = () => {
     if (keycloak.token && keycloak.refreshToken) {
