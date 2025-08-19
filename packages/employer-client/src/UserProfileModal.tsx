@@ -79,6 +79,9 @@ const UserProfileModal: React.FC<UserProfileModalProps> = ({ isOpen, onRequestCl
             {
                 onSuccess: () => {
                     ec.setEmployerProfileExists(true)
+                },
+                onError: () => {
+                    logout()
                 }
             }
         )
@@ -102,10 +105,10 @@ const UserProfileModal: React.FC<UserProfileModalProps> = ({ isOpen, onRequestCl
     }, [isOpen])
 
     useEffect(() => {
-        if (identity) {
+        if (identity && localStorage.getItem("token")) {
             createProfileIfNotExists(identity)
         }
-    }, [identity])
+    }, [createProfileIfNotExists, identity])
 
     return (
         <>
