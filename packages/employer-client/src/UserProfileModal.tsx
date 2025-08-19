@@ -108,7 +108,7 @@ const UserProfileModal: React.FC<UserProfileModalProps> = ({ isOpen, onRequestCl
         if (identity && !ec.profileExists) {
             createProfileIfNotExists(identity)
         }
-    }, [createProfileIfNotExists, identity])
+    }, [createProfileIfNotExists, ec.profileExists, identity])
 
     return (
         <>
