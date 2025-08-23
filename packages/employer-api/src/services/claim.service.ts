@@ -171,7 +171,9 @@ export const getServiceProviderClaimByInternalId = async (internalId: string) =>
 export const addServiceProviderClaim = async (
     submissionResponse: any,
     serviceProviderInternalID: string,
-    serviceProviderSubmissionID: string
+    serviceProviderSubmissionID: string,
+    catchment: number,
+    storefront: string
 ) => {
     let result
     try {
@@ -200,6 +202,8 @@ export const addServiceProviderClaim = async (
                     status: "New",
                     service_provider_form_submission_id: serviceProviderSubmissionID,
                     service_provider_form_internal_id: serviceProviderInternalID,
+                    catchmentno: catchment,
+                    workbc_centre: storefront,
                     updated_by: submissionResponse.submission.updatedBy ?? submissionResponse.submission.createdBy,
                     updated_date: new Date().toISOString()
                 })
