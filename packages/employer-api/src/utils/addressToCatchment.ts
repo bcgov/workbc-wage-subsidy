@@ -52,5 +52,15 @@ export function getClosestCentres(lat: any, lon: any, n: number) {
             }
         }
     }
-    return { closestCentres }
+    return closestCentres
+}
+
+export function getAllCentres() {
+    let allCentres = []
+    for (let i = 0; i < pins.length; i += 1) {
+        for (let j = 0; j < pins[i].Storefronts.length; j += 1) {
+            allCentres.push({ name: pins[i].Storefronts[j].name })
+        }
+    }
+    return allCentres
 }

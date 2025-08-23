@@ -2,6 +2,7 @@
 import * as express from "express"
 
 import * as geocoderService from "../services/geocoder.service"
+import * as centreUtils from "../utils/addressToCatchment"
 
 export const getAddressValidation = async (req: express.Request, res: express.Response) => {
     try {
@@ -20,6 +21,16 @@ export const getNearestCentres = async (req: express.Request, res: express.Respo
         console.log("getting nearest centres for: ", address, city, province)
         const closestCentres = await geocoderService.calculateNearestCentres(address, city, province, 3)
         return res.status(200).send(closestCentres)
+    } catch (e: unknown) {
+        console.log(e)
+        return res.status(500).send("Server Error")
+    }
+}
+export const getAllCentres = async (req: express.Request, res: express.Response) => {
+    try {
+        console.log("getting all centres")
+        const centres = await centreUtils.getAllCentres()
+        return res.status(200).send(centres)
     } catch (e: unknown) {
         console.log(e)
         return res.status(500).send("Server Error")
