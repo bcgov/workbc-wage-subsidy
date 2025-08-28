@@ -1,9 +1,13 @@
 import { HorizontalMenu } from "@react-admin/ra-navigation"
 import { ReactQueryDevtools } from "react-query/devtools"
 import { CustomContainerLayout } from "./CustomContainerLayout"
+import { useEffect } from "react"
+import { useUserMenu } from "react-admin"
 
 // eslint-disable-next-line import/no-anonymous-default-export
 export default (props: any) => {
+    const { onClose } = useUserMenu()
+
     const itemStyle = {
         backgroundColor: "#5a7daa",
         height: "100%",
@@ -11,6 +15,10 @@ export default (props: any) => {
         paddingRight: 35,
         fontSize: "14px"
     }
+    useEffect(() => {
+        onClose()
+    }, [])
+
     return (
         // use a custom ContainerLayout implementation in order to be able to display two headers
         <>
