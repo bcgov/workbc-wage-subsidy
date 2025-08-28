@@ -1,14 +1,19 @@
 import { useEffect, useState } from "react"
-import { useLogout } from "react-admin"
+import { useLogout, useUserMenu } from "react-admin"
 import BCEID_LOGO from "../assets/logo-banner.png"
 import "./ready.css"
 import NotificationCheck from "../common/components/NotificationCheck/NotificationCheck"
 
 const Ready = () => {
     const [access, setAccess] = useState(false)
+    const { onClose } = useUserMenu()
+
     const [loading, setLoading] = useState(true)
     const logout = useLogout()
-    const handleClick = () => logout()
+    const handleClick = () => {
+        onClose()
+        logout()
+    }
     useEffect(() => {
         // checking storage for events when storage is changed
         window.addEventListener("storage", () => {
