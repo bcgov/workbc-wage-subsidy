@@ -2,7 +2,7 @@ import "@bcgov/bc-sans/css/BCSans.css"
 import { ReactKeycloakProvider } from "@react-keycloak/web"
 import Keycloak, { KeycloakConfig } from "keycloak-js"
 import { useEffect, useState } from "react"
-import { Admin, CustomRoutes, Resource, useUserMenu } from "react-admin"
+import { Admin, CustomRoutes, Resource } from "react-admin"
 import { Route } from "react-router-dom"
 import { QueryClient } from "react-query"
 import Ready from "./Admin/ready"
@@ -206,10 +206,8 @@ export const lightTheme = {
 const CustomAdminWithKeycloak = () => {
     const customAuthProvider = useAuthProvider(process.env.REACT_APP_KEYCLOAK_CLIENT_ID ?? "")
     const [permissions, setPermissions] = useState(keycloak.idTokenParsed?.identity_provider === "bceid")
-    const { onClose } = useUserMenu()
 
     useEffect(() => {
-        onClose()
         if (
             (keycloak && keycloak.idTokenParsed?.identity_provider === "bceid") ||
             (keycloak && keycloak.idTokenParsed?.identity_provider === "bceidboth")
