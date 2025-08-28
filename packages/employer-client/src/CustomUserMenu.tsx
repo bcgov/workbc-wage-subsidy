@@ -5,6 +5,7 @@ import ListItemIcon from "@mui/material/ListItemIcon"
 import ListItemText from "@mui/material/ListItemText"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faUserPen, faPowerOff } from "@fortawesome/pro-solid-svg-icons"
+import { setEnvVariables } from "./utils/index"
 
 interface EditProfileMenuItemProps {
     openModal: () => void
@@ -33,10 +34,15 @@ interface CustomUserMenuProps {
 }
 
 export const CustomUserMenu: React.FC<CustomUserMenuProps> = ({ openModal }) => {
+    const { absolutePath } = setEnvVariables()
+
     return (
         <UserMenu>
             <EditProfileMenuItem openModal={openModal} />
-            <Logout icon={<FontAwesomeIcon icon={faPowerOff} size="lg" style={{ color: "black" }} tabIndex={0} />} />
+            <Logout
+                redirectTo={`${absolutePath}/logout-success`}
+                icon={<FontAwesomeIcon icon={faPowerOff} size="lg" style={{ color: "black" }} tabIndex={0} />}
+            />
         </UserMenu>
     )
 }
