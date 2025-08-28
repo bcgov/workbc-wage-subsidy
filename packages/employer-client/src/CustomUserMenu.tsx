@@ -35,6 +35,11 @@ interface CustomUserMenuProps {
 export const CustomUserMenu: React.FC<CustomUserMenuProps> = ({ openModal }) => (
     <UserMenu>
         <EditProfileMenuItem openModal={openModal} />
-        <Logout icon={<FontAwesomeIcon icon={faPowerOff} size="lg" style={{ color: "black" }} tabIndex={0} />} />
+        <Logout
+            onClick={() => {
+                console.log("test")
+            }}
+            icon={<FontAwesomeIcon icon={faPowerOff} size="lg" style={{ color: "black" }} tabIndex={0} />}
+        />
     </UserMenu>
 )
