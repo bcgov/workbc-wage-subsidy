@@ -32,16 +32,9 @@ interface CustomUserMenuProps {
     openModal: () => void
 }
 
-export const CustomUserMenu: React.FC<CustomUserMenuProps> = ({ openModal }) => {
-    const { onClose } = useUserMenu()
-
-    return (
-        <UserMenu>
-            <EditProfileMenuItem openModal={openModal} />
-            <Logout
-                onClick={() => onClose()}
-                icon={<FontAwesomeIcon icon={faPowerOff} size="lg" style={{ color: "black" }} tabIndex={0} />}
-            />
-        </UserMenu>
-    )
-}
+export const CustomUserMenu: React.FC<CustomUserMenuProps> = ({ openModal }) => (
+    <UserMenu>
+        <EditProfileMenuItem openModal={openModal} />
+        <Logout icon={<FontAwesomeIcon icon={faPowerOff} size="lg" style={{ color: "black" }} tabIndex={0} />} />
+    </UserMenu>
+)
