@@ -34,6 +34,7 @@ interface CustomUserMenuProps {
 
 export const CustomUserMenu: React.FC<CustomUserMenuProps> = ({ openModal }) => {
     const logout = useLogout()
+    const { onClose } = useUserMenu()
 
     return (
         <UserMenu>
@@ -41,6 +42,7 @@ export const CustomUserMenu: React.FC<CustomUserMenuProps> = ({ openModal }) => 
             <Logout
                 onClick={() => {
                     console.log("test")
+                    onClose()
                     logout()
                 }}
                 icon={<FontAwesomeIcon icon={faPowerOff} size="lg" style={{ color: "black" }} tabIndex={0} />}
