@@ -1,12 +1,10 @@
 import React from "react"
-import { Logout, UserMenu, useUserMenu, useLogout } from "react-admin"
+import { Logout, UserMenu, useUserMenu } from "react-admin"
 import MenuItem from "@mui/material/MenuItem"
 import ListItemIcon from "@mui/material/ListItemIcon"
 import ListItemText from "@mui/material/ListItemText"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faUserPen, faPowerOff } from "@fortawesome/pro-solid-svg-icons"
-import { setEnvVariables } from "./utils/index"
-import { useKeycloak } from "@react-keycloak/web"
 
 interface EditProfileMenuItemProps {
     openModal: () => void
@@ -35,19 +33,10 @@ interface CustomUserMenuProps {
 }
 
 export const CustomUserMenu: React.FC<CustomUserMenuProps> = ({ openModal }) => {
-    const { absolutePath } = setEnvVariables()
-    const logout = useLogout()
-    const { keycloak } = useKeycloak()
-
     return (
         <UserMenu>
             <EditProfileMenuItem openModal={openModal} />
-            <Logout
-                onClick={() => {
-                    keycloak.logout().then(() => logout(null, `${absolutePath}logout-success`, false))
-                }}
-                icon={<FontAwesomeIcon icon={faPowerOff} size="lg" style={{ color: "black" }} tabIndex={0} />}
-            />
+            <Logout icon={<FontAwesomeIcon icon={faPowerOff} size="lg" style={{ color: "black" }} tabIndex={0} />} />
         </UserMenu>
     )
 }
