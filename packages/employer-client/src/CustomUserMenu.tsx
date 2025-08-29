@@ -40,7 +40,7 @@ export const CustomUserMenu: React.FC<CustomUserMenuProps> = ({ openModal }) => 
         <UserMenu>
             <EditProfileMenuItem openModal={openModal} />
             <Logout
-                redirectTo={`${absolutePath}/logout-success`}
+                redirectTo={`${absolutePath}logout-success`}
                 icon={<FontAwesomeIcon icon={faPowerOff} size="lg" style={{ color: "black" }} tabIndex={0} />}
             />
         </UserMenu>
