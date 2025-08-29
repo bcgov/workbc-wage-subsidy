@@ -32,32 +32,11 @@ interface CustomUserMenuProps {
     openModal: () => void
 }
 
-const handleClickOutside = () => {
-    const centerX = window.innerWidth / 2
-    const centerY = window.innerHeight / 2
-    const clickEvent = new MouseEvent("click", {
-        bubbles: true,
-        cancelable: true,
-        view: window,
-        clientX: centerX,
-        clientY: centerY
-    })
-    document.dispatchEvent(clickEvent)
-}
-
 export const CustomUserMenu: React.FC<CustomUserMenuProps> = ({ openModal }) => {
-    const logout = useLogout()
     return (
         <UserMenu>
             <EditProfileMenuItem openModal={openModal} />
-            {/* <Logout icon={<FontAwesomeIcon icon={faPowerOff} size="lg" style={{ color: "black" }} tabIndex={0} />} /> */}
-            <Logout
-                icon={<FontAwesomeIcon icon={faPowerOff} size="lg" style={{ color: "black" }} tabIndex={0} />}
-                onClick={() => {
-                    handleClickOutside()
-                    logout()
-                }}
-            />
+            <Logout icon={<FontAwesomeIcon icon={faPowerOff} size="lg" style={{ color: "black" }} tabIndex={0} />} />
         </UserMenu>
     )
 }
