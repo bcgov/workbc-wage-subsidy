@@ -36,11 +36,7 @@ export const CustomUserMenu: React.FC<CustomUserMenuProps> = ({ openModal }) => 
     return (
         <UserMenu>
             <EditProfileMenuItem openModal={openModal} />
-            {/* <Logout icon={<FontAwesomeIcon icon={faPowerOff} size="lg" style={{ color: "black" }} tabIndex={0} />} /> */}
-            <Logout
-                icon={<FontAwesomeIcon icon={faPowerOff} size="lg" style={{ color: "black" }} tabIndex={0} />}
-                onClick={() => document.dispatchEvent(new Event("mousedown"))}
-            />
+            <Logout icon={<FontAwesomeIcon icon={faPowerOff} size="lg" style={{ color: "black" }} tabIndex={0} />} />
         </UserMenu>
     )
 }
