@@ -256,9 +256,9 @@ const CustomAdminWithKeycloak = () => {
                     <CustomRoutes>
                         <Route path="ViewForm/:resource/:recordId" element={<ViewForm />} />
                     </CustomRoutes>
-                    {/* <CustomRoutes>
+                    <CustomRoutes>
                         <Route path="login" element={<Loader isLoading={true} />} />
-                    </CustomRoutes> */}
+                    </CustomRoutes>
                 </>
             )}
         </Admin>
