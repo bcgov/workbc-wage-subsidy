@@ -17,7 +17,6 @@ import "@bcgov/bc-sans/css/BCSans.css"
 import { Route } from "react-router-dom"
 import { ViewForm } from "./Form/ViewForm"
 import { parseCatchments } from "./utils/parseCatchments"
-import Loader from "./common/components/Loader"
 
 const initOptions = {
     url: process.env.REACT_APP_KEYCLOAK_URL || "",
@@ -227,9 +226,6 @@ const CustomAdminWithKeycloak = () => {
                     <Resource name="claims" options={{ label: "Claims" }} list={ClaimList} />
                     <CustomRoutes>
                         <Route path="ViewForm/:resource/:recordId" element={<ViewForm />} />
-                    </CustomRoutes>
-                    <CustomRoutes>
-                        <Route path="login" element={<Loader isLoading={true} />} />
                     </CustomRoutes>
                 </>
             )}

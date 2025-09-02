@@ -105,10 +105,10 @@ const UserProfileModal: React.FC<UserProfileModalProps> = ({ isOpen, onRequestCl
     }, [isOpen])
 
     useEffect(() => {
-        if (identity && !ec.profileExists) {
+        if (identity) {
             createProfileIfNotExists(identity)
         }
-    }, [createProfileIfNotExists, ec.profileExists, identity])
+    }, [identity])
 
     return (
         <>

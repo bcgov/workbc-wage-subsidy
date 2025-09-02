@@ -19,7 +19,6 @@ import { ViewForm } from "./Form/ViewForm"
 import Layout from "./Layout"
 import Footer from "./footer"
 import { EmployerProvider } from "./common/contexts/EmployerContext"
-import Loader from "./common/components/Loader"
 
 const initOptions: KeycloakConfig = {
     url: process.env.REACT_APP_KEYCLOAK_URL || "",
@@ -255,9 +254,6 @@ const CustomAdminWithKeycloak = () => {
                     </Resource>
                     <CustomRoutes>
                         <Route path="ViewForm/:resource/:recordId" element={<ViewForm />} />
-                    </CustomRoutes>
-                    <CustomRoutes>
-                        <Route path="login" element={<Loader isLoading={true} />} />
                     </CustomRoutes>
                 </>
             )}
