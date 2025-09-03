@@ -132,7 +132,7 @@ export const ApplicationList = (props: any) => {
                                                 >
                                                     <FontAwesomeIcon
                                                         icon={faCopy}
-                                                        style={{ color: COLOURS.LIGHTBLUE_TEXT, padding: "0 0.5rem" }}
+                                                        style={{ color: COLOURS.LIGHTBLUE_TEXT }}
                                                     />
                                                 </Button>
                                             </Tooltip>
