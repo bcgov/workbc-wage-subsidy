@@ -118,7 +118,12 @@ export const ApplicationList = (props: any) => {
                                             >
                                                 <Button
                                                     aria-label={`Copy Submission ID ${record.form_confirmation_id}`}
-                                                    style={{ padding: 0, minWidth: "unset" }}
+                                                    style={{
+                                                        flex: 1,
+                                                        justifyContent: "flex-end",
+                                                        minWidth: "unset",
+                                                        paddingLeft: 3
+                                                    }}
                                                     onClick={(e) => {
                                                         e.stopPropagation()
                                                         handleSubmissionIDClick(record.form_confirmation_id)
