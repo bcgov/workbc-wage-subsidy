@@ -7,7 +7,7 @@ import * as centreUtils from "../utils/addressToCatchment"
 export const getAddressValidation = async (req: express.Request, res: express.Response) => {
     try {
         const { address, city, province } = req.body
-        console.log("validating address: ", address, city, province)
+        console.log("validating address: ", maskAddress(address), city, province)
         const addressValidation = await geocoderService.geocodeAddress(address, city, province)
         return res.status(200).send(addressValidation)
     } catch (e: unknown) {
@@ -18,7 +18,7 @@ export const getAddressValidation = async (req: express.Request, res: express.Re
 export const getNearestCentres = async (req: express.Request, res: express.Response) => {
     try {
         const { address, city, province } = req.body
-        console.log("getting nearest centres for: ", address, city, province)
+        console.log("getting nearest centres for: ", maskAddress(address), city, province)
         const closestCentres = await geocoderService.calculateNearestCentres(address, city, province, 3)
         return res.status(200).send(closestCentres)
     } catch (e: unknown) {
@@ -35,4 +35,7 @@ export const getAllCentres = async (req: express.Request, res: express.Response)
         console.log(e)
         return res.status(500).send("Server Error")
     }
+}
+function maskAddress(address: any): any {
+    throw new Error("Function not implemented.")
 }
