@@ -149,7 +149,8 @@ export const submission = async (req: express.Request, res: express.Response) =>
                         })
                         .catch((e) => {
                             console.log(
-                                `[event.controller] error sending notifications for submission id ${req.body.submissionId} - Error:`,
+                                "[event.controller] error sending notifications for submission id: %s - Error:",
+                                String(req.body.submissionId),
                                 e
                             )
                             return res.status(500).send("Internal Server Error")
