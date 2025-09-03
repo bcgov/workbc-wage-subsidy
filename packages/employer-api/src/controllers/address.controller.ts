@@ -3,6 +3,7 @@ import * as express from "express"
 
 import * as geocoderService from "../services/geocoder.service"
 import * as centreUtils from "../utils/addressToCatchment"
+import { maskAddress } from "../utils/logging"
 
 export const getAddressValidation = async (req: express.Request, res: express.Response) => {
     try {
@@ -35,7 +36,4 @@ export const getAllCentres = async (req: express.Request, res: express.Response)
         console.log(e)
         return res.status(500).send("Server Error")
     }
-}
-function maskAddress(address: any): any {
-    throw new Error("Function not implemented.")
 }
