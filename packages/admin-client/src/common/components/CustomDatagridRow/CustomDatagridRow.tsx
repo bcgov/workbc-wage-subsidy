@@ -125,7 +125,13 @@ const DatagridRow = React.forwardRef<HTMLTableRowElement, CustomDatagridRowProps
                                 }
                             }}
                             onClick={handleClick}
-                            aria-label="View or edit form"
+                            aria-label={
+                                (rowAriaLabel ? rowAriaLabel : "View or edit form") +
+                                " with organization " +
+                                record?.organization +
+                                " and position title " +
+                                record?.position_title
+                            }
                         />
                         {hasBulkActions && (
                             <Checkbox
@@ -156,6 +162,14 @@ const DatagridRow = React.forwardRef<HTMLTableRowElement, CustomDatagridRowProps
                             onPointerEnterCapture={() => {}}
                             onPointerLeaveCapture={() => {}}
                             {...{ field, resource, rest }}
+                            tabIndex={0}
+                            aria-label={field.props.label}
+                            onClick={handleClick}
+                            onKeyDown={(e) => {
+                                if (e.key === "Enter") {
+                                    handleClick(e)
+                                }
+                            }}
                         />
                     ) : null
                 )}

@@ -45,7 +45,7 @@ app.use("/applications", keycloak.protect(), applicationRoute)
 app.use("/claims", keycloak.protect(), claimRoute)
 app.use("/events", eventRoute)
 app.use("/employers", keycloak.protect(), employerRoute)
-app.use("/address", keycloak.protect(), addressRoute)
+app.use("/address", addressRoute)
 
 const port = process.env.PORT || "8000"
 app.listen(port, () => {

@@ -19,6 +19,7 @@ import { ViewForm } from "./Form/ViewForm"
 import Layout from "./Layout"
 import Footer from "./footer"
 import { EmployerProvider } from "./common/contexts/EmployerContext"
+import Loader from "./common/components/Loader"
 
 const initOptions: KeycloakConfig = {
     url: process.env.REACT_APP_KEYCLOAK_URL || "",
@@ -26,7 +27,7 @@ const initOptions: KeycloakConfig = {
     clientId: process.env.REACT_APP_KEYCLOAK_CLIENT_ID || ""
 }
 
-let keycloak: Keycloak = new Keycloak(initOptions)
+const keycloak: Keycloak = new Keycloak(initOptions)
 const kcLogin = keycloak.login
 keycloak.login = (options) => {
     if (options) options.idpHint = "bceid"
@@ -205,6 +206,7 @@ export const lightTheme = {
 const CustomAdminWithKeycloak = () => {
     const customAuthProvider = useAuthProvider(process.env.REACT_APP_KEYCLOAK_CLIENT_ID ?? "")
     const [permissions, setPermissions] = useState(keycloak.idTokenParsed?.identity_provider === "bceid")
+
     useEffect(() => {
         if (
             (keycloak && keycloak.idTokenParsed?.identity_provider === "bceid") ||
@@ -253,6 +255,9 @@ const CustomAdminWithKeycloak = () => {
                     </Resource>
                     <CustomRoutes>
                         <Route path="ViewForm/:resource/:recordId" element={<ViewForm />} />
+                    </CustomRoutes>
+                    <CustomRoutes>
+                        <Route path="login" element={<Loader isLoading={true} />} />
                     </CustomRoutes>
                 </>
             )}

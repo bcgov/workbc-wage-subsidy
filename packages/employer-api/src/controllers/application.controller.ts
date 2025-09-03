@@ -161,58 +161,74 @@ const updateApplicationFromForm = async (application: any) => {
                 )
                 const submission = submissionResponse?.submission.submission
                 if (submissionResponse.submission.draft === false) {
-                    // Application form has been submitted
-                    // Route the catchment & storefront for the submitted application //
-                    // Use the workplace address if provided, otherwise use the business address //
-                    let address
-                    let city
-                    let province
-                    const workplaceContainer = submission?.data?.container
-                    if (
-                        workplaceContainer?.addressAlt &&
-                        workplaceContainer.cityAlt &&
-                        workplaceContainer.provinceAlt
-                    ) {
-                        address = workplaceContainer.addressAlt
-                        city = workplaceContainer.cityAlt
-                        province = workplaceContainer.provinceAlt
-                    } else if (
-                        submission?.data?.businessAddress &&
-                        submission.data.businessCity &&
-                        submission.data.businessProvince
-                    ) {
-                        address = submission.data.businessAddress
-                        city = submission.data.businessCity
-                        province = submission.data.businessProvince
-                    }
-                    console.log(
-                        `[application.controller] address for submission id ${application.form_submission_id} - Address: ${address}, City: ${city}, Province: ${province}`
-                    )
-                    const { Score, Catchment, Storefront } = await geocoderService.geocodeAddress(
-                        address,
-                        city,
-                        province
-                    )
-                    console.log(
-                        `[application.controller] address validation result for submission id ${application.form_submission_id} - Score: ${Score}, Catchment: ${Catchment}, Storefront: ${Storefront}`
-                    )
-                    if (Score && Catchment && Storefront) {
-                        if (Score >= 80) {
-                            const newDataObj = Object.assign(submissionResponse.submission.submission.data, {
-                                catchmentNo: Catchment,
-                                storefrontId: Storefront,
-                                catchmentNoStoreFront: `${Catchment}-${Storefront}`,
-                                matchedToCentre: `${Catchment}-${Storefront}`
-                            })
-                            submissionResponse.submission.submission.data = newDataObj // update the object used for updating the application record
-                        } else {
-                            console.log(
-                                `[application.controller] insufficient address validation score for application submission id ${application.form_submission_id} - this shouldn't happen!`
-                            )
+                    // Application form has been submitted; determine the catchment & storefront, then update the application in the DB //
+                    let catchment
+                    let storefront
+                    const selected = submission?.data?.otherSelectedCentre ?? submission?.data?.selectedCentre
+                    if (selected && selected.catchment && selected.storefront) {
+                        console.log(
+                            `[application.controller] submission id ${application.form_submission_id} has selected the following catchment & storefront: ${selected.catchment} ${selected.storefront}`
+                        )
+                        catchment = selected.catchment
+                        storefront = selected.storefront
+                    } else {
+                        // Route the catchment & storefront for the submitted application //
+                        // Use the workplace address if provided, otherwise use the business address //
+                        let address
+                        let city
+                        let province
+                        const workplaceContainer = submission?.data?.container
+                        if (
+                            workplaceContainer?.addressAlt &&
+                            workplaceContainer.cityAlt &&
+                            workplaceContainer.provinceAlt
+                        ) {
+                            address = workplaceContainer.addressAlt
+                            city = workplaceContainer.cityAlt
+                            province = workplaceContainer.provinceAlt
+                        } else if (
+                            submission?.data?.businessAddress &&
+                            submission.data.businessCity &&
+                            submission.data.businessProvince
+                        ) {
+                            address = submission.data.businessAddress
+                            city = submission.data.businessCity
+                            province = submission.data.businessProvince
                         }
+                        console.log(
+                            `[application.controller] address for submission id ${application.form_submission_id} - Address: ${address}, City: ${city}, Province: ${province}`
+                        )
+                        const { Score, Catchment, Storefront } = await geocoderService.geocodeAddress(
+                            address,
+                            city,
+                            province
+                        )
+                        console.log(
+                            `[application.controller] address validation result for submission id ${application.form_submission_id} - Score: ${Score}, Catchment: ${Catchment}, Storefront: ${Storefront}`
+                        )
+                        if (Score && Catchment && Storefront) {
+                            if (Score >= 80) {
+                                catchment = Catchment
+                                storefront = Storefront
+                            } else {
+                                console.log(
+                                    `[application.controller] insufficient address validation score for application submission id ${application.form_submission_id} - this shouldn't happen!`
+                                )
+                            }
+                        }
+                    }
+
+                    if (catchment && storefront) {
+                        const newDataObj = Object.assign(submissionResponse.submission.submission.data, {
+                            catchmentNo: catchment,
+                            storefrontId: storefront,
+                            catchmentNoStoreFront: `${catchment}-${storefront}`,
+                            matchedToCentre: `${catchment}-${storefront}`
+                        })
+                        submissionResponse.submission.submission.data = newDataObj // update the object used for updating the application record
                     } else {
                         console.log(
-                            `[application.controller] address validation failed for submission id ${application.form_submission_id} - this shouldn't happen!`
+                            `[application.controller] catchment & storefront calculation failed for submission id ${application.form_submission_id} - this shouldn't happen!`
                         )
                     }
                     await applicationService.updateApplication(
@@ -223,11 +239,11 @@ const updateApplicationFromForm = async (application: any) => {
                     )
 
                     // Update the catchment of the form in CHEFS //
-                    if (Catchment) {
+                    if (catchment) {
                         await formService.updateSubmissionCatchment(
                             application.form_submission_id,
                             submissionResponse.submission,
-                            Catchment
+                            catchment
                         )
                     }
 

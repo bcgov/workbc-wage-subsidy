@@ -1,7 +1,7 @@
 /* eslint-disable import/prefer-default-export */
 
 import axios from "axios"
-import { getCatchment } from "../utils/addressToCatchment"
+import { getCatchment, getClosestCentres } from "../utils/addressToCatchment"
 
 /**
  * @param address Address line 1
@@ -35,4 +35,24 @@ export const geocodeAddress = async (address: string, city: string, province: st
             }
         })
     return { Score, FullAddress, Catchment, Storefront }
+}
+
+/**
+ * @param address Address line 1
+ * @param city city
+ * @param province one of the provinces in Canada
+ * @return Array[object {distance, catchment, storefront, name}]
+ */
+export const calculateNearestCentres = async (address: string, city: string, province: string, n: number) => {
+    let centres = null
+    await axios
+        .post(`http://geocoder.api.gov.bc.ca/addresses.geojson?addressString=${address},${city},${province}`)
+        .then((response) => {
+            centres = getClosestCentres(
+                response.data.features[0].geometry.coordinates[1],
+                response.data.features[0].geometry.coordinates[0],
+                n
+            )
+        })
+    return { centres }
 }
