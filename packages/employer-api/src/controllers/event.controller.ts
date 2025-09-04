@@ -8,6 +8,7 @@ import * as formService from "../services/form.service"
 import * as emailController from "./email.controller"
 import * as geocoderService from "../services/geocoder.service"
 import { getCHEFSToken } from "../services/common.service"
+import { maskAddress } from "../utils/logging"
 
 export const submission = async (req: express.Request, res: express.Response) => {
     try {
@@ -242,7 +243,9 @@ export const submission = async (req: express.Request, res: express.Response) =>
                             province = submission.data.businessProvince
                         }
                         console.log(
-                            `[event.controller] address for submission id ${req.body.submissionId} - Address: ${address}, City: ${city}, Province: ${province}`
+                            `[event.controller] address for submission id ${
+                                req.body.submissionId
+                            } - Address: ${maskAddress(address)}, City: ${city}, Province: ${province}`
                         )
                         const { Score, Catchment, Storefront } = await geocoderService.geocodeAddress(
                             address,

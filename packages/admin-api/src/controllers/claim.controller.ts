@@ -10,6 +10,7 @@ import { generatePdf } from "../services/cdogs.service"
 import { updateClaimWithSideEffects } from "../lib/transactions"
 import { formatCurrency, formatDateMmmDDYYYY, formatPercentage } from "../utils/string-functions"
 import WorkBcCentres from "../data/workbc-centres"
+import { maskJSON } from "../utils/logging"
 
 const workBcCentreCodes = Object.keys(WorkBcCentres)
 
@@ -308,7 +309,7 @@ export const generatePDF = async (req: any, res: express.Response) => {
             return res.status(500).send("Internal Server Error")
         }
         const data = formatPDFData(submission, claim, submittedDate)
-        console.log("formatted data: ", data)
+        console.log("formatted data: ", maskJSON(data))
         const templateConfig = {
             // eslint-disable-next-line object-shorthand
             data: data,
