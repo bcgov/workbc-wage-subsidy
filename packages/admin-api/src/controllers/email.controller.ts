@@ -4,6 +4,7 @@ import * as emailService from "../services/email.service"
 import * as notificationService from "../services/notification.service"
 import notificationTemplate from "../templates/catchment-move-notification.template"
 import pins from "../constants/centres.json"
+import { maskEmail } from "../utils/logging"
 
 export const sendEmail = async (resource: string, catchmentNo: number) => {
     try {
@@ -36,7 +37,9 @@ export const sendEmail = async (resource: string, catchmentNo: number) => {
                 })
                 .catch(() => {
                     console.log(
-                        `[email.controller] Error sending email(s) for catchment ${catchmentNo} and recipient(s) ${recipients}`
+                        `[email.controller] Error sending email(s) for catchment ${catchmentNo} and recipient(s) ${recipients.map(
+                            (item: any) => maskEmail(item)
+                        )}`
                     )
                     throw new Error()
                 })

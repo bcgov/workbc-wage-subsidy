@@ -8,6 +8,7 @@ import * as employerService from "../services/employer.service"
 import * as formService from "../services/form.service"
 import * as geocoderService from "../services/geocoder.service"
 import * as emailController from "./email.controller"
+import { maskAddress, maskID } from "../utils/logging"
 
 export const getAllApplications = async (req: any, res: express.Response) => {
     try {
@@ -196,7 +197,9 @@ const updateApplicationFromForm = async (application: any) => {
                             province = submission.data.businessProvince
                         }
                         console.log(
-                            `[application.controller] address for submission id ${application.form_submission_id} - Address: ${address}, City: ${city}, Province: ${province}`
+                            `[application.controller] address for submission id ${
+                                application.form_submission_id
+                            } - Address: ${maskAddress(address)}, City: ${city}, Province: ${province}`
                         )
                         const { Score, Catchment, Storefront } = await geocoderService.geocodeAddress(
                             address,
@@ -394,7 +397,9 @@ const computeApplicationPrefillFields = async (employer: any) => {
         )
         if (!(businessAddressValidation?.Score && businessAddressValidation.Score >= 80)) {
             console.log(
-                `invalid business address ${employer.street_address}, ${employer.city}, ${employer.province} for employer with id ${employer.id} - avoiding prefilling address`
+                `invalid business address ${maskAddress(employer.street_address)}, ${employer.city}, ${
+                    employer.province
+                } for employer with id ${maskID(employer.id)} - avoiding prefilling address`
             )
             employer.street_address = null
             employer.city = null
@@ -414,7 +419,11 @@ const computeApplicationPrefillFields = async (employer: any) => {
         )
         if (!(workplaceAddressValidation?.Score && workplaceAddressValidation.Score >= 80)) {
             console.log(
-                `invalid workplace address ${employer.workplace_street_address}, ${employer.workplace_city}, ${employer.workplace_province} for employer with id ${employer.id} - avoiding prefilling address`
+                `invalid workplace address ${maskAddress(employer.workplace_street_address)}, ${
+                    employer.workplace_city
+                }, ${employer.workplace_province} for employer with id ${maskID(
+                    employer.id
+                )} - avoiding prefilling address`
             )
             employer.workplace_street_address = null
             employer.workplace_city = null
@@ -430,13 +439,17 @@ const computeApplicationPrefillFields = async (employer: any) => {
     const regex = /^[ABCEGHJ-NPRSTVXY][0-9][ABCEGHJ-NPRSTV-Z] [0-9][ABCEGHJ-NPRSTV-Z][0-9]$/
     if (employer.postal_code && !regex.test(employer.postal_code)) {
         console.log(
-            `invalid business postal code ${employer.postal_code} for employer with id ${employer.id} - avoiding prefilling postal code`
+            `invalid business postal code ${employer.postal_code} for employer with id ${maskID(
+                employer.id
+            )} - avoiding prefilling postal code`
         )
         employer.postal_code = null
     }
     if (employer.workplace_postal_code && !regex.test(employer.workplace_postal_code)) {
         console.log(
-            `invalid workplace postal code ${employer.workplace_postal_code} for employer with id ${employer.id} - avoiding prefilling postal code`
+            `invalid workplace postal code ${employer.workplace_postal_code} for employer with id ${maskID(
+                employer.id
+            )} - avoiding prefilling postal code`
         )
         employer.workplace_postal_code = null
     }
