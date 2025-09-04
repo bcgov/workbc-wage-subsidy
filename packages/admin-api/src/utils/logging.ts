@@ -14,13 +14,6 @@ const AddressMaskingConfig = {
 }
 
 const JSONMaskingConfig = {
-    cardMaskOptions: {
-        maskWith: "*",
-        unmaskedStartDigits: 4,
-        unmaskedEndDigits: 1
-    },
-    cardFields: [],
-
     emailMaskOptions: {
         maskWith: "*",
         unmaskedStartCharactersBeforeAt: 3,
@@ -36,15 +29,6 @@ const JSONMaskingConfig = {
         "userInfo.email",
         "applicationJSON.Answers.ApplicantEmail"
     ],
-
-    passwordMaskOptions: {
-        maskWith: "*",
-        maxMaskedCharacters: 16,
-        fixedOutputLength: undefined,
-        unmaskedStartCharacters: 0,
-        unmaskedEndCharacters: 0
-    },
-    passwordFields: [],
 
     phoneMaskOptions: {
         maskWith: "*",
@@ -72,13 +56,6 @@ const JSONMaskingConfig = {
     },
     stringFields: ["baseProfile.email"],
 
-    uuidMaskOptions: {
-        maskWith: "*",
-        unmaskedStartCharacters: 0,
-        unmaskedEndCharacters: 0
-    },
-    uuidFields: [],
-
     jwtMaskOptions: {
         maskWith: "*",
         maxMaskedCharacters: 20,
@@ -98,7 +75,6 @@ const JSONMaskingConfig = {
                 "fcmToken",
                 "GuID",
                 "Guid",
-                "GuID",
                 "userGUID",
                 "Username",
                 "key",
@@ -173,7 +149,6 @@ const JSONMaskingConfig = {
                 "CaseContactInfoResponse.ContactInformation.FirstName",
                 "CaseContactInfoResponse.ContactInformation.LastName",
                 "CaseContactInfoResponse.ContactInformation.MiddleName",
-                "CaseContactInfoResponse.ContactInformation.ContactAddress",
                 "baseProfile.firstName",
                 "baseProfile.lastName",
                 "baseProfile.middleName"
