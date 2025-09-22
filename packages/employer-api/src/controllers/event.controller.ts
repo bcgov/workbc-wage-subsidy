@@ -8,6 +8,7 @@ import * as formService from "../services/form.service"
 import * as emailController from "./email.controller"
 import * as geocoderService from "../services/geocoder.service"
 import { getCHEFSToken } from "../services/common.service"
+import { maskAddress } from "../utils/logging"
 
 export const submission = async (req: express.Request, res: express.Response) => {
     try {
@@ -80,7 +81,17 @@ export const submission = async (req: express.Request, res: express.Response) =>
             // Create service provider claim form if one does not already exist.
             if (!claim?.service_provider_form_submission_id || !claim?.service_provider_form_internal_id) {
                 const serviceProviderInternalID = `SPx${submission.data.internalId}` // create a new internal id for the SP form
-
+                let catchment = claim.catchmentno
+                let storefront = claim.workbc_centre
+                const selected =
+                    submission?.data?.container?.otherSelectedCentre ?? submission?.data?.container?.selectedCentre
+                if (selected && selected.catchment && selected.storefront) {
+                    console.log(
+                        `[event.controller] claim id ${claim.id} has selected the following catchment & storefront: ${selected.catchment} ${selected.storefront}`
+                    )
+                    catchment = selected.catchment
+                    storefront = `${selected.catchment}-${selected.storefront}`
+                }
                 // Create a new form draft //
                 const token = await getCHEFSToken()
                 const createDraftResult = await formService.createLoginProtectedDraft(
@@ -89,7 +100,7 @@ export const submission = async (req: express.Request, res: express.Response) =>
                     process.env.SP_CLAIM_FORM_VERSION_ID as string,
                     serviceProviderInternalID,
                     submission.data,
-                    claim.catchmentno
+                    catchment
                 )
 
                 if (createDraftResult?.id && createDraftResult.submission) {
@@ -97,7 +108,9 @@ export const submission = async (req: express.Request, res: express.Response) =>
                     const addResult = await claimService.addServiceProviderClaim(
                         submissionResponse,
                         serviceProviderInternalID,
-                        createDraftResult.id
+                        createDraftResult.id,
+                        catchment,
+                        storefront
                     )
                     if (addResult === 1) {
                         console.log(
@@ -117,6 +130,33 @@ export const submission = async (req: express.Request, res: express.Response) =>
                         )
                         return res.status(500).send("Internal Server Error")
                     }
+
+                    // Send notifications to clients with Claims notifications enabled
+                    await emailController
+                        .sendEmail(
+                            {
+                                // email controller expects the data to be wrapped in a data object
+                                data: {
+                                    catchmentNo: catchment,
+                                    applicationType: "Claims"
+                                }
+                            },
+                            claim.id
+                        )
+                        .then(() => {
+                            console.log(
+                                `[event.controller] successfully sent notifications for submission id ${req.body.submissionId}`
+                            )
+                        })
+                        .catch((e) => {
+                            console.log(
+                                "[event.controller] error sending notifications for submission id: %s - Error:",
+                                String(req.body.submissionId),
+                                e
+                            )
+                            return res.status(500).send("Internal Server Error")
+                        })
+                    return res.status(200).send()
                 } else {
                     console.log(
                         `[event.controller] unable to create new service provider claim form for submission id ${req.body.submissionId} - this shouldn't happen!`
@@ -124,31 +164,6 @@ export const submission = async (req: express.Request, res: express.Response) =>
                     return res.status(500).send("Internal Server Error")
                 }
             }
-            // Send notifications to clients with Claims notifications enabled
-            await emailController
-                .sendEmail(
-                    {
-                    // email controller expects the data to be wrapped in a data object
-                    data: {
-                        catchmentNo: claim.catchmentno,
-                        applicationType: "Claims"
-                    }
-                }, 
-                claim.id
-            )
-                .then(() => {
-                    console.log(
-                        `[event.controller] successfully sent notifications for submission id ${req.body.submissionId}`
-                    )
-                })
-                .catch((e) => {
-                    console.log(
-                        `[event.controller] error sending notifications for submission id ${req.body.submissionId} - Error:`,
-                        e
-                    )
-                    return res.status(500).send("Internal Server Error")
-                })
-            return res.status(200).send()
         }
 
         // Service Provider Claim Form draft submission events - triggered on calculator approval //
@@ -193,57 +208,80 @@ export const submission = async (req: express.Request, res: express.Response) =>
                     console.log(
                         `[event.controller] updating submitted application for application id ${application.id} and submission id ${req.body.submissionId}`
                     )
-                    // Route the catchment & storefront for the submitted application //
-                    // Use the workplace address if provided, otherwise use the business address //
-                    let address
-                    let city
-                    let province
-                    const workplaceContainer = submission?.data?.container
-                    if (
-                        workplaceContainer?.addressAlt &&
-                        workplaceContainer.cityAlt &&
-                        workplaceContainer.provinceAlt
-                    ) {
-                        address = workplaceContainer.addressAlt
-                        city = workplaceContainer.cityAlt
-                        province = workplaceContainer.provinceAlt
-                    } else if (
-                        submission.data.businessAddress &&
-                        submission.data.businessCity &&
-                        submission.data.businessProvince
-                    ) {
-                        address = submission.data.businessAddress
-                        city = submission.data.businessCity
-                        province = submission.data.businessProvince
-                    }
-                    console.log(
-                        `[event.controller] address for submission id ${req.body.submissionId} - Address: ${address}, City: ${city}, Province: ${province}`
-                    )
-                    const { Score, Catchment, Storefront } = await geocoderService.geocodeAddress(
-                        address,
-                        city,
-                        province
-                    )
-                    console.log(
-                        `[event.controller] address validation result for submission id ${req.body.submissionId} - Score: ${Score}, Catchment: ${Catchment}, Storefront: ${Storefront}`
-                    )
-                    if (Score && Catchment && Storefront) {
-                        if (Score >= 80) {
-                            const newDataObj = Object.assign(submissionResponse.submission.submission.data, {
-                                catchmentNo: Catchment,
-                                storefrontId: Storefront,
-                                catchmentNoStoreFront: `${Catchment}-${Storefront}`,
-                                matchedToCentre: `${Catchment}-${Storefront}`
-                            })
-                            submissionResponse.submission.submission.data = newDataObj // update the object used for updating the application record
+                    // Application form has been submitted; determine the catchment & storefront, then update the application in the DB //
+                    let catchment
+                    let storefront
+                    const selected = submission?.data?.otherSelectedCentre ?? submission?.data?.selectedCentre
+                    if (selected && selected.catchment && selected.storefront) {
+                        console.log(
+                            `[event.controller] submission id ${req.body.submissionId} has selected the following catchment & storefront: ${selected.catchment} ${selected.storefront}`
+                        )
+                        catchment = selected.catchment
+                        storefront = selected.storefront
+                    } else {
+                        // Route the catchment & storefront for the submitted application //
+                        // Use the workplace address if provided, otherwise use the business address //
+                        let address
+                        let city
+                        let province
+                        const workplaceContainer = submission?.data?.container
+                        if (
+                            workplaceContainer?.addressAlt &&
+                            workplaceContainer.cityAlt &&
+                            workplaceContainer.provinceAlt
+                        ) {
+                            address = workplaceContainer.addressAlt
+                            city = workplaceContainer.cityAlt
+                            province = workplaceContainer.provinceAlt
+                        } else if (
+                            submission.data.businessAddress &&
+                            submission.data.businessCity &&
+                            submission.data.businessProvince
+                        ) {
+                            address = submission.data.businessAddress
+                            city = submission.data.businessCity
+                            province = submission.data.businessProvince
+                        }
+                        console.log(
+                            `[event.controller] address for submission id ${
+                                req.body.submissionId
+                            } - Address: ${maskAddress(address)}, City: ${city}, Province: ${province}`
+                        )
+                        const { Score, Catchment, Storefront } = await geocoderService.geocodeAddress(
+                            address,
+                            city,
+                            province
+                        )
+                        console.log(
+                            `[event.controller] address validation result for submission id ${req.body.submissionId} - Score: ${Score}, Catchment: ${Catchment}, Storefront: ${Storefront}`
+                        )
+                        if (Score && Catchment && Storefront) {
+                            if (Score >= 80) {
+                                catchment = Catchment
+                                storefront = Storefront
+                            } else {
+                                console.log(
+                                    `[event.controller] insufficient address validation score for application submission id ${req.body.submissionId} - this shouldn't happen!`
+                                )
+                            }
                         } else {
                             console.log(
-                                `[event.controller] insufficient address validation score for application submission id ${application.form_submission_id} - this shouldn't happen!`
+                                `[event.controller] insufficient results returned from address validation for submission id ${req.body.submissionId} - this shouldn't happen!`
                             )
                         }
+                    }
+
+                    if (catchment && storefront) {
+                        const newDataObj = Object.assign(submissionResponse.submission.submission.data, {
+                            catchmentNo: catchment,
+                            storefrontId: storefront,
+                            catchmentNoStoreFront: `${catchment}-${storefront}`,
+                            matchedToCentre: `${catchment}-${storefront}`
+                        })
+                        submissionResponse.submission.submission.data = newDataObj // update the object used for updating the application record
                     } else {
                         console.log(
-                            `[event.controller] insufficient results returned from address validation for submission id ${application.form_submission_id} - this shouldn't happen!`
+                            `[event.controller] catchment & storefront calculation failed for submission id ${req.body.submissionId} - this shouldn't happen!`
                         )
                     }
 
@@ -271,11 +309,11 @@ export const submission = async (req: express.Request, res: express.Response) =>
                     }
 
                     // Update the catchment of the form in CHEFS //
-                    if (Catchment) {
+                    if (catchment) {
                         await formService.updateSubmissionCatchment(
                             req.body.submissionId,
                             submissionResponse.submission,
-                            Catchment
+                            catchment
                         )
                     }
 

@@ -259,6 +259,17 @@ const updateClaimFromForm = async (employerClaimRecord: any) => {
                     !employerClaimRecord?.service_provider_form_internal_id
                 ) {
                     const submission = submissionResponse?.submission?.submission
+                    let catchment = employerClaimRecord.catchmentno
+                    let storefront = employerClaimRecord.workbc_centre
+                    const selected =
+                        submission?.data?.container?.otherSelectedCentre ?? submission?.data?.container?.selectedCentre
+                    if (selected && selected.catchment && selected.storefront) {
+                        console.log(
+                            `[claim.controller] claim id ${employerClaimRecord.id} has selected the following catchment & storefront: ${selected.catchment} ${selected.storefront}`
+                        )
+                        catchment = selected.catchment
+                        storefront = `${selected.catchment}-${selected.storefront}`
+                    }
                     const serviceProviderInternalID = `SPx${submission.data.internalId}` // create a new internal id for the SP form
                     const token = await getCHEFSToken()
                     const createDraftResult = await formService.createLoginProtectedDraft(
@@ -267,19 +278,21 @@ const updateClaimFromForm = async (employerClaimRecord: any) => {
                         process.env.SP_CLAIM_FORM_VERSION_ID as string,
                         serviceProviderInternalID,
                         submission.data,
-                        employerClaimRecord.catchmentno
+                        catchment
                     )
 
                     // If SP claim form created, then update DB record.
                     if (createDraftResult?.id && createDraftResult.submission) {
                         console.log(
-                            `[claim.controller] new SP claim form draft created with id ${createDraftResult.id} and catchment ${employerClaimRecord.catchmentno}`
+                            `[claim.controller] new SP claim form draft created with id ${createDraftResult.id} and catchment ${catchment}`
                         )
                         await claimService
                             .addServiceProviderClaim(
                                 submissionResponse,
                                 serviceProviderInternalID,
-                                createDraftResult.id
+                                createDraftResult.id,
+                                catchment,
+                                storefront
                             )
                             .then(() => {
                                 console.log(
@@ -287,7 +300,7 @@ const updateClaimFromForm = async (employerClaimRecord: any) => {
                                 )
                             })
                         submission.data.applicationType = "Claims"
-                        submission.data.catchmentNo = employerClaimRecord.catchmentno
+                        submission.data.catchmentNo = catchment
 
                         await emailController
                             .sendEmail(submission, employerClaimRecord.id)

@@ -6,6 +6,7 @@ import NotificationCheck from "../common/components/NotificationCheck/Notificati
 
 const Ready = () => {
     const [access, setAccess] = useState(false)
+
     const [loading, setLoading] = useState(true)
     const logout = useLogout()
     const handleClick = () => logout()

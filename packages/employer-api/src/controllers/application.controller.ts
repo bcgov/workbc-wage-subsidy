@@ -8,6 +8,7 @@ import * as employerService from "../services/employer.service"
 import * as formService from "../services/form.service"
 import * as geocoderService from "../services/geocoder.service"
 import * as emailController from "./email.controller"
+import { maskAddress, maskID } from "../utils/logging"
 
 export const getAllApplications = async (req: any, res: express.Response) => {
     try {
@@ -161,58 +162,76 @@ const updateApplicationFromForm = async (application: any) => {
                 )
                 const submission = submissionResponse?.submission.submission
                 if (submissionResponse.submission.draft === false) {
-                    // Application form has been submitted
-                    // Route the catchment & storefront for the submitted application //
-                    // Use the workplace address if provided, otherwise use the business address //
-                    let address
-                    let city
-                    let province
-                    const workplaceContainer = submission?.data?.container
-                    if (
-                        workplaceContainer?.addressAlt &&
-                        workplaceContainer.cityAlt &&
-                        workplaceContainer.provinceAlt
-                    ) {
-                        address = workplaceContainer.addressAlt
-                        city = workplaceContainer.cityAlt
-                        province = workplaceContainer.provinceAlt
-                    } else if (
-                        submission?.data?.businessAddress &&
-                        submission.data.businessCity &&
-                        submission.data.businessProvince
-                    ) {
-                        address = submission.data.businessAddress
-                        city = submission.data.businessCity
-                        province = submission.data.businessProvince
-                    }
-                    console.log(
-                        `[application.controller] address for submission id ${application.form_submission_id} - Address: ${address}, City: ${city}, Province: ${province}`
-                    )
-                    const { Score, Catchment, Storefront } = await geocoderService.geocodeAddress(
-                        address,
-                        city,
-                        province
-                    )
-                    console.log(
-                        `[application.controller] address validation result for submission id ${application.form_submission_id} - Score: ${Score}, Catchment: ${Catchment}, Storefront: ${Storefront}`
-                    )
-                    if (Score && Catchment && Storefront) {
-                        if (Score >= 80) {
-                            const newDataObj = Object.assign(submissionResponse.submission.submission.data, {
-                                catchmentNo: Catchment,
-                                storefrontId: Storefront,
-                                catchmentNoStoreFront: `${Catchment}-${Storefront}`,
-                                matchedToCentre: `${Catchment}-${Storefront}`
-                            })
-                            submissionResponse.submission.submission.data = newDataObj // update the object used for updating the application record
-                        } else {
-                            console.log(
-                                `[application.controller] insufficient address validation score for application submission id ${application.form_submission_id} - this shouldn't happen!`
-                            )
+                    // Application form has been submitted; determine the catchment & storefront, then update the application in the DB //
+                    let catchment
+                    let storefront
+                    const selected = submission?.data?.otherSelectedCentre ?? submission?.data?.selectedCentre
+                    if (selected && selected.catchment && selected.storefront) {
+                        console.log(
+                            `[application.controller] submission id ${application.form_submission_id} has selected the following catchment & storefront: ${selected.catchment} ${selected.storefront}`
+                        )
+                        catchment = selected.catchment
+                        storefront = selected.storefront
+                    } else {
+                        // Route the catchment & storefront for the submitted application //
+                        // Use the workplace address if provided, otherwise use the business address //
+                        let address
+                        let city
+                        let province
+                        const workplaceContainer = submission?.data?.container
+                        if (
+                            workplaceContainer?.addressAlt &&
+                            workplaceContainer.cityAlt &&
+                            workplaceContainer.provinceAlt
+                        ) {
+                            address = workplaceContainer.addressAlt
+                            city = workplaceContainer.cityAlt
+                            province = workplaceContainer.provinceAlt
+                        } else if (
+                            submission?.data?.businessAddress &&
+                            submission.data.businessCity &&
+                            submission.data.businessProvince
+                        ) {
+                            address = submission.data.businessAddress
+                            city = submission.data.businessCity
+                            province = submission.data.businessProvince
                         }
+                        console.log(
+                            `[application.controller] address for submission id ${
+                                application.form_submission_id
+                            } - Address: ${maskAddress(address)}, City: ${city}, Province: ${province}`
+                        )
+                        const { Score, Catchment, Storefront } = await geocoderService.geocodeAddress(
+                            address,
+                            city,
+                            province
+                        )
+                        console.log(
+                            `[application.controller] address validation result for submission id ${application.form_submission_id} - Score: ${Score}, Catchment: ${Catchment}, Storefront: ${Storefront}`
+                        )
+                        if (Score && Catchment && Storefront) {
+                            if (Score >= 80) {
+                                catchment = Catchment
+                                storefront = Storefront
+                            } else {
+                                console.log(
+                                    `[application.controller] insufficient address validation score for application submission id ${application.form_submission_id} - this shouldn't happen!`
+                                )
+                            }
+                        }
+                    }
+
+                    if (catchment && storefront) {
+                        const newDataObj = Object.assign(submissionResponse.submission.submission.data, {
+                            catchmentNo: catchment,
+                            storefrontId: storefront,
+                            catchmentNoStoreFront: `${catchment}-${storefront}`,
+                            matchedToCentre: `${catchment}-${storefront}`
+                        })
+                        submissionResponse.submission.submission.data = newDataObj // update the object used for updating the application record
                     } else {
                         console.log(
-                            `[application.controller] address validation failed for submission id ${application.form_submission_id} - this shouldn't happen!`
+                            `[application.controller] catchment & storefront calculation failed for submission id ${application.form_submission_id} - this shouldn't happen!`
                         )
                     }
                     await applicationService.updateApplication(
@@ -223,11 +242,11 @@ const updateApplicationFromForm = async (application: any) => {
                     )
 
                     // Update the catchment of the form in CHEFS //
-                    if (Catchment) {
+                    if (catchment) {
                         await formService.updateSubmissionCatchment(
                             application.form_submission_id,
                             submissionResponse.submission,
-                            Catchment
+                            catchment
                         )
                     }
 
@@ -378,7 +397,9 @@ const computeApplicationPrefillFields = async (employer: any) => {
         )
         if (!(businessAddressValidation?.Score && businessAddressValidation.Score >= 80)) {
             console.log(
-                `invalid business address ${employer.street_address}, ${employer.city}, ${employer.province} for employer with id ${employer.id} - avoiding prefilling address`
+                `invalid business address ${maskAddress(employer.street_address)}, ${employer.city}, ${
+                    employer.province
+                } for employer with id ${maskID(employer.id)} - avoiding prefilling address`
             )
             employer.street_address = null
             employer.city = null
@@ -398,7 +419,11 @@ const computeApplicationPrefillFields = async (employer: any) => {
         )
         if (!(workplaceAddressValidation?.Score && workplaceAddressValidation.Score >= 80)) {
             console.log(
-                `invalid workplace address ${employer.workplace_street_address}, ${employer.workplace_city}, ${employer.workplace_province} for employer with id ${employer.id} - avoiding prefilling address`
+                `invalid workplace address ${maskAddress(employer.workplace_street_address)}, ${
+                    employer.workplace_city
+                }, ${employer.workplace_province} for employer with id ${maskID(
+                    employer.id
+                )} - avoiding prefilling address`
             )
             employer.workplace_street_address = null
             employer.workplace_city = null
@@ -414,13 +439,17 @@ const computeApplicationPrefillFields = async (employer: any) => {
     const regex = /^[ABCEGHJ-NPRSTVXY][0-9][ABCEGHJ-NPRSTV-Z] [0-9][ABCEGHJ-NPRSTV-Z][0-9]$/
     if (employer.postal_code && !regex.test(employer.postal_code)) {
         console.log(
-            `invalid business postal code ${employer.postal_code} for employer with id ${employer.id} - avoiding prefilling postal code`
+            `invalid business postal code ${employer.postal_code} for employer with id ${maskID(
+                employer.id
+            )} - avoiding prefilling postal code`
         )
         employer.postal_code = null
     }
     if (employer.workplace_postal_code && !regex.test(employer.workplace_postal_code)) {
         console.log(
-            `invalid workplace postal code ${employer.workplace_postal_code} for employer with id ${employer.id} - avoiding prefilling postal code`
+            `invalid workplace postal code ${employer.workplace_postal_code} for employer with id ${maskID(
+                employer.id
+            )} - avoiding prefilling postal code`
         )
         employer.workplace_postal_code = null
     }

@@ -1,4 +1,5 @@
 import { chefsApi } from "../config/config"
+import { maskID } from "../utils/logging"
 import { getCHEFSToken } from "./common.service"
 
 export const getFormSubmissions = async (formID: string, formPass: string, params: any) => {
@@ -120,15 +121,15 @@ export const shareForm = async (userToken: any, submissionID: string, userGUIDs:
         }
         const chefsToken = await getCHEFSToken()
         for (const userGUID of userGUIDs) {
-            console.log(`sharing form submission ${submissionID} with guid ${userGUID}`)
+            console.log(`sharing form submission ${submissionID} with guid ${maskID(userGUID)}`)
             let chefsUserID = await userLookup(chefsToken, userGUID)
             if (!chefsUserID) {
-                console.log(`user guid ${userGUID} not found in CHEFS - creating user`)
+                console.log(`user guid ${maskID(userGUID)} not found in CHEFS - creating user`)
                 chefsUserID = await createUser(chefsToken, userGUID)
                 if (chefsUserID) {
-                    console.log(`successfully created CHEFS user with id ${chefsUserID}`)
+                    console.log(`successfully created CHEFS user with id ${maskID(chefsUserID)}`)
                 } else {
-                    console.log(`unable to create CHEFS user for guid ${userGUID} - skipping`)
+                    console.log(`unable to create CHEFS user for guid ${maskID(userGUID)} - skipping`)
                     continue
                 }
             }
@@ -144,8 +145,12 @@ export const shareForm = async (userToken: any, submissionID: string, userGUIDs:
             }
             await chefsApi
                 .put(url, data, config)
-                .then(() => console.log(`successfully shared form submission ${submissionID} with guid ${userGUID}`))
-                .catch(() => console.log(`unable to share form submission ${submissionID} with guid ${userGUID}`))
+                .then(() =>
+                    console.log(`successfully shared form submission ${submissionID} with guid ${maskID(userGUID)}`)
+                )
+                .catch(() =>
+                    console.log(`unable to share form submission ${submissionID} with guid ${maskID(userGUID)}`)
+                )
         }
         return true
     } catch (e: any) {
@@ -170,9 +175,9 @@ export const userLookup = async (token: string, userGUID: string) => {
             return userResponse.data[0].id
         }
         if (userResponse?.data?.length === 0) {
-            console.log(`user guid ${userGUID} not found in CHEFS`)
+            console.log(`user guid ${maskID(userGUID)} not found in CHEFS`)
         } else {
-            console.log(`user guid ${userGUID} returned multiple results in CHEFS - should not happen`)
+            console.log(`user guid ${maskID(userGUID)} returned multiple results in CHEFS - should not happen`)
         }
         return null
     } catch (e: any) {

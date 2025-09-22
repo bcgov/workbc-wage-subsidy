@@ -1,4 +1,4 @@
-import { Box, Chip } from "@mui/material"
+import { Box, Chip, Button, Tooltip } from "@mui/material"
 import { FunctionField, Identifier, List, TextField, useUnselectAll, useRedirect, Loading } from "react-admin"
 import { useContext, useEffect, useState } from "react"
 import CatchmentLabel from "../common/components/CatchmentLabel/CatchmentLabel"
@@ -8,6 +8,9 @@ import { ListActions } from "../common/components/ListActions/ListActions"
 import { ListAside } from "../common/components/ListAside/ListAside"
 import { WorkBcCentres } from "../common/data/WorkBcCentres"
 import { CustomSearchInput } from "../common/components/CustomSearchInput/CustomSearchInput"
+import { faCopy } from "@fortawesome/pro-solid-svg-icons"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { COLOURS } from "../Colours"
 
 export const applicationStatusFilters = {
     All: { label: "All" },
@@ -25,6 +28,13 @@ export const ApplicationList = (props: any) => {
     const [listIsLoading, setListIsLoading] = useState(true)
     const [listAsideIsLoading, setListAsideIsLoading] = useState(true)
     const [ready, setReady] = useState(false)
+    const [copiedID, setCopiedID] = useState(null)
+
+    const handleSubmissionIDClick = (form_confirmation_id: any) => {
+        navigator.clipboard.writeText(form_confirmation_id)
+        setCopiedID(form_confirmation_id)
+        setTimeout(() => setCopiedID(null), 2000)
+    }
 
     useEffect(() => {
         unselectAll()
@@ -86,7 +96,54 @@ export const ApplicationList = (props: any) => {
                                 ariaLabel="applications list"
                                 setIsLoading={setListIsLoading}
                             >
-                                <TextField label="Submission ID" source="form_confirmation_id" emptyText="-" />
+                                <FunctionField
+                                    label="Submission ID"
+                                    source="form_confirmation_id"
+                                    render={(record: any) => (
+                                        <Box display="flex" alignItems="center" gap={0}>
+                                            <TextField
+                                                label={record.form_confirmation_id}
+                                                aria-label={record.form_confirmation_id}
+                                                source="form_confirmation_id"
+                                                emptyText="-"
+                                            />
+                                            <Tooltip
+                                                title={
+                                                    copiedID === record.form_confirmation_id
+                                                        ? "Copied!"
+                                                        : "Copy Submission ID"
+                                                }
+                                                aria-label={record.form_confirmation_id}
+                                                aria-hidden={true}
+                                            >
+                                                <Button
+                                                    aria-label={`Copy Submission ID ${record.form_confirmation_id}`}
+                                                    style={{
+                                                        flex: 1,
+                                                        justifyContent: "flex-end",
+                                                        minWidth: "unset",
+                                                        paddingLeft: 3
+                                                    }}
+                                                    onClick={(e) => {
+                                                        e.stopPropagation()
+                                                        handleSubmissionIDClick(record.form_confirmation_id)
+                                                    }}
+                                                    onKeyDown={(e) => {
+                                                        if (e.key === "Enter") {
+                                                            e.stopPropagation()
+                                                            handleSubmissionIDClick(record.form_confirmation_id)
+                                                        }
+                                                    }}
+                                                >
+                                                    <FontAwesomeIcon
+                                                        icon={faCopy}
+                                                        style={{ color: COLOURS.LIGHTBLUE_TEXT }}
+                                                    />
+                                                </Button>
+                                            </Tooltip>
+                                        </Box>
+                                    )}
+                                />
                                 <TextField label="Organization" source="organization" emptyText="-" />
                                 <TextField label="Position Title" source="position_title" emptyText="-" />
                                 <FunctionField
@@ -126,11 +183,8 @@ export const ApplicationList = (props: any) => {
                                     }}
                                 />
                                 <FunctionField
-                                    label={
-                                        <Box display="flex" width="100%" justifyContent="center">
-                                            Status
-                                        </Box>
-                                    }
+                                    label="Status"
+                                    sortBy="status"
                                     render={(record: any) => (
                                         <Box display="flex" width="100%" justifyContent="center">
                                             <Chip
