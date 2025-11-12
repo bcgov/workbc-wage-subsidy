@@ -1,7 +1,7 @@
 import Box from "@mui/material/Box"
 import Grid from "@mui/material/Grid"
 import { useEffect, useState } from "react"
-import { LoadingIndicator, useCreate, useGetIdentity, useGetList, useRedirect } from "react-admin"
+import { LoadingIndicator, useCreate, useGetIdentity, useGetList, useGetOne, useRedirect } from "react-admin"
 import { useSearchParams } from "react-router-dom"
 import { v4 as uuidv4 } from "uuid"
 import BCGovPrimaryButton from "../common/components/BCGovPrimaryButton/BCGovPrimaryButton"
@@ -27,7 +27,9 @@ export const ApplicationCreate = () => {
                 {
                     onSuccess: (data) => {
                         setLoading(false)
-                        redirect("/ViewForm/applications/" + data.id, "")
+                        const formURL = process.env.REACT_APP_DRAFT_URL + data.submission_id
+                        window.open(formURL, "_blank")?.focus()
+                        redirect("/", "applications")
                     },
                     onError: () => {
                         setLoading(false)
