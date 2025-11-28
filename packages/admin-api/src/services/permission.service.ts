@@ -12,6 +12,7 @@ export const getPermission = async (guid: string, isIDIR: boolean) => {
     const agent = new https.Agent({
         rejectUnauthorized: false
     })
+    console.log("Console test!")
     const response = await axios
         .get(url, {
             params: {
