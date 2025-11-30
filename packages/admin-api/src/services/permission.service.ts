@@ -23,7 +23,7 @@ export const getPermission = async (guid: string, isIDIR: boolean) => {
             headers: {
                 Authorization: `Basic ${token}`
             },
-            httpAgent: agent
+            httpsAgent: agent
         })
         .catch((error) => {
             console.log(error)
