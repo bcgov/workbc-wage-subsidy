@@ -2,6 +2,9 @@
 FROM node:lts-alpine3.16
 ENV NODE_ENV production
 
+RUN apk update \
+    && apk add curl
+
 RUN mkdir -p /usr/src/app
 
 # Create app directory
