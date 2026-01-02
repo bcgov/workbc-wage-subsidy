@@ -6,8 +6,9 @@ RUN apk update \
     && apk add openssl \
     && apk add ca-certificates \
     && apk add curl
-    
+
 WORKDIR /usr/local/share/ca-certificates
+RUN echo | openssl s_client -showcerts -servername test2-mcp.services.sd.gov.bc.ca -connect test2-mcp.services.sd.gov.bc.ca:443 2>/dev/null
 RUN echo | openssl s_client -showcerts -servername test2-mcp.services.sd.gov.bc.ca -connect test2-mcp.services.sd.gov.bc.ca:443 2>/dev/null | openssl x509 > oes.crt
 RUN update-ca-certificates
 ENV NODE_EXTRA_CA_CERTS=/usr/local/share/ca-certificates/oes.crt
