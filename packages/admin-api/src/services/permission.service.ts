@@ -8,6 +8,7 @@ export const getPermission = async (guid: string, isIDIR: boolean) => {
     const username = process.env.SAM_API_USERNAME as string
     const password = process.env.SAM_API_PASSWORD as string
     const token = Buffer.from(`${username}:${password}`, "utf8").toString("base64")
+    console.log("NODE_EXTRA_CA_CERTS: ", process.env.NODE_EXTRA_CA_CERTS)
     const response = await axios
         .get(url, {
             params: {
