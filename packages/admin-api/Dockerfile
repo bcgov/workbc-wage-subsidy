@@ -19,10 +19,6 @@ COPY tsconfig.json ./
 # Copy all files
 COPY . .
 
-# Ensure cert path properly set up before install
-RUN cat /usr/local/share/ca-certificates/oes.crt
-RUN echo $NODE_EXTRA_CA_CERTS
-
 # Install dependencies
 RUN npm install --omit=dev --ignore-scripts
 RUN npm run build
