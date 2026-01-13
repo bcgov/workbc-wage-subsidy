@@ -35,7 +35,9 @@ keycloak.login = (options) => {
 }
 
 const onToken = () => {
+    console.log("onToken")
     if (keycloak.token && keycloak.refreshToken) {
+        console.log("onToken - 1")
         localStorage.setItem("token", keycloak.token)
         localStorage.setItem("refresh-token", keycloak.refreshToken)
         localStorage.setItem("provider", keycloak.idTokenParsed?.identity_provider)
@@ -44,10 +46,13 @@ const onToken = () => {
 }
 
 const onTokenExpired = () => {
+    console.log("onTokenExpired")
     keycloak
         .updateToken(30)
         .then(() => {
+            console.log("onTokenExpired - 1")
             if (keycloak.token && keycloak.refreshToken) {
+                console.log("onTokenExpired - 2")
                 localStorage.setItem("token", keycloak.token)
                 localStorage.setItem("refresh-token", keycloak.refreshToken)
                 localStorage.setItem("provider", keycloak.idTokenParsed?.identity_provider)
@@ -55,6 +60,7 @@ const onTokenExpired = () => {
             }
         })
         .catch(() => {
+            console.log("onTokenExpired - 3")
             console.error("failed to refresh token")
         })
 }
