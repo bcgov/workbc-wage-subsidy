@@ -154,7 +154,7 @@ export const dataProvider = {
                 Authorization: `Bearer ${localStorage.getItem("token")}`
             })
         }).then(({ json }) => ({
-            data: { ...params.data, id: json.recordId }
+            data: { ...params.data, id: json.recordId, submission_id: json.submissionId }
         })),
     createOrUpdate: (resource: any, params: { id: any; data: any }) =>
         httpClient(`${apiUrl}/${resource}/${params.id}`, {

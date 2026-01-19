@@ -97,8 +97,8 @@ export const insertApplication = async (
 }
 
 export const updateApplication = async (id: number, status: string | null, body: any, requireStale?: boolean) => {
-    const wages = await knex("applications").where("id", id)
-    if (wages.length === 0) {
+    const applications = await knex("applications").where("id", id)
+    if (applications.length === 0) {
         console.log("application not found with id ", id)
         return 0
     }
