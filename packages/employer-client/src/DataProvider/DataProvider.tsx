@@ -279,5 +279,5 @@ export const dataProvider = {
                 Accept: "application/json",
                 Authorization: `Bearer ${localStorage.getItem("token")}`
             })
-        }).then(({ json }) => ({ id: json.recordId }))
+        }).then(({ json }) => ({ id: json.recordId, submission_id: json.submissionId }))
 }
