@@ -1,7 +1,7 @@
 import Box from "@mui/material/Box"
 import Grid from "@mui/material/Grid"
 import { useEffect, useState } from "react"
-import { LoadingIndicator, useCreate, useGetIdentity, useGetList, useGetOne, useRedirect } from "react-admin"
+import { LoadingIndicator, useCreate, useGetIdentity, useGetList, useRedirect } from "react-admin"
 import { useSearchParams } from "react-router-dom"
 import { v4 as uuidv4 } from "uuid"
 import BCGovPrimaryButton from "../common/components/BCGovPrimaryButton/BCGovPrimaryButton"
