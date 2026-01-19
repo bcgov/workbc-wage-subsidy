@@ -56,6 +56,12 @@ export const ClaimList = (props: any) => {
     const [isClaimCreating, setIsClaimCreating] = useState(false)
     const [selectedRecord, setSelectedRecord] = useState("")
 
+    const markAsStale = (resource, record) => {
+        if (record?.id) {
+            dataProvider.mark(resource, { id: record.id })
+        }
+    }
+
     const syncClaims = useCallback(() => {
         dataProvider.sync("claims").then(({ data }) => {
             setSynced(true)
@@ -64,9 +70,13 @@ export const ClaimList = (props: any) => {
 
     const handleRowClick = (id: Identifier, resource: string, record: any) => {
         if (record.status === "Draft" && record.id && record.form_submission_id) {
-            redirect("/ViewForm/claims/" + record.id, "")
+            const formURL = process.env.REACT_APP_DRAFT_URL + record.form_submission_id
+            window.open(formURL, "_blank")?.focus()
+            markAsStale(resource, record)
         } else if (record.status !== "Draft" && record.id && record.form_submission_id) {
-            redirect("/ViewForm/claims/" + record.id, "")
+            const formURL = process.env.REACT_APP_VIEW_URL + record.form_submission_id
+            window.open(formURL, "_blank")?.focus()
+            markAsStale(resource, record)
         } else {
             return "" // rowClick expects a path to be returned
         }

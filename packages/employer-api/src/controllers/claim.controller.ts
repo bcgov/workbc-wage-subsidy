@@ -108,7 +108,7 @@ export const createClaim = async (req: any, res: express.Response) => {
             )
             if (insertResult?.rowCount === 1) {
                 // successful insertion
-                return res.status(200).send({ recordId: req.body.formKey })
+                return res.status(200).send({ recordId: req.body.formKey, submissionId: createDraftResult.id })
             }
         } else {
             return res.status(500).send("Internal Server Error")
@@ -166,7 +166,7 @@ export const createLegacyClaim = async (req: any, res: express.Response) => {
             )
             if (insertResult?.rowCount === 1) {
                 // successful insertion
-                return res.status(200).send({ recordId: req.body.formKey })
+                return res.status(200).send({ recordId: req.body.formKey, submissionId: createDraftResult.id })
             }
         } else {
             return res.status(500).send("Internal Server Error")
