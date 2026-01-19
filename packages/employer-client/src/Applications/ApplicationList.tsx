@@ -67,7 +67,7 @@ export const ApplicationList = (props: any) => {
             window.open(formURL, "_blank")?.focus()
             markAsStale(resource, record)
         } else {
-            return "" // rowClick expects a path to be returnedÍÍ
+            return "" // rowClick expects a path to be returned
         }
     }
 
