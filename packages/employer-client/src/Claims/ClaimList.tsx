@@ -255,10 +255,13 @@ export const ClaimList = (props: any) => {
                                                                                 onSuccess: (data) => {
                                                                                     setIsClaimCreating(false)
                                                                                     setSelectedRecord("")
-                                                                                    redirect(
-                                                                                        "/ViewForm/claims/" + data.id,
-                                                                                        ""
-                                                                                    )
+                                                                                    const formURL =
+                                                                                        process.env
+                                                                                            .REACT_APP_DRAFT_URL +
+                                                                                        data.submission_id
+                                                                                    window
+                                                                                        .open(formURL, "_blank")
+                                                                                        ?.focus()
                                                                                 },
                                                                                 onError: () => {
                                                                                     setIsClaimCreating(false)

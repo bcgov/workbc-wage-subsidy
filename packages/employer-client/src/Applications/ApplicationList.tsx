@@ -8,7 +8,6 @@ import {
     TextField,
     useDataProvider,
     useGetIdentity,
-    useRedirect,
     useUpdate,
     useRefresh
 } from "react-admin"
