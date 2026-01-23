@@ -2,16 +2,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable import/prefer-default-export */
 import axios from "axios"
-import https from "https"
 
 export const getPermission = async (guid: string, isIDIR: boolean) => {
     const url = process.env.SAM_API_URL as string
     const username = process.env.SAM_API_USERNAME as string
     const password = process.env.SAM_API_PASSWORD as string
     const token = Buffer.from(`${username}:${password}`, "utf8").toString("base64")
-    const agent = new https.Agent({
-        rejectUnauthorized: false
-    })
     const response = await axios
         .get(url, {
             params: {
@@ -21,8 +17,7 @@ export const getPermission = async (guid: string, isIDIR: boolean) => {
             },
             headers: {
                 Authorization: `Basic ${token}`
-            },
-            httpsAgent: agent
+            }
         })
         .catch((error) => {
             console.log(error)
