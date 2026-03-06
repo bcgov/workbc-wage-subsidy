@@ -53,7 +53,9 @@ export const ClaimCreateSelectApplication = (props: any) => {
                 {
                     onSuccess: (data) => {
                         setLoading(false)
-                        redirect("/ViewForm/claims/" + data.id, "")
+                        const formURL = process.env.REACT_APP_DRAFT_URL + data.submission_id
+                        window.open(formURL, "_blank")?.focus()
+                        redirect("list", "claims")
                     },
                     onError: () => {
                         setLoading(false)
@@ -260,7 +262,11 @@ export const ClaimCreateSelectApplication = (props: any) => {
                                                                     })
                                                                     .then((res) => {
                                                                         setLoading(false)
-                                                                        redirect("/ViewForm/claims/" + res.id, "")
+                                                                        const formURL =
+                                                                            process.env.REACT_APP_DRAFT_URL +
+                                                                            res.submission_id
+                                                                        window.open(formURL, "_blank")?.focus()
+                                                                        redirect("list", "claims")
                                                                     })
                                                                     .catch((err) => {
                                                                         setLoading(false)
