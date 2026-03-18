@@ -158,26 +158,26 @@ export const ApplicationList = (props: any) => {
                                                                 record.status === "Draft"
                                                                     ? "Draft"
                                                                     : record.status === "New"
-                                                                    ? "Submitted"
-                                                                    : record.status === "In Progress"
-                                                                    ? "Processing"
-                                                                    : record.status === "Completed"
-                                                                    ? "Completed"
-                                                                    : "Cancelled"
+                                                                      ? "Submitted"
+                                                                      : record.status === "In Progress"
+                                                                        ? "Processing"
+                                                                        : record.status === "Completed"
+                                                                          ? "Completed"
+                                                                          : "Cancelled"
                                                             }
                                                             size="small"
                                                             color={
                                                                 record.status === "Draft"
                                                                     ? "secondary"
                                                                     : record.status === "New"
-                                                                    ? "info"
-                                                                    : record.status === "In Progress"
-                                                                    ? "warning"
-                                                                    : record.status === "Completed"
-                                                                    ? "success"
-                                                                    : record.status === "Cancelled"
-                                                                    ? "error"
-                                                                    : "primary"
+                                                                      ? "info"
+                                                                      : record.status === "In Progress"
+                                                                        ? "warning"
+                                                                        : record.status === "Completed"
+                                                                          ? "success"
+                                                                          : record.status === "Cancelled"
+                                                                            ? "error"
+                                                                            : "primary"
                                                             }
                                                         />
                                                     </Box>
@@ -190,7 +190,8 @@ export const ApplicationList = (props: any) => {
                                                     {record.status === "Draft" && (
                                                         <Tooltip title="Delete Application">
                                                             <Button
-                                                                onClick={() => {
+                                                                onClick={(e) => {
+                                                                    e.stopPropagation()
                                                                     if (
                                                                         window.confirm(
                                                                             "Are you sure you want to delete this application?"

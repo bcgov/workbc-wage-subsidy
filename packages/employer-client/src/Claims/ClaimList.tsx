@@ -191,8 +191,8 @@ export const ClaimList = (props: any) => {
                                                             record.status === "Completed"
                                                                 ? "info"
                                                                 : record.status === "Cancelled"
-                                                                ? "error"
-                                                                : "secondary"
+                                                                  ? "error"
+                                                                  : "secondary"
                                                         }
                                                     />
                                                 </Box>
@@ -204,7 +204,8 @@ export const ClaimList = (props: any) => {
                                                     {record.status === "Draft" && (
                                                         <Tooltip title="Delete Claim">
                                                             <Button
-                                                                onClick={() => {
+                                                                onClick={(e) => {
+                                                                    e.stopPropagation()
                                                                     if (
                                                                         window.confirm(
                                                                             "Are you sure you want to delete this claim?"
@@ -237,7 +238,8 @@ export const ClaimList = (props: any) => {
                                                         record.associated_application_id !== "LEGACY" && (
                                                             <Tooltip title="Copy Claim">
                                                                 <Button
-                                                                    onClick={async () => {
+                                                                    onClick={async (e) => {
+                                                                        e.stopPropagation()
                                                                         setIsClaimCreating(true)
                                                                         setSelectedRecord(record.id)
                                                                         await create(
