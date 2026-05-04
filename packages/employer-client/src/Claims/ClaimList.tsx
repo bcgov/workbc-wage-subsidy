@@ -56,6 +56,12 @@ export const ClaimList = (props: any) => {
     const [isClaimCreating, setIsClaimCreating] = useState(false)
     const [selectedRecord, setSelectedRecord] = useState("")
 
+    const markAsStale = (resource, record) => {
+        if (record?.id) {
+            dataProvider.mark(resource, { id: record.id })
+        }
+    }
+
     const syncClaims = useCallback(() => {
         dataProvider.sync("claims").then(({ data }) => {
             setSynced(true)
@@ -64,9 +70,13 @@ export const ClaimList = (props: any) => {
 
     const handleRowClick = (id: Identifier, resource: string, record: any) => {
         if (record.status === "Draft" && record.id && record.form_submission_id) {
-            redirect("/ViewForm/claims/" + record.id, "")
+            const formURL = process.env.REACT_APP_DRAFT_URL + record.form_submission_id
+            window.open(formURL, "_blank")?.focus()
+            markAsStale(resource, record)
         } else if (record.status !== "Draft" && record.id && record.form_submission_id) {
-            redirect("/ViewForm/claims/" + record.id, "")
+            const formURL = process.env.REACT_APP_VIEW_URL + record.form_submission_id
+            window.open(formURL, "_blank")?.focus()
+            markAsStale(resource, record)
         } else {
             return "" // rowClick expects a path to be returned
         }
@@ -181,8 +191,8 @@ export const ClaimList = (props: any) => {
                                                             record.status === "Completed"
                                                                 ? "info"
                                                                 : record.status === "Cancelled"
-                                                                ? "error"
-                                                                : "secondary"
+                                                                  ? "error"
+                                                                  : "secondary"
                                                         }
                                                     />
                                                 </Box>
@@ -194,7 +204,8 @@ export const ClaimList = (props: any) => {
                                                     {record.status === "Draft" && (
                                                         <Tooltip title="Delete Claim">
                                                             <Button
-                                                                onClick={() => {
+                                                                onClick={(e) => {
+                                                                    e.stopPropagation()
                                                                     if (
                                                                         window.confirm(
                                                                             "Are you sure you want to delete this claim?"
@@ -227,7 +238,8 @@ export const ClaimList = (props: any) => {
                                                         record.associated_application_id !== "LEGACY" && (
                                                             <Tooltip title="Copy Claim">
                                                                 <Button
-                                                                    onClick={async () => {
+                                                                    onClick={async (e) => {
+                                                                        e.stopPropagation()
                                                                         setIsClaimCreating(true)
                                                                         setSelectedRecord(record.id)
                                                                         await create(
@@ -245,10 +257,13 @@ export const ClaimList = (props: any) => {
                                                                                 onSuccess: (data) => {
                                                                                     setIsClaimCreating(false)
                                                                                     setSelectedRecord("")
-                                                                                    redirect(
-                                                                                        "/ViewForm/claims/" + data.id,
-                                                                                        ""
-                                                                                    )
+                                                                                    const formURL =
+                                                                                        process.env
+                                                                                            .REACT_APP_DRAFT_URL +
+                                                                                        data.submission_id
+                                                                                    window
+                                                                                        .open(formURL, "_blank")
+                                                                                        ?.focus()
                                                                                 },
                                                                                 onError: () => {
                                                                                     setIsClaimCreating(false)

@@ -3,6 +3,8 @@ FROM node:lts-alpine3.16
 ENV NODE_ENV production
 
 RUN apk update \
+    && apk add openssl \
+    && apk add ca-certificates \
     && apk add curl
 
 RUN mkdir -p /usr/src/app

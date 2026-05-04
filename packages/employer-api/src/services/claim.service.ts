@@ -67,29 +67,31 @@ export const insertClaim = async (
     idpUsername: string,
     trx?: any
 ) => {
-    const application = await knex("applications").where("form_confirmation_id", applicationID)
-    if (application && application.length > 0) {
-        const data = {
-            id,
-            form_submission_id: submissionID,
-            position_title: application[0].position_title,
-            associated_application_id: applicationID,
-            created_date: new Date().toISOString(),
-            created_by: userGuid,
-            created_by_idp: `${idpUsername}@${idp}`,
-            status: "Draft",
-            catchmentno: application[0].catchmentno,
-            workbc_centre: application[0].workbc_centre
-        }
-        const result = await knex("claims").modify((queryBuilder: any) => {
-            queryBuilder.insert(data)
-            if (trx) {
-                queryBuilder.transacting(trx)
-            }
-        })
-        return result
+    const applications = await knex("applications").where("form_confirmation_id", applicationID)
+    if (!applications || applications.length !== 1) {
+        console.log("application not found with id ", id)
+        return false
     }
-    return false
+    const application = applications[0]
+    const data = {
+        id,
+        form_submission_id: submissionID,
+        position_title: application.position_title,
+        associated_application_id: applicationID,
+        created_date: new Date().toISOString(),
+        created_by: userGuid,
+        created_by_idp: `${idpUsername}@${idp}`,
+        status: "Draft",
+        catchmentno: application.catchmentno,
+        workbc_centre: application.workbc_centre
+    }
+    const result = await knex("claims").modify((queryBuilder: any) => {
+        queryBuilder.insert(data)
+        if (trx) {
+            queryBuilder.transacting(trx)
+        }
+    })
+    return result
 }
 
 export const insertLegacyClaim = async (

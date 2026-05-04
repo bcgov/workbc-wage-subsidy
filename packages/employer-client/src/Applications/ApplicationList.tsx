@@ -8,7 +8,6 @@ import {
     TextField,
     useDataProvider,
     useGetIdentity,
-    useRedirect,
     useUpdate,
     useRefresh
 } from "react-admin"
@@ -33,7 +32,6 @@ export const applicationStatusFilters = {
 export const ApplicationList = (props: any) => {
     const [statusFilter, setStatusFilter] = useState(applicationStatusFilters["All"])
     const { identity } = useGetIdentity()
-    const redirect = useRedirect()
     const refresh = useRefresh()
     const [modalIsOpen, setModalIsOpen] = useState(false)
     const [sharedUsers, setSharedUsers] = useState([])
@@ -46,6 +44,12 @@ export const ApplicationList = (props: any) => {
     const ec = useContext(EmployerContext)
     const [update] = useUpdate()
 
+    const markAsStale = (resource, record) => {
+        if (record?.id) {
+            dataProvider.mark(resource, { id: record.id })
+        }
+    }
+
     const syncApplications = useCallback(() => {
         dataProvider.sync("applications").then(({ data }) => {
             setSynced(true)
@@ -54,9 +58,13 @@ export const ApplicationList = (props: any) => {
 
     const handleRowClick = (id: Identifier, resource: string, record: any) => {
         if (record.status === "Draft" && record.id && record.form_submission_id) {
-            redirect("/ViewForm/applications/" + record.id, "")
+            const formURL = process.env.REACT_APP_DRAFT_URL + record.form_submission_id
+            window.open(formURL, "_blank")?.focus()
+            markAsStale(resource, record)
         } else if (record.id && record.form_submission_id) {
-            redirect("/ViewForm/applications/" + record.id, "")
+            const formURL = process.env.REACT_APP_VIEW_URL + record.form_submission_id
+            window.open(formURL, "_blank")?.focus()
+            markAsStale(resource, record)
         } else {
             return "" // rowClick expects a path to be returned
         }
@@ -150,26 +158,26 @@ export const ApplicationList = (props: any) => {
                                                                 record.status === "Draft"
                                                                     ? "Draft"
                                                                     : record.status === "New"
-                                                                    ? "Submitted"
-                                                                    : record.status === "In Progress"
-                                                                    ? "Processing"
-                                                                    : record.status === "Completed"
-                                                                    ? "Completed"
-                                                                    : "Cancelled"
+                                                                      ? "Submitted"
+                                                                      : record.status === "In Progress"
+                                                                        ? "Processing"
+                                                                        : record.status === "Completed"
+                                                                          ? "Completed"
+                                                                          : "Cancelled"
                                                             }
                                                             size="small"
                                                             color={
                                                                 record.status === "Draft"
                                                                     ? "secondary"
                                                                     : record.status === "New"
-                                                                    ? "info"
-                                                                    : record.status === "In Progress"
-                                                                    ? "warning"
-                                                                    : record.status === "Completed"
-                                                                    ? "success"
-                                                                    : record.status === "Cancelled"
-                                                                    ? "error"
-                                                                    : "primary"
+                                                                      ? "info"
+                                                                      : record.status === "In Progress"
+                                                                        ? "warning"
+                                                                        : record.status === "Completed"
+                                                                          ? "success"
+                                                                          : record.status === "Cancelled"
+                                                                            ? "error"
+                                                                            : "primary"
                                                             }
                                                         />
                                                     </Box>
@@ -182,7 +190,8 @@ export const ApplicationList = (props: any) => {
                                                     {record.status === "Draft" && (
                                                         <Tooltip title="Delete Application">
                                                             <Button
-                                                                onClick={() => {
+                                                                onClick={(e) => {
+                                                                    e.stopPropagation()
                                                                     if (
                                                                         window.confirm(
                                                                             "Are you sure you want to delete this application?"
