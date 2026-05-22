@@ -1,5 +1,5 @@
 # dockerfile for an image with the admin api, express deployment
-FROM artifacts.developer.gov.bc.ca/docker-remote/library/node:20-alpine3.20
+FROM node:20-alpine3.20
 ENV NODE_ENV production
 
 RUN apk update \
