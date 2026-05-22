@@ -4,12 +4,15 @@
     "description": "WorkBC Wage Subsidy Monorepo",
     "license": "Apache-2.0",
     "author": "Sid McLaughlin <sid.mclaughlin@gov.bc.ca>",
+    "engines": {
+        "node": ">=20 <21"
+    },
     "workspaces": [
         "packages/*"
     ],
     "scripts": {
         "changeset": "changeset",
-        "prepare": "husky install",
+        "prepare": "npx husky@8.0.3 install",
         "release": "changeset publish",
         "test": "npx jest --detectOpenHandles --forceExit"
     },
