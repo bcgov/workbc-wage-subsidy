@@ -1,4 +1,4 @@
-FROM node:18-alpine as builder
+FROM artifacts.developer.gov.bc.ca/docker-remote/library/node:20-alpine3.20 as builder
 ENV NODE_ENV=production
 ARG REACT_APP_KEYCLOAK_REALM
 ENV REACT_APP_KEYCLOAK_REALM=$REACT_APP_KEYCLOAK_REALM
@@ -33,7 +33,7 @@ RUN npm install --omit=dev --ignore-scripts
 RUN npm run build
 
 # Bundle static assets with nginx
-FROM nginxinc/nginx-unprivileged:1.23-alpine as production
+FROM artifacts.developer.gov.bc.ca/docker-remote/nginxinc/nginx-unprivileged:1.27-alpine as production
 ENV NODE_ENV production
 # Copy built assets from `builder` image
 COPY --from=builder /app/build /usr/share/nginx/html

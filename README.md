@@ -35,7 +35,7 @@ There are GitHub Actions created to build the image and push it with the appropr
 
 **Required Dependancies on first open:**
 
-- [Node 18.16.0 LTS](https://nodejs.org/en/download)
+- [Node 20 LTS](https://nodejs.org/en/download)
 
 Run the following command first in the root folder:
 
