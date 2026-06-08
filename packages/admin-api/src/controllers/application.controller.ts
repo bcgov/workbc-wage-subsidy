@@ -14,12 +14,13 @@ const workBcCentreCodes = Object.keys(WorkBcCentres)
 
 export const getAllApplications = async (req: any, res: express.Response) => {
     try {
-        const { bceid_user_guid, idir_user_guid, idp } = req.kauth.grant.access_token.content
+        const { auth } = req
+        const { bceid_user_guid, idir_user_guid, idp } = auth
         if (bceid_user_guid === undefined && idir_user_guid === undefined) {
             return res.status(401).send("Not Authorized")
         }
         const filter = req.query.filter ? JSON.parse(req.query.filter) : {}
-        const catchments = await getCatchments(req.kauth.grant.access_token)
+        const catchments = await getCatchments(auth)
         if (
             catchments.length === 0 ||
             filter.catchmentno == null ||
@@ -58,12 +59,13 @@ export const getAllApplications = async (req: any, res: express.Response) => {
 
 export const getApplicationCounts = async (req: any, res: express.Response) => {
     try {
-        const { bceid_user_guid, idir_user_guid, idp } = req.kauth.grant.access_token.content
+        const { auth } = req
+        const { bceid_user_guid, idir_user_guid, idp } = auth
         if (bceid_user_guid === undefined && idir_user_guid === undefined) {
             return res.status(401).send("Not Authorized")
         }
         const filter = req.query.filter ? JSON.parse(req.query.filter) : {}
-        const catchments = await getCatchments(req.kauth.grant.access_token)
+        const catchments = await getCatchments(auth)
         if (
             catchments.length === 0 ||
             filter.catchmentno == null ||
@@ -84,13 +86,14 @@ export const getApplicationCounts = async (req: any, res: express.Response) => {
 
 export const getOneApplication = async (req: any, res: express.Response) => {
     try {
-        const { bceid_user_guid, idir_user_guid } = req.kauth.grant.access_token.content
+        const { auth } = req
+        const { bceid_user_guid, idir_user_guid } = auth
         if (bceid_user_guid === undefined && idir_user_guid === undefined) {
             return res.status(401).send("Not Authorized")
         }
         const { id } = req.params
         const application = await applicationService.getApplicationByID(id)
-        const catchments = await getCatchments(req.kauth.grant.access_token)
+        const catchments = await getCatchments(auth)
         if (catchments.length === 0 || (application && !catchments.includes(application.catchmentno))) {
             return res.status(403).send("Forbidden")
         }
@@ -106,13 +109,14 @@ export const getOneApplication = async (req: any, res: express.Response) => {
 
 export const updateApplication = async (req: any, res: express.Response) => {
     try {
-        const { bceid_user_guid, idir_user_guid } = req.kauth.grant.access_token.content
+        const { auth } = req
+        const { bceid_user_guid, idir_user_guid } = auth
         if (bceid_user_guid === undefined && idir_user_guid === undefined) {
             return res.status(401).send("Not Authorized")
         }
         const { id } = req.params
         const application = await applicationService.getApplicationByID(id)
-        const catchments = await getCatchments(req.kauth.grant.access_token)
+        const catchments = await getCatchments(auth)
         if (
             catchments.length === 0 ||
             (application && !catchments.includes(application.catchmentno)) ||
@@ -143,13 +147,14 @@ export const updateApplication = async (req: any, res: express.Response) => {
 
 export const deleteApplication = async (req: any, res: express.Response) => {
     try {
-        const { bceid_user_guid, idir_user_guid } = req.kauth.grant.access_token.content
+        const { auth } = req
+        const { bceid_user_guid, idir_user_guid } = auth
         if (bceid_user_guid === undefined && idir_user_guid === undefined) {
             return res.status(401).send("Not Authorized")
         }
         const { id } = req.params
         const application = await applicationService.getApplicationByID(id)
-        const catchments = await getCatchments(req.kauth.grant.access_token)
+        const catchments = await getCatchments(auth)
         if (
             idir_user_guid === undefined ||
             catchments.length === 0 ||
@@ -176,13 +181,14 @@ export const deleteApplication = async (req: any, res: express.Response) => {
 
 export const generatePDF = async (req: any, res: express.Response) => {
     try {
-        const { bceid_user_guid, idir_user_guid } = req.kauth.grant.access_token.content
+        const { auth } = req
+        const { bceid_user_guid, idir_user_guid } = auth
         if (bceid_user_guid === undefined && idir_user_guid === undefined) {
             return res.status(401).send("Not Authorized")
         }
         const { id, formType } = req.params
         const application = await applicationService.getApplicationByID(id)
-        const catchments = await getCatchments(req.kauth.grant.access_token)
+        const catchments = await getCatchments(auth)
         if (
             (formType !== "HaveEmployee" && formType !== "NeedEmployee") ||
             catchments.length === 0 ||

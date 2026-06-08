@@ -6,15 +6,16 @@ import { getCatchments } from "../lib/catchment"
 
 export const getNotifications = async (req: any, res: express.Response) => {
     try {
+        const { auth } = req
         const { catchmentNo, type } = req.query
-        const catchments = await getCatchments(req.kauth.grant.access_token)
+        const catchments = await getCatchments(auth)
         if (catchments.length === 0 || (!catchments.includes(Number(catchmentNo)) && Number(catchmentNo) !== 0)) {
             return res.status(403).send("Forbidden")
         }
         if (type !== "application" && type !== "claim") {
             return res.status(400).send("Bad Request")
         }
-        const { email, idp_username, identity_provider } = req.kauth.grant.access_token.content
+        const { email, idp_username, identity_provider } = auth
         if (email === undefined || idp_username === undefined || identity_provider === undefined) {
             return res.status(403).send("Forbidden")
         }
@@ -29,8 +30,9 @@ export const getNotifications = async (req: any, res: express.Response) => {
 
 export const addNotification = async (req: any, res: express.Response) => {
     try {
+        const { auth } = req
         const { catchmentNo, type } = req.body
-        const catchments = await getCatchments(req.kauth.grant.access_token)
+        const catchments = await getCatchments(auth)
 
         if (catchments.length === 0 || !catchments.includes(Number(catchmentNo))) {
             return res.status(403).send("Forbidden")
@@ -39,7 +41,7 @@ export const addNotification = async (req: any, res: express.Response) => {
         if (type !== "application" && type !== "claim") {
             return res.status(400).send("Bad Request")
         }
-        const { email, idp_username, identity_provider } = req.kauth.grant.access_token.content
+        const { email, idp_username, identity_provider } = auth
         if (email === undefined || idp_username === undefined || identity_provider === undefined) {
             return res.status(403).send("Forbidden")
         }
@@ -54,8 +56,9 @@ export const addNotification = async (req: any, res: express.Response) => {
 
 export const deleteNotification = async (req: any, res: express.Response) => {
     try {
+        const { auth } = req
         const { catchmentNo, type } = req.body
-        const catchments = await getCatchments(req.kauth.grant.access_token)
+        const catchments = await getCatchments(auth)
 
         if (catchments.length === 0 || !catchments.includes(Number(catchmentNo))) {
             return res.status(403).send("Forbidden")
@@ -63,7 +66,7 @@ export const deleteNotification = async (req: any, res: express.Response) => {
         if (type !== "application" && type !== "claim") {
             return res.status(400).send("Bad Request")
         }
-        const { email, idp_username, identity_provider } = req.kauth.grant.access_token.content
+        const { email, idp_username, identity_provider } = auth
         if (email === undefined || idp_username === undefined || identity_provider === undefined) {
             return res.status(403).send("Forbidden")
         }
@@ -78,18 +81,19 @@ export const deleteNotification = async (req: any, res: express.Response) => {
 
 export const checkNotificationEmail = async (req: any, res: express.Response) => {
     try {
-        const { email, idp_username, identity_provider } = req.kauth.grant.access_token.content
+        const { auth } = req
+        const { email, idp_username, identity_provider } = auth
         if (email === undefined || idp_username === undefined || identity_provider === undefined) {
             return res.status(403).send("Forbidden")
         }
-        const username = `${req.kauth.grant.access_token.content.idp_username}@${req.kauth.grant.access_token.content.identity_provider}`
+        const username = `${auth.idp_username}@${auth.identity_provider}`
         const notifications = await notificationService.getAllNotificationsFromUser(username)
         await Promise.all(
             notifications.map(async (notification: any) => {
-                if (notification.email !== req.kauth.grant.access_token.content.email) {
+                if (notification.email !== auth.email) {
                     await notificationService.updateNotification(
                         notification.id,
-                        req.kauth.grant.access_token.content.email,
+                        auth.email,
                         notification.catchmentno,
                         notification.type,
                         username

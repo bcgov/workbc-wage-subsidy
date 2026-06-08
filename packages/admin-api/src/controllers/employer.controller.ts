@@ -7,7 +7,8 @@ import * as claimService from "../services/claims.service"
 
 export const getOneEmployer = async (req: any, res: express.Response) => {
     try {
-        const bceid_guid = req.kauth.grant.access_token.content?.bceid_user_guid
+        const { auth } = req
+        const bceid_guid = auth.bceid_user_guid
         if (bceid_guid === undefined) {
             return res.status(403).send("Not Authorized")
         }
