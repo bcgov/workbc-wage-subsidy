@@ -1,20 +1,21 @@
+/* eslint-disable camelcase */
 /* eslint-disable import/prefer-default-export */
 import * as express from "express"
 import * as permissionService from "../services/permission.service"
 
 export const getPermission = async (req: any, res: express.Response) => {
     try {
-        const { auth } = req
-        if (!auth) {
+        const { identity_provider, bceid_user_guid, idir_user_guid } = req.auth
+        if (!req.auth) {
             return res.status(401).send("Unauthorized")
         }
         let guid
         let isIDIR = false
 
-        if (auth.identity_provider === "bceid" || auth.identity_provider === "bceidboth") {
-            guid = auth.bceid_user_guid
-        } else if (auth.identity_provider === "idir") {
-            guid = auth.idir_user_guid
+        if (identity_provider === "bceid" || identity_provider === "bceidboth") {
+            guid = bceid_user_guid
+        } else if (identity_provider === "idir") {
+            guid = idir_user_guid
             isIDIR = true
         }
 

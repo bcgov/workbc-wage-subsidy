@@ -12,9 +12,8 @@ import * as emailController from "./email.controller"
 
 export const getAllClaims = async (req: any, res: express.Response) => {
     try {
-        const { auth } = req
-        const bceid_guid = auth.bceid_user_guid
-        if (bceid_guid === undefined) {
+        const { bceid_user_guid } = req.auth
+        if (bceid_user_guid === undefined) {
             return res.status(403).send("Not Authorized")
         }
         const filter = req.query.filter ? JSON.parse(req.query.filter) : {}
@@ -29,7 +28,7 @@ export const getAllClaims = async (req: any, res: express.Response) => {
             filter,
             sortFields,
             sortOrder,
-            bceid_guid
+            bceid_user_guid
         )
 
         res.set({
@@ -45,12 +44,11 @@ export const getAllClaims = async (req: any, res: express.Response) => {
 
 export const getClaimCounts = async (req: any, res: express.Response) => {
     try {
-        const { auth } = req
-        const bceid_guid = auth.bceid_user_guid
-        if (bceid_guid === undefined) {
+        const { bceid_user_guid } = req.auth
+        if (bceid_user_guid === undefined) {
             return res.status(401).send("Not Authorized")
         }
-        const claimCounts = await claimService.getClaimCounts(bceid_guid)
+        const claimCounts = await claimService.getClaimCounts(bceid_user_guid)
         return res.status(200).send(claimCounts)
     } catch (e: unknown) {
         return res.status(500).send("Internal Server Error")
@@ -59,13 +57,12 @@ export const getClaimCounts = async (req: any, res: express.Response) => {
 
 export const createClaim = async (req: any, res: express.Response) => {
     try {
-        const { auth } = req
-        const bceid_guid = auth.bceid_user_guid
+        const { bceid_user_guid, idp, idp_username } = req.auth
         const { application_id: appConfirmationId } = req.body
-        if (bceid_guid === undefined) {
+        if (bceid_user_guid === undefined) {
             return res.status(403).send("Not Authorized")
         }
-        if (!req.body?.guid || req.body.guid !== bceid_guid) {
+        if (!req.body?.guid || req.body.guid !== bceid_user_guid) {
             return res.status(403).send("Forbidden")
         }
 
@@ -94,7 +91,7 @@ export const createClaim = async (req: any, res: express.Response) => {
 
         // Create a new form draft //
         const createDraftResult = await formService.createLoginProtectedDraft(
-            auth.token,
+            req.auth.token,
             process.env.CLAIM_FORM_ID as string,
             process.env.CLAIM_FORM_VERSION_ID as string,
             req.body.formKey,
@@ -106,8 +103,8 @@ export const createClaim = async (req: any, res: express.Response) => {
                 req.body.guid,
                 req.body.application_id,
                 createDraftResult.id,
-                auth.idp,
-                auth.idp_username
+                idp,
+                idp_username
             )
             if (insertResult?.rowCount === 1) {
                 // successful insertion
@@ -125,17 +122,16 @@ export const createClaim = async (req: any, res: express.Response) => {
 
 export const createLegacyClaim = async (req: any, res: express.Response) => {
     try {
-        const { auth } = req
+        const { bceid_user_guid, idp, idp_username } = req.auth
 
-        const bceid_guid = auth.bceid_user_guid
-        if (bceid_guid === undefined) {
+        if (bceid_user_guid === undefined) {
             return res.status(403).send("Not Authorized")
         }
-        if (!req.body?.guid || req.body.guid !== bceid_guid) {
+        if (!req.body?.guid || req.body.guid !== bceid_user_guid) {
             return res.status(403).send("Forbidden")
         }
 
-        const employer = await employerService.getEmployerByID(bceid_guid)
+        const employer = await employerService.getEmployerByID(bceid_user_guid)
         if (!employer) {
             return res.status(403).send("Forbidden")
         }
@@ -153,7 +149,7 @@ export const createLegacyClaim = async (req: any, res: express.Response) => {
 
         // Create a new form draft //
         const createDraftResult = await formService.createLoginProtectedDraft(
-            auth,
+            req.auth,
             process.env.CLAIM_FORM_ID as string,
             process.env.CLAIM_FORM_VERSION_ID as string,
             req.body.formKey,
@@ -166,8 +162,8 @@ export const createLegacyClaim = async (req: any, res: express.Response) => {
                 createDraftResult.id,
                 req.body.catchment,
                 req.body.storefront,
-                auth.idp,
-                auth.idp_username
+                idp,
+                idp_username
             )
             if (insertResult?.rowCount === 1) {
                 // successful insertion
@@ -185,14 +181,12 @@ export const createLegacyClaim = async (req: any, res: express.Response) => {
 
 export const getOneClaim = async (req: any, res: express.Response) => {
     try {
-        const { auth } = req
-
-        const bceid_guid = auth.bceid_user_guid
-        if (bceid_guid === undefined) {
+        const { bceid_user_guid } = req.auth
+        if (bceid_user_guid === undefined) {
             return res.status(403).send("Not Authorized")
         }
         const { id } = req.params
-        const employerClaimRecord = await claimService.getEmployerClaimRecord(bceid_guid, id)
+        const employerClaimRecord = await claimService.getEmployerClaimRecord(bceid_user_guid, id)
         if (!employerClaimRecord) {
             return res.status(403).send("Forbidden or Not Found")
         }
@@ -207,18 +201,16 @@ export const getOneClaim = async (req: any, res: express.Response) => {
 // Update stale claims with latest data from CHEFS forms.
 export const syncClaims = async (req: any, res: express.Response) => {
     try {
-        const { auth } = req
-
-        const bceid_guid = auth.bceid_user_guid
-        if (bceid_guid === undefined) {
+        const { bceid_user_guid } = req.auth
+        if (bceid_user_guid === undefined) {
             return res.status(403).send("Not Authorized")
         }
-        const employer = await employerService.getEmployerByID(bceid_guid)
+        const employer = await employerService.getEmployerByID(bceid_user_guid)
         if (!employer) {
             return res.status(403).send("Forbidden or Not Found")
         }
         // Update any drafts that have changed.
-        const drafts = await claimService.getStaleDrafts(bceid_guid)
+        const drafts = await claimService.getStaleDrafts(bceid_user_guid)
         await Promise.all(drafts.map(updateClaimFromForm))
         return res.status(200).send({})
     } catch (e: any) {
@@ -229,14 +221,13 @@ export const syncClaims = async (req: any, res: express.Response) => {
 
 export const updateClaim = async (req: any, res: express.Response) => {
     try {
-        const { auth } = req
+        const { bceid_user_guid } = req.auth
 
-        const bceid_guid = auth.bceid_user_guid
-        if (bceid_guid === undefined) {
+        if (bceid_user_guid === undefined) {
             return res.status(403).send("Not Authorized")
         }
         const { id } = req.params
-        const employerClaimRecord = await claimService.getEmployerClaimRecord(bceid_guid, id)
+        const employerClaimRecord = await claimService.getEmployerClaimRecord(bceid_user_guid, id)
         if (!employerClaimRecord) {
             return res.status(403).send("Forbidden or Not Found")
         }
@@ -344,14 +335,12 @@ const updateClaimFromForm = async (employerClaimRecord: any) => {
 // Mark a claim as stale.
 export const markClaim = async (req: any, res: express.Response) => {
     try {
-        const { auth } = req
-
-        const bceid_guid = auth.bceid_user_guid
-        if (bceid_guid === undefined) {
+        const { bceid_user_guid } = req.auth
+        if (bceid_user_guid === undefined) {
             return res.status(403).send("Not Authorized")
         }
         const { id } = req.params
-        const employerClaimRecord = await claimService.getEmployerClaimRecord(bceid_guid, id)
+        const employerClaimRecord = await claimService.getEmployerClaimRecord(bceid_user_guid, id)
         if (!employerClaimRecord) {
             return res.status(403).send("Forbidden or Not Found")
         }
@@ -365,9 +354,7 @@ export const markClaim = async (req: any, res: express.Response) => {
 
 export const shareClaim = async (req: any, res: express.Response) => {
     try {
-        const { auth } = req
-
-        const { bceid_user_guid, bceid_business_guid } = auth
+        const { bceid_user_guid, bceid_business_guid } = req.auth
         if (bceid_user_guid === undefined) {
             return res.status(401).send("Not Authorized")
         }
@@ -383,7 +370,7 @@ export const shareClaim = async (req: any, res: express.Response) => {
             return res.status(403).send("Forbidden or Not Found")
         }
         const claim = await claimService.getClaimByID(id)
-        const shareResult = await formService.shareForm(auth.token, claim.form_submission_id, users)
+        const shareResult = await formService.shareForm(req.auth.token, claim.form_submission_id, users)
         if (shareResult) {
             await claimService.shareClaim(id, users)
         }
@@ -396,17 +383,15 @@ export const shareClaim = async (req: any, res: express.Response) => {
 
 export const deleteClaim = async (req: any, res: express.Response) => {
     try {
-                const { auth } = req
-
-        const bceid_guid = auth.bceid_user_guid
-        if (bceid_guid === undefined) {
+        const { bceid_user_guid } = req.auth
+        if (bceid_user_guid === undefined) {
             return res.status(403).send("Not Authorized")
         }
         const { id } = req.params
         const claim = await claimService.getClaimByID(id)
         /* Only applications created by the user who sent the request
         or if the status is Awaiting Submission can be deleted */
-        if (claim.createdby !== bceid_guid || claim.status !== null) {
+        if (claim.createdby !== bceid_user_guid || claim.status !== null) {
             return res.status(401).send("Not Authorized")
         }
         const deleted = await claimService.deleteClaim(id)

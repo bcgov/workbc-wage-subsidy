@@ -7,9 +7,8 @@ import * as claimService from "../services/claims.service"
 
 export const getOneEmployer = async (req: any, res: express.Response) => {
     try {
-        const { auth } = req
-        const bceid_guid = auth.bceid_user_guid
-        if (bceid_guid === undefined) {
+        const { bceid_user_guid } = req.auth
+        if (bceid_user_guid === undefined) {
             return res.status(403).send("Not Authorized")
         }
         const { id } = req.params

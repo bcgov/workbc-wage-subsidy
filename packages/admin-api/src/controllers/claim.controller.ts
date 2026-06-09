@@ -19,13 +19,12 @@ const { PDFDocument } = require("pdf-lib")
 
 export const getAllClaims = async (req: any, res: express.Response) => {
     try {
-        const { auth } = req
-        const { bceid_user_guid, idir_user_guid, idp } = auth
+        const { bceid_user_guid, idir_user_guid, idp } = req.auth
         if (bceid_user_guid === undefined && idir_user_guid === undefined) {
             return res.status(401).send("Not Authorized")
         }
         const filter = req.query.filter ? JSON.parse(req.query.filter) : {}
-        const catchments = await getCatchments(auth)
+        const catchments = await getCatchments(req.auth)
         if (
             catchments.length === 0 ||
             filter.catchmentno == null ||
@@ -55,13 +54,12 @@ export const getAllClaims = async (req: any, res: express.Response) => {
 
 export const getClaimCounts = async (req: any, res: express.Response) => {
     try {
-        const { auth } = req
-        const { bceid_user_guid, idir_user_guid, idp } = auth
+        const { bceid_user_guid, idir_user_guid, idp } = req.auth
         if (bceid_user_guid === undefined && idir_user_guid === undefined) {
             return res.status(401).send("Not Authorized")
         }
         const filter = req.query.filter ? JSON.parse(req.query.filter) : {}
-        const catchments = await getCatchments(auth)
+        const catchments = await getCatchments(req.auth)
         if (
             catchments.length === 0 ||
             filter.catchmentno == null ||
@@ -82,14 +80,13 @@ export const getClaimCounts = async (req: any, res: express.Response) => {
 
 export const getOneClaim = async (req: any, res: express.Response) => {
     try {
-        const { auth } = req
-        const { bceid_user_guid, idir_username } = auth
+        const { bceid_user_guid, idir_username } = req.auth
         if (bceid_user_guid === undefined && idir_username === undefined) {
             return res.status(401).send("Not Authorized")
         }
         const { id } = req.params
         const claim = await claimService.getClaimByID(id)
-        const catchments = await getCatchments(auth)
+        const catchments = await getCatchments(req.auth)
         if (catchments.length === 0 || (claim && !catchments.includes(claim.catchmentno))) {
             return res.status(403).send("Forbidden")
         }
@@ -109,14 +106,13 @@ export const getOneClaim = async (req: any, res: express.Response) => {
 
 export const updateClaim = async (req: any, res: express.Response) => {
     try {
-        const { auth } = req
-        const { bceid_user_guid, idir_user_guid } = auth
+        const { bceid_user_guid, idir_user_guid } = req.auth
         if (bceid_user_guid === undefined && idir_user_guid === undefined) {
             return res.status(401).send("Not Authorized")
         }
         const { id } = req.params
         const claim = await claimService.getClaimByID(id)
-        const catchments = await getCatchments(auth)
+        const catchments = await getCatchments(req.auth)
         if (
             catchments.length === 0 ||
             (claim && !catchments.includes(claim.catchmentno)) ||
@@ -146,14 +142,13 @@ export const updateClaim = async (req: any, res: express.Response) => {
 
 export const deleteClaim = async (req: any, res: express.Response) => {
     try {
-        const { auth } = req
-        const { bceid_user_guid, idir_username } = auth
+        const { bceid_user_guid, idir_username } = req.auth
         if (bceid_user_guid === undefined && idir_username === undefined) {
             return res.status(401).send("Not Authorized")
         }
         const { id } = req.params
         const claim = await claimService.getClaimByID(id)
-        const catchments = await getCatchments(auth)
+        const catchments = await getCatchments(req.auth)
         if (
             idir_username === undefined ||
             catchments.length === 0 ||
@@ -285,14 +280,13 @@ const formatPDFData = (submission: any, claim: any, submittedDate: string) => {
 
 export const generatePDF = async (req: any, res: express.Response) => {
     try {
-        const { auth } = req
-        const { bceid_user_guid, idir_user_guid } = auth
+        const { bceid_user_guid, idir_user_guid } = req.auth
         if (bceid_user_guid === undefined && idir_user_guid === undefined) {
             return res.status(401).send("Not Authorized")
         }
         const { id } = req.params
         const claim = await claimService.getClaimByID(id)
-        const catchments = await getCatchments(auth)
+        const catchments = await getCatchments(req.auth)
         if (catchments.length === 0 || (claim && !catchments.includes(claim.catchmentno))) {
             return res.status(403).send("Forbidden")
         }
