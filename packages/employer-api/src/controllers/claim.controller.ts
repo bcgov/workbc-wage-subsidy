@@ -12,7 +12,8 @@ import * as emailController from "./email.controller"
 
 export const getAllClaims = async (req: any, res: express.Response) => {
     try {
-        const bceid_guid = req.kauth.grant.access_token.content?.bceid_user_guid
+        const { auth } = req
+        const bceid_guid = auth.bceid_user_guid
         if (bceid_guid === undefined) {
             return res.status(403).send("Not Authorized")
         }
@@ -44,7 +45,8 @@ export const getAllClaims = async (req: any, res: express.Response) => {
 
 export const getClaimCounts = async (req: any, res: express.Response) => {
     try {
-        const bceid_guid = req.kauth.grant.access_token.content?.bceid_user_guid
+        const { auth } = req
+        const bceid_guid = auth.bceid_user_guid
         if (bceid_guid === undefined) {
             return res.status(401).send("Not Authorized")
         }
@@ -57,7 +59,8 @@ export const getClaimCounts = async (req: any, res: express.Response) => {
 
 export const createClaim = async (req: any, res: express.Response) => {
     try {
-        const bceid_guid = req.kauth.grant.access_token.content?.bceid_user_guid
+        const { auth } = req
+        const bceid_guid = auth.bceid_user_guid
         const { application_id: appConfirmationId } = req.body
         if (bceid_guid === undefined) {
             return res.status(403).send("Not Authorized")
@@ -91,7 +94,7 @@ export const createClaim = async (req: any, res: express.Response) => {
 
         // Create a new form draft //
         const createDraftResult = await formService.createLoginProtectedDraft(
-            req.kauth.grant.access_token,
+            auth.token,
             process.env.CLAIM_FORM_ID as string,
             process.env.CLAIM_FORM_VERSION_ID as string,
             req.body.formKey,
@@ -103,8 +106,8 @@ export const createClaim = async (req: any, res: express.Response) => {
                 req.body.guid,
                 req.body.application_id,
                 createDraftResult.id,
-                req.kauth.grant.access_token.content.idp,
-                req.kauth.grant.access_token.content.idp_username
+                auth.idp,
+                auth.idp_username
             )
             if (insertResult?.rowCount === 1) {
                 // successful insertion
@@ -122,7 +125,9 @@ export const createClaim = async (req: any, res: express.Response) => {
 
 export const createLegacyClaim = async (req: any, res: express.Response) => {
     try {
-        const bceid_guid = req.kauth.grant.access_token.content?.bceid_user_guid
+        const { auth } = req
+
+        const bceid_guid = auth.bceid_user_guid
         if (bceid_guid === undefined) {
             return res.status(403).send("Not Authorized")
         }
@@ -148,7 +153,7 @@ export const createLegacyClaim = async (req: any, res: express.Response) => {
 
         // Create a new form draft //
         const createDraftResult = await formService.createLoginProtectedDraft(
-            req.kauth.grant.access_token,
+            auth,
             process.env.CLAIM_FORM_ID as string,
             process.env.CLAIM_FORM_VERSION_ID as string,
             req.body.formKey,
@@ -161,8 +166,8 @@ export const createLegacyClaim = async (req: any, res: express.Response) => {
                 createDraftResult.id,
                 req.body.catchment,
                 req.body.storefront,
-                req.kauth.grant.access_token.content.idp,
-                req.kauth.grant.access_token.content.idp_username
+                auth.idp,
+                auth.idp_username
             )
             if (insertResult?.rowCount === 1) {
                 // successful insertion
@@ -180,7 +185,9 @@ export const createLegacyClaim = async (req: any, res: express.Response) => {
 
 export const getOneClaim = async (req: any, res: express.Response) => {
     try {
-        const bceid_guid = req.kauth.grant.access_token.content?.bceid_user_guid
+        const { auth } = req
+
+        const bceid_guid = auth.bceid_user_guid
         if (bceid_guid === undefined) {
             return res.status(403).send("Not Authorized")
         }
@@ -200,7 +207,9 @@ export const getOneClaim = async (req: any, res: express.Response) => {
 // Update stale claims with latest data from CHEFS forms.
 export const syncClaims = async (req: any, res: express.Response) => {
     try {
-        const bceid_guid = req.kauth.grant.access_token.content?.bceid_user_guid
+        const { auth } = req
+
+        const bceid_guid = auth.bceid_user_guid
         if (bceid_guid === undefined) {
             return res.status(403).send("Not Authorized")
         }
@@ -220,7 +229,9 @@ export const syncClaims = async (req: any, res: express.Response) => {
 
 export const updateClaim = async (req: any, res: express.Response) => {
     try {
-        const bceid_guid = req.kauth.grant.access_token.content?.bceid_user_guid
+        const { auth } = req
+
+        const bceid_guid = auth.bceid_user_guid
         if (bceid_guid === undefined) {
             return res.status(403).send("Not Authorized")
         }
@@ -333,7 +344,9 @@ const updateClaimFromForm = async (employerClaimRecord: any) => {
 // Mark a claim as stale.
 export const markClaim = async (req: any, res: express.Response) => {
     try {
-        const bceid_guid = req.kauth.grant.access_token.content?.bceid_user_guid
+        const { auth } = req
+
+        const bceid_guid = auth.bceid_user_guid
         if (bceid_guid === undefined) {
             return res.status(403).send("Not Authorized")
         }
@@ -352,7 +365,9 @@ export const markClaim = async (req: any, res: express.Response) => {
 
 export const shareClaim = async (req: any, res: express.Response) => {
     try {
-        const { bceid_user_guid, bceid_business_guid } = req.kauth.grant.access_token.content
+        const { auth } = req
+
+        const { bceid_user_guid, bceid_business_guid } = auth
         if (bceid_user_guid === undefined) {
             return res.status(401).send("Not Authorized")
         }
@@ -368,11 +383,7 @@ export const shareClaim = async (req: any, res: express.Response) => {
             return res.status(403).send("Forbidden or Not Found")
         }
         const claim = await claimService.getClaimByID(id)
-        const shareResult = await formService.shareForm(
-            req.kauth.grant.access_token.token,
-            claim.form_submission_id,
-            users
-        )
+        const shareResult = await formService.shareForm(auth.token, claim.form_submission_id, users)
         if (shareResult) {
             await claimService.shareClaim(id, users)
         }
@@ -385,7 +396,9 @@ export const shareClaim = async (req: any, res: express.Response) => {
 
 export const deleteClaim = async (req: any, res: express.Response) => {
     try {
-        const bceid_guid = req.kauth.grant.access_token.content?.bceid_user_guid
+                const { auth } = req
+
+        const bceid_guid = auth.bceid_user_guid
         if (bceid_guid === undefined) {
             return res.status(403).send("Not Authorized")
         }

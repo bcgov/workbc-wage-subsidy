@@ -6,7 +6,8 @@ import * as employerService from "../services/employer.service"
 
 export const getAllEmployers = async (req: any, res: express.Response) => {
     try {
-        const { bceid_user_guid: bceid_guid, bceid_business_guid: business_guid } = req.kauth.grant.access_token.content
+        const { auth } = req
+        const { bceid_user_guid: bceid_guid, bceid_business_guid: business_guid } = auth
         if (bceid_guid === undefined || business_guid === undefined) {
             return res.status(403).send("Not Authorized")
         }
@@ -35,7 +36,8 @@ export const getAllEmployers = async (req: any, res: express.Response) => {
 
 export const createEmployer = async (req: any, res: express.Response) => {
     try {
-        const bceid_guid = req.kauth.grant.access_token.content?.bceid_user_guid
+        const { auth } = req
+        const bceid_guid = auth.bceid_user_guid
         if (bceid_guid === undefined) {
             return res.status(403).send("Not Authorized")
         }
@@ -56,7 +58,8 @@ export const createEmployer = async (req: any, res: express.Response) => {
 
 export const getOneEmployer = async (req: any, res: express.Response) => {
     try {
-        const bceid_guid = req.kauth.grant.access_token.content?.bceid_user_guid
+        const { auth } = req
+        const bceid_guid = auth.bceid_user_guid
         if (bceid_guid === undefined) {
             return res.status(403).send("Not Authorized")
         }
@@ -80,7 +83,8 @@ export const getOneEmployer = async (req: any, res: express.Response) => {
 
 export const updateEmployer = async (req: any, res: express.Response) => {
     try {
-        const bceid_guid = req.kauth.grant.access_token.content?.bceid_user_guid
+        const { auth } = req
+        const bceid_guid = auth.bceid_user_guid
         if (bceid_guid === undefined) {
             return res.status(403).send("Not Authorized")
         }

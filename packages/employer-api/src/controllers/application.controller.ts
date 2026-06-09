@@ -12,7 +12,8 @@ import { maskAddress, maskID } from "../utils/logging"
 
 export const getAllApplications = async (req: any, res: express.Response) => {
     try {
-        const bceid_guid = req.kauth.grant.access_token.content?.bceid_user_guid
+        const { auth } = req
+        const bceid_guid = auth.bceid_user_guid
         if (bceid_guid === undefined) {
             return res.status(401).send("Not Authorized")
         }
@@ -45,7 +46,8 @@ export const getAllApplications = async (req: any, res: express.Response) => {
 
 export const getApplicationCounts = async (req: any, res: express.Response) => {
     try {
-        const bceid_guid = req.kauth.grant.access_token.content?.bceid_user_guid
+        const { auth } = req
+        const bceid_guid = auth.bceid_user_guid
         if (bceid_guid === undefined) {
             return res.status(401).send("Not Authorized")
         }
@@ -58,7 +60,8 @@ export const getApplicationCounts = async (req: any, res: express.Response) => {
 
 export const createApplication = async (req: any, res: express.Response) => {
     try {
-        const bceid_guid = req.kauth.grant.access_token.content?.bceid_user_guid
+        const { auth } = req
+        const bceid_guid = auth.bceid_user_guid
         if (bceid_guid === undefined) {
             return res.status(401).send("Not Authorized")
         }
@@ -77,7 +80,7 @@ export const createApplication = async (req: any, res: express.Response) => {
         const formID = applicationService.getFormId(req.body.formType)
         const formVersionID = applicationService.getFormVersionId(req.body.formType)
         const createDraftResult = await formService.createLoginProtectedDraft(
-            req.kauth.grant.access_token,
+            auth,
             formID,
             formVersionID,
             req.body.formKey,
@@ -89,8 +92,8 @@ export const createApplication = async (req: any, res: express.Response) => {
                 req.body.guid,
                 req.body.formType,
                 createDraftResult.id,
-                req.kauth.grant.access_token.content.idp,
-                req.kauth.grant.access_token.content.idp_username
+                auth.idp,
+                auth.idp_username
             )
             if (insertResult?.rowCount === 1) {
                 // successful insertion
@@ -108,7 +111,8 @@ export const createApplication = async (req: any, res: express.Response) => {
 
 export const getOneApplication = async (req: any, res: express.Response) => {
     try {
-        const bceid_guid = req.kauth.grant.access_token.content?.bceid_user_guid
+        const { auth } = req
+        const bceid_guid = auth.bceid_user_guid
         if (bceid_guid === undefined) {
             return res.status(401).send("Not Authorized")
         }
@@ -127,7 +131,8 @@ export const getOneApplication = async (req: any, res: express.Response) => {
 // Update stale applications with latest data from CHEFS forms.
 export const syncApplications = async (req: any, res: express.Response) => {
     try {
-        const bceid_guid = req.kauth.grant.access_token.content?.bceid_user_guid
+        const { auth } = req
+        const bceid_guid = auth.bceid_user_guid
         if (bceid_guid === undefined) {
             return res.status(403).send("Not Authorized")
         }
@@ -284,7 +289,8 @@ const updateApplicationFromForm = async (application: any) => {
 
 export const shareApplication = async (req: any, res: express.Response) => {
     try {
-        const { bceid_user_guid, bceid_business_guid } = req.kauth.grant.access_token.content
+        const { auth } = req
+        const { bceid_user_guid, bceid_business_guid } = auth
         if (bceid_user_guid === undefined) {
             return res.status(401).send("Not Authorized")
         }
@@ -303,7 +309,7 @@ export const shareApplication = async (req: any, res: express.Response) => {
         }
         const application = await applicationService.getApplicationByID(id)
         const shareResult = await formService.shareForm(
-            applicationRecord.status === "Draft" ? req.kauth.grant.access_token.token : null, // use users token for draft states
+            applicationRecord.status === "Draft" ? auth.token : null, // use users token for draft states
             application.form_submission_id,
             users
         )
@@ -322,7 +328,8 @@ export const shareApplication = async (req: any, res: express.Response) => {
 
 export const deleteApplication = async (req: any, res: express.Response) => {
     try {
-        const bceid_guid = req.kauth.grant.access_token.content?.bceid_user_guid
+        const { auth } = req
+        const bceid_guid = auth.bceid_user_guid
         if (bceid_guid === undefined) {
             return res.status(403).send("Not Authorized")
         }
@@ -346,7 +353,8 @@ export const deleteApplication = async (req: any, res: express.Response) => {
 
 export const updateApplication = async (req: any, res: express.Response) => {
     try {
-        const bceid_guid = req.kauth.grant.access_token.content?.bceid_user_guid
+        const { auth } = req
+        const bceid_guid = auth.bceid_user_guid
         if (bceid_guid === undefined) {
             return res.status(403).send("Not Authorized")
         }
@@ -366,7 +374,8 @@ export const updateApplication = async (req: any, res: express.Response) => {
 // Mark an application as stale.
 export const markApplication = async (req: any, res: express.Response) => {
     try {
-        const bceid_guid = req.kauth.grant.access_token.content?.bceid_user_guid
+        const { auth } = req
+        const bceid_guid = auth.bceid_user_guid
         if (bceid_guid === undefined) {
             return res.status(403).send("Not Authorized")
         }
