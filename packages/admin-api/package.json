@@ -17,7 +17,6 @@
         "cors": "^2.8.5",
         "dotenv": "^16.4.5",
         "express": "^4.21.1",
-        "express-session": "^1.19.0",
         "helmet": "^6.2.0",
         "jwt-decode": "^3.1.2",
         "knex": "^2.5.1",
