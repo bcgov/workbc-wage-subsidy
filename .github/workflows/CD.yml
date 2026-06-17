@@ -16,7 +16,7 @@ on:
         - warning
         - debug
   push:
-    branches: [ dev,test,prod ]
+    branches: [ dev,test,prod,dev-111-keycloak-connect-replacement ]
     paths-ignore:
         - '.github/workflows/**'
 
