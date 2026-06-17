@@ -16,7 +16,7 @@ export const sendEmail = async (resource: string, catchmentNo: number) => {
             resource
         )
 
-        // Calculate recipients //
+        // Calculate recipients1 //
         const notificationsList = await notificationService.getNotificationsForCatchment(
             catchmentNo,
             resource.toLowerCase()
