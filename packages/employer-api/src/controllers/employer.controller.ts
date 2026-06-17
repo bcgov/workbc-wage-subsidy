@@ -6,7 +6,7 @@ import * as employerService from "../services/employer.service"
 
 export const getAllEmployers = async (req: any, res: express.Response) => {
     try {
-        const { bceid_user_guid: bceid_guid, bceid_business_guid: business_guid } = req.kauth.grant.access_token.content
+        const { bceid_user_guid: bceid_guid, bceid_business_guid: business_guid } = req.auth
         if (bceid_guid === undefined || business_guid === undefined) {
             return res.status(403).send("Not Authorized")
         }
@@ -35,11 +35,11 @@ export const getAllEmployers = async (req: any, res: express.Response) => {
 
 export const createEmployer = async (req: any, res: express.Response) => {
     try {
-        const bceid_guid = req.kauth.grant.access_token.content?.bceid_user_guid
-        if (bceid_guid === undefined) {
+        const { bceid_user_guid } = req.auth
+        if (bceid_user_guid === undefined) {
             return res.status(403).send("Not Authorized")
         }
-        if (!req.body?.id || bceid_guid !== req.body.id) {
+        if (!req.body?.id || bceid_user_guid !== req.body.id) {
             return res.status(403).send("Forbidden")
         }
         const employer = await employerService.getEmployerByID(req.body.id)
@@ -56,15 +56,15 @@ export const createEmployer = async (req: any, res: express.Response) => {
 
 export const getOneEmployer = async (req: any, res: express.Response) => {
     try {
-        const bceid_guid = req.kauth.grant.access_token.content?.bceid_user_guid
-        if (bceid_guid === undefined) {
+        const { bceid_user_guid } = req.auth
+        if (bceid_user_guid === undefined) {
             return res.status(403).send("Not Authorized")
         }
         const { id } = req.body
         if (id == null) {
             return res.status(400).send("id is required")
         }
-        if (bceid_guid !== id) {
+        if (bceid_user_guid !== id) {
             return res.status(403).send("Forbidden")
         }
         const employer = await employerService.getEmployerByID(id)
@@ -80,8 +80,8 @@ export const getOneEmployer = async (req: any, res: express.Response) => {
 
 export const updateEmployer = async (req: any, res: express.Response) => {
     try {
-        const bceid_guid = req.kauth.grant.access_token.content?.bceid_user_guid
-        if (bceid_guid === undefined) {
+        const { bceid_user_guid } = req.auth
+        if (bceid_user_guid === undefined) {
             return res.status(403).send("Not Authorized")
         }
         const { id } = req.body
@@ -89,7 +89,7 @@ export const updateEmployer = async (req: any, res: express.Response) => {
             return res.status(400).send("id is required")
         }
         const employer = await employerService.getEmployerByID(id)
-        if (id !== bceid_guid) {
+        if (id !== bceid_user_guid) {
             return res.status(403).send("Forbidden")
         }
         if (!employer) {

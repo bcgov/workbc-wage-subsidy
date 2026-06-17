@@ -6,7 +6,7 @@ import * as permissionService from "../services/permission.service"
 export const getCatchments = async (access_token: any) => {
     try {
         let permission = []
-        const { identity_provider, bceid_user_guid, idir_user_guid } = access_token.content
+        const { identity_provider, bceid_user_guid, idir_user_guid } = access_token
         if ((identity_provider === "bceid" || identity_provider === "bceidboth") && bceid_user_guid) {
             permission = await permissionService.getPermission(bceid_user_guid, false)
         } else if (identity_provider === "idir" && idir_user_guid) {

@@ -6,7 +6,10 @@ import { Issuer } from "openid-client"
 
 const createServer = async () => {
     const corsOptions = {
-        origin: process.env.ORIGIN_URL || process.env.OPENSHIFT_NODEJS_ORIGIN_URL || "http://localhost:3006",
+        origin: [
+            process.env.ORIGIN_URL || process.env.OPENSHIFT_NODEJS_ORIGIN_URL || ("http://localhost:3000" as string),
+            process.env.CHEFS_FRONTEND_URL as string
+        ],
         credentials: true,
         optionsSuccessStatus: 200
     }
