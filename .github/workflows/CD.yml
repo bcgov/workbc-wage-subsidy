@@ -16,7 +16,7 @@ on:
         - warning
         - debug
   push:
-    branches: [ dev,test,prod ]
+    branches: [ dev,test,prod,feature ]
     paths-ignore:
         - '.github/workflows/**'
 
@@ -114,7 +114,7 @@ jobs:
         uses: redhat-actions/buildah-build@v2
         with:
           image: ${{ matrix.imagename }}
-          tags: ${{ steps.extract_branch.outputs.branch == 'dev' && 'latest' || steps.extract_branch.outputs.branch}}
+          tags: ${{ (steps.extract_branch.outputs.branch == 'dev' || steps.extract_branch.outputs.branch == 'feature') && 'latest' || steps.extract_branch.outputs.branch}}
           context: ${{ matrix.context }}
           containerfiles: ${{ matrix.context }}/Dockerfile
           tls-verify: false
