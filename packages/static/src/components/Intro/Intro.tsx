@@ -21,7 +21,7 @@ const Intro = () => {
             <p>
                 The Wage Subsidy helps employers hire eligible WorkBC participants who need work experience and
                 on-the-job training. Employers may receive a wage subsidy to help cover the costs of supervising,
-                coaching, and training a new employee while they gain skills and work experience. &nbsp; NOTE: As of
+                coaching, and training a new employee while they gain skills and work experience. <br /> NOTE: As of
                 August 31, 2026, Wage Subsidy reimbursement rates have changed.
             </p>
             <ModalButton text="Find out more" showIcon onClick={openModal} ariaHasPopup="dialog" />
