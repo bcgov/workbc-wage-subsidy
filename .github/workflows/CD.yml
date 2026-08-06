@@ -60,7 +60,7 @@ jobs:
         shell: bash
         run: echo "branch=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_OUTPUT
         id: extract_branch
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           ref: ${{ steps.extract_branch.outputs.branch }}
       - name: Setup react-admin registry
@@ -81,9 +81,9 @@ jobs:
             ${{ runner.os }}-build-
             ${{ runner.os }}-
       - name: Use Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
-          node-version: '18.x'
+          node-version: '20.x'
           cache: 'npm'
           # Since all node modules is stored in the main directory, we need to
           # use the package-lock.json from the main directory

@@ -1,5 +1,5 @@
 # dockerfile for an image with the admin api, express deployment
-FROM node:lts-alpine3.16
+FROM node:20-alpine3.20
 ENV NODE_ENV production
 
 RUN apk update \

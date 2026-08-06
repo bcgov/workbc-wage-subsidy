@@ -130,7 +130,7 @@ parameters:
   displayName: NODE_JS_VERSION
   name: NODE_JS_VERSION
   required: true
-  value: '18'
+  value: '20'
 - description: REACT_APP_KEYCLOAK_REALM
   displayName: REACT_APP_KEYCLOAK_REALM
   name: REACT_APP_KEYCLOAK_REALM
