@@ -1461,14 +1461,14 @@
             {
                 "name": "Hazelton",
                 "id": 2,
-                "Address": "4345 Field St, Hazelton, BC V0J 1Y0",
-                "Phone": "250-842-6110",
+                "Address": "PO Box 418, 4125 River Road, Hazelton, BC, V0J 1Y0",
+                "Phone": "250-842-0216",
                 "Fax": "250-842-2282",
                 "Email": "centre-hazelton@workbc.ca",
                 "Website": "https://workbc.ca/WorkBC-Centres/North-Coast-Nechako/Hazelton.aspx",
                 "BusinessWebsite": "http://workbccentre-hazelton.ca",
                 "FrenchServices": "N",
-                "Coordinates": "-127.6752791,55.2565141"
+                "Coordinates": "-127.676881,55.253635"
             }
         ]
     },
