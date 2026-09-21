@@ -10,7 +10,6 @@ import Logo from "./Logo"
 import Tag from "./Tag"
 import { CustomUserMenu } from "./CustomUserMenu"
 import UserProfileModal from "./UserProfileModal"
-import EmployerHandbook from "./assets/Wage-Subsidy-Handbook.pdf"
 import BCGovModal from "./common/components/BCGovModal/BCGovModal"
 
 export const Header = (props: HeaderProps) => {
@@ -111,7 +110,7 @@ export const Header = (props: HeaderProps) => {
                                     textDecoration: "underline"
                                 }
                             }}
-                            onClick={() => window.open(EmployerHandbook)}
+                            onClick={() => window.open("https://www.workbc.ca/media/3231/download?inline", "_blank")}
                         >
                             <FontAwesomeIcon icon={faBookOpenReader} size="2x" style={{ marginRight: 15 }} />
                             Employer Handbook
