@@ -10,7 +10,6 @@ import Logo from "./Logo"
 import Tag from "./Tag"
 import { CustomUserMenu } from "./CustomUserMenu"
 import UserProfileModal from "./UserProfileModal"
-import EmployerHandbook from "./assets/Wage-Subsidy-Handbook.pdf"
 import BCGovModal from "./common/components/BCGovModal/BCGovModal"
 
 export const Header = (props: HeaderProps) => {
