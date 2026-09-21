@@ -111,7 +111,7 @@ export const Header = (props: HeaderProps) => {
                                     textDecoration: "underline"
                                 }
                             }}
-                            onClick={() => window.open(EmployerHandbook)}
+                            onClick={() => window.open("https://www.workbc.ca/media/3231/download?inline", "_blank")}
                         >
                             <FontAwesomeIcon icon={faBookOpenReader} size="2x" style={{ marginRight: 15 }} />
                             Employer Handbook
