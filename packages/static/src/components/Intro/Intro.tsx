@@ -19,14 +19,10 @@ const Intro = () => {
         <div className="intro">
             <h1>WorkBC Wage Subsidy</h1>
             <p>
-                <b>As of May 1, 2024, the Employer Initiated Wage Subsidy (EIWS) ended.</b>
-                &nbsp; The WorkBC wage subsidy has returned to its original intent of assisting unemployed WorkBC
-                clients who are having a difficult time finding work due to a lack of skills and work experience.
-            </p>
-            <p>
-                The Wage Subsidy program matches WorkBC clients who require on-the-job training and work experience with
-                employers who can offer support, supervision, and training to their new employee. The temporary subsidy
-                covers a part of employee wages in exchange for coaching and on-the-job training.
+                The Wage Subsidy helps employers hire eligible WorkBC participants who need work experience and
+                on-the-job training. Employers may receive a wage subsidy to help cover the costs of supervising,
+                coaching, and training a new employee while they gain skills and work experience. <br /> NOTE: As of
+                August 31, 2026, Wage Subsidy reimbursement rates have changed.
             </p>
             <ModalButton text="Find out more" showIcon onClick={openModal} ariaHasPopup="dialog" />
             <BCGovModal

@@ -9,6 +9,7 @@ import permissionRoute from "./routes/permission.route"
 import notificationRoute from "./routes/notification.route"
 import employerRoute from "./routes/employer.route"
 
+// trigger a build
 const corsOptions = {
     origin: process.env.ORIGIN_URL || process.env.OPENSHIFT_NODEJS_ORIGIN_URL || "http://localhost:3006",
     credentials: true,
