@@ -12,17 +12,14 @@ import {
     // FIXME: add this when the react-admin dependency is updated
     //Inspector,
 } from "react-admin"
-import { AppLocationContext } from "@react-admin/ra-navigation"
-import { ContainerLayoutContext } from "@react-admin/ra-navigation"
 import { Header } from "./CustomHeader"
 import { CustomSkipNavigationButton } from "./CustomSkipNavigationButton"
 
 export const CustomContainerLayout = (props: LayoutProps) => {
     const {
-        appBar = defaultAppBar,
+        appBar,
         children,
         className,
-        dashboard,
         error: errorComponent,
         menu,
         title,
@@ -40,48 +37,29 @@ export const CustomContainerLayout = (props: LayoutProps) => {
     }
 
     return (
-        <AppLocationContext>
-            <ContainerLayoutContext.Provider
-                value={{
-                    hasDashboard: !!dashboard,
-                    title,
-                    menu,
-                    toolbar,
-                    userMenu
-                }}
-            >
-                <StyledLayout className={clsx("layout", ContainerLayoutClasses.root, className)} sx={sx}>
-                    <CustomSkipNavigationButton />
-                    {appBar}
-                    <Container
-                        id="main-content"
-                        className={ContainerLayoutClasses.content}
-                        maxWidth={maxWidth}
-                        fixed={fixed}
-                    >
-                        <ErrorBoundary
-                            onError={handleError as any}
-                            fallbackRender={({ error, resetErrorBoundary }) => (
-                                <Error
-                                    error={error}
-                                    errorComponent={errorComponent}
-                                    errorInfo={errorInfo}
-                                    resetErrorBoundary={resetErrorBoundary}
-                                    title={title}
-                                />
-                            )}
-                        >
-                            {children}
-                        </ErrorBoundary>
-                    </Container>
-                    {/* <Inspector /> */}
-                </StyledLayout>
-            </ContainerLayoutContext.Provider>
-        </AppLocationContext>
+        <StyledLayout className={clsx("layout", ContainerLayoutClasses.root, className)} sx={sx}>
+            <CustomSkipNavigationButton />
+            {appBar !== undefined ? appBar : <Header menu={menu} toolbar={toolbar} userMenu={userMenu} />}
+            <Container id="main-content" className={ContainerLayoutClasses.content} maxWidth={maxWidth} fixed={fixed}>
+                <ErrorBoundary
+                    onError={handleError as any}
+                    fallbackRender={({ error, resetErrorBoundary }) => (
+                        <Error
+                            error={error}
+                            errorComponent={errorComponent}
+                            errorInfo={errorInfo}
+                            resetErrorBoundary={resetErrorBoundary}
+                            title={title}
+                        />
+                    )}
+                >
+                    {children}
+                </ErrorBoundary>
+            </Container>
+            {/* <Inspector /> */}
+        </StyledLayout>
     )
 }
-
-const defaultAppBar = <Header />
 
 export interface LayoutProps extends Omit<CoreLayoutProps, "menu">, Omit<HtmlHTMLAttributes<HTMLDivElement>, "title"> {
     appBar?: ReactNode

@@ -37,7 +37,6 @@
         "@mui/icons-material": "^5.16.7",
         "@mui/material": "^5.16.7",
         "@mui/system": "^5.16.7",
-        "@react-admin/ra-navigation": "^4.9.6",
         "@react-keycloak/web": "^3.4.0",
         "axios": "^1.2.3",
         "buffer": "^6.0.3",
