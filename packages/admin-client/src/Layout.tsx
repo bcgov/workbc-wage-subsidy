@@ -1,6 +1,6 @@
-import { HorizontalMenu } from "@react-admin/ra-navigation"
 import { ReactQueryDevtools } from "react-query/devtools"
 import { CustomContainerLayout } from "./CustomContainerLayout"
+import NavigationTabs from "./NavigationTabs"
 
 // eslint-disable-next-line import/no-anonymous-default-export
 export default (props: any) => {
@@ -12,15 +12,15 @@ export default (props: any) => {
                 {...props}
                 maxWidth="xl"
                 menu={
-                    <HorizontalMenu indicatorColor="secondary">
-                        <HorizontalMenu.Item
+                    <NavigationTabs indicatorColor="secondary">
+                        <NavigationTabs.Item
                             label="Applications"
                             to="/applications"
                             value="applications"
                             style={itemStyle}
                         />
-                        <HorizontalMenu.Item label="Claim Forms" to="/claims" value="claims" style={itemStyle} />
-                    </HorizontalMenu>
+                        <NavigationTabs.Item label="Claim Forms" to="/claims" value="claims" style={itemStyle} />
+                    </NavigationTabs>
                 }
             />
             <ReactQueryDevtools initialIsOpen={false} />
