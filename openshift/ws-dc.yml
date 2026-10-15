@@ -433,11 +433,6 @@ objects:
             value: ${REACT_APP_KEYCLOAK_REALM}
           - name: REACT_APP_ADMIN_API_URL
             value: ${REACT_APP_ADMIN_API_URL}
-          - name: REACT_ADMIN_TOKEN
-            valueFrom:
-              secretKeyRef:
-                key: ${NPM_INSTALL_TOKENS_SECRET_NAME}
-                name: REACT_ADMIN_TOKEN
           - name: FONT_AWESOME_TOKEN
             valueFrom:
               secretKeyRef:
@@ -522,11 +517,6 @@ objects:
             value: ${REACT_APP_KEYCLOAK_REALM}
           - name: REACT_APP_VIEW_URL
             value: ${REACT_APP_VIEW_URL}
-          - name: REACT_ADMIN_TOKEN
-            valueFrom:
-              secretKeyRef:
-                key: ${NPM_INSTALL_TOKENS_SECRET_NAME}
-                name: REACT_ADMIN_TOKEN
           - name: FONT_AWESOME_TOKEN
             valueFrom:
               secretKeyRef:
