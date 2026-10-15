@@ -63,10 +63,6 @@ jobs:
       - uses: actions/checkout@v4
         with:
           ref: ${{ steps.extract_branch.outputs.branch }}
-      - name: Setup react-admin registry
-        uses: react-admin/ra-enterprise-action@v1.0.0
-        env:
-          RA_EE_CI_TOKEN: ${{secrets.REACT_ADMIN_TOKEN}}
       - name: Cache node modules
         id: cache-npm
         uses: actions/cache@v3
@@ -121,7 +117,6 @@ jobs:
           build-args: |
             VITE_REACT_ENVIRONMENT=${{ vars.REACT_APP_ENVIRONMENT }}
             REACT_APP_ENVIRONMENT=${{ vars.REACT_APP_ENVIRONMENT }}
-            REACT_ADMIN_TOKEN=${{ secrets.REACT_ADMIN_TOKEN }}
             FONT_AWESOME_TOKEN=${{ secrets.FONT_AWESOME_TOKEN }}
             REACT_APP_DATA_PROVIDER_URL=${{ vars.REACT_APP_DATA_PROVIDER_URL }}
             REACT_APP_ADMIN_API_URL=${{ vars.REACT_APP_ADMIN_API_URL }}
