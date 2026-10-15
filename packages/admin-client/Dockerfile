@@ -1,6 +1,5 @@
 FROM node:20-alpine3.20 AS builder
 ENV NODE_ENV=production
-# Keycloak build args (must be provided by CD from the GitHub Environment)
 ARG REACT_APP_KEYCLOAK_REALM
 ENV REACT_APP_KEYCLOAK_REALM=$REACT_APP_KEYCLOAK_REALM
 ARG REACT_APP_KEYCLOAK_URL
