@@ -1,6 +1,5 @@
 import { AppBar, AppBarProps, Box, Link, Toolbar, Button } from "@mui/material"
 import { styled } from "@mui/material/styles"
-import { HorizontalMenu, useContainerLayout } from "@react-admin/ra-navigation"
 import React, { useState } from "react"
 import { LoadingIndicator, LocalesMenuButton, TitleComponent, UserMenu, useLocales } from "react-admin"
 import { Link as RouterLink } from "react-router-dom"
@@ -11,7 +10,7 @@ import { faEyeLowVision } from "@fortawesome/pro-solid-svg-icons"
 import BCGovModal from "./common/components/BCGovModal/BCGovModal"
 
 export const Header = (props: HeaderProps) => {
-    const { menu = defaultMenu, toolbar = defaultToolbar, userMenu = defaultUserMenu } = useContainerLayout(props)
+    const { menu = defaultMenu, toolbar = defaultToolbar, userMenu = defaultUserMenu } = props
     const [accessibilityFeaturesModalIsOpen, setAccessibilityFeaturesModalIsOpen] = useState(false)
 
     return (
@@ -170,7 +169,7 @@ const Root2 = styled(AppBar, {
     }
 })
 
-const defaultMenu = <HorizontalMenu />
+const defaultMenu = null
 const defaultUserMenu = <UserMenu />
 
 const sanitizeRestProps = ({ title, menu, userMenu, toolbar, ...props }: any) => props
